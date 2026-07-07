@@ -100,24 +100,6 @@
 
 /* An OPTIONAL dark treatment. Kept elegant + neutral (still NOT space themed —
  * deep warm charcoal, not a starfield). Teri can delete this block to force light. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --usp-bg: #17161a;
-    --usp-canvas-bg: #1c1b21;
-    --usp-surface: #232128;
-    --usp-surface-2: #26242c;
-    --usp-ink: #f2f0ec;
-    --usp-ink-muted: #b4b1bd;
-    --usp-ink-faint: #86838f;
-    --usp-border: #34313b;
-    --usp-orb-core: #f4f2ff;
-    --usp-orb-tint: #6f68b8;
-    --usp-ring: rgba(246, 244, 239, 0.16);
-    --usp-ring-strong: rgba(246, 244, 239, 0.7);
-    --usp-affinity: #3a3743;
-    --usp-affinity-ink: #a3a0ac;
-    --usp-link-faint: rgba(246, 244, 239, 0.09);
-    --usp-link-share: rgba(160, 150, 240, 0.4);
-    --usp-shadow-panel: 0 12px 44px rgba(0, 0, 0, 0.5);
-  }
-}
+/* dark-mode variant disabled (raw/0034): the product is light-only —
+   the room matches the cover and the document on every system theme. */
+

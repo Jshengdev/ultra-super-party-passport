@@ -111,6 +111,16 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
     [payload],
   );
 
+  const interestDegree = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const l of payload.links) {
+      if (l.type !== 'INTERESTED_IN') continue;
+      const t = String(typeof l.target === 'object' ? (l.target as GraphNode).id : l.target);
+      m.set(t, (m.get(t) ?? 0) + 1);
+    }
+    return m;
+  }, [payload]);
+
   const valueMates = useMemo(() => {
     const m = new Map<string, Set<string>>();
     for (const l of payload.links) {
@@ -231,20 +241,8 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
   const onRenderFramePre = useCallback(
     (ctx: CanvasRenderingContext2D) => {
       ctx.save();
-      for (const n of graphData.nodes) {
-        if (n.type === 'Person' && n.cluster && typeof n.x === 'number' && typeof n.y === 'number') {
-          const hue = hueFor(n.cluster);
-          if (!hue) continue;
-          const R = 26;
-          const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, R);
-          g.addColorStop(0, withAlpha(hue, 0.22));
-          g.addColorStop(1, withAlpha(hue, 0));
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, R, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
+      // idle halos removed (raw/0034: "remove the glow") — the room rests as flat ink
+      // dots on paper; color belongs to touch (the lit ego-web) and the touchpoint tags.
       // the selected person's web: value-ties + a halo ring, painted (no physics)
       if (selectedId) {
         const sel = graphData.nodes.find((n) => n.id === selectedId);
@@ -317,10 +315,10 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           : node.label;
       const showLabel =
         selected ||
-        (node.type === 'ValueCluster' && scale > 0.35) ||
+        (node.type === 'ValueCluster' && scale > 2.2) || // higher-level names live deeper, never on the instant view (raw/0034)
         (node.type === 'Person' &&
           ((scale > 0.95 && labelElect.has(String(node.id))) || scale > 1.35)) ||
-        (node.type === 'Interest' && scale > 1.4) ||
+        (node.type === 'Interest' && (interestDegree.get(String(node.id)) ?? 0) >= 2) || // shared interests ARE the instant layer
         (node.type !== 'Person' && node.type !== 'ValueCluster' && node.type !== 'Interest' && scale > 1.7);
       if ((showLabel || matched) && node.label && node.type === 'ValueCluster') {
         // the stamp: small-caps mono in a thin rounded outline, gently tilted

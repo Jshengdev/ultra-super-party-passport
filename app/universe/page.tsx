@@ -122,55 +122,20 @@ export default function UniversePage() {
             zIndex: 30, width: 'min(360px, 86vw)', display: 'flex', flexDirection: 'column', gap: 6,
           }}
         >
-          {/* the wave-match box (raw/0030): letters wave in gradient when a match exists */}
-          <div style={{ position: 'relative', width: '100%' }}>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="what’s your name?"
-              aria-label="search your name"
-              style={{
-                width: '100%', padding: '13px 20px', borderRadius: 999,
-                border: '1.5px solid var(--usp-ink, #2a2a28)', background: 'var(--usp-card, #fff)',
-                fontSize: 16, textAlign: 'center', outline: 'none', fontFamily: 'inherit',
-                boxShadow: '0 12px 36px rgba(42,42,40,0.15)', fontWeight: 500,
-                letterSpacing: '0.01em',
-                color: query && searchMatches.length > 0 ? 'transparent' : 'var(--usp-ink, #2a2a28)',
-                caretColor: 'var(--usp-ink, #2a2a28)',
-              }}
-            />
-            {query && searchMatches.length > 0 && (
-              <div
-                aria-hidden
-                style={{
-                  position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', pointerEvents: 'none',
-                  fontSize: 16, fontWeight: 500, letterSpacing: '0.01em', fontFamily: 'inherit',
-                }}
-              >
-                {query.split('').map((ch, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      display: 'inline-block',
-                      whiteSpace: 'pre',
-                      animation: `uspWave 1.6s ease-in-out ${i * 0.09}s infinite`,
-                      background:
-                        'linear-gradient(90deg, #e8a8b8, #e8c65c, #7fb2e5, #37618f, #e8a8b8)',
-                      backgroundSize: '300% 100%',
-                      backgroundPosition: `${(i * 22) % 300}% 0`,
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      color: 'transparent',
-                    }}
-                  >
-                    {ch}
-                  </span>
-                ))}
-              </div>
-            )}
-            <style>{`@keyframes uspWave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }`}</style>
-          </div>
+          {/* the box stays plain and readable (raw/0034) — the wave lives ON the graph */}
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="what’s your name?"
+            aria-label="search your name"
+            style={{
+              width: '100%', padding: '13px 20px', borderRadius: 999,
+              border: '1.5px solid var(--usp-ink, #1c1c1a)', background: '#ffffff',
+              fontSize: 16, textAlign: 'center', outline: 'none', fontFamily: 'inherit',
+              boxShadow: '0 12px 36px rgba(42,42,40,0.15)', fontWeight: 500,
+              letterSpacing: '0.01em', color: '#1c1c1a',
+            }}
+          />
           {searchMatches.map((m) => (
             <button
               key={m.id}
