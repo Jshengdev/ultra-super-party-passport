@@ -59,6 +59,8 @@ interface Props {
   payload: GraphPayload;
   selectedId: string | null;
   onSelect: (node: GraphNode | null) => void;
+  /** search matches: their labels render as a slow gradient wave (raw/0030) */
+  matchedIds?: Set<string>;
 }
 
 // SHARES_VALUE never appears here: those edges are filtered out of the sim
@@ -83,7 +85,7 @@ const LINK_DISTANCE: Partial<Record<LinkType, number>> = {
 const IN_CLUSTER_STRENGTH = 0.15;
 const CHARGE_STRENGTH = -28;
 
-export default function UniverseGraph({ payload, selectedId, onSelect }: Props) {
+export default function UniverseGraph({ payload, selectedId, onSelect, matchedIds }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const fgRef = useRef<ForceGraphMethods<GraphNode, GraphLink> | undefined>(undefined);
   const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
@@ -291,25 +293,49 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
         (node.type === 'ValueCluster' && scale > 0.75) ||
         (node.type === 'Person' && scale > 0.95) ||
         (node.type !== 'Person' && node.type !== 'ValueCluster' && scale > 1.7);
-      if (showLabel && node.label) {
+      const matched = matchedIds?.has(String(node.id)) ?? false;
+      if ((showLabel || matched) && node.label) {
         const fontPx = (node.type === 'ValueCluster' ? 12 : node.type === 'Person' ? 10 : 8) / scale;
-        ctx.font = `${node.type === 'ValueCluster' ? 600 : 420} ${fontPx}px ${fontFamily}`;
+        ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 600 : 420} ${fontPx}px ${fontFamily}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const labelY = y + r + 1.5 / scale;
         // halo: a soft canvas-bg stroke keeps ink legible over the colored web
         ctx.lineJoin = 'round';
         ctx.lineWidth = 3 / scale;
-        ctx.strokeStyle = withAlpha(palette.canvasBg, selected ? 0.9 : 0.7);
-        ctx.strokeText(node.label, x, labelY);
-        ctx.fillStyle =
-          node.type === 'Person' || node.type === 'ValueCluster'
-            ? palette.ink
-            : palette.affinityInk;
-        ctx.fillText(node.label, x, labelY);
+        ctx.strokeStyle = withAlpha(palette.canvasBg, selected || matched ? 0.9 : 0.7);
+        if (matched) {
+          // the match signal (raw/0030): each letter rides a slow wave, the spectrum
+          // blended across the whole name. Painted per-letter in graph coords.
+          const t = performance.now();
+          const letters = node.label.split('');
+          const widths = letters.map((ch) => ctx.measureText(ch).width);
+          const total = widths.reduce((a, b) => a + b, 0);
+          const grad = ctx.createLinearGradient(x - total / 2, 0, x + total / 2, 0);
+          const spec = palette.spectrum;
+          const stops = [spec[0], spec[3], spec[4], spec[5] ?? spec[0]].filter(Boolean);
+          stops.forEach((c, si) => grad.addColorStop(si / Math.max(1, stops.length - 1), c));
+          ctx.textAlign = 'left';
+          let cx0 = x - total / 2;
+          letters.forEach((ch, li) => {
+            const dy = Math.sin(t / 260 + li * 0.6) * (1.6 / scale);
+            ctx.strokeText(ch, cx0, labelY + dy);
+            ctx.fillStyle = grad;
+            ctx.fillText(ch, cx0, labelY + dy);
+            cx0 += widths[li];
+          });
+          ctx.textAlign = 'center';
+        } else {
+          ctx.strokeText(node.label, x, labelY);
+          ctx.fillStyle =
+            node.type === 'Person' || node.type === 'ValueCluster'
+              ? palette.ink
+              : palette.affinityInk;
+          ctx.fillText(node.label, x, labelY);
+        }
       }
     },
-    [selectedId, hueFor, palette, fontFamily],
+    [selectedId, hueFor, palette, fontFamily, matchedIds],
   );
 
   const nodePointerAreaPaint = useCallback(
@@ -366,6 +392,20 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
     (link: FGLink) => (link.type === 'IN_CLUSTER' ? [2, 3] : null),
     [],
   );
+
+  // While matches exist, nudge the renderer every frame so the wave animates even
+  // when the force simulation has cooled (paint-only; zero physics reheat).
+  useEffect(() => {
+    if (!matchedIds || matchedIds.size === 0) return;
+    let raf = 0;
+    const tick = () => {
+      const fg = fgRef.current as unknown as { refresh?: () => void } | undefined;
+      fg?.refresh?.();
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [matchedIds]);
 
   const handleNodeClick = useCallback(
     (node: FGNode) => onSelect(node as GraphNode),
