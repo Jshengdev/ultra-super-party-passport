@@ -123,7 +123,7 @@
     linear-gradient(
       calc(115deg + var(--tilt)),
       transparent calc(var(--pointer-x) - 18%),
-      oklch(100% 0 0 / 0.09) var(--pointer-x),
+      oklch(100% 0 0 / 0.15) var(--pointer-x),
       transparent calc(var(--pointer-x) + 18%)
     );
   mix-blend-mode: screen;

@@ -20,6 +20,7 @@ import { fromUspPassport } from '@/passport/document/adapter';
 import { PassportDocument } from '@/passport/document/PassportDocument';
 import { DownloadButton } from '@/passport/document/DownloadButton';
 import Reveal from './Reveal';
+import QRCode from 'qrcode';
 import '@/passport/tokens.css';
 
 const plexSans = IBM_Plex_Sans({ weight: ['400', '500'], subsets: ['latin'], variable: '--np-plex-sans' });
@@ -100,6 +101,10 @@ function Failed({ id, reason }: { id: string; reason: string }) {
 
 export default async function PassportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: rawId } = await params;
+  const qrDataUrl = await QRCode.toDataURL(
+    `https://ultra-super-party-passport.butterbase.dev/passport/${rawId}`,
+    { margin: 1, width: 192, color: { dark: '#2a2a28', light: '#faf9f6' } },
+  );
   const id = decodeURIComponent(rawId);
   // guard against path traversal — only ever read within data/passports/
   const safe = path.basename(id);
@@ -152,6 +157,11 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
           <PassportDocument data={data} gradientStops={gradientStops} sketchId={id} />
         </Reveal>
         <DownloadButton personId={result.data.personId} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginTop: 18 }}>
+          {/* server-baked at export: scan → this passport, living, on your phone */}
+          <img src={qrDataUrl} alt="scan to open this passport on your phone" width={96} height={96} style={{ borderRadius: 8, opacity: 0.9 }} />
+          <span style={{ fontFamily: 'var(--np-plex-mono, monospace)', fontSize: 9, letterSpacing: '0.16em', color: 'var(--usp-muted, #8a8a86)', textTransform: 'uppercase' }}>scan → your passport on your phone</span>
+        </div>
       </div>
     </Shell>
   );

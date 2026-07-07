@@ -30,6 +30,11 @@ export function useFoilTilt(ref: RefObject<HTMLElement | null>) {
     }
 
     const onMove = (e: PointerEvent) => {
+      // the sketch frame opts out of tilt (raw/0035): drawing never fights the card
+      if ((e.target as Element | null)?.closest?.('[data-no-tilt]')) {
+        apply(0.5, 0.5, false)
+        return
+      }
       const r = el.getBoundingClientRect()
       if (!r.width || !r.height) return
       const rawX = (e.clientX - r.left) / r.width
