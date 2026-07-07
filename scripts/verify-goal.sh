@@ -14,7 +14,7 @@ case "$LEG" in
   passport) ls data/passports/*.json >/dev/null 2>&1 || fail passport "no passports generated"
             node --env-file=.env --import tsx scripts/audit-receipts.ts || fail passport "receipts audit failed or missing"
             pass passport "all claims receipted" ;;
-  universe) node --env-file=.env --import tsx scripts/check-universe.ts || fail universe "universe checker failed or missing"
+  universe) CSV_PATH="${CSV_PATH:-data/party.csv}" node --env-file=.env --import tsx scripts/check-universe.ts || fail universe "universe checker failed or missing"
             pass universe "renders all people" ;;
   checkin)  node --env-file=.env --import tsx scripts/check-checkin.ts || fail checkin "checkin checker failed or missing"
             pass checkin "state flip works" ;;
