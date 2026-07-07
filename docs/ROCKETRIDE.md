@@ -218,3 +218,34 @@ Sourced from real `.pipe` files in `rocketride-org/rocketride-workshops`
   "manual", apikey: "${ROCKETRIDE_ANTHROPIC_KEY}" }, name }`. Attached as a control-brain via
   `control: [{ classType: "llm", from: "<agent id>" }]`. Env interpolation uses `${VAR}`.
 - **`response_answers`**: `config: { laneName: "answers", name }`. Input lane `answers`.
+
+## Live deploy probe (2026-07-07, ~13:15 PDT)
+
+**DEPLOYED: YES (resident on cloud), one cloud-side secret short of end-to-end.**
+
+- SDK: `pip install rocketride` (v1.3.0, **fully async** — every call must be awaited).
+- Working sequence (verified live):
+  ```python
+  c = RocketRideClient(uri="https://api.rocketride.ai", auth=ROCKETRIDE_APIKEY)
+  await c.connect()                      # returns account identity (johnny sheng)
+  rec = await c.deploy.add(pipeline=json.load(open("party-passport.pipe")))
+  #   -> DeploymentRecord project_id 00000000-0000-4000-8000-partypassport1, ACTIVATED
+  await c.deploy.list()                  # shows the pipeline resident
+  ```
+- **Invocation contract (verified):** HTTP `POST /task/data` requires a **TASK TOKEN as the
+  Bearer** (the API key is NOT accepted; same error pre/post deploy). The token is minted by
+  `await c.use(name=..., use_existing=True, ...)` over the SDK's WS/DAP session; then
+  `await c.send(token, data, {"name":"job.json"}, "application/json")` runs the job — or plain
+  HTTP with `Authorization: Bearer <task-token>`.
+- **The one blocker to end-to-end:** the pipe's `llm_anthropic` brain resolves
+  `${ROCKETRIDE_ANTHROPIC_KEY}` cloud-side; `use()` errors `Invalid Anthropic API key format`.
+  No Anthropic key exists in any local env. FIXES (either): (a) Johnny sets
+  `ROCKETRIDE_ANTHROPIC_KEY` in RocketRide cloud project settings (dashboard) or hands any
+  Anthropic key → pass via `use(env={...})`; (b) swap the brain node to an OpenAI-compatible
+  provider pointed at the Butterbase gateway — BLOCKED on schema receipts (no llm_openai
+  example exists in the workshops repo; guessing config fields is a demo-time risk).
+- **What pipeline/client.ts needs (do not guess-edit):** callPipeline's Bearer must be a task
+  token, not the API key; token-minting needs the SDK (WS), so either mint a long-TTL token at
+  deploy time and ship it as ROCKETRIDE_TASK_TOKEN env, or keep runInference's gateway
+  fallback as the app path until the cloud key lands. `use(ttl=...)` exists in the SDK
+  signature — untested.
