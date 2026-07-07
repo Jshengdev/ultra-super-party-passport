@@ -184,19 +184,23 @@ export default function UniversePage() {
 
       {(status === 'live' || status === 'demo') && payload && payload.nodes.length > 0 && (
         <div className={styles.legend}>
+          {/* the color key (raw/0036): every dot wears its value-cloud hue — the six
+              clouds live HERE at instant view, not as canvas titles (raw/0034). */}
+          {[...clusterNames.entries()]
+            .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+            .map(([cid, name]) => (
+              <div key={cid} className={styles.legendRow}>
+                <span className={styles.legendSwatch} style={{ background: hueFor(cid) ?? 'var(--usp-spectrum-3)' }} />{' '}
+                {name}
+              </div>
+            ))}
           <div className={styles.legendRow}>
-            <span className={styles.legendSwatch} style={{ background: 'var(--usp-spectrum-3)' }} /> A person
-          </div>
-          <div className={styles.legendRow}>
-            <span className={styles.legendSwatch} style={{ background: 'var(--usp-spectrum-2)', opacity: 0.5 }} /> A value cloud
+            <span className={styles.legendSwatch} style={{ background: 'var(--usp-spectrum-1, #f4c98a)', opacity: 0.9 }} /> Shared interest
           </div>
           <div className={styles.legendRow}>
             <span className={styles.legendSwatch} style={{ background: 'var(--usp-affinity)' }} /> School / work / craft
           </div>
-          <div className={styles.legendRow}>
-            <span className={styles.legendSwatch} style={{ background: 'var(--usp-spectrum-1)', opacity: 0.85 }} /> Shared interest
-          </div>
-          <div className={styles.legendHint}>Click anyone to open them.</div>
+          <div className={styles.legendHint}>A person wears their value cloud's color. Click anyone to open them.</div>
         </div>
       )}
 

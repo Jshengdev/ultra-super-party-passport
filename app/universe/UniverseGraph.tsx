@@ -45,6 +45,7 @@ interface FGProps {
   onRenderFramePre?: (ctx: CanvasRenderingContext2D, scale: number) => void;
   onEngineStop?: () => void;
   cooldownTicks?: number;
+  autoPauseRedraw?: boolean;
   d3VelocityDecay?: number;
   minZoom?: number;
   maxZoom?: number;
@@ -289,26 +290,47 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
       ctx.globalAlpha = dimmed ? 0.12 : 1;
 
       if (node.type === 'Person') {
-        // dial 3: a person is a small ink dot; their cloud speaks only as a soft halo
+        // color IS the relationship mapping (raw/0036): a person wears their
+        // value-cloud hue as a flat, confident fill — no glow, just ink-ringed color.
         const hue = hueFor(node.cluster) ?? palette.personTint;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(palette.ink, selected ? 0.95 : 0.65);
+        ctx.fillStyle = withAlpha(hue, selected ? 1 : 0.88);
         ctx.fill();
-        ctx.lineWidth = selected ? 1.4 : 0.5;
-        ctx.strokeStyle = selected ? palette.ringStrong : withAlpha(hue, 0.5);
+        ctx.lineWidth = selected ? 1.4 : 0.6;
+        ctx.strokeStyle = selected ? palette.ringStrong : withAlpha(palette.ink, 0.35);
         ctx.stroke();
       } else if (node.type === 'ValueCluster') {
         const hue = hueFor(node.cluster) ?? palette.personTint;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(hue, 0.55);
+        ctx.fillStyle = withAlpha(hue, 0.8);
+        ctx.fill();
+        ctx.lineWidth = 0.6;
+        ctx.strokeStyle = withAlpha(palette.ink, 0.3);
+        ctx.stroke();
+      } else if (node.type === 'Interest') {
+        // shared ground: warm amber embers
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = withAlpha(palette.spectrum[1] ?? '#f4c98a', 0.85);
         ctx.fill();
         ctx.lineWidth = 0.5;
-        ctx.strokeStyle = palette.ring;
+        ctx.strokeStyle = withAlpha(palette.ink, 0.25);
+        ctx.stroke();
+      } else {
+        // affinity hubs (school / work / craft): quiet neutral anchors
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = withAlpha(palette.affinity, 0.9);
+        ctx.fill();
+        ctx.lineWidth = 0.4;
+        ctx.strokeStyle = withAlpha(palette.affinityInk, 0.4);
         ctx.stroke();
       }
-      const matched = matchedIds?.has(String(node.id)) ?? false;
+      const matched =
+        (matchedIds?.has(String(node.id)) ?? false) ||
+        (selected && node.type === 'Person'); // the demo moment: the chosen name keeps waving
       const shortLabel =
         node.type === 'Interest' && node.label
           ? node.label.split(/\s+/).slice(0, 3).join(' ')
@@ -445,19 +467,9 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
     [],
   );
 
-  // While matches exist, nudge the renderer every frame so the wave animates even
-  // when the force simulation has cooled (paint-only; zero physics reheat).
-  useEffect(() => {
-    if (!matchedIds || matchedIds.size === 0) return;
-    let raf = 0;
-    const tick = () => {
-      const fg = fgRef.current as unknown as { refresh?: () => void } | undefined;
-      fg?.refresh?.();
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [matchedIds]);
+  // The wave animates unconditionally: autoPauseRedraw={false} keeps the canvas
+  // repainting after the sim cools, so time-based label paint never freezes.
+  // (react-force-graph's ref has no refresh(); the prior rAF loop no-op'd.)
 
   const handleNodeClick = useCallback(
     (node: FGNode) => onSelect(node as GraphNode),
@@ -489,6 +501,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           onBackgroundClick={handleBgClick}
           onRenderFramePre={onRenderFramePre}
           onEngineStop={onEngineStop}
+          autoPauseRedraw={false}
           d3VelocityDecay={0.32}
           minZoom={0.4}
           maxZoom={12}
