@@ -235,8 +235,24 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
     );
   }, [payload]);
 
-  const radiusOf = (n: FGNode): number =>
-    n.type === 'ValueCluster' ? 4.5 : n.type === 'Person' ? 5 : n.type === 'Interest' ? 3 : 3.5;
+  const hubDegree = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const l of payload.links) {
+      const a = String(typeof l.source === 'object' ? (l.source as GraphNode).id : l.source);
+      const b = String(typeof l.target === 'object' ? (l.target as GraphNode).id : l.target);
+      m.set(a, (m.get(a) ?? 0) + 1);
+      m.set(b, (m.get(b) ?? 0) + 1);
+    }
+    return m;
+  }, [payload]);
+
+  // dots sized by how many people they hold (raw: "match the size of the number in them")
+  const radiusOf = (n: FGNode): number => {
+    if (n.type === 'Person') return 5;
+    const d = hubDegree.get(String(n.id)) ?? 1;
+    const base = n.type === 'ValueCluster' ? 5 : n.type === 'Interest' ? 2.6 : 2.8;
+    return Math.min(base + Math.sqrt(d) * 1.15, 16);
+  };
 
   // ---- value-cloud halos (drawn behind everything, in graph coords) ----
   const onRenderFramePre = useCallback(
@@ -364,6 +380,19 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
         ctx.fillStyle = withAlpha(palette.ink, 0.8);
         ctx.fillText(text, 0, padY);
         ctx.restore();
+      // the count inside sizable hubs — the number the size speaks for
+      if (node.type !== 'Person') {
+        const d = hubDegree.get(String(node.id)) ?? 0;
+        const r = radiusOf(node);
+        if (d >= 4 && r >= 6.5) {
+          ctx.font = `600 ${Math.max(r * 0.9, 5) / 1}px ${fontFamily}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = withAlpha(palette.ink, 0.75);
+          ctx.fillText(String(d), x, y);
+        }
+      }
+
       } else if ((showLabel || matched) && node.label) {
         const fontPx = (node.type === 'Person' ? 10 : 8) / scale;
         ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 600 : 420} ${fontPx}px ${fontFamily}`;
