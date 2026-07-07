@@ -24,7 +24,7 @@ import {
 } from '@/app/universe/lib/graph';
 
 export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static'; // export build bakes the live graph snapshot; dev refetches per request
 
 const NODE_TYPES: NodeType[] = ['Person', 'School', 'Major', 'Company', 'Activity', 'ValueCluster'];
 const AFFINITY_REL_TYPES: LinkType[] = ['STUDIES_AT', 'MAJORS_IN', 'WORKS_AT', 'DOES', 'WORKING_ON', 'SHARES_VALUE'];
@@ -184,11 +184,10 @@ function json(body: unknown, status: number): Response {
   return Response.json(body, { status, headers: { 'cache-control': 'no-store' } });
 }
 
-export async function GET(request: Request): Promise<Response> {
-  const demo = new URL(request.url).searchParams.get('demo');
-
-  // ?demo=1 always serves the fixture (buildability before creds; explicit opt-in).
-  if (demo === '1' || demo === 'true') {
+// No request param: static-exportable (query strings don't exist in a static world).
+// Demo fixture = explicit env opt-in (GRAPH_DEMO=1) — never a silent fallback when creds exist.
+export async function GET(): Promise<Response> {
+  if (process.env.GRAPH_DEMO === '1') {
     return json(demoPayload(), 200);
   }
 

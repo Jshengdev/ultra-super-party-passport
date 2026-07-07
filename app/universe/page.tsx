@@ -35,7 +35,7 @@ export default function UniversePage() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch('/api/graph', { cache: 'no-store' });
+        const res = await fetch(process.env.NEXT_PUBLIC_GRAPH_API || '/api/graph', { cache: 'no-store' });
         if (res.status === 200) {
           const data = (await res.json()) as GraphPayload;
           if (cancelled) return;
@@ -44,7 +44,7 @@ export default function UniversePage() {
           return;
         }
         if (res.status === 503) {
-          const demoRes = await fetch('/api/graph?demo=1', { cache: 'no-store' });
+          const demoRes = await fetch('/api/graph', { cache: 'no-store' });
           const demo = (await demoRes.json()) as GraphPayload;
           if (cancelled) return;
           setPayload(demo);

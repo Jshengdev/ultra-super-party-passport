@@ -111,6 +111,6 @@ is what the app hits. `STATUS: pipe authored; deploy pending — check-ship gate
 
 ## Repository
 
-- Code: `<REPO_URL>` &nbsp;`STATUS: placeholder — fill with the public GitHub URL before submit.`
-- Live demo: `<LIVE_URL>` &nbsp;`STATUS: placeholder — the deployed Butterbase URL.`
+- Code: `https://github.com/Jshengdev/ultra-super-party-passport` &nbsp;`STATUS: placeholder — fill with the public GitHub URL before submit.`
+- Live demo: `https://ultra-super-party-passport.butterbase.dev` &nbsp;`STATUS: placeholder — the deployed Butterbase URL.`
 - Demo video / script: `docs/DEMO-SCRIPT.md`

@@ -16,7 +16,17 @@ import { passportSchema } from '@/passport/schema';
 import PassportCard from '@/passport/template';
 import '@/passport/tokens.css';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
+
+export async function generateStaticParams() {
+  try {
+    const dir = path.join(process.cwd(), 'data', 'passports');
+    const files = await fs.readdir(dir);
+    return files.filter((f) => f.endsWith('.json')).map((f) => ({ id: f.replace(/\.json$/, '') }));
+  } catch {
+    return [];
+  }
+}
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
