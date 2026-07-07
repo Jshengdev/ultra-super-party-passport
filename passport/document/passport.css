@@ -1,0 +1,306 @@
+.passport-root {
+  position: relative;
+  width: min(617px, 100%);
+  container-type: inline-size;
+  perspective: 1600px;
+  animation: passport-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* server / pre-mount closed cover, sized to one page so there is no layout
+   shift when the client mounts and the real document + flip take over */
+.passport-closed {
+  aspect-ratio: 617 / 774;
+  animation: none;
+}
+.passport-cover-static {
+  position: absolute;
+  inset: 0;
+  background: var(--cover);
+  border-radius: calc(var(--radius-page) * (100cqw / 617));
+  box-shadow:
+    inset 0 0 0 1.5px oklch(100% 0 0 / 0.08),
+    0 var(--space-xs) var(--space-lg) oklch(from var(--cover) l c h / 0.45);
+}
+
+/* 3d hover tilt, driven by --tilt-x/--tilt-y from useFoilTilt */
+.passport-3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg));
+  transition: transform 0.18s ease-out;
+}
+
+/* the top page is revealed as the cover flips down; the bottom half stays
+   clipped until the cover (carrying the bottom page on its back) lands */
+.passport-reveal {
+  position: relative;
+  animation:
+    doc-reveal 0.35s ease-out 1.7s both,
+    doc-unclip 0.25s ease-out 2.45s both;
+}
+
+@keyframes doc-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes doc-unclip {
+  from {
+    clip-path: inset(0 0 50% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* closed booklet on the top half: starts vertical, turns horizontal, then the
+   cover flips DOWN around the perforation hinge; its back face is the bottom
+   page, so the top page is revealed as it swings over */
+.passport-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 50%;
+  z-index: 3;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  animation:
+    cover-turn 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both,
+    cover-settle 0.3s ease-out 2.55s both;
+}
+
+.cover-flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: bottom center;
+  animation: cover-flip 0.9s cubic-bezier(0.6, 0, 0.3, 1) 1.65s both;
+}
+
+.cover-face,
+.cover-page {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--radius-page) * (100cqw / 617));
+  backface-visibility: hidden;
+}
+
+.cover-face {
+  background: var(--cover);
+  box-shadow:
+    inset 0 0 0 1.5px oklch(100% 0 0 / 0.08),
+    0 var(--space-xs) var(--space-lg) oklch(from var(--cover) l c h / 0.45);
+}
+
+/* back of the cover, carrying the real bottom page as it flips down */
+.cover-page {
+  background: var(--paper);
+  transform: rotateX(180deg);
+  overflow: hidden;
+}
+
+.cover-page .passport-doc {
+  width: 100%;
+  height: 100%;
+  filter: none;
+}
+
+@keyframes cover-turn {
+  0%,
+  22% {
+    transform: translateY(50%) rotate(90deg) scale(0.98);
+  }
+  78%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes cover-flip {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+
+@keyframes cover-settle {
+  to {
+    opacity: 0;
+  }
+}
+
+.passport-doc {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 var(--space-2xs) var(--space-md) oklch(from var(--paper-shadow) l c h / 0.55));
+}
+
+/* entry screen: name prompt above the closed vertical booklet.
+   The closed cover is exactly one page half (617x387) held vertically,
+   with the same 20px corners as the pages. */
+.entry-name-input {
+  width: min(387px, 80vw);
+  border: 1px solid var(--paper-shadow);
+  border-radius: var(--radius-page);
+  background: oklch(100% 0 0 / 0.85);
+  color: var(--ink);
+  font-family: var(--font-document);
+  font-size: var(--space-md);
+  text-align: center;
+  padding: var(--space-sm) var(--space-md);
+}
+
+.entry-name-input:focus-visible {
+  outline: 2px solid var(--ink-accent);
+  outline-offset: 2px;
+}
+
+.entry-cover {
+  width: min(387px, 80vw);
+  aspect-ratio: 387 / 617;
+  background: var(--cover);
+  border: none;
+  border-radius: var(--radius-page);
+  box-shadow:
+    inset 0 0 0 1.5px oklch(100% 0 0 / 0.08),
+    0 var(--space-xs) var(--space-lg) oklch(from var(--cover) l c h / 0.45);
+  cursor: pointer;
+}
+
+.entry-cover:focus-visible {
+  outline: 2px solid var(--ink-accent);
+  outline-offset: 3px;
+}
+
+.page-paper {
+  fill: var(--paper);
+}
+
+.bg-text {
+  opacity: 0.032;
+  pointer-events: none;
+}
+
+.page-grain {
+  mix-blend-mode: multiply;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.doc-label {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 12px;
+  fill: var(--ink);
+}
+
+/* light base under the chroma title overlay, melding into the paper */
+.doc-title {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 12px;
+  fill: var(--ink-ghost);
+}
+
+.id-label {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 8px;
+  fill: var(--ink-label);
+}
+
+.id-value {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.qa-answer {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 16px;
+  fill: var(--ink);
+}
+
+/* load sequence: document fades up, then artifacts land with a stamp thunk */
+@keyframes passport-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-md));
+  }
+}
+
+@keyframes stamp-thunk {
+  0% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.96);
+  }
+  78% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stamp-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: stamp-thunk 0.42s cubic-bezier(0.3, 0.9, 0.4, 1) both;
+  animation-delay: calc(2.4s + var(--stagger, 0) * 0.24s);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* hover: stamps lift a couple of degrees toward level */
+.stamp-artifact:hover .stamp-pop {
+  transform: rotate(var(--lift, 0deg));
+}
+
+/* nametag peels slightly instead */
+.stamp-artifact[data-kind='nametag']:hover .stamp-pop {
+  transform: skewX(-1.5deg) translateY(calc(-1 * var(--space-2xs)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .passport-root {
+    animation: passport-plain-fade 0.4s ease-out both;
+  }
+  .passport-cover {
+    display: none;
+  }
+  .passport-reveal {
+    animation: none;
+  }
+  .passport-3d {
+    transform: none;
+    transition: none;
+  }
+  .stamp-pop {
+    animation: passport-plain-fade 0.4s ease-out both;
+    transition: none;
+  }
+  .stamp-artifact:hover .stamp-pop,
+  .stamp-artifact[data-kind='nametag']:hover .stamp-pop {
+    transform: none;
+  }
+}
+
+@keyframes passport-plain-fade {
+  from {
+    opacity: 0;
+  }
+}

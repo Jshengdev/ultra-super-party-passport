@@ -1,0 +1,130 @@
+/* Chromatic foil layers. Position values are percentages of the page box,
+   computed from Figma page coordinates; color comes from the holo tokens. */
+
+.foil-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: calc(var(--radius-page) * (100cqw / 617));
+  overflow: hidden;
+}
+
+.foil-surface {
+  position: absolute;
+  background: conic-gradient(
+    from calc(var(--tilt) + 210deg) at var(--pointer-x) var(--pointer-y),
+    var(--holo-1),
+    var(--holo-2),
+    var(--holo-3),
+    var(--holo-4),
+    var(--holo-5),
+    var(--holo-3),
+    var(--holo-1)
+  );
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mix-blend-mode: color-dodge;
+  opacity: 0.26;
+}
+
+.foil-seal {
+  aspect-ratio: 1;
+  mix-blend-mode: overlay;
+  opacity: 0.85;
+}
+
+/* faint holo kiss over stamp edges, so foil interacts with the ink texture;
+   fades in with the stamp stagger so no glow precedes its stamp */
+.foil-kiss {
+  position: absolute;
+  background: radial-gradient(
+    closest-side at var(--pointer-x) var(--pointer-y),
+    var(--holo-2),
+    var(--holo-4) 45%,
+    transparent 78%
+  );
+  mix-blend-mode: color-dodge;
+  animation: kiss-reveal 0.4s ease-out 2.5s both;
+}
+
+@keyframes kiss-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.14;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foil-kiss {
+    animation: none;
+    opacity: 0.14;
+  }
+}
+
+/* moving gradient fill on the mrz text via a duplicate clipped layer */
+.foil-mrz {
+  position: absolute;
+  left: calc(263 / 617 * 100%);
+  top: calc(723 / 774 * 100%);
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: calc(14 / 617 * 100cqw);
+  line-height: 1;
+  white-space: nowrap;
+  color: transparent;
+  background: linear-gradient(
+    calc(90deg + var(--tilt)),
+    var(--holo-1) calc(var(--pointer-x) - 30%),
+    var(--holo-3) var(--pointer-x),
+    var(--holo-5) calc(var(--pointer-x) + 30%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+/* same chroma treatment on the document title, right-aligned like the base text */
+.foil-title {
+  position: absolute;
+  right: calc((617 - 603) / 617 * 100%);
+  top: calc(399 / 774 * 100%);
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: calc(12 / 617 * 100cqw);
+  line-height: 1;
+  white-space: nowrap;
+  color: transparent;
+  background: linear-gradient(
+    calc(90deg + var(--tilt)),
+    var(--holo-1) calc(var(--pointer-x) - 30%),
+    var(--holo-3) var(--pointer-x),
+    var(--holo-5) calc(var(--pointer-x) + 30%)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+/* full-page lamination sheen translating with the pointer */
+.foil-lamination {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 90% at var(--pointer-x) var(--pointer-y),
+      oklch(100% 0 0 / 0.13),
+      oklch(100% 0 0 / 0.05) 35%,
+      transparent 70%
+    ),
+    linear-gradient(
+      calc(115deg + var(--tilt)),
+      transparent calc(var(--pointer-x) - 18%),
+      oklch(100% 0 0 / 0.09) var(--pointer-x),
+      transparent calc(var(--pointer-x) + 18%)
+    );
+  mix-blend-mode: screen;
+}

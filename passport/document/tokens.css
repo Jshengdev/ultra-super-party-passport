@@ -1,0 +1,68 @@
+/*
+  Design tokens. Single source for color, type, spacing, radius, and motion.
+  Base values come from the Figma file (PtbSlTGnuZHrZAYg0GywuE, node 32:3);
+  the coloring direction is "blue holo" (Flighty passport reference): neutrals
+  cool-tinted toward the sticker-blue hue (~272), iridescence lives only in
+  foil surfaces.
+
+  Figma source values, for traceability:
+    paper #d9d9d9, perforation dash #e9e9e9, ink black / #2a2a2a,
+    sticker blue #4d4dff, canvas white.
+*/
+:root {
+  /* paper, periwinkle-lavender per the Flighty reference, dialed back a step */
+  --paper: oklch(86.5% 0.035 285);
+  --paper-shadow: oklch(75% 0.05 285);
+  --paper-edge: oklch(92.5% 0.022 285);
+  --canvas: oklch(96.5% 0.012 285);
+
+  /* closed passport cover, dark navy from the Wireframe-6 reference */
+  --cover: oklch(25% 0.09 275);
+
+  /* ink */
+  --ink: oklch(24% 0.055 285);
+  --ink-stamp: oklch(33% 0.04 285);
+  --ink-accent: oklch(52.7% 0.263 272.3); /* Figma sticker blue #4d4dff */
+  --ink-faint: oklch(24% 0.055 285 / 0.55);
+  --ink-ghost: color-mix(in oklch, var(--paper) 60%, var(--ink)); /* base text under chroma overlays */
+  --ink-label: oklch(52% 0.11 275); /* passport-blue field labels, purple lean */
+
+  /* holo spectrum sampled from the Flighty reference:
+     mint -> ice cyan -> periwinkle -> violet -> soft pink */
+  --holo-1: oklch(85% 0.11 165);
+  --holo-2: oklch(86% 0.09 215);
+  --holo-3: oklch(72% 0.13 275);
+  --holo-4: oklch(65% 0.16 300);
+  --holo-5: oklch(80% 0.12 340);
+
+  /* type, faces fixed by the Figma text nodes; loaded via next/font in
+     app/passport/[id]/page.tsx, which sets the --np-* variables */
+  --font-document: var(--np-plex-sans, 'IBM Plex Sans'), sans-serif;
+  --font-typewriter: var(--np-plex-mono, 'IBM Plex Mono'), monospace;
+  --font-official: var(--np-garamond, 'EB Garamond'), serif;
+
+  /* spacing scale, 4pt */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 20px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* radius, zero default; page and sticker radii from Figma */
+  --radius: 0px;
+  --radius-page: 20px;
+  --radius-sticker: 12px;
+
+  /* stamp rotation range for scatter placement */
+  --stamp-rotation-min: -6deg;
+  --stamp-rotation-max: 6deg;
+
+  /* foil runtime vars, written by useFoilTilt; defaults for reduced motion */
+  --pointer-x: 50%;
+  --pointer-y: 35%;
+  --tilt: 0deg;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+}
