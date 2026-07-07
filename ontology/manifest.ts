@@ -39,6 +39,7 @@ export const OBJECT_SCHEMAS = {
     basis: z.string().min(1),
   }),
   Party: z.object({ id: z.string().min(1), name: z.string().min(1), date: z.string().min(1) }),
+  Interest: z.object({ name: z.string().min(1) }), // canonical lowercase 1-3 word semantic tag
 } as const;
 
 export type ObjectLabel = keyof typeof OBJECT_SCHEMAS;
@@ -63,6 +64,7 @@ export const LINKS: readonly LinkPattern[] = [
   { from: "Belief", rel: "IN_CLUSTER", to: "ValueCluster" },
   { from: "Person", rel: "SHARES_VALUE", to: "Person", props: ["cluster", "basis"] },
   { from: "Person", rel: "SIGNED_UP", to: "Party", props: ["checked_in", "checked_in_at"] },
+  { from: "Person", rel: "INTERESTED_IN", to: "Interest" },
 ] as const;
 
 export const REL_TYPES = Array.from(new Set(LINKS.map((l) => l.rel)));
@@ -185,6 +187,23 @@ SET sv.basis = $cluster.basis, sv._src = $_src, sv._ts = $_ts, sv._actor = $_act
 RETURN [$cluster.id] AS writtenIds
 `.trim();
 
+/* ---- write_interests: the semantic layer — one-liner analysis distilled to shared tags ---- */
+export const WriteInterestsParams = z.object({
+  personId: z.string().min(1),
+  interests: z.array(z.string().min(1).max(40)).min(1).max(4),
+});
+export type WriteInterestsParams = z.infer<typeof WriteInterestsParams>;
+
+const WRITE_INTERESTS_CYPHER = `
+MATCH (p:Person {id: $personId})
+UNWIND $interests AS tag
+MERGE (i:Interest {name: tag})
+SET i._src = $_src, i._ts = $_ts, i._actor = $_actor
+MERGE (p)-[r:INTERESTED_IN]->(i)
+SET r._src = $_src, r._ts = $_ts, r._actor = $_actor
+RETURN collect(DISTINCT i.name) AS writtenIds
+`.trim();
+
 /* ---- check_in: the kinetic layer — flip a SIGNED_UP edge's checked_in state ---- */
 export const CheckInParams = z.object({
   personId: z.string().min(1),
@@ -229,6 +248,15 @@ export const ACTIONS = {
     ],
     cypher: WRITE_VALUE_CLUSTER_CYPHER,
     defaultSrc: "action:write_value_cluster",
+    defaultActor: "pipeline",
+  },
+  write_interests: {
+    name: "write_interests",
+    params: WriteInterestsParams,
+    writesLabels: ["Person", "Interest"],
+    writesPatterns: [["Person", "INTERESTED_IN", "Interest"]],
+    cypher: WRITE_INTERESTS_CYPHER,
+    defaultSrc: "semantic:one-liner",
     defaultActor: "pipeline",
   },
   check_in: {

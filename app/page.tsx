@@ -308,33 +308,17 @@ export default function AnalyzePage() {
             <motion.div
               key="drop"
               exit={{ opacity: 0, y: -10 }}
-              className="w-full flex flex-col items-center gap-6"
+              className="w-full flex flex-col items-center gap-7"
             >
-              <motion.p
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="font-mono text-[11px] tracking-[0.2em] text-stone"
-              >
-                THE ULTRA SUPER SOCIAL PASSPORT
-              </motion.p>
-              <motion.h1
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-center text-[30px] leading-tight font-medium"
-              >
-                Every event is curated.
-                <br />
-                See how this one is curated toward you.
-              </motion.h1>
+              {/* the pill IS the door — reference: the Dia card page (raw screenshot, 3:24pm) */}
               <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.25 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
                 onClick={() => fileRef.current?.click()}
-                className="rounded-full bg-charcoal px-8 py-4 text-[15.5px] text-cloud hover:opacity-90 transition-opacity cursor-pointer"
+                className="w-[min(420px,86vw)] rounded-full border border-mist bg-white px-8 py-4 text-center text-[16.5px] font-medium hover:border-charcoal transition-colors cursor-pointer shadow-[0_10px_36px_rgba(42,42,40,0.08)]"
               >
-                Drop the guest list
+                drop the guest list
               </motion.button>
               <input
                 ref={fileRef}
@@ -343,9 +327,52 @@ export default function AnalyzePage() {
                 className="hidden"
                 onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
               />
-              <p className="text-[12.5px] text-stone">
-                a Luma export, a spreadsheet — any guest CSV
-              </p>
+
+              {/* the card: soft grey field, vivid stepped bands blooming from the bottom */}
+              <motion.div
+                initial={{ opacity: 0, y: 26, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+                onClick={() => fileRef.current?.click()}
+                className="relative w-[min(420px,86vw)] cursor-pointer overflow-hidden rounded-[26px] shadow-[0_30px_80px_rgba(42,42,40,0.16)]"
+                style={{ aspectRatio: "3 / 4.35", background: "#ececea" }}
+                role="img"
+                aria-label="the passport cover — drop a guest list to begin"
+              >
+                <p className="absolute top-5 left-0 right-0 z-10 text-center font-mono text-[10.5px] tracking-[0.22em] text-charcoal/60">
+                  THE ULTRA SUPER SOCIAL PASSPORT
+                </p>
+                {/* stepped bloom: three columns, center swell — saturated, lightly blurred so the bands keep their step */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-[78%]"
+                  style={{
+                    background: `
+                      radial-gradient(46% 34% at 50% 30%, #e935d1 0%, rgba(233,53,209,0) 72%),
+                      radial-gradient(42% 26% at 18% 42%, #e935d1 0%, rgba(233,53,209,0) 70%),
+                      radial-gradient(42% 26% at 82% 42%, #e935d1 0%, rgba(233,53,209,0) 70%),
+                      radial-gradient(52% 30% at 50% 48%, #f4442e 0%, rgba(244,68,46,0) 74%),
+                      radial-gradient(48% 26% at 16% 58%, #f5c944 0%, rgba(245,201,68,0) 72%),
+                      radial-gradient(48% 26% at 84% 58%, #f5c944 0%, rgba(245,201,68,0) 72%),
+                      radial-gradient(56% 30% at 50% 62%, #f5c944 0%, rgba(245,201,68,0) 74%),
+                      radial-gradient(70% 34% at 50% 78%, #7fb2e5 0%, rgba(127,178,229,0) 78%),
+                      linear-gradient(to bottom, rgba(29,78,216,0) 58%, #1d4ed8 86%, #1e2b8f 100%)
+                    `,
+                    filter: "blur(13px) saturate(1.22)",
+                    transform: "scale(1.06)",
+                  }}
+                />
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35 }}
+                className="text-center text-[13px] leading-relaxed text-stone"
+              >
+                Every event is curated. See how this one is curated toward you.
+                <br />
+                <span className="text-[11.5px] opacity-80">a Luma export, a spreadsheet — any guest CSV</span>
+              </motion.p>
             </motion.div>
           ) : (
             <motion.div

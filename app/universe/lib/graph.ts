@@ -20,10 +20,14 @@ export type NodeType =
   | 'Major'
   | 'Company'
   | 'Activity'
-  | 'ValueCluster';
+  | 'ValueCluster'
+  | 'Interest';
 
 /** The affinity node types (everything that is not a Person or a ValueCluster). */
 export const AFFINITY_TYPES: NodeType[] = ['School', 'Major', 'Company', 'Activity'];
+
+/** The semantic layer: interests distilled from what each guest SAID. */
+export const SEMANTIC_TYPES: NodeType[] = ['Interest'];
 
 /** Link types rendered in the Universe (subset of the manifest allowlist that lives between rendered nodes). */
 export type LinkType =
@@ -33,7 +37,8 @@ export type LinkType =
   | 'DOES'
   | 'WORKING_ON'
   | 'SHARES_VALUE'
-  | 'IN_CLUSTER';
+  | 'IN_CLUSTER'
+  | 'INTERESTED_IN';
 
 /** The relationship types we read straight out of the graph (Person -> node). */
 export const AFFINITY_RELS: LinkType[] = [

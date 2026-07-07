@@ -70,6 +70,7 @@ const REL_LINK_WIDTH: Partial<Record<LinkType, number>> = {
 // Force-layout tuning (raw/0026: organic attribute-mesh, not isolated pods).
 // Attribute-hub spokes stay short (the fine web); IN_CLUSTER ties are longer
 // and weak so value clouds read as tendencies, not silos.
+// INTERESTED_IN gets a mid-length so shared interests BRIDGE clusters
 const LINK_DISTANCE: Partial<Record<LinkType, number>> = {
   STUDIES_AT: 28,
   MAJORS_IN: 28,
@@ -77,6 +78,7 @@ const LINK_DISTANCE: Partial<Record<LinkType, number>> = {
   DOES: 32,
   WORKING_ON: 34,
   IN_CLUSTER: 40,
+  INTERESTED_IN: 36,
 };
 const IN_CLUSTER_STRENGTH = 0.15;
 const CHARGE_STRENGTH = -28;
@@ -189,7 +191,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
   }, [graphData]);
 
   const radiusOf = (n: FGNode): number =>
-    n.type === 'ValueCluster' ? 4.5 : n.type === 'Person' ? 5 : 3.5;
+    n.type === 'ValueCluster' ? 4.5 : n.type === 'Person' ? 5 : n.type === 'Interest' ? 3 : 3.5;
 
   // ---- value-cloud halos (drawn behind everything, in graph coords) ----
   const onRenderFramePre = useCallback(
@@ -260,6 +262,15 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = selected ? 1.4 : 0.5;
+        ctx.strokeStyle = selected ? palette.ringStrong : palette.ring;
+        ctx.stroke();
+      } else if (node.type === 'Interest') {
+        // semantic tag: a small warm ember — what they SAID, not what they are
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = withAlpha(palette.spectrum[1] ?? palette.affinity, 0.85);
+        ctx.fill();
+        ctx.lineWidth = selected ? 1.2 : 0.4;
         ctx.strokeStyle = selected ? palette.ringStrong : palette.ring;
         ctx.stroke();
       } else {
@@ -335,6 +346,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
         case 'WORKS_AT':    return withAlpha(spec[6] ?? spec[2] ?? palette.linkFaint, alpha);
         case 'DOES':        return withAlpha(spec[4] ?? palette.linkFaint, alpha);
         case 'WORKING_ON':  return withAlpha(spec[5] ?? spec[4] ?? palette.linkFaint, alpha);
+        case 'INTERESTED_IN': return withAlpha(spec[1] ?? palette.linkFaint, alpha);
         case 'IN_CLUSTER': {
           const src = link.source as FGNode | string;
           const cluster = typeof src === 'object' ? src.cluster : undefined;

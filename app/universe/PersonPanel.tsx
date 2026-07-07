@@ -166,6 +166,7 @@ export default function PersonPanel({ node, adjacency, hueFor, clusterName, onSe
     const major = labels(neighbors, 'MAJORS_IN');
     const company = labels(neighbors, 'WORKS_AT');
     const clusters = neighborsByRel(neighbors, 'IN_CLUSTER', 'out').map((n) => n.node);
+    const interests = labels(neighbors, 'INTERESTED_IN');
     const peers = neighborsByRel(neighbors, 'SHARES_VALUE').map((n) => n.node);
     const line2 = node.line2 ?? company[0] ?? school[0] ?? '';
 
@@ -206,6 +207,19 @@ export default function PersonPanel({ node, adjacency, hueFor, clusterName, onSe
               <p className={styles.sectionLabel}>Affinity</p>
               <div className={styles.chips}>
                 {[...company, ...school, ...major].map((t, i) => (
+                  <span key={`${t}-${i}`} className={styles.chip}>
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {interests.length > 0 && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Into</p>
+              <div className={styles.chips}>
+                {interests.map((t, i) => (
                   <span key={`${t}-${i}`} className={styles.chip}>
                     {t}
                   </span>

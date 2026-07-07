@@ -26,8 +26,8 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-static'; // export build bakes the live graph snapshot; dev refetches per request
 
-const NODE_TYPES: NodeType[] = ['Person', 'School', 'Major', 'Company', 'Activity', 'ValueCluster'];
-const AFFINITY_REL_TYPES: LinkType[] = ['STUDIES_AT', 'MAJORS_IN', 'WORKS_AT', 'DOES', 'WORKING_ON', 'SHARES_VALUE'];
+const NODE_TYPES: NodeType[] = ['Person', 'School', 'Major', 'Company', 'Activity', 'ValueCluster', 'Interest'];
+const AFFINITY_REL_TYPES: LinkType[] = ['STUDIES_AT', 'MAJORS_IN', 'WORKS_AT', 'DOES', 'WORKING_ON', 'SHARES_VALUE', 'INTERESTED_IN'];
 
 // --- coercion helpers ------------------------------------------------------
 function asStr(v: unknown): string | undefined {

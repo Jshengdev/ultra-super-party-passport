@@ -186,6 +186,9 @@ export default function UniversePage() {
           <div className={styles.legendRow}>
             <span className={styles.legendSwatch} style={{ background: 'var(--usp-affinity)' }} /> School / work / craft
           </div>
+          <div className={styles.legendRow}>
+            <span className={styles.legendSwatch} style={{ background: 'var(--usp-spectrum-1)', opacity: 0.85 }} /> Shared interest
+          </div>
           <div className={styles.legendHint}>Click anyone to open them.</div>
         </div>
       )}
