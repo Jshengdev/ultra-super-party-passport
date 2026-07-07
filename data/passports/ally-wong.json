@@ -1,0 +1,68 @@
+{
+  "personId": "ally-wong",
+  "name": "Ally Wong",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You would enjoy meeting Advik Sharma, as you both share a passion for interaction design that could spark exciting conversations and ideas.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Ally Wong",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "amadeo",
+      "name": "Amadeo",
+      "why": "You’ll connect deeply with Amadeo, as both of you share a passion for creativity that evokes genuine emotions and meaningful experiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Animation's tiny deliberate choices—a hesitation, a glance—plant themselves deeper than dialogue ever could.",
+      "path_receipt": [
+        {
+          "from": "Ally Wong",
+          "rel": "SHARES_VALUE",
+          "to": "Amadeo"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "NARRATIVE DESIGNER",
+    "company": "",
+    "belief": "Honesty reads as refreshingly radical when everything around you is performing for engagement metrics."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to restore authenticity in communication, valuing transparency as a powerful antidote to superficiality in interactions.",
+  "gradient": {
+    "seed": 1023468819,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(316 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

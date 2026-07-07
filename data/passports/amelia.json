@@ -1,0 +1,68 @@
+{
+  "personId": "amelia",
+  "name": "Amelia",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "eshaan-kothari",
+      "name": "Eshaan Kothari",
+      "why": "You should definitely meet Eshaan Kothari, as both of you share a passion for systems architecture and generative art that could spark inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "systems architect, generative art",
+      "path_receipt": [
+        {
+          "from": "Amelia",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        },
+        {
+          "from": "Eshaan Kothari",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        }
+      ]
+    },
+    {
+      "personId": "byeongjun-moon",
+      "name": "Byeongjun Moon",
+      "why": "You would love to meet Byeongjun Moon, as his innovative approach to creativity aligns perfectly with your passion for connecting unique ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "You translate human emotion into the algorithm's language, then write the code that bridges the gap between them.",
+      "path_receipt": [
+        {
+          "from": "Amelia",
+          "rel": "SHARES_VALUE",
+          "to": "Byeongjun Moon"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Business Administration",
+    "grad_year": "2029",
+    "position": "FEEDBACK LOOP DESIGNER",
+    "company": "",
+    "belief": "Feedback loops that close creation and curation into one continuous act instead of sequential steps."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize creation and consumption, seeking to deepen human connection through real-time emotional engagement with your art.",
+  "gradient": {
+    "seed": 2376682952,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(32 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

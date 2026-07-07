@@ -1,0 +1,68 @@
+{
+  "personId": "anjali",
+  "name": "Anjali",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "amanda",
+      "name": "Amanda",
+      "why": "You would really enjoy meeting Amanda, as you both share a passion for product design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "product designer",
+      "path_receipt": [
+        {
+          "from": "Anjali",
+          "rel": "DOES",
+          "to": "product designer"
+        },
+        {
+          "from": "Amanda",
+          "rel": "DOES",
+          "to": "product designer"
+        }
+      ]
+    },
+    {
+      "personId": "anushka",
+      "name": "anushka",
+      "why": "You would love meeting Anushka because her innovative approach to creativity aligns perfectly with your passion for making real things exist.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "It counts as creation only when the machine succeeds independently. That's when you know you built something real.",
+      "path_receipt": [
+        {
+          "from": "Anjali",
+          "rel": "SHARES_VALUE",
+          "to": "anushka"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "BEHAVIORAL DESIGNER",
+    "company": "",
+    "belief": "Real products solve for the hand holding them and habits of the person using them every day."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform everyday routines into effortless rituals, making well-being an intrinsic part of life.",
+  "gradient": {
+    "seed": 3526015968,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(263 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

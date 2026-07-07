@@ -1,0 +1,68 @@
+{
+  "personId": "anika-mantripragada",
+  "name": "Anika Mantripragada",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You should meet Abriana because her innovative approach as a motion designer perfectly complements your creative style and could spark some exciting collaborations.",
+      "basis_kind": "same_work",
+      "via": "motion designer",
+      "path_receipt": [
+        {
+          "from": "Anika Mantripragada",
+          "rel": "DOES",
+          "to": "motion designer"
+        },
+        {
+          "from": "Abriana",
+          "rel": "DOES",
+          "to": "motion designer"
+        }
+      ]
+    },
+    {
+      "personId": "arvin",
+      "name": "Arvin",
+      "why": "You should meet Arvin because his unique approach to creativity will resonate with your passion for making people feel something genuine.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Arrange existing pieces until the gap between them suddenly holds meaning nobody saw before.",
+      "path_receipt": [
+        {
+          "from": "Anika Mantripragada",
+          "rel": "SHARES_VALUE",
+          "to": "Arvin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "MICRO-EXPRESSION SPECIALIST",
+    "company": "",
+    "belief": "Specificity is the opposite of generic—it's the detail that makes people feel personally witnessed."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate the nuanced emotions that often go unnoticed, fostering deeper connections through authenticity and detail.",
+  "gradient": {
+    "seed": 1990133957,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(272 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

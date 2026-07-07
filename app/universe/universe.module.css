@@ -242,3 +242,96 @@
 .passportBtn:hover { opacity: 0.9; }
 
 .empty { font-size: var(--usp-fs-sm); color: var(--usp-ink-faint); }
+
+/* ---- going-mark + generate footer (additive; raw/0026) ----
+ * .panelBody makes the panel's content a column at least as tall as the panel,
+ * so the footer pins to the bottom even when the person has little content;
+ * position:sticky keeps it in view while the sections above scroll. */
+.panelBody {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.panelFooter {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: auto -24px -32px; /* top:auto pins low; sides/bottom bleed over .panel padding */
+  padding: 16px 24px 20px;
+  background: var(--usp-surface);
+  border-top: 1px solid var(--usp-border);
+}
+
+.goingRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: var(--usp-radius-md);
+  background: var(--usp-surface-2);
+  border: 1px solid var(--usp-border);
+  color: var(--usp-ink);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.goingRow:hover { border-color: var(--usp-ink-faint); }
+
+.goingBox {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  border: 1.5px solid var(--usp-ink-faint);
+  background: var(--usp-surface);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.goingBoxOn {
+  background: var(--usp-ink);
+  border-color: var(--usp-ink);
+}
+.goingCheck { display: block; }
+
+.goingText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+}
+.goingLabel {
+  font-size: var(--usp-fs-sm);
+  font-weight: var(--usp-weight-medium);
+}
+.goingHint {
+  display: block;
+  overflow: hidden;
+  font-size: var(--usp-fs-xs);
+  color: var(--usp-ink-muted);
+}
+
+.generateBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: var(--usp-radius-pill);
+  background: var(--usp-ink);
+  color: var(--usp-bg);
+  font-size: var(--usp-fs-md);
+  font-weight: var(--usp-weight-bold);
+  letter-spacing: var(--usp-tracking-tight);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--usp-shadow-soft);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.generateBtn:hover { opacity: 0.92; transform: translateY(-1px); }
+.generateBtn:active { opacity: 1; transform: translateY(0); }

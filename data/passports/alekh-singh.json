@@ -1,0 +1,68 @@
+{
+  "personId": "alekh-singh",
+  "name": "Alekh singh",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "jai-andersen",
+      "name": "Jai Andersen",
+      "why": "You should meet Jai Andersen because you both share a passion for program curation that could spark some exciting collaborative ideas.",
+      "basis_kind": "same_work",
+      "via": "program curator",
+      "path_receipt": [
+        {
+          "from": "Alekh singh",
+          "rel": "DOES",
+          "to": "program curator"
+        },
+        {
+          "from": "Jai Andersen",
+          "rel": "DOES",
+          "to": "program curator"
+        }
+      ]
+    },
+    {
+      "personId": "alex-wan",
+      "name": "Alex Wan",
+      "why": "You should meet Alex Wan because his innovative ideas about creativity could inspire your own projects and lead to exciting collaborations.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "You clear your own obstacles and watch what others build with the space you freed up.",
+      "path_receipt": [
+        {
+          "from": "Alekh singh",
+          "rel": "SHARES_VALUE",
+          "to": "Alex Wan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Business Administration",
+    "grad_year": "2029",
+    "position": "FRICTION FACILITATOR",
+    "company": "",
+    "belief": "Collision works when you stage unfamiliar minds and let their friction produce insight nobody planned."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep curiosity for the magic that emerges from uncharted connections, believing in the transformative power of unexpected collaboration.",
+  "gradient": {
+    "seed": 1617749744,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(62 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

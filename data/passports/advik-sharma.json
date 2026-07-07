@@ -1,0 +1,68 @@
+{
+  "personId": "advik-sharma",
+  "name": "Advik Sharma",
+  "line2": "NA",
+  "find": [
+    {
+      "personId": "ally-wong",
+      "name": "Ally Wong",
+      "why": "You should meet Ally Wong, as her innovative approach to interaction design could inspire your own projects and spark a great conversation.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Ally Wong",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "alekh-singh",
+      "name": "Alekh singh",
+      "why": "You should meet Alekh Singh, as his creative insights could spark inspiring ideas that resonate with your vision.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Collision works when you stage unfamiliar minds and let their friction produce insight nobody planned.",
+      "path_receipt": [
+        {
+          "from": "Advik Sharma",
+          "rel": "SHARES_VALUE",
+          "to": "Alekh singh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "NA",
+    "major": "Film & Media",
+    "grad_year": "2025",
+    "position": "AUDIENCE CONNECTOR",
+    "company": "",
+    "belief": "The paradox is that platforms grow when they stop chasing growth and start solving real friction."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to foster genuine connections, prioritizing meaningful engagement over mere metrics, reflecting a deep understanding of community needs.",
+  "gradient": {
+    "seed": 732585239,
+    "stops": [
+      {
+        "color": "hsl(64 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(185 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

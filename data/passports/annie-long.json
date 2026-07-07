@@ -1,0 +1,68 @@
+{
+  "personId": "annie-long",
+  "name": "Annie Long",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "ben-flora",
+      "name": "Ben Flora",
+      "why": "You should meet Ben Flora; his innovative approach as a code artist complements your own, and I think you both would spark some great ideas together.",
+      "basis_kind": "same_work",
+      "via": "code artist",
+      "path_receipt": [
+        {
+          "from": "Annie Long",
+          "rel": "DOES",
+          "to": "code artist"
+        },
+        {
+          "from": "Ben Flora",
+          "rel": "DOES",
+          "to": "code artist"
+        }
+      ]
+    },
+    {
+      "personId": "ansh-sankhala",
+      "name": "Ansh Sankhala",
+      "why": "You should meet Ansh Sankhala because his innovative ideas about creativity could inspire your own approach to changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "You've unlocked possibility for someone who walked in believing their circumstances were locked forever.",
+      "path_receipt": [
+        {
+          "from": "Annie Long",
+          "rel": "SHARES_VALUE",
+          "to": "Ansh Sankhala"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Business Administration",
+    "grad_year": "2028",
+    "position": "DATA STORYTELLER",
+    "company": "",
+    "belief": "Data made audible and visible so neighborhoods can name and resist the forces reshaping their blocks."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to empower communities, transforming complex data into tangible experiences that foster awareness and resilience.",
+  "gradient": {
+    "seed": 294282635,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(311 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

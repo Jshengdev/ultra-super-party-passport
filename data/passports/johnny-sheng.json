@@ -1,31 +1,31 @@
 {
   "personId": "johnny-sheng",
   "name": "johnny Sheng",
-  "line2": "Iovine & Young Academy",
+  "line2": "Lemma (YC F25)",
   "find": [
     {
-      "personId": "andrew-zhao",
-      "name": "Andrew Zhao",
-      "why": "You should meet Andrew Zhao because you both share a passion for impact investing and can exchange valuable insights on making a difference.",
+      "personId": "sarah-fan",
+      "name": "Sarah Fan",
+      "why": "You should meet Sarah Fan because you both share an exciting connection through Lemma (YC F25), and I think you'd have a lot to discuss.",
       "basis_kind": "same_work",
-      "via": "impact investor",
+      "via": "Lemma (YC F25)",
       "path_receipt": [
         {
           "from": "johnny Sheng",
-          "rel": "DOES",
-          "to": "impact investor"
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         },
         {
-          "from": "Andrew Zhao",
-          "rel": "DOES",
-          "to": "impact investor"
+          "from": "Sarah Fan",
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         }
       ]
     },
     {
       "personId": "jonathan-gantt",
       "name": "Jonathan Gantt",
-      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire you to rethink what's possible for your own projects.",
+      "why": "You should meet Jonathan Gantt because his innovative ideas on creativity could inspire you to change what's possible for people in remarkable ways.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Making complex systems transparent terrifies institutions but frees people—that's the only metric that matters.",
@@ -42,12 +42,12 @@
     "school": "Iovine & Young Academy",
     "major": "Arts, Technology & the Business of Innovation",
     "grad_year": "2027",
-    "position": "IMPACT VENTURE SCOUT",
-    "company": "",
+    "position": "FOUNDING ENGINEER",
+    "company": "Lemma (YC F25)",
     "belief": "Expanding what's possible for someone means showing them doors they didn't know they could choose."
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep commitment to unlocking potential, believing that transformative choices can reshape lives and create a more equitable world.",
+  "magic_inference": "You are driven by a profound desire to illuminate unseen possibilities, empowering others to reshape foundational systems for a more equitable future.",
   "gradient": {
     "seed": 3490936393,
     "stops": [

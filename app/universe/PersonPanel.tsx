@@ -10,6 +10,9 @@
  * affinity hub: the people gathered there.
  */
 
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import type { GraphNode, LinkType, Neighbor } from './lib/graph';
 import styles from './universe.module.css';
 
@@ -33,6 +36,112 @@ const AFFINITY_LABEL: Record<string, string> = {
 
 function neighborsByRel(neighbors: Neighbor[], rel: LinkType, dir?: 'out' | 'in'): Neighbor[] {
   return neighbors.filter((n) => n.rel === rel && (dir ? n.dir === dir : true));
+}
+
+/** Read the going-mark from localStorage. Default ON — demo warmth. */
+function readGoing(personId: string): boolean {
+  if (typeof window === 'undefined') return true;
+  try {
+    return window.localStorage.getItem(`usp-going-${personId}`) !== '0';
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * The pinned footer: the going-mark toggle + the primary "Generate my passport"
+ * block button. The passport is for the going — flip the mark off and the button
+ * copy softens to "Generate anyway".
+ */
+function GenerateFooter({ personId }: { personId: string }) {
+  const [going, setGoing] = useState(() => readGoing(personId));
+
+  // Re-sync when the selected person changes (panel stays mounted across selections).
+  useEffect(() => {
+    setGoing(readGoing(personId));
+  }, [personId]);
+
+  const toggleGoing = () => {
+    const next = !going;
+    setGoing(next);
+    try {
+      window.localStorage.setItem(`usp-going-${personId}`, next ? '1' : '0');
+    } catch {
+      // storage unavailable (private mode) — in-session state still works
+    }
+  };
+
+  return (
+    <div className={styles.panelFooter}>
+      <button
+        type="button"
+        className={styles.goingRow}
+        role="switch"
+        aria-checked={going}
+        onClick={toggleGoing}
+      >
+        <span className={going ? `${styles.goingBox} ${styles.goingBoxOn}` : styles.goingBox}>
+          <AnimatePresence initial={false}>
+            {going && (
+              <motion.svg
+                className={styles.goingCheck}
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                fill="none"
+                aria-hidden="true"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                transition={{ duration: 0.16, ease: 'easeOut' }}
+              >
+                <motion.path
+                  d="M3 8.5 L6.5 12 L13 4.5"
+                  stroke="var(--usp-surface)"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.26, ease: 'easeOut' }}
+                />
+              </motion.svg>
+            )}
+          </AnimatePresence>
+        </span>
+        <span className={styles.goingText}>
+          <span className={styles.goingLabel}>I’m going to this party</span>
+          <AnimatePresence initial={false}>
+            {!going && (
+              <motion.span
+                className={styles.goingHint}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+              >
+                The passport is for the going.
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </span>
+      </button>
+
+      <a className={styles.generateBtn} href={`/passport/${encodeURIComponent(personId)}?reveal=1`}>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={going ? 'going' : 'anyway'}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.13, ease: 'easeOut' }}
+          >
+            {going ? 'Generate my passport →' : 'Generate anyway →'}
+          </motion.span>
+        </AnimatePresence>
+      </a>
+    </div>
+  );
 }
 
 function labels(neighbors: Neighbor[], rel: LinkType, dir: 'out' | 'in' = 'out'): string[] {
@@ -63,92 +172,92 @@ export default function PersonPanel({ node, adjacency, hueFor, clusterName, onSe
     return (
       <aside className={styles.panel}>
         {close}
-        <div className={styles.panelKicker}>
-          {hue && <span className={styles.kickerSwatch} style={{ background: hue }} />}
-          {node.cluster ? clusterName(node.cluster) : 'Person'}
-        </div>
-        <h2 className={styles.panelName}>{node.label}</h2>
-        {line2 && <p className={styles.panelLine2}>{line2}</p>}
-
-        {node.belief && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Believes</p>
-            <blockquote className={styles.belief}>“{node.belief}”</blockquote>
+        <div className={styles.panelBody}>
+          <div className={styles.panelKicker}>
+            {hue && <span className={styles.kickerSwatch} style={{ background: hue }} />}
+            {node.cluster ? clusterName(node.cluster) : 'Person'}
           </div>
-        )}
+          <h2 className={styles.panelName}>{node.label}</h2>
+          {line2 && <p className={styles.panelLine2}>{line2}</p>}
 
-        {does.length > 0 && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>What they do</p>
-            <p className={styles.sectionBody}>{does.join(' · ')}</p>
-          </div>
-        )}
-
-        {workingOn.length > 0 && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Working on</p>
-            <p className={styles.sectionBody}>{workingOn.join(' · ')}</p>
-          </div>
-        )}
-
-        {(school.length > 0 || major.length > 0 || company.length > 0) && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Affinity</p>
-            <div className={styles.chips}>
-              {[...company, ...school, ...major].map((t, i) => (
-                <span key={`${t}-${i}`} className={styles.chip}>
-                  {t}
-                </span>
-              ))}
+          {node.belief && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Believes</p>
+              <blockquote className={styles.belief}>“{node.belief}”</blockquote>
             </div>
-          </div>
-        )}
+          )}
 
-        {clusters.length > 0 && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Value cloud</p>
-            <div className={styles.chips}>
-              {clusters.map((c) => {
-                const ch = hueFor(c.cluster);
-                return (
-                  <span
-                    key={c.id}
-                    className={styles.chip}
-                    onClick={() => onSelectNode(c.id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {ch && <span className={styles.chipSwatch} style={{ background: ch }} />}
-                    {c.label}
+          {does.length > 0 && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>What they do</p>
+              <p className={styles.sectionBody}>{does.join(' · ')}</p>
+            </div>
+          )}
+
+          {workingOn.length > 0 && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Working on</p>
+              <p className={styles.sectionBody}>{workingOn.join(' · ')}</p>
+            </div>
+          )}
+
+          {(school.length > 0 || major.length > 0 || company.length > 0) && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Affinity</p>
+              <div className={styles.chips}>
+                {[...company, ...school, ...major].map((t, i) => (
+                  <span key={`${t}-${i}`} className={styles.chip}>
+                    {t}
                   </span>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {peers.length > 0 && (
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>People to find</p>
-            <div>
-              {peers.map((peer) => {
-                const ph = hueFor(peer.cluster);
-                return (
-                  <div key={peer.id} className={styles.peer} onClick={() => onSelectNode(peer.id)}>
-                    <span className={styles.peerDot} style={{ background: ph ?? 'var(--usp-orb-tint)' }} />
-                    <span className={styles.peerText}>
-                      <span className={styles.peerName}>{peer.label}</span>
-                      {peer.cluster && <span className={styles.peerWhy}>shares {clusterName(peer.cluster)}</span>}
+          {clusters.length > 0 && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Value cloud</p>
+              <div className={styles.chips}>
+                {clusters.map((c) => {
+                  const ch = hueFor(c.cluster);
+                  return (
+                    <span
+                      key={c.id}
+                      className={styles.chip}
+                      onClick={() => onSelectNode(c.id)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {ch && <span className={styles.chipSwatch} style={{ background: ch }} />}
+                      {c.label}
                     </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <a className={styles.passportBtn} href={`/passport/${encodeURIComponent(node.id)}?reveal=1`}>
-          Generate passport →
-        </a>
+          {peers.length > 0 && (
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>People to find</p>
+              <div>
+                {peers.map((peer) => {
+                  const ph = hueFor(peer.cluster);
+                  return (
+                    <div key={peer.id} className={styles.peer} onClick={() => onSelectNode(peer.id)}>
+                      <span className={styles.peerDot} style={{ background: ph ?? 'var(--usp-orb-tint)' }} />
+                      <span className={styles.peerText}>
+                        <span className={styles.peerName}>{peer.label}</span>
+                        {peer.cluster && <span className={styles.peerWhy}>shares {clusterName(peer.cluster)}</span>}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <GenerateFooter personId={node.id} />
+        </div>
       </aside>
     );
   }

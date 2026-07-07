@@ -61,26 +61,65 @@ interface Props {
   onSelect: (node: GraphNode | null) => void;
 }
 
+// SHARES_VALUE never appears here: those edges are filtered out of the sim
+// (see graphData below) and painted manually for the selected person only.
 const REL_LINK_WIDTH: Partial<Record<LinkType, number>> = {
-  SHARES_VALUE: 1.4,
   IN_CLUSTER: 0.6,
 };
+
+// Force-layout tuning (raw/0026: organic attribute-mesh, not isolated pods).
+// Attribute-hub spokes stay short (the fine web); IN_CLUSTER ties are longer
+// and weak so value clouds read as tendencies, not silos.
+const LINK_DISTANCE: Partial<Record<LinkType, number>> = {
+  STUDIES_AT: 28,
+  MAJORS_IN: 28,
+  WORKS_AT: 28,
+  DOES: 32,
+  WORKING_ON: 34,
+  IN_CLUSTER: 40,
+};
+const IN_CLUSTER_STRENGTH = 0.15;
+const CHARGE_STRENGTH = -28;
 
 export default function UniverseGraph({ payload, selectedId, onSelect }: Props) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const fgRef = useRef<ForceGraphMethods<GraphNode, GraphLink> | undefined>(undefined);
   const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
   const [palette] = useState<Palette>(() => readPalette());
+  // Read once (not per node per frame); guarded like readPalette for the SSR pass.
+  const [fontFamily] = useState<string>(() =>
+    typeof document === 'undefined'
+      ? 'sans-serif'
+      : getComputedStyle(document.documentElement).getPropertyValue('--usp-font-sans').trim() ||
+        'sans-serif',
+  );
 
   // Stable copy of the data (force-graph mutates x/y/source/target in place; we
   // must not corrupt the raw payload the panel reads from).
   const graphData = useMemo(
     () => ({
       nodes: payload.nodes.map((n) => ({ ...n })) as FGNode[],
-      links: payload.links.map((l) => ({ ...l })) as FGLink[],
+      // SHARES_VALUE edges are dense complete-subgraphs (3k+): physics-including them
+      // collapses each cloud into an isolated pod (raw/0026's critique). They stay OUT
+      // of the layout; the selected person's value-ties are painted manually instead.
+      links: payload.links.filter((l) => l.type !== 'SHARES_VALUE').map((l) => ({ ...l })) as FGLink[],
     }),
     [payload],
   );
+
+  const valueMates = useMemo(() => {
+    const m = new Map<string, Set<string>>();
+    for (const l of payload.links) {
+      if (l.type !== 'SHARES_VALUE') continue;
+      const a = String(typeof l.source === 'object' ? (l.source as GraphNode).id : l.source);
+      const b = String(typeof l.target === 'object' ? (l.target as GraphNode).id : l.target);
+      if (!m.has(a)) m.set(a, new Set());
+      if (!m.has(b)) m.set(b, new Set());
+      m.get(a)!.add(b);
+      m.get(b)!.add(a);
+    }
+    return m;
+  }, [payload]);
 
   const hueFor = useCallback(
     (clusterId: string | null | undefined) => clusterColor(clusterId, palette.spectrum),
@@ -98,8 +137,59 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
     return () => ro.disconnect();
   }, []);
 
+  // ---- force tuning (raw/0026: organic spread, no isolation) ----
+  // ForceGraph2D is dynamically imported and only mounts once the host is
+  // measured, so fgRef.current is not available on the first effect run —
+  // retry on rAF until it is, then shape the layout and reheat.
+  useEffect(() => {
+    let raf = 0;
+    let cancelled = false;
+
+    // per-node degree over the SIMULATED links (SHARES_VALUE already excluded),
+    // to reproduce d3's default strength heuristic for the non-cluster links.
+    const degree = new Map<string, number>();
+    const endId = (e: FGLink['source']): string =>
+      String(typeof e === 'object' && e !== null ? (e as FGNode).id : e);
+    for (const l of graphData.links) {
+      for (const k of [endId(l.source), endId(l.target)]) {
+        degree.set(k, (degree.get(k) ?? 0) + 1);
+      }
+    }
+
+    const tune = () => {
+      if (cancelled) return;
+      const fg = fgRef.current;
+      if (!fg) {
+        raf = requestAnimationFrame(tune);
+        return;
+      }
+      const linkForce = fg.d3Force('link');
+      if (linkForce) {
+        linkForce.distance((l: FGLink) => LINK_DISTANCE[l.type] ?? 30);
+        linkForce.strength((l: FGLink) => {
+          // weak cluster pull: clouds are tendencies, not silos
+          if (l.type === 'IN_CLUSTER') return IN_CLUSTER_STRENGTH;
+          // d3 default heuristic — hubs with many spokes pull each spoke less,
+          // which is exactly what keeps the attribute mesh fine and organic.
+          const s = degree.get(endId(l.source)) ?? 1;
+          const t = degree.get(endId(l.target)) ?? 1;
+          return 1 / Math.min(s, t);
+        });
+      }
+      const charge = fg.d3Force('charge');
+      if (charge) charge.strength(CHARGE_STRENGTH);
+      fg.d3ReheatSimulation();
+    };
+
+    tune();
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [graphData]);
+
   const radiusOf = (n: FGNode): number =>
-    n.type === 'ValueCluster' ? 9 : n.type === 'Person' ? 5 : 3.5;
+    n.type === 'ValueCluster' ? 4.5 : n.type === 'Person' ? 5 : 3.5;
 
   // ---- value-cloud halos (drawn behind everything, in graph coords) ----
   const onRenderFramePre = useCallback(
@@ -109,21 +199,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
         if (n.type === 'Person' && n.cluster && typeof n.x === 'number' && typeof n.y === 'number') {
           const hue = hueFor(n.cluster);
           if (!hue) continue;
-          const R = 24;
-          const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, R);
-          g.addColorStop(0, withAlpha(hue, 0.16));
-          g.addColorStop(1, withAlpha(hue, 0));
-          ctx.fillStyle = g;
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, R, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      // brighter core glow under each cluster hub
-      for (const n of graphData.nodes) {
-        if (n.type === 'ValueCluster' && typeof n.x === 'number' && typeof n.y === 'number') {
-          const hue = hueFor(n.cluster) ?? palette.personTint;
-          const R = 34;
+          const R = 26;
           const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, R);
           g.addColorStop(0, withAlpha(hue, 0.22));
           g.addColorStop(1, withAlpha(hue, 0));
@@ -133,9 +209,36 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
           ctx.fill();
         }
       }
+      // the selected person's web: value-ties + a halo ring, painted (no physics)
+      if (selectedId) {
+        const sel = graphData.nodes.find((n) => n.id === selectedId);
+        const mates = valueMates.get(selectedId);
+        if (sel && typeof sel.x === 'number' && typeof sel.y === 'number') {
+          if (mates) {
+            for (const n of graphData.nodes) {
+              if (!mates.has(String(n.id)) || typeof n.x !== 'number' || typeof n.y !== 'number') continue;
+              const hue = hueFor(sel.cluster) ?? palette.personTint;
+              ctx.strokeStyle = withAlpha(hue, 0.5);
+              ctx.lineWidth = 0.9;
+              ctx.beginPath();
+              ctx.moveTo(sel.x, sel.y);
+              ctx.lineTo(n.x, n.y);
+              ctx.stroke();
+            }
+          }
+          const R = 16;
+          const g = ctx.createRadialGradient(sel.x, sel.y, 0, sel.x, sel.y, R);
+          g.addColorStop(0, withAlpha(palette.ringStrong, 0.35));
+          g.addColorStop(1, withAlpha(palette.ringStrong, 0));
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(sel.x, sel.y, R, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
       ctx.restore();
     },
-    [graphData, hueFor, palette],
+    [graphData, hueFor, palette, selectedId, valueMates],
   );
 
   // ---- node painting ----
@@ -170,28 +273,32 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
         ctx.stroke();
       }
 
-      // labels — sized in constant screen px, gated by zoom to avoid clutter
+      // labels — sized in constant screen px, gated by zoom to avoid clutter;
+      // the selected node's label is always on regardless of zoom.
       const showLabel =
-        node.type === 'ValueCluster' ||
-        (node.type === 'Person' && scale > 1.15) ||
-        (node.type !== 'Person' && scale > 1.9); // affinity hubs only when zoomed in
+        selected ||
+        (node.type === 'ValueCluster' && scale > 0.75) ||
+        (node.type === 'Person' && scale > 0.95) ||
+        (node.type !== 'Person' && node.type !== 'ValueCluster' && scale > 1.7);
       if (showLabel && node.label) {
         const fontPx = (node.type === 'ValueCluster' ? 12 : node.type === 'Person' ? 10 : 8) / scale;
-        ctx.font = `${node.type === 'ValueCluster' ? 600 : 420} ${fontPx}px ${
-          getComputedStyle(document.documentElement).getPropertyValue('--usp-font-sans') || 'sans-serif'
-        }`;
+        ctx.font = `${node.type === 'ValueCluster' ? 600 : 420} ${fontPx}px ${fontFamily}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
+        const labelY = y + r + 1.5 / scale;
+        // halo: a soft canvas-bg stroke keeps ink legible over the colored web
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 3 / scale;
+        ctx.strokeStyle = withAlpha(palette.canvasBg, selected ? 0.9 : 0.7);
+        ctx.strokeText(node.label, x, labelY);
         ctx.fillStyle =
-          node.type === 'ValueCluster'
+          node.type === 'Person' || node.type === 'ValueCluster'
             ? palette.ink
-            : node.type === 'Person'
-              ? palette.ink
-              : palette.affinityInk;
-        ctx.fillText(node.label, x, y + r + 1.5 / scale);
+            : palette.affinityInk;
+        ctx.fillText(node.label, x, labelY);
       }
     },
-    [selectedId, hueFor, palette],
+    [selectedId, hueFor, palette, fontFamily],
   );
 
   const nodePointerAreaPaint = useCallback(
@@ -204,20 +311,45 @@ export default function UniverseGraph({ payload, selectedId, onSelect }: Props) 
     [],
   );
 
-  const linkColor = useCallback(
+  const isSelectedEnd = useCallback(
     (link: FGLink) => {
-      if (link.type === 'SHARES_VALUE') return palette.shareLink;
-      if (link.type === 'IN_CLUSTER') {
-        const src = link.source as FGNode | string;
-        const cluster = typeof src === 'object' ? src.cluster : undefined;
-        return withAlpha(hueFor(cluster) ?? palette.personTint, 0.22);
-      }
-      return palette.linkFaint;
+      if (!selectedId) return false;
+      const a = link.source as FGNode | string;
+      const b = link.target as FGNode | string;
+      return (
+        String(typeof a === 'object' ? a.id : a) === selectedId ||
+        String(typeof b === 'object' ? b.id : b) === selectedId
+      );
     },
-    [palette, hueFor],
+    [selectedId],
   );
 
-  const linkWidth = useCallback((link: FGLink) => REL_LINK_WIDTH[link.type] ?? 0.5, []);
+  const linkColor = useCallback(
+    (link: FGLink) => {
+      const lit = isSelectedEnd(link);
+      const alpha = lit ? 0.85 : 0.42;
+      const spec = palette.spectrum;
+      switch (link.type) {
+        case 'STUDIES_AT':  return withAlpha(spec[3] ?? palette.linkFaint, alpha);
+        case 'MAJORS_IN':   return withAlpha(spec[0] ?? palette.linkFaint, alpha);
+        case 'WORKS_AT':    return withAlpha(spec[6] ?? spec[2] ?? palette.linkFaint, alpha);
+        case 'DOES':        return withAlpha(spec[4] ?? palette.linkFaint, alpha);
+        case 'WORKING_ON':  return withAlpha(spec[5] ?? spec[4] ?? palette.linkFaint, alpha);
+        case 'IN_CLUSTER': {
+          const src = link.source as FGNode | string;
+          const cluster = typeof src === 'object' ? src.cluster : undefined;
+          return withAlpha(hueFor(cluster) ?? palette.personTint, lit ? 0.6 : 0.16);
+        }
+        default: return withAlpha(palette.linkFaint, lit ? 0.7 : 0.25);
+      }
+    },
+    [palette, hueFor, isSelectedEnd],
+  );
+
+  const linkWidth = useCallback(
+    (link: FGLink) => (isSelectedEnd(link) ? 1.6 : REL_LINK_WIDTH[link.type] ?? 0.5),
+    [isSelectedEnd],
+  );
   const linkLineDash = useCallback(
     (link: FGLink) => (link.type === 'IN_CLUSTER' ? [2, 3] : null),
     [],

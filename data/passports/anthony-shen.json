@@ -1,0 +1,68 @@
+{
+  "personId": "anthony-shen",
+  "name": "anthony shen",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "andrew-zhao",
+      "name": "Andrew Zhao",
+      "why": "You should meet Andrew Zhao because you both share a passion for impact investing and can exchange valuable insights on driving meaningful change.",
+      "basis_kind": "same_work",
+      "via": "impact investor",
+      "path_receipt": [
+        {
+          "from": "anthony shen",
+          "rel": "DOES",
+          "to": "impact investor"
+        },
+        {
+          "from": "Andrew Zhao",
+          "rel": "DOES",
+          "to": "impact investor"
+        }
+      ]
+    },
+    {
+      "personId": "antonis-ioannou",
+      "name": "Antonis Ioannou",
+      "why": "You should meet Antonis Ioannou because his innovative ideas about creativity could inspire you to explore new possibilities together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Visibility forces reckoning—you make what was hidden so undeniable that systems have to bend.",
+      "path_receipt": [
+        {
+          "from": "anthony shen",
+          "rel": "SHARES_VALUE",
+          "to": "Antonis Ioannou"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Hti",
+    "grad_year": "2029",
+    "position": "JUSTICE RESEARCHER",
+    "company": "",
+    "belief": "Rendering invisibility so acute it forces witnesses to confront what they've been avoiding."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to illuminate overlooked narratives, challenging society to acknowledge and engage with uncomfortable truths.",
+  "gradient": {
+    "seed": 1671798177,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(103 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "personId": "alexandra-siy",
+  "name": "Alexandra Siy",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "aniket-singh",
+      "name": "Aniket Singh",
+      "why": "You should meet Aniket Singh, as you both share a passion for healthcare product design and could exchange inspiring ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Aniket Singh",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "andrew-zhao",
+      "name": "Andrew Zhao",
+      "why": "You would enjoy meeting Andrew Zhao because his innovative approach to creativity aligns perfectly with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Expanding someone's future to include possibility that wasn't there before they met you matters.",
+      "path_receipt": [
+        {
+          "from": "Alexandra Siy",
+          "rel": "SHARES_VALUE",
+          "to": "Andrew Zhao"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "SYSTEMS TRANSLATOR",
+    "company": "",
+    "belief": "Making systems legible so fear doesn't override someone's ability to choose—that's the whole craft."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion for vulnerable individuals, seeking to empower them through clarity and understanding in moments of fear.",
+  "gradient": {
+    "seed": 1843879289,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(335 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

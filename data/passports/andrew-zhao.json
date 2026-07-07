@@ -1,0 +1,68 @@
+{
+  "personId": "andrew-zhao",
+  "name": "Andrew Zhao",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "ansh-sankhala",
+      "name": "Ansh Sankhala",
+      "why": "You should meet Ansh Sankhala, as you both share a passion for impact investing and can exchange valuable insights on making a difference.",
+      "basis_kind": "same_work",
+      "via": "impact investor",
+      "path_receipt": [
+        {
+          "from": "Andrew Zhao",
+          "rel": "DOES",
+          "to": "impact investor"
+        },
+        {
+          "from": "Ansh Sankhala",
+          "rel": "DOES",
+          "to": "impact investor"
+        }
+      ]
+    },
+    {
+      "personId": "aniket-singh",
+      "name": "Aniket Singh",
+      "why": "You should meet Aniket Singh because his innovative ideas about creativity could inspire you to see new possibilities in your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Legibility returns agency to someone whose fear was built on misunderstanding, not actual threat.",
+      "path_receipt": [
+        {
+          "from": "Andrew Zhao",
+          "rel": "SHARES_VALUE",
+          "to": "Aniket Singh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "IMPACT FINDER",
+    "company": "",
+    "belief": "Expanding someone's future to include possibility that wasn't there before they met you matters."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound commitment to illuminate paths for others, transforming potential into reality through meaningful connections and insights.",
+  "gradient": {
+    "seed": 538021101,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(75 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

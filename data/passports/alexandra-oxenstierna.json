@@ -1,0 +1,68 @@
+{
+  "personId": "alexandra-oxenstierna",
+  "name": "Alexandra Oxenstierna",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "maceo",
+      "name": "Maceo",
+      "why": "You should meet Maceo, as you both have valuable insights and experiences related to investors that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "investor",
+      "path_receipt": [
+        {
+          "from": "Alexandra Oxenstierna",
+          "rel": "DOES",
+          "to": "investor"
+        },
+        {
+          "from": "Maceo",
+          "rel": "DOES",
+          "to": "investor"
+        }
+      ]
+    },
+    {
+      "personId": "anuj-shah",
+      "name": "Anuj Shah",
+      "why": "You’ll enjoy meeting Anuj Shah, as both of you share a passion for bringing creative minds together in inspiring ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity flows through people who've never met. It's finding the room where they should collide.",
+      "path_receipt": [
+        {
+          "from": "Alexandra Oxenstierna",
+          "rel": "SHARES_VALUE",
+          "to": "Anuj Shah"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "TASTE INVESTOR",
+    "company": "",
+    "belief": "Taste is recognizing a perspective you haven't seen elsewhere and funding it before market validation arrives."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief in potential, nurturing unseen talent and fostering diverse perspectives that enrich the creative landscape.",
+  "gradient": {
+    "seed": 819440086,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(236 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

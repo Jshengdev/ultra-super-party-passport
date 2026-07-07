@@ -1,0 +1,68 @@
+{
+  "personId": "aniket-singh",
+  "name": "Aniket Singh",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy because her insights as a healthcare product designer could spark inspiring ideas for your own projects.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Aniket Singh",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "annie-long",
+      "name": "Annie Long",
+      "why": "You should meet Annie Long because her innovative ideas about creativity will inspire you to think differently about what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Data made audible and visible so neighborhoods can name and resist the forces reshaping their blocks.",
+      "path_receipt": [
+        {
+          "from": "Aniket Singh",
+          "rel": "SHARES_VALUE",
+          "to": "Annie Long"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "COMPLEXITY SIMPLIFIER",
+    "company": "",
+    "belief": "Legibility returns agency to someone whose fear was built on misunderstanding, not actual threat."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep empathy for adolescents, seeking to empower them with clarity in moments where fear can overshadow their voice.",
+  "gradient": {
+    "seed": 1249136399,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(190 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

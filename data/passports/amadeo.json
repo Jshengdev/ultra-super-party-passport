@@ -1,0 +1,68 @@
+{
+  "personId": "amadeo",
+  "name": "Amadeo",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "badria",
+      "name": "Badria",
+      "why": "You should meet Badria because her unique animation style complements your work beautifully, and I think you both would inspire each other.",
+      "basis_kind": "same_work",
+      "via": "animator illustrator",
+      "path_receipt": [
+        {
+          "from": "Amadeo",
+          "rel": "DOES",
+          "to": "animator illustrator"
+        },
+        {
+          "from": "Badria",
+          "rel": "DOES",
+          "to": "animator illustrator"
+        }
+      ]
+    },
+    {
+      "personId": "anika-mantripragada",
+      "name": "Anika Mantripragada",
+      "why": "You should meet Anika Mantripragada because her creativity deeply resonates with others, sparking genuine emotions and connections that you both value.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Specificity is the opposite of generic—it's the detail that makes people feel personally witnessed.",
+      "path_receipt": [
+        {
+          "from": "Amadeo",
+          "rel": "SHARES_VALUE",
+          "to": "Anika Mantripragada"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "EMOTION ANIMATOR",
+    "company": "",
+    "belief": "Animation's tiny deliberate choices—a hesitation, a glance—plant themselves deeper than dialogue ever could."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to capture the raw, unspoken emotions that linger beneath the surface, revealing deeper truths through subtle movements.",
+  "gradient": {
+    "seed": 2072639762,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(67 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

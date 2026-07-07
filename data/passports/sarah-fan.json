@@ -1,31 +1,31 @@
 {
   "personId": "sarah-fan",
   "name": "Sarah Fan",
-  "line2": "Iovine & Young Academy",
+  "line2": "Lemma (YC F25)",
   "find": [
     {
-      "personId": "dee-dee-dawson",
-      "name": "Dee Dee Dawson",
-      "why": "You and Dee Dee Dawson both have a passion for product strategy and voice, making your conversation rich with shared insights and experiences.",
+      "personId": "johnny-sheng",
+      "name": "johnny Sheng",
+      "why": "You should meet Johnny Sheng because you both share a connection to Lemma (YC F25) and could exchange valuable insights from your experiences.",
       "basis_kind": "same_work",
-      "via": "product strategist, voice",
+      "via": "Lemma (YC F25)",
       "path_receipt": [
         {
           "from": "Sarah Fan",
-          "rel": "DOES",
-          "to": "product strategist, voice"
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         },
         {
-          "from": "Dee Dee Dawson",
-          "rel": "DOES",
-          "to": "product strategist, voice"
+          "from": "johnny Sheng",
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         }
       ]
     },
     {
       "personId": "shan",
       "name": "Shan",
-      "why": "You should meet Shan because her innovative ideas about creativity will inspire you to connect concepts in ways you haven't imagined yet.",
+      "why": "You should meet Shan because their unique perspective on creativity might inspire you to connect ideas in ways you hadn't considered before.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "Mastery in one system unlocks remixability across ten others you didn't know were listening",
@@ -42,12 +42,12 @@
     "school": "Iovine & Young Academy",
     "major": "Arts, Technology & the Business of Innovation",
     "grad_year": "2027",
-    "position": "SYSTEMS CARTOGRAPHER",
-    "company": "",
+    "position": "COFOUNDER",
+    "company": "Lemma (YC F25)",
     "belief": "When two separate machines suddenly recognize each other, creation happens in that moment of connection"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound curiosity about the interplay of emotion and language, seeking to reveal the hidden connections that inspire creativity.",
+  "magic_inference": "You are driven by a profound desire to illuminate the hidden connections between emotion and language, celebrating the beauty of recognition and creation.",
   "gradient": {
     "seed": 98470752,
     "stops": [

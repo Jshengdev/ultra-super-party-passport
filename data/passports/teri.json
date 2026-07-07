@@ -1,31 +1,31 @@
 {
   "personId": "teri",
   "name": "teri",
-  "line2": "Iovine & Young Academy",
+  "line2": "Lemma (YC F25)",
   "find": [
     {
-      "personId": "jg",
-      "name": "Jg",
-      "why": "You should meet Jg because both of you share a passion for data visualization design that could spark some inspiring conversations.",
+      "personId": "johnny-sheng",
+      "name": "johnny Sheng",
+      "why": "You would really enjoy meeting Johnny Sheng, as you both have a unique connection through Lemma (YC F25) that could spark some great conversations.",
       "basis_kind": "same_work",
-      "via": "data visualization designer",
+      "via": "Lemma (YC F25)",
       "path_receipt": [
         {
           "from": "teri",
-          "rel": "DOES",
-          "to": "data visualization designer"
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         },
         {
-          "from": "Jg",
-          "rel": "DOES",
-          "to": "data visualization designer"
+          "from": "johnny Sheng",
+          "rel": "WORKS_AT",
+          "to": "Lemma (YC F25)"
         }
       ]
     },
     {
       "personId": "tj-weir",
       "name": "TJ Weir",
-      "why": "You should meet TJ Weir because his innovative approach to creativity will inspire you to connect ideas in ways you never imagined.",
+      "why": "You should connect with TJ Weir, as both of you share a unique passion for creativity and connecting unexpected ideas in inspiring ways.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "Building a new graph by wiring every node the old system ignored",
@@ -42,12 +42,12 @@
     "school": "Iovine & Young Academy",
     "major": "Arts, Technology & the Business of Innovation",
     "grad_year": "2027",
-    "position": "ATTENTION MAPPER",
-    "company": "",
+    "position": "FOUNDING DESIGNER",
+    "company": "Lemma (YC F25)",
     "belief": "Revealing the space where people feel different from what they're measuring"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to illuminate the dissonance between aspirations and actions, fostering deeper self-awareness and growth in others.",
+  "magic_inference": "You are driven by a desire to illuminate the hidden dissonance between aspirations and actions, fostering deeper self-awareness and authenticity.",
   "gradient": {
     "seed": 2664306827,
     "stops": [

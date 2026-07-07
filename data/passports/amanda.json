@@ -1,0 +1,68 @@
+{
+  "personId": "amanda",
+  "name": "Amanda",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "anjali",
+      "name": "Anjali",
+      "why": "You should meet Anjali because her innovative approach to product design aligns perfectly with your creative vision and could spark some exciting collaboration.",
+      "basis_kind": "same_work",
+      "via": "product designer",
+      "path_receipt": [
+        {
+          "from": "Amanda",
+          "rel": "DOES",
+          "to": "product designer"
+        },
+        {
+          "from": "Anjali",
+          "rel": "DOES",
+          "to": "product designer"
+        }
+      ]
+    },
+    {
+      "personId": "armaan-kapoor",
+      "name": "Armaan Kapoor",
+      "why": "You would love to meet Armaan Kapoor because his bold creativity perfectly complements your own taste and craft, sparking inspiring conversations.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Design that respects human dignity means every surface whispers protection, not extraction.",
+      "path_receipt": [
+        {
+          "from": "Amanda",
+          "rel": "SHARES_VALUE",
+          "to": "Armaan Kapoor"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "INVISIBLE PROBLEM SOLVER",
+    "company": "",
+    "belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower creativity and independence in children, transforming learning into an intuitive, joyful experience.",
+  "gradient": {
+    "seed": 50564095,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(284 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

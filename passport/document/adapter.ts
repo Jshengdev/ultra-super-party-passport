@@ -68,6 +68,14 @@ function beliefFromReceipt(find: Find, holderName: string): string {
   return out
 }
 
+/** Long catalog names overflow the data page; the mock's own form is the target ("ARTS, TECH, BIZ"). */
+function shortMajor(m: string): string {
+  if (m.length <= 24) return m
+  if (/arts.*tech.*business/i.test(m)) return 'Arts, Tech & Biz'
+  const words = m.split(/\s+/).filter((w) => !/^(&|and|the|of)$/i.test(w))
+  return words.slice(0, 3).join(' ').slice(0, 24)
+}
+
 export interface AdaptedPassport {
   data: DocPassportData
   gradientStops: DocGradientStop[]
@@ -105,11 +113,14 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
       meta: { title: DOC_TITLE, context: PARTY_CONTEXT, issued: ISSUED },
       holder: {
         fullName: passport.name.toUpperCase(),
-        company: (passport.profile?.company || passport.line2).toUpperCase(),
+        company: (
+          passport.profile?.company ||
+          (passport.profile?.grad_year ? `USC · CLASS OF ${passport.profile.grad_year}` : passport.line2)
+        ).toUpperCase(),
         position: (passport.profile?.position ?? '').toUpperCase(),
         gradYear: passport.profile?.grad_year ?? '',
         school: (passport.profile?.school ?? '').toUpperCase(),
-        major: (passport.profile?.major ?? '').toUpperCase(),
+        major: shortMajor(passport.profile?.major ?? '').toUpperCase(),
         prompt: passport.profile?.belief
           ? { question: 'What is a creative?', answer: passport.profile.belief.toUpperCase() }
           : { question: 'Your hidden mission', answer: passport.hidden_prompt },
