@@ -192,6 +192,38 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
     };
   }, [graphData]);
 
+  // ego-web of the selected node (direct link neighbors + value-mates): the lit set
+  const egoSet = useMemo(() => {
+    if (!selectedId) return null;
+    const set = new Set<string>([selectedId]);
+    for (const l of payload.links) {
+      const a = String(typeof l.source === 'object' ? (l.source as GraphNode).id : l.source);
+      const b = String(typeof l.target === 'object' ? (l.target as GraphNode).id : l.target);
+      if (a === selectedId) set.add(b);
+      if (b === selectedId) set.add(a);
+    }
+    for (const m of valueMates.get(selectedId) ?? []) set.add(m);
+    return set;
+  }, [selectedId, payload, valueMates]);
+
+  // top people by degree — the only names shown at mid-zoom (dial 1: progressive disclosure)
+  const labelElect = useMemo(() => {
+    const deg = new Map<string, number>();
+    for (const l of payload.links) {
+      const a = String(typeof l.source === 'object' ? (l.source as GraphNode).id : l.source);
+      const b = String(typeof l.target === 'object' ? (l.target as GraphNode).id : l.target);
+      deg.set(a, (deg.get(a) ?? 0) + 1);
+      deg.set(b, (deg.get(b) ?? 0) + 1);
+    }
+    return new Set(
+      payload.nodes
+        .filter((n) => n.type === 'Person')
+        .sort((a, b) => (deg.get(String(b.id)) ?? 0) - (deg.get(String(a.id)) ?? 0))
+        .slice(0, 24)
+        .map((n) => String(n.id)),
+    );
+  }, [payload]);
+
   const radiusOf = (n: FGNode): number =>
     n.type === 'ValueCluster' ? 4.5 : n.type === 'Person' ? 5 : n.type === 'Interest' ? 3 : 3.5;
 
@@ -253,49 +285,67 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
       const r = radiusOf(node);
       const selected = node.id === selectedId;
 
-      if (node.type === 'Person' || node.type === 'ValueCluster') {
+      // focus+context (dial 2): when someone is selected, everything outside
+      // their web recedes to paper.
+      const dimmed = egoSet ? !egoSet.has(String(node.id)) : false;
+      ctx.globalAlpha = dimmed ? 0.12 : 1;
+
+      if (node.type === 'Person') {
+        // dial 3: a person is a small ink dot; their cloud speaks only as a soft halo
         const hue = hueFor(node.cluster) ?? palette.personTint;
-        // glass orb: white highlight → hue tint
-        const grad = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
-        grad.addColorStop(0, palette.personCore);
-        grad.addColorStop(1, hue);
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = grad;
+        ctx.fillStyle = withAlpha(palette.ink, selected ? 0.95 : 0.65);
         ctx.fill();
         ctx.lineWidth = selected ? 1.4 : 0.5;
-        ctx.strokeStyle = selected ? palette.ringStrong : palette.ring;
+        ctx.strokeStyle = selected ? palette.ringStrong : withAlpha(hue, 0.5);
         ctx.stroke();
-      } else if (node.type === 'Interest') {
-        // semantic tag: a small warm ember — what they SAID, not what they are
+      } else if (node.type === 'ValueCluster') {
+        const hue = hueFor(node.cluster) ?? palette.personTint;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(palette.spectrum[1] ?? palette.affinity, 0.85);
+        ctx.fillStyle = withAlpha(hue, 0.55);
         ctx.fill();
-        ctx.lineWidth = selected ? 1.2 : 0.4;
-        ctx.strokeStyle = selected ? palette.ringStrong : palette.ring;
-        ctx.stroke();
-      } else {
-        // affinity hub: quiet neutral dot
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = palette.affinity;
-        ctx.fill();
-        ctx.lineWidth = selected ? 1.2 : 0.4;
-        ctx.strokeStyle = selected ? palette.ringStrong : palette.ring;
+        ctx.lineWidth = 0.5;
+        ctx.strokeStyle = palette.ring;
         ctx.stroke();
       }
-
-      // labels — sized in constant screen px, gated by zoom to avoid clutter;
-      // the selected node's label is always on regardless of zoom.
+      const matched = matchedIds?.has(String(node.id)) ?? false;
+      const shortLabel =
+        node.type === 'Interest' && node.label
+          ? node.label.split(/\s+/).slice(0, 3).join(' ')
+          : node.label;
       const showLabel =
         selected ||
-        (node.type === 'ValueCluster' && scale > 0.75) ||
-        (node.type === 'Person' && scale > 0.95) ||
-        (node.type !== 'Person' && node.type !== 'ValueCluster' && scale > 1.7);
-      const matched = matchedIds?.has(String(node.id)) ?? false;
-      if ((showLabel || matched) && node.label) {
-        const fontPx = (node.type === 'ValueCluster' ? 12 : node.type === 'Person' ? 10 : 8) / scale;
+        (node.type === 'ValueCluster' && scale > 0.35) ||
+        (node.type === 'Person' &&
+          ((scale > 0.95 && labelElect.has(String(node.id))) || scale > 1.35)) ||
+        (node.type === 'Interest' && scale > 1.4) ||
+        (node.type !== 'Person' && node.type !== 'ValueCluster' && node.type !== 'Interest' && scale > 1.7);
+      if ((showLabel || matched) && node.label && node.type === 'ValueCluster') {
+        // the stamp: small-caps mono in a thin rounded outline, gently tilted
+        const fontPx = 10 / scale;
+        ctx.save();
+        ctx.translate(x, y + r + 4 / scale);
+        ctx.rotate(-0.052);
+        ctx.font = `600 ${fontPx}px ${getComputedStyle(document.documentElement).getPropertyValue('--usp-font-mono') || 'monospace'}`;
+        const text = node.label.toUpperCase();
+        const w = ctx.measureText(text).width;
+        const padX = 6 / scale;
+        const padY = 4 / scale;
+        const hue = hueFor(node.cluster) ?? palette.ink;
+        ctx.strokeStyle = withAlpha(hue, 0.75);
+        ctx.lineWidth = 1 / scale;
+        ctx.beginPath();
+        ctx.roundRect(-w / 2 - padX, 0, w + padX * 2, fontPx + padY * 2, 4 / scale);
+        ctx.stroke();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = withAlpha(palette.ink, 0.8);
+        ctx.fillText(text, 0, padY);
+        ctx.restore();
+      } else if ((showLabel || matched) && node.label) {
+        const fontPx = (node.type === 'Person' ? 10 : 8) / scale;
         ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 600 : 420} ${fontPx}px ${fontFamily}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -308,7 +358,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           // the match signal (raw/0030): each letter rides a slow wave, the spectrum
           // blended across the whole name. Painted per-letter in graph coords.
           const t = performance.now();
-          const letters = node.label.split('');
+          const letters = (shortLabel ?? '').split('');
           const widths = letters.map((ch) => ctx.measureText(ch).width);
           const total = widths.reduce((a, b) => a + b, 0);
           const grad = ctx.createLinearGradient(x - total / 2, 0, x + total / 2, 0);
@@ -326,16 +376,17 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           });
           ctx.textAlign = 'center';
         } else {
-          ctx.strokeText(node.label, x, labelY);
+          ctx.strokeText(shortLabel ?? '', x, labelY);
           ctx.fillStyle =
             node.type === 'Person' || node.type === 'ValueCluster'
               ? palette.ink
               : palette.affinityInk;
-          ctx.fillText(node.label, x, labelY);
+          ctx.fillText(shortLabel ?? '', x, labelY);
         }
       }
+      ctx.globalAlpha = 1;
     },
-    [selectedId, hueFor, palette, fontFamily, matchedIds],
+    [selectedId, hueFor, palette, fontFamily, matchedIds, egoSet, labelElect],
   );
 
   const nodePointerAreaPaint = useCallback(
@@ -364,24 +415,27 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
   const linkColor = useCallback(
     (link: FGLink) => {
       const lit = isSelectedEnd(link);
-      const alpha = lit ? 0.85 : 0.42;
+      if (!lit && egoSet) return withAlpha(palette.ink, 0.03); // someone selected: the rest is paper
+      if (!lit) {
+        // idle room: quiet ink hairlines — color belongs to the lit web (90/10 budget)
+        return withAlpha(palette.ink, link.type === 'IN_CLUSTER' ? 0.05 : 0.08);
+      }
       const spec = palette.spectrum;
       switch (link.type) {
-        case 'STUDIES_AT':  return withAlpha(spec[3] ?? palette.linkFaint, alpha);
-        case 'MAJORS_IN':   return withAlpha(spec[0] ?? palette.linkFaint, alpha);
-        case 'WORKS_AT':    return withAlpha(spec[6] ?? spec[2] ?? palette.linkFaint, alpha);
-        case 'DOES':        return withAlpha(spec[4] ?? palette.linkFaint, alpha);
-        case 'WORKING_ON':  return withAlpha(spec[5] ?? spec[4] ?? palette.linkFaint, alpha);
-        case 'INTERESTED_IN': return withAlpha(spec[1] ?? palette.linkFaint, alpha);
+        case 'STUDIES_AT':  return withAlpha(spec[3] ?? palette.linkFaint, 0.85);
+        case 'MAJORS_IN':   return withAlpha(spec[0] ?? palette.linkFaint, 0.85);
+        case 'DOES':        return withAlpha(spec[4] ?? palette.linkFaint, 0.85);
+        case 'WORKING_ON':  return withAlpha(spec[5] ?? spec[4] ?? palette.linkFaint, 0.85);
+        case 'INTERESTED_IN': return withAlpha(spec[2] ?? spec[1] ?? palette.linkFaint, 0.85);
         case 'IN_CLUSTER': {
           const src = link.source as FGNode | string;
           const cluster = typeof src === 'object' ? src.cluster : undefined;
-          return withAlpha(hueFor(cluster) ?? palette.personTint, lit ? 0.6 : 0.16);
+          return withAlpha(hueFor(cluster) ?? palette.personTint, 0.6);
         }
-        default: return withAlpha(palette.linkFaint, lit ? 0.7 : 0.25);
+        default: return withAlpha(palette.linkFaint, 0.7);
       }
     },
-    [palette, hueFor, isSelectedEnd],
+    [palette, hueFor, isSelectedEnd, egoSet],
   );
 
   const linkWidth = useCallback(
