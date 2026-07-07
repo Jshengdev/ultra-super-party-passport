@@ -1,0 +1,55 @@
+{
+  "personId": "sarah-fan",
+  "name": "Sarah Fan",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "dee-dee-dawson",
+      "name": "Dee Dee Dawson",
+      "why": "You should meet Dee Dee Dawson because you both share a passion for building innovative software that transforms how we understand and express voice patterns.",
+      "path_receipt": [
+        {
+          "from": "Sarah Fan",
+          "rel": "WORKING_ON",
+          "to": "building software that learns voice patterns and lets you change emotional tone while keeping meaning intact"
+        },
+        {
+          "from": "Dee Dee Dawson",
+          "rel": "WORKING_ON",
+          "to": "building software that learns voice patterns and lets you change emotional tone while keeping meaning intact"
+        }
+      ]
+    },
+    {
+      "personId": "shan",
+      "name": "Shan",
+      "why": "You should meet Shan, as both of you share a remarkable talent for connecting ideas in unexpected ways, sparking creativity that inspires others.",
+      "path_receipt": [
+        {
+          "from": "Sarah Fan",
+          "rel": "SHARES_VALUE",
+          "to": "Shan"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "Your drive stems from a desire to harmonize communication, enabling deeper emotional connections through the nuanced interplay of voice and meaning.",
+  "gradient": {
+    "seed": 98470752,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

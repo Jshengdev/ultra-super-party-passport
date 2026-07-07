@@ -1,0 +1,55 @@
+{
+  "personId": "johnny-sheng",
+  "name": "johnny Sheng",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "andrew-zhao",
+      "name": "Andrew Zhao",
+      "why": "You should meet Andrew Zhao because you both share a passion for finding founders who are tackling real problems in education, health, and justice.",
+      "path_receipt": [
+        {
+          "from": "johnny Sheng",
+          "rel": "WORKING_ON",
+          "to": "finding founders solving real problems in education, health, justice—not just another app"
+        },
+        {
+          "from": "Andrew Zhao",
+          "rel": "WORKING_ON",
+          "to": "finding founders solving real problems in education, health, justice—not just another app"
+        }
+      ]
+    },
+    {
+      "personId": "jonathan-gantt",
+      "name": "Jonathan Gantt",
+      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire you to explore new possibilities in your own work.",
+      "path_receipt": [
+        {
+          "from": "johnny Sheng",
+          "rel": "SHARES_VALUE",
+          "to": "Jonathan Gantt"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower others, creating pathways to brighter futures through meaningful solutions that truly address systemic challenges.",
+  "gradient": {
+    "seed": 3490936393,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(95 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

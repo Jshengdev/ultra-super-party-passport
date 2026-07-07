@@ -1,0 +1,55 @@
+{
+  "personId": "abriana",
+  "name": "Abriana",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "isaac-wang",
+      "name": "Isaac Wang",
+      "why": "You should meet Isaac Wang, as you both share a passion for animating UI for that innovative app that highlights exactly three things.",
+      "path_receipt": [
+        {
+          "from": "Abriana",
+          "rel": "WORKING_ON",
+          "to": "animating UI for an app that shows you exactly three things, nothing more"
+        },
+        {
+          "from": "Isaac Wang",
+          "rel": "WORKING_ON",
+          "to": "animating UI for an app that shows you exactly three things, nothing more"
+        }
+      ]
+    },
+    {
+      "personId": "amanda",
+      "name": "Amanda",
+      "why": "You’ll love meeting Amanda because her unique perspective on creativity mirrors your own passion for taste and craft.",
+      "path_receipt": [
+        {
+          "from": "Abriana",
+          "rel": "SHARES_VALUE",
+          "to": "Amanda"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "You are driven by a desire to refine experiences, revealing beauty in simplicity and timing, inviting users to savor each moment.",
+  "gradient": {
+    "seed": 951798219,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(111 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

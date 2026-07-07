@@ -1,0 +1,55 @@
+{
+  "personId": "aaron-figueroa",
+  "name": "Aaron Figueroa",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "charles",
+      "name": "Charles",
+      "why": "You'd enjoy meeting Charles because he shares your passion for building innovative tools that empower musicians to creatively sample everyday sounds like doors and glass.",
+      "path_receipt": [
+        {
+          "from": "Aaron Figueroa",
+          "rel": "WORKING_ON",
+          "to": "building tools that let musicians compose by sampling everyday sounds like doors or glass"
+        },
+        {
+          "from": "Charles",
+          "rel": "WORKING_ON",
+          "to": "building tools that let musicians compose by sampling everyday sounds like doors or glass"
+        }
+      ]
+    },
+    {
+      "personId": "amelia",
+      "name": "Amelia",
+      "why": "You’ll love meeting Amelia, as her unique perspective on creativity might inspire you to connect ideas in ways you haven’t imagined yet.",
+      "path_receipt": [
+        {
+          "from": "Aaron Figueroa",
+          "rel": "SHARES_VALUE",
+          "to": "Amelia"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform the mundane into artistic inspiration, encouraging musicians to discover creativity in unexpected places.",
+  "gradient": {
+    "seed": 1887477371,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(260 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

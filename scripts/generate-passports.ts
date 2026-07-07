@@ -8,6 +8,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { allPeople, closeDriver } from "@/lib/traverse";
+import { run } from "@/lib/neo4j";
 import { buildPassport } from "@/lib/passport";
 
 const OUT_DIR = path.resolve(process.cwd(), "data/passports");
@@ -23,8 +24,12 @@ async function main(): Promise<void> {
   await mkdir(OUT_DIR, { recursive: true });
 
   let people = await allPeople();
+  if (process.env.PEOPLE_FILTER) {
+    const want = new Set(process.env.PEOPLE_FILTER.split(",").map((x) => x.trim()));
+    people = people.filter((p) => want.has(p.id));
+    console.log(`[generate-passports] PEOPLE_FILTER: ${people.length} selected`);
+  }
   if (process.env.GOING_ONLY === '1') {
-    const { run } = await import('@/lib/neo4j');
     const { records } = await run("MATCH (p:Person)-[su:SIGNED_UP]->(:Party) WHERE su.checked_in = true RETURN p.id AS id");
     const going = new Set(records.map((r) => String(r.get('id'))));
     people = people.filter((p) => going.has(p.id));

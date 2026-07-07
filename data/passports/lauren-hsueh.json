@@ -1,0 +1,55 @@
+{
+  "personId": "lauren-hsueh",
+  "name": "Lauren Hsueh",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "eason-tang",
+      "name": "Eason Tang",
+      "why": "You should meet Eason Tang, as you both share a passion for hand-lettering all social copy for a bakery, creating beautiful, oven-inspired text.",
+      "path_receipt": [
+        {
+          "from": "Lauren Hsueh",
+          "rel": "WORKING_ON",
+          "to": "hand-lettering all social copy for a bakery, making text look hand-carved by their ovens"
+        },
+        {
+          "from": "Eason Tang",
+          "rel": "WORKING_ON",
+          "to": "hand-lettering all social copy for a bakery, making text look hand-carved by their ovens"
+        }
+      ]
+    },
+    {
+      "personId": "lindsey-demyun",
+      "name": "Lindsey Demyun",
+      "why": "You should meet Lindsey Demyun, as her bold creativity and unique perspective will resonate beautifully with your own artistic vision.",
+      "path_receipt": [
+        {
+          "from": "Lauren Hsueh",
+          "rel": "SHARES_VALUE",
+          "to": "Lindsey Demyun"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "You are driven by a desire to celebrate authenticity, transforming ordinary words into art that reflects the unique spirit of the bakery.",
+  "gradient": {
+    "seed": 4265883538,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(126 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

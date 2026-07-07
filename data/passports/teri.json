@@ -1,0 +1,55 @@
+{
+  "personId": "teri",
+  "name": "teri",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jg",
+      "name": "Jg",
+      "why": "You and Jg both share a passion for charting how people feel about their time spent versus where it actually goes, making for an enriching conversation.",
+      "path_receipt": [
+        {
+          "from": "teri",
+          "rel": "WORKING_ON",
+          "to": "charting how people feel about their time spent versus where it actually goes"
+        },
+        {
+          "from": "Jg",
+          "rel": "WORKING_ON",
+          "to": "charting how people feel about their time spent versus where it actually goes"
+        }
+      ]
+    },
+    {
+      "personId": "tj-weir",
+      "name": "TJ Weir",
+      "why": "You should meet TJ Weir because his innovative approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "path_receipt": [
+        {
+          "from": "teri",
+          "rel": "SHARES_VALUE",
+          "to": "TJ Weir"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate the often-overlooked connections between effort and experience, fostering deeper understanding and creativity in others.",
+  "gradient": {
+    "seed": 2664306827,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(195 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}
