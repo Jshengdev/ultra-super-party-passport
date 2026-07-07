@@ -1,0 +1,69 @@
+{
+  "personId": "ellie",
+  "name": "Ellie",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You and Christian Stiker both share a passion for accessible interaction design, making it a perfect opportunity to exchange ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "Ellie",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "emily-millegan",
+      "name": "Emily Millegan",
+      "why": "You should meet Emily Millegan because her innovative ideas about creativity can inspire you to change what's possible for your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Spotting where the system forgets a person—that's where you rebuild them back in.",
+      "path_receipt": [
+        {
+          "from": "Ellie",
+          "rel": "SHARES_VALUE",
+          "to": "Emily Millegan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "EQUITY ARCHITECT",
+    "company": "",
+    "belief": "Making something that wasn't made for you into something that works for everyone—that's the only creativity that matters.",
+    "working_on": "rebuilding financial aid forms so single-parent students actually finish them"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to equity, transforming obstacles into opportunities so that every student can thrive.",
+  "gradient": {
+    "seed": 3427945586,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(65 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

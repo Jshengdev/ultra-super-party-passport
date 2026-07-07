@@ -1,0 +1,69 @@
+{
+  "personId": "mavis-zhang",
+  "name": "Mavis Zhang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because he shares your passion for music production and has some incredible insights to share.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Mavis Zhang",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "mia-wang",
+      "name": "Mia Wang",
+      "why": "You should meet Mia Wang because her innovative ideas and artistic spirit align beautifully with your own creative vision.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Stop performance and follow the pull—that's where the real creating starts.",
+      "path_receipt": [
+        {
+          "from": "Mavis Zhang",
+          "rel": "SHARES_VALUE",
+          "to": "Mia Wang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "SPATIAL SOUND CREATOR",
+    "company": "",
+    "belief": "Sound holds people without their knowing why—that invisibility is the entire lever.",
+    "working_on": "crafting invisible acoustic environments for digital spaces where people actually want to linger"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create immersive experiences that gently pull people in, fostering connection and comfort in the unseen.",
+  "gradient": {
+    "seed": 3472973584,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(354 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

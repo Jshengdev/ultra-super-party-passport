@@ -1,0 +1,69 @@
+{
+  "personId": "hamin-jin",
+  "name": "Hamin Jin",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "anuj-shah",
+      "name": "Anuj Shah",
+      "why": "You would really enjoy meeting Anuj Shah, as you both share a passion for startup strategy and can exchange valuable insights.",
+      "basis_kind": "same_work",
+      "via": "startup strategist",
+      "path_receipt": [
+        {
+          "from": "Hamin Jin",
+          "rel": "DOES",
+          "to": "startup strategist"
+        },
+        {
+          "from": "Anuj Shah",
+          "rel": "DOES",
+          "to": "startup strategist"
+        }
+      ]
+    },
+    {
+      "personId": "ignatius",
+      "name": "Ignatius",
+      "why": "You should meet Ignatius because his innovative ideas about creativity will resonate with your own passion for bringing the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Seeing the unmet need that everyone walks past—that's where connection becomes possible.",
+      "path_receipt": [
+        {
+          "from": "Hamin Jin",
+          "rel": "SHARES_VALUE",
+          "to": "Ignatius"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "INSIGHT STRATEGIST",
+    "company": "",
+    "belief": "Finding the gap nobody's looking at yet—that's where connection becomes possible.",
+    "working_on": "mapping where creative communities and capital sources almost meet but miss each other"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bridge unseen divides, believing that true creativity flourishes where unexpected connections can thrive.",
+  "gradient": {
+    "seed": 2208255538,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(280 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

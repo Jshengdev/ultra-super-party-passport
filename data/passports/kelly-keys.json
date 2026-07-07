@@ -1,0 +1,69 @@
+{
+  "personId": "kelly-keys",
+  "name": "Kelly Keys",
+  "line2": "Price",
+  "find": [
+    {
+      "personId": "diana-mundi",
+      "name": "Diana Mundi",
+      "why": "You should meet Diana Mundi because her insights as an environmental justice organizer could inspire your passion for sustainability and meaningful change.",
+      "basis_kind": "same_work",
+      "via": "environmental justice organizer",
+      "path_receipt": [
+        {
+          "from": "Kelly Keys",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        },
+        {
+          "from": "Diana Mundi",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        }
+      ]
+    },
+    {
+      "personId": "khalil-mayden",
+      "name": "Khalil Mayden",
+      "why": "You should meet Khalil Mayden because his innovative ideas about creativity can inspire you to explore new possibilities together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "The invisible wall drops when you design for the person it was excluding before they ask.",
+      "path_receipt": [
+        {
+          "from": "Kelly Keys",
+          "rel": "SHARES_VALUE",
+          "to": "Khalil Mayden"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Price",
+    "major": "Real Estate Development",
+    "grad_year": "2027",
+    "position": "PROPERTY JUSTICE ANALYST",
+    "company": "",
+    "belief": "Real estate markets hide their math; revealing it rewrites what communities can actually negotiate.",
+    "working_on": "Development finance transparency tool naming how capital flows into neighborhoods and who gets priced out."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to empower communities, illuminating hidden truths to reshape their narratives and reclaim their agency.",
+  "gradient": {
+    "seed": 148014139,
+    "stops": [
+      {
+        "color": "hsl(114 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(7 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

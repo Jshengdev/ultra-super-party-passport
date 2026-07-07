@@ -1,0 +1,69 @@
+{
+  "personId": "nadine-mcmahon",
+  "name": "Nadine McMahon",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "amanda",
+      "name": "Amanda",
+      "why": "You and Amanda share a passion for product design, and I think you'll enjoy exchanging ideas and inspirations with each other.",
+      "basis_kind": "same_work",
+      "via": "product designer",
+      "path_receipt": [
+        {
+          "from": "Nadine McMahon",
+          "rel": "DOES",
+          "to": "product designer"
+        },
+        {
+          "from": "Amanda",
+          "rel": "DOES",
+          "to": "product designer"
+        }
+      ]
+    },
+    {
+      "personId": "shailee-sankhala",
+      "name": "Shailee Sankhala",
+      "why": "You would really enjoy meeting Shailee Sankhala, as her unique perspective on creativity aligns beautifully with your own passion for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Refusing to be legible until your vision decides what legibility means",
+      "path_receipt": [
+        {
+          "from": "Nadine McMahon",
+          "rel": "SHARES_VALUE",
+          "to": "Shailee Sankhala"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "TACTILE FORM DESIGNER",
+    "company": "",
+    "belief": "Your best work disappears. When someone solves a problem and credits luck instead of design, you've won.",
+    "working_on": "creating children's dinnerware that corrects posture through ergonomic curves alone"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to enhance children's well-being, believing that thoughtful design can transform everyday experiences into healthier habits.",
+  "gradient": {
+    "seed": 656086072,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "khalil-mayden",
+  "name": "Khalil Mayden",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You and Christian Stiker both connect as accessible interaction designers, making for a great conversation about inclusive design practices and innovations in the field.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "Khalil Mayden",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "kim-sales",
+      "name": "kim sales",
+      "why": "You should meet Kim Sales, as her innovative ideas about creativity align beautifully with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Rig the incentives so the sustainable choice becomes cheaper and the industry has no escape.",
+      "path_receipt": [
+        {
+          "from": "Khalil Mayden",
+          "rel": "SHARES_VALUE",
+          "to": "kim sales"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "ACCESSIBILITY ENGINEER",
+    "company": "",
+    "belief": "The invisible wall drops when you design for the person it was excluding before they ask.",
+    "working_on": "Government portal rebuild where screen readers finally navigate like ears were part of the design intent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound commitment to inclusivity, believing that true accessibility comes from anticipating needs and empowering those often overlooked.",
+  "gradient": {
+    "seed": 825378825,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(32 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

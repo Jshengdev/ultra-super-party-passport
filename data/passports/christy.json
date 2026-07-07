@@ -1,0 +1,69 @@
+{
+  "personId": "christy",
+  "name": "Christy",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "connie-sun",
+      "name": "Connie Sun",
+      "why": "You should meet Connie Sun because her innovative ideas in education design align closely with your passion for creating impactful learning experiences.",
+      "basis_kind": "same_work",
+      "via": "education designer",
+      "path_receipt": [
+        {
+          "from": "Christy",
+          "rel": "DOES",
+          "to": "education designer"
+        },
+        {
+          "from": "Connie Sun",
+          "rel": "DOES",
+          "to": "education designer"
+        }
+      ]
+    },
+    {
+      "personId": "dylan",
+      "name": "Dylan",
+      "why": "You should meet Dylan because his innovative ideas about creativity could inspire your next project and spark a fascinating discussion between you both.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "It's asking what they're trying to say when everyone's tired, then building the thing that says it true.",
+      "path_receipt": [
+        {
+          "from": "Christy",
+          "rel": "SHARES_VALUE",
+          "to": "Dylan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "FRICTION CURATOR",
+    "company": "",
+    "belief": "Friction between thinking styles is the highest-leverage education. You're just building the collisions right.",
+    "working_on": "Running a fellowship where engineers sit in life drawing and artists debug code—they teach each other how to see wrong first."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a belief in the transformative power of collaboration, where diverse perspectives ignite deeper understanding and creativity.",
+  "gradient": {
+    "seed": 2963499635,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(246 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

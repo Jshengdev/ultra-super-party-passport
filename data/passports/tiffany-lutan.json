@@ -1,0 +1,69 @@
+{
+  "personId": "tiffany-lutan",
+  "name": "Tiffany Lutan",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "arvin",
+      "name": "Arvin",
+      "why": "You should meet Arvin because he shares your passion for video essays and has some fascinating insights on the genre.",
+      "basis_kind": "same_work",
+      "via": "video essayist",
+      "path_receipt": [
+        {
+          "from": "Tiffany Lutan",
+          "rel": "DOES",
+          "to": "video essayist"
+        },
+        {
+          "from": "Arvin",
+          "rel": "DOES",
+          "to": "video essayist"
+        }
+      ]
+    },
+    {
+      "personId": "tyler",
+      "name": "Tyler",
+      "why": "You should meet Tyler, as his unique perspective on creativity will inspire you and resonate deeply with your own experiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Art happens when listeners give up waiting for the sound to shift",
+      "path_receipt": [
+        {
+          "from": "Tiffany Lutan",
+          "rel": "SHARES_VALUE",
+          "to": "Tyler"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "CINEMATIC THEORIST",
+    "company": "",
+    "belief": "Arranging the fragments until they suddenly point to something nobody else saw before",
+    "working_on": "splicing decades of cinema to argue one exact thesis about human grief"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to uncover hidden truths, revealing the profound connections between art and the human experience of grief.",
+  "gradient": {
+    "seed": 4255048643,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(124 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

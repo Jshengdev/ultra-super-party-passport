@@ -1,0 +1,69 @@
+{
+  "personId": "emily-millegan",
+  "name": "Emily Millegan",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You and Christian Stiker both share a passion for accessible interaction design, making it a great opportunity to exchange insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "Emily Millegan",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "henry-warren",
+      "name": "Henry Warren",
+      "why": "You should meet Henry Warren because his innovative ideas about creativity could inspire you to change what's possible for others in remarkable ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Rig the system so the right choice is cheaper, faster, easier than any shortcut.",
+      "path_receipt": [
+        {
+          "from": "Emily Millegan",
+          "rel": "SHARES_VALUE",
+          "to": "Henry Warren"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "SYSTEMIC DESIGNER",
+    "company": "",
+    "belief": "Spotting where the system forgets a person—that's where you rebuild them back in.",
+    "working_on": "accessible crowdsourcing platform where disabled artists can actually submit work"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound commitment to inclusivity, seeking to illuminate and empower voices that have been overlooked and forgotten.",
+  "gradient": {
+    "seed": 117632973,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(282 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

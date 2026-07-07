@@ -1,0 +1,69 @@
+{
+  "personId": "mateo-morales",
+  "name": "Mateo Morales",
+  "line2": "Annenberg",
+  "find": [
+    {
+      "personId": "george-zhou",
+      "name": "George Zhou",
+      "why": "You and George Zhou both share a passion for tinkering with electronics, making it a great opportunity to exchange ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "electronics tinkerer",
+      "path_receipt": [
+        {
+          "from": "Mateo Morales",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        },
+        {
+          "from": "George Zhou",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        }
+      ]
+    },
+    {
+      "personId": "mattice",
+      "name": "Mattice",
+      "why": "You should connect with Mattice; your shared creativity in cluster-6 could spark some truly inspiring ideas together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "When the arm reaches and succeeds, that's proof—no simulation required.",
+      "path_receipt": [
+        {
+          "from": "Mateo Morales",
+          "rel": "SHARES_VALUE",
+          "to": "Mattice"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Annenberg",
+    "major": "PR And Advertising",
+    "grad_year": "2029",
+    "position": "MODULAR HARDWARE BUILDER",
+    "company": "",
+    "belief": "Build something that boots and hums—then you know the idea was never theoretical.",
+    "working_on": "prototyping solar-powered synthesis that collapses a studio into a traveling case"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to fuse creativity with practicality, transforming abstract concepts into tangible, functional art that travels with you.",
+  "gradient": {
+    "seed": 683813515,
+    "stops": [
+      {
+        "color": "hsl(37 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(19 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

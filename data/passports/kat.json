@@ -1,0 +1,69 @@
+{
+  "personId": "kat",
+  "name": "Kat",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "dee-dee-dawson",
+      "name": "Dee Dee Dawson",
+      "why": "You should meet Dee Dee Dawson because you both share a passion for product strategy and voice, leading to some fascinating discussions.",
+      "basis_kind": "same_work",
+      "via": "product strategist, voice",
+      "path_receipt": [
+        {
+          "from": "Kat",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        },
+        {
+          "from": "Dee Dee Dawson",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        }
+      ]
+    },
+    {
+      "personId": "langston-macy-gima-reid",
+      "name": "Langston Macy Gima Reid",
+      "why": "You should meet Langston Macy Gima Reid because their unique approach to creativity might inspire you with fresh perspectives on connecting ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "The moment two languages realize they've been speaking the same grammar—that's where the bridge lives.",
+      "path_receipt": [
+        {
+          "from": "Kat",
+          "rel": "SHARES_VALUE",
+          "to": "Langston Macy Gima Reid"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "VOCAL BRIDGE DESIGNER",
+    "company": "",
+    "belief": "Creativity happens when two separate systems recognize they've been trying to say the same thing.",
+    "working_on": "Machine learning that reads emotional weight in speech then remaps tone while preserving what was meant."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize human expression, believing that true connection arises from understanding and reframing shared emotions.",
+  "gradient": {
+    "seed": 1561012671,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(242 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

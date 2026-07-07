@@ -1,0 +1,69 @@
+{
+  "personId": "diora-juraboeva",
+  "name": "Diora Juraboeva",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "arely",
+      "name": "Arely",
+      "why": "You and Arely share a passion for spatial design, making it a perfect opportunity to exchange ideas and inspire each other creatively.",
+      "basis_kind": "same_work",
+      "via": "spatial designer",
+      "path_receipt": [
+        {
+          "from": "Diora Juraboeva",
+          "rel": "DOES",
+          "to": "spatial designer"
+        },
+        {
+          "from": "Arely",
+          "rel": "DOES",
+          "to": "spatial designer"
+        }
+      ]
+    },
+    {
+      "personId": "eason-tang",
+      "name": "Eason Tang",
+      "why": "You should meet Eason Tang because his unique perspective on creativity aligns perfectly with your own artistic vision and passion for bold expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Unfashionable today is just taste six months ahead. Hold it anyway.",
+      "path_receipt": [
+        {
+          "from": "Diora Juraboeva",
+          "rel": "SHARES_VALUE",
+          "to": "Eason Tang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "CONSTRAINT PHILOSOPHER",
+    "company": "",
+    "belief": "Spaces that fight back force sharper solutions. If they don't push, neither do you.",
+    "working_on": "Constructing a gallery from laundromat bones—walls cracked and tilted become the real exhibition, not the art inside."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to challenge perceptions, believing that the environment itself can inspire deeper engagement and transformation.",
+  "gradient": {
+    "seed": 702055896,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(14 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "laura-jun",
+  "name": "Laura Jun",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "langston-macy-gima-reid",
+      "name": "Langston Macy Gima Reid",
+      "why": "You and Langston share a passion for live performance and the exciting world of machine learning engineering, making for a fascinating conversation.",
+      "basis_kind": "same_work",
+      "via": "ml engineer, live performance",
+      "path_receipt": [
+        {
+          "from": "Laura Jun",
+          "rel": "DOES",
+          "to": "ml engineer, live performance"
+        },
+        {
+          "from": "Langston Macy Gima Reid",
+          "rel": "DOES",
+          "to": "ml engineer, live performance"
+        }
+      ]
+    },
+    {
+      "personId": "lorenzo-ametrano",
+      "name": "Lorenzo Ametrano",
+      "why": "You should meet Lorenzo Ametrano because his innovative ideas will inspire your creativity, as you both excel at connecting unexpected concepts in unique ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Most people miss the incentive collision. The gap appears once you see it's there.",
+      "path_receipt": [
+        {
+          "from": "Laura Jun",
+          "rel": "SHARES_VALUE",
+          "to": "Lorenzo Ametrano"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "SYNAESTHETIC TECHNOLOGIST",
+    "company": "",
+    "belief": "Genius is finding the axis two separate domains rotate on without knowing it.",
+    "working_on": "generative stage lighting that evolves alongside music, discovering where the two languages already speak to each other"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to uncover hidden connections, seeking harmony between music and light that resonates with deeper artistic truths.",
+  "gradient": {
+    "seed": 2520842272,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(23 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

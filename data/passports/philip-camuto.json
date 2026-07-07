@@ -1,0 +1,69 @@
+{
+  "personId": "philip-camuto",
+  "name": "Philip Camuto",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alekh-singh",
+      "name": "Alekh singh",
+      "why": "You should meet Alekh Singh because you both share a passion for curating programs that inspire and engage diverse audiences.",
+      "basis_kind": "same_work",
+      "via": "program curator",
+      "path_receipt": [
+        {
+          "from": "Philip Camuto",
+          "rel": "DOES",
+          "to": "program curator"
+        },
+        {
+          "from": "Alekh singh",
+          "rel": "DOES",
+          "to": "program curator"
+        }
+      ]
+    },
+    {
+      "personId": "preston-thoman",
+      "name": "Preston Thoman",
+      "why": "You should meet Preston Thoman because his creative energy complements your vision, making it a perfect opportunity for collaboration and inspiration.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Stop calling it creativity and call it what pulls you. The pull is always honest.",
+      "path_receipt": [
+        {
+          "from": "Philip Camuto",
+          "rel": "SHARES_VALUE",
+          "to": "Preston Thoman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Business Administration",
+    "grad_year": "2027",
+    "position": "CREATIVE CATALYST ORGANIZER",
+    "company": "",
+    "belief": "Serendipity doesn't happen. You build the lattice, choose the beads, watch them rearrange each other.",
+    "working_on": "designing friction events where philosophy students collide with ceramicists by structural intent"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create intentional connections that spark unexpected insights, believing that true discovery requires thoughtful design.",
+  "gradient": {
+    "seed": 634484175,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(155 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

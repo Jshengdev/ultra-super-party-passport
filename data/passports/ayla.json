@@ -1,0 +1,69 @@
+{
+  "personId": "ayla",
+  "name": "Ayla",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "arushi-purkayastha",
+      "name": "Arushi Purkayastha",
+      "why": "You would enjoy meeting Arushi Purkayastha because she shares your passion for audio tool building and has some fascinating insights to share.",
+      "basis_kind": "same_work",
+      "via": "audio tool builder",
+      "path_receipt": [
+        {
+          "from": "Ayla",
+          "rel": "DOES",
+          "to": "audio tool builder"
+        },
+        {
+          "from": "Arushi Purkayastha",
+          "rel": "DOES",
+          "to": "audio tool builder"
+        }
+      ]
+    },
+    {
+      "personId": "cat-wang",
+      "name": "cat wang",
+      "why": "You would love to meet Cat Wang because their creative energy and innovative ideas in cluster-6 align perfectly with your passion for making real things exist.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Wearables become creative when someone would wear them even if nobody was watching. That's when you've truly made something.",
+      "path_receipt": [
+        {
+          "from": "Ayla",
+          "rel": "SHARES_VALUE",
+          "to": "cat wang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "REAL-TIME COMPOSITION BUILDER",
+    "company": "",
+    "belief": "Your tool becomes real when other artists can't imagine working without it. That's how you make your ideas infinite.",
+    "working_on": "Creating tools that let musicians layer sampled everyday sounds—doors, breaks, rain—into live performance compositions on the fly"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to empower creativity, enabling artists to weave the fabric of everyday life into their musical expressions.",
+  "gradient": {
+    "seed": 3748140648,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(296 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

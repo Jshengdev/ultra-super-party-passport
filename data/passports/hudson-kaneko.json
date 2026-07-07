@@ -1,0 +1,69 @@
+{
+  "personId": "hudson-kaneko",
+  "name": "Hudson Kaneko",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "cooper-queen",
+      "name": "cooper queen",
+      "why": "You should meet Cooper Queen, as you both share a passion for visual design that could spark some inspiring conversations and ideas.",
+      "basis_kind": "same_work",
+      "via": "visual designer",
+      "path_receipt": [
+        {
+          "from": "Hudson Kaneko",
+          "rel": "DOES",
+          "to": "visual designer"
+        },
+        {
+          "from": "cooper queen",
+          "rel": "DOES",
+          "to": "visual designer"
+        }
+      ]
+    },
+    {
+      "personId": "isaac-wang",
+      "name": "Isaac Wang",
+      "why": "You should meet Isaac Wang because his unique perspective on creativity will resonate with your own taste and passion for craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Discipline is saying no so loudly that what remains is impossible to ignore.",
+      "path_receipt": [
+        {
+          "from": "Hudson Kaneko",
+          "rel": "SHARES_VALUE",
+          "to": "Isaac Wang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "REDUCTION DESIGNER",
+    "company": "",
+    "belief": "Reduction is the opposite of emptiness. Removing what doesn't matter makes what remains unmissable.",
+    "working_on": "packaging system where each curve serves a structural purpose and no decoration exists"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to reveal beauty through purity, allowing essential forms to communicate strength and meaning without distraction.",
+  "gradient": {
+    "seed": 2431879186,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(222 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

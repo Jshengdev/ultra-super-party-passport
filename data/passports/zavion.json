@@ -1,0 +1,69 @@
+{
+  "personId": "zavion",
+  "name": "Zavion",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jefray-ding",
+      "name": "Jefray Ding",
+      "why": "You should meet Jefray Ding because his insights into indie game dev could inspire your next project and spark some exciting collaboration ideas.",
+      "basis_kind": "same_work",
+      "via": "indie game dev",
+      "path_receipt": [
+        {
+          "from": "Zavion",
+          "rel": "DOES",
+          "to": "indie game dev"
+        },
+        {
+          "from": "Jefray Ding",
+          "rel": "DOES",
+          "to": "indie game dev"
+        }
+      ]
+    },
+    {
+      "personId": "anjali",
+      "name": "Anjali",
+      "why": "You’d love to meet Anjali because her unique approach to creativity will inspire you to turn your ideas into tangible realities.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Real products solve for the hand holding them and habits of the person using them every day.",
+      "path_receipt": [
+        {
+          "from": "Anjali",
+          "rel": "SHARES_VALUE",
+          "to": "Zavion"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "GAME DESIGNER",
+    "company": "",
+    "belief": "You learn by shipping. Every player's unexpected choice rewrites your assumptions faster than any meeting could.",
+    "working_on": "Shipping a strategy game about inheriting a failing family business—each run explores a different path"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform failure into discovery, valuing the unpredictable nature of choices to fuel growth and innovation.",
+  "gradient": {
+    "seed": 2537509592,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(237 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

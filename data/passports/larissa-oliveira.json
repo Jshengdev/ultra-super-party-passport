@@ -1,0 +1,69 @@
+{
+  "personId": "larissa-oliveira",
+  "name": "Larissa Oliveira",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christy",
+      "name": "Christy",
+      "why": "You should meet Christy because her innovative approach as an education designer will resonate with your own passion for creating impactful learning experiences.",
+      "basis_kind": "same_work",
+      "via": "education designer",
+      "path_receipt": [
+        {
+          "from": "Larissa Oliveira",
+          "rel": "DOES",
+          "to": "education designer"
+        },
+        {
+          "from": "Christy",
+          "rel": "DOES",
+          "to": "education designer"
+        }
+      ]
+    },
+    {
+      "personId": "lauryn-kinsella",
+      "name": "Lauryn Kinsella",
+      "why": "You should meet Lauryn Kinsella because her innovative ideas about creativity will inspire you both to connect with like-minded individuals in an exciting way.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Magic's the split second two people realize they actually needed each other all along.",
+      "path_receipt": [
+        {
+          "from": "Larissa Oliveira",
+          "rel": "SHARES_VALUE",
+          "to": "Lauryn Kinsella"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "DISCIPLINE FRICTION EDUCATOR",
+    "company": "",
+    "belief": "The collision between different minds making art is where everyone learns what neither could alone.",
+    "working_on": "Residency pairing painters with roboticists; each group teaching the other how they see what's buildable."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief in collaboration, seeking to unlock new perspectives and possibilities through the fusion of art and technology.",
+  "gradient": {
+    "seed": 2086734772,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(188 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

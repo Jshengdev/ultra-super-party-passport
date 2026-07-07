@@ -1,0 +1,69 @@
+{
+  "personId": "christian-stiker",
+  "name": "christian stiker",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "ellie",
+      "name": "Ellie",
+      "why": "You should meet Ellie, as you both share a passion for accessible interaction design that could spark inspiring conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "Ellie",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "christine-lai",
+      "name": "Christine Lai",
+      "why": "You should meet Christine Lai because her innovative approach to creativity aligns perfectly with your passion for transforming possibilities for others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Data becomes action only when the decision-maker sees themselves in the numbers. Translation is the work.",
+      "path_receipt": [
+        {
+          "from": "christian stiker",
+          "rel": "SHARES_VALUE",
+          "to": "Christine Lai"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "^",
+    "grad_year": "",
+    "position": "ACCESS ARCHITECT",
+    "company": "",
+    "belief": "Removing invisible walls before anyone has to name them out loud. That's the starting point.",
+    "working_on": "Rewriting a government portal's code so screen reader users navigate with the same speed and authority as anyone else."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to equality, ensuring that everyone can access information effortlessly, transforming silence into empowerment.",
+  "gradient": {
+    "seed": 1978586359,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(148 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

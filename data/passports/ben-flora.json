@@ -1,0 +1,69 @@
+{
+  "personId": "ben-flora",
+  "name": "Ben Flora",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "annie-long",
+      "name": "Annie Long",
+      "why": "You and Annie Long both share a passion for code artistry, making your conversation about creative coding projects sure to be inspiring.",
+      "basis_kind": "same_work",
+      "via": "code artist",
+      "path_receipt": [
+        {
+          "from": "Ben Flora",
+          "rel": "DOES",
+          "to": "code artist"
+        },
+        {
+          "from": "Annie Long",
+          "rel": "DOES",
+          "to": "code artist"
+        }
+      ]
+    },
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You should meet Christian Stiker because his innovative ideas about creativity could inspire you to explore new possibilities in your work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Removing invisible walls before anyone has to name them out loud. That's the starting point.",
+      "path_receipt": [
+        {
+          "from": "Ben Flora",
+          "rel": "SHARES_VALUE",
+          "to": "christian stiker"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "DATA ARTIST",
+    "company": "",
+    "belief": "Creativity hands people the instruments to see the system nobody let them see before. That changes everything.",
+    "working_on": "Installing spaces where gentrification becomes visible through real estate data and sound, giving people power to name it"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep desire to empower others, transforming overlooked realities into shared narratives that inspire collective action and awareness.",
+  "gradient": {
+    "seed": 4213642549,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(140 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

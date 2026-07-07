@@ -1,0 +1,69 @@
+{
+  "personId": "jasmine-yip",
+  "name": "jasmine yip",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "byeongjun-moon",
+      "name": "Byeongjun Moon",
+      "why": "You should meet Byeongjun Moon because you both share a passion for software engineering and documentary filmmaking that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "software engineer, documentarian",
+      "path_receipt": [
+        {
+          "from": "jasmine yip",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        },
+        {
+          "from": "Byeongjun Moon",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        }
+      ]
+    },
+    {
+      "personId": "jg",
+      "name": "Jg",
+      "why": "You should meet Jg, as both of you have a unique talent for connecting ideas in ways that inspire creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Hidden circuits reveal themselves in the gap between time you measure and time you feel.",
+      "path_receipt": [
+        {
+          "from": "jasmine yip",
+          "rel": "SHARES_VALUE",
+          "to": "Jg"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Computer Science",
+    "grad_year": "2027",
+    "position": "EMOTION-SYSTEM TRANSLATOR",
+    "company": "",
+    "belief": "Bridge human language and algorithms by teaching systems to recognize what bodies know before minds.",
+    "working_on": "writing code that lets humans search by feeling instead of keywords they don't understand"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect authentic human experience with technology, honoring intuition over intellect in our interactions.",
+  "gradient": {
+    "seed": 558837305,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(179 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

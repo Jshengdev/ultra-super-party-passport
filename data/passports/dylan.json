@@ -1,0 +1,69 @@
+{
+  "personId": "dylan",
+  "name": "Dylan",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma, as you both share a passion for interaction design that could spark inspiring conversations and ideas.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Dylan",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "eleanor-xie",
+      "name": "Eleanor Xie",
+      "why": "You should meet Eleanor Xie because her innovative ideas and creative spirit align perfectly with your passion for bringing inspiring people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Connection happens when the path clears and the right people can actually find each other.",
+      "path_receipt": [
+        {
+          "from": "Dylan",
+          "rel": "SHARES_VALUE",
+          "to": "Eleanor Xie"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Finance",
+    "grad_year": "2027",
+    "position": "AUTHENTICITY ENGINEER",
+    "company": "",
+    "belief": "It's asking what they're trying to say when everyone's tired, then building the thing that says it true.",
+    "working_on": "Redesigning how artists reach fans without the platform's hunger—real numbers, straight words, no vanity metrics to chase."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower authentic connections, fostering genuine expression amidst a landscape that often prioritizes artifice.",
+  "gradient": {
+    "seed": 2002457953,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(239 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

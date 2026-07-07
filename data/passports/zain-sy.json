@@ -1,0 +1,69 @@
+{
+  "personId": "zain-sy",
+  "name": "Zain Sy",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should definitely meet Advik Sharma; your shared passion for interaction design will spark some inspiring conversations and ideas between you two.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Zain Sy",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "zuhair",
+      "name": "Zuhair",
+      "why": "You should meet Zuhair because his creative insights could inspire your next project and spark some exciting collaborations together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Sound shapes presence invisibly. Someone feels held in a room because you designed for attention, not just acoustics.",
+      "path_receipt": [
+        {
+          "from": "Zain Sy",
+          "rel": "SHARES_VALUE",
+          "to": "Zuhair"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "CREATIVE CONNECTOR",
+    "company": "",
+    "belief": "One conversation at the right moment with the right person multiplies outward. Connecting those moments is the whole project.",
+    "working_on": "Building a mentorship matching system pairing emerging artists with established creators in their niche"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep understanding of the transformative power of connection, believing that relationships can spark profound change in creative journeys.",
+  "gradient": {
+    "seed": 1705360750,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(156 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

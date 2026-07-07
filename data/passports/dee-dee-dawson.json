@@ -1,0 +1,69 @@
+{
+  "personId": "dee-dee-dawson",
+  "name": "Dee Dee Dawson",
+  "line2": "Dornslife",
+  "find": [
+    {
+      "personId": "kat",
+      "name": "Kat",
+      "why": "You’ll enjoy connecting with Kat, as you both share a passion for product strategy and voice, making for an engaging conversation.",
+      "basis_kind": "same_work",
+      "via": "product strategist, voice",
+      "path_receipt": [
+        {
+          "from": "Dee Dee Dawson",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        },
+        {
+          "from": "Kat",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        }
+      ]
+    },
+    {
+      "personId": "dylan-reid",
+      "name": "Dylan Reid",
+      "why": "You should meet Dylan Reid because his innovative approach to creativity will resonate with your unique perspective on connecting unexpected ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "The architecture holds when you teach algorithms to speak about feeling in their own syntax. Bridge built.",
+      "path_receipt": [
+        {
+          "from": "Dee Dee Dawson",
+          "rel": "SHARES_VALUE",
+          "to": "Dylan Reid"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornslife",
+    "major": "Economics",
+    "grad_year": "2027",
+    "position": "PITCH DIRECTOR",
+    "company": "",
+    "belief": "Creative breakthroughs happen when you wire systems together that were never meant to talk. The novelty is in the bridge.",
+    "working_on": "Building software that reads vocal patterns and shifts emotional tone from frustrated to authoritative while keeping every word intact."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize disparate elements, crafting connections that empower voices to be heard and understood.",
+  "gradient": {
+    "seed": 2453437681,
+    "stops": [
+      {
+        "color": "hsl(295 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

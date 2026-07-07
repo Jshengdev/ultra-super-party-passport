@@ -1,0 +1,69 @@
+{
+  "personId": "paris",
+  "name": "Paris",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah, as you both share a passion for music production that could spark some exciting creative conversations.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Paris",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "rania",
+      "name": "Rania",
+      "why": "You should meet Rania, as her unique approach to creativity will resonate with your passion for making meaningful connections through art.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Perception shifts when you show someone what existed all along but they overlooked.",
+      "path_receipt": [
+        {
+          "from": "Paris",
+          "rel": "SHARES_VALUE",
+          "to": "Rania"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "SONIC LANDSCAPE DESIGNER",
+    "company": "",
+    "belief": "Work lingers in someone's skull three days after they heard it. That's the only test.",
+    "working_on": "field recordings from industrial decay transformed into meditative compositions that haunt afterward"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to evoke deep, lingering reflections, transforming decay into a haunting beauty that resonates long after the experience.",
+  "gradient": {
+    "seed": 1341829536,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(279 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "isabella-smart",
+  "name": "Isabella Smart",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christy",
+      "name": "Christy",
+      "why": "You and Christy share a passion for education design, making it a great opportunity to exchange innovative ideas and insights in the field.",
+      "basis_kind": "same_work",
+      "via": "education designer",
+      "path_receipt": [
+        {
+          "from": "Isabella Smart",
+          "rel": "DOES",
+          "to": "education designer"
+        },
+        {
+          "from": "Christy",
+          "rel": "DOES",
+          "to": "education designer"
+        }
+      ]
+    },
+    {
+      "personId": "jaden",
+      "name": "Jaden",
+      "why": "You’ll love meeting Jaden because their creativity aligns perfectly with yours, making it an exciting opportunity to collaborate and share ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Stop overthinking creativity—just build what your hands already want to hold.",
+      "path_receipt": [
+        {
+          "from": "Isabella Smart",
+          "rel": "SHARES_VALUE",
+          "to": "Jaden"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "DISCIPLINE COLLISION DESIGNER",
+    "company": "",
+    "belief": "Creativity ignites in the discomfort between incompatible minds trying to speak the same language.",
+    "working_on": "matchmaking between artists and engineers who see the world totally differently and need each other"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief that true innovation emerges from the friction of diverse perspectives colliding and collaborating.",
+  "gradient": {
+    "seed": 1711104836,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(85 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

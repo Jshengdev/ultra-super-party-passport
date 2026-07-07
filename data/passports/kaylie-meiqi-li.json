@@ -1,0 +1,69 @@
+{
+  "personId": "kaylie-meiqi-li",
+  "name": "kaylie meiqi li",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "george-zhou",
+      "name": "George Zhou",
+      "why": "You would really enjoy meeting George Zhou, as he shares your passion for electronics tinkering and has some fascinating projects to discuss.",
+      "basis_kind": "same_work",
+      "via": "electronics tinkerer",
+      "path_receipt": [
+        {
+          "from": "kaylie meiqi li",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        },
+        {
+          "from": "George Zhou",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        }
+      ]
+    },
+    {
+      "personId": "kelvin-ye",
+      "name": "Kelvin Ye",
+      "why": "You should meet Kelvin Ye because his innovative approach to creativity in cluster-6 aligns perfectly with your passion for bringing ideas to life.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Three games in the wild teach you more about design than one perfect document ever could.",
+      "path_receipt": [
+        {
+          "from": "kaylie meiqi li",
+          "rel": "SHARES_VALUE",
+          "to": "Kelvin Ye"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "PORTABLE SYNTH BUILDER",
+    "company": "",
+    "belief": "A deployed instrument teaching people to make sound is proof—ideas alone never were.",
+    "working_on": "Self-powered modular synthesizer in travel-size; every oscillator runs on recharged sun."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your drive stems from a desire to empower creativity and connection, transforming abstract ideas into tangible experiences that resonate with others.",
+  "gradient": {
+    "seed": 3323319380,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(273 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

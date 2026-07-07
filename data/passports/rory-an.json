@@ -1,0 +1,69 @@
+{
+  "personId": "rory-an",
+  "name": "Rory An",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jefray-ding",
+      "name": "Jefray Ding",
+      "why": "You should meet Jefray Ding because he has some fascinating insights into indie game dev that you would both enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "indie game dev",
+      "path_receipt": [
+        {
+          "from": "Rory An",
+          "rel": "DOES",
+          "to": "indie game dev"
+        },
+        {
+          "from": "Jefray Ding",
+          "rel": "DOES",
+          "to": "indie game dev"
+        }
+      ]
+    },
+    {
+      "personId": "ryan-zhu",
+      "name": "Ryan Zhu",
+      "why": "You should meet Ryan Zhu because his innovative approach to creativity complements your passion for making real things exist in exciting ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "A frame is static. Thousands of frames at sixty hertz become alive. That's the craft.",
+      "path_receipt": [
+        {
+          "from": "Rory An",
+          "rel": "SHARES_VALUE",
+          "to": "Ryan Zhu"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "INTERACTIVE NARRATIVE DESIGNER",
+    "company": "",
+    "belief": "Building is thinking out loud. Code and play are the only honest conversation between intention and truth.",
+    "working_on": "simulation where you navigate your family's failing bookstore across three generations of choice and consequence"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to explore the intricate tapestry of familial legacy, revealing how choices shape identity and connection.",
+  "gradient": {
+    "seed": 1116734729,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(146 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

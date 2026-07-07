@@ -1,0 +1,69 @@
+{
+  "personId": "cooper-queen",
+  "name": "cooper queen",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "hudson-kaneko",
+      "name": "Hudson Kaneko",
+      "why": "You would enjoy meeting Hudson Kaneko because you both share a passion for visual design and can exchange inspiring ideas.",
+      "basis_kind": "same_work",
+      "via": "visual designer",
+      "path_receipt": [
+        {
+          "from": "cooper queen",
+          "rel": "DOES",
+          "to": "visual designer"
+        },
+        {
+          "from": "Hudson Kaneko",
+          "rel": "DOES",
+          "to": "visual designer"
+        }
+      ]
+    },
+    {
+      "personId": "daven-dong",
+      "name": "Daven Dong",
+      "why": "You should meet Daven Dong because his bold creativity mirrors your own, and you'd both enjoy exchanging insights on taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Your craft standard doesn't negotiate with faster or cheaper. It just doesn't.",
+      "path_receipt": [
+        {
+          "from": "cooper queen",
+          "rel": "SHARES_VALUE",
+          "to": "Daven Dong"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "STRUCTURE MINIMALIST",
+    "company": "",
+    "belief": "Slash until removing one more thing breaks it. That's the line.",
+    "working_on": "Rebuilding packaging so ruthlessly efficient that every millimeter of curve carries a load or gets cut."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a quest for purity in design, seeking to distill functionality to its most essential, elegant form.",
+  "gradient": {
+    "seed": 2245278976,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(277 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

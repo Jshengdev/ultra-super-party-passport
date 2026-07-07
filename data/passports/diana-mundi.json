@@ -1,0 +1,69 @@
+{
+  "personId": "diana-mundi",
+  "name": "Diana Mundi",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "justin",
+      "name": "Justin",
+      "why": "You and Justin share a passion for environmental justice organizing, which makes him a fantastic person for you to connect with.",
+      "basis_kind": "same_work",
+      "via": "environmental justice organizer",
+      "path_receipt": [
+        {
+          "from": "Diana Mundi",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        },
+        {
+          "from": "Justin",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        }
+      ]
+    },
+    {
+      "personId": "edith-chang",
+      "name": "Edith Chang",
+      "why": "You should meet Edith Chang because her innovative ideas about creativity could inspire you to change what's possible for people in remarkable ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Visibility shifts when the people affected become the storytellers instead of the story. That's all power.",
+      "path_receipt": [
+        {
+          "from": "Diana Mundi",
+          "rel": "SHARES_VALUE",
+          "to": "Edith Chang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Business Administration",
+    "grad_year": "2029",
+    "position": "POLLUTION CARTOGRAPHER",
+    "company": "",
+    "belief": "Revelation happens when you show what's been true all along. Then power has nowhere left to hide.",
+    "working_on": "Assembling detailed maps of industrial pollution plumes so a neighborhood has proof, coordinates, and standing to sue the source."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to empower the vulnerable, revealing hidden truths that demand accountability and justice for affected communities.",
+  "gradient": {
+    "seed": 2231118350,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(114 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

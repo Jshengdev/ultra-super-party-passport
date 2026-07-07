@@ -1,0 +1,69 @@
+{
+  "personId": "jackson",
+  "name": "Jackson",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "antonis-ioannou",
+      "name": "Antonis Ioannou",
+      "why": "You should meet Antonis Ioannou, as he has some fascinating insights into documentary filmmaking that I think you'll both appreciate and enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "documentary filmmaker",
+      "path_receipt": [
+        {
+          "from": "Jackson",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        },
+        {
+          "from": "Antonis Ioannou",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        }
+      ]
+    },
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because his unique perspective on creativity will inspire you to explore new ways of making people feel something true.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Music's only truly working when it makes someone sit inside a feeling they normally flee from.",
+      "path_receipt": [
+        {
+          "from": "Jackson",
+          "rel": "SHARES_VALUE",
+          "to": "Jash Shah"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "DOCUMENTARY WITNESS",
+    "company": "",
+    "belief": "People change when they see their own lives reflected back clearer than memory allows.",
+    "working_on": "spending months embedded with families at 5am to show what actually gets sacrificed silently"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep empathy, seeking to illuminate hidden sacrifices so others can recognize and transform their own narratives.",
+  "gradient": {
+    "seed": 4257837030,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(3 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

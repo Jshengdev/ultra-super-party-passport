@@ -1,0 +1,69 @@
+{
+  "personId": "vagis-kumar",
+  "name": "Vagis Kumar",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because his insights into entrepreneurship could spark some exciting ideas for your own ventures.",
+      "basis_kind": "shared_context",
+      "via": "Entrepreneurship",
+      "path_receipt": [
+        {
+          "from": "Vagis Kumar",
+          "rel": "MAJORS_IN",
+          "to": "Entrepreneurship"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "MAJORS_IN",
+          "to": "Entrepreneurship"
+        }
+      ]
+    },
+    {
+      "personId": "vineeta-muvvala",
+      "name": "vineeta muvvala",
+      "why": "You'd enjoy meeting Vineeta Muvvala because her creativity in connecting people aligns perfectly with your passion for fostering collaboration in Cluster-2.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Cutting out the middleman reveals something: creators and supporters find each other when algorithms stop deciding who matters.",
+      "path_receipt": [
+        {
+          "from": "Vagis Kumar",
+          "rel": "SHARES_VALUE",
+          "to": "vineeta muvvala"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Entrepreneurship",
+    "grad_year": "2026",
+    "position": "TACTILE INTERFACE SCULPTOR",
+    "company": "",
+    "belief": "Listening to what material wants becomes the conversation between makers and their work",
+    "working_on": "sculpting interfaces where hands discover spatial audio through touch, not explanation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create immersive experiences that foster intuitive connections, allowing people to explore and engage through sensation.",
+  "gradient": {
+    "seed": 1709965452,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

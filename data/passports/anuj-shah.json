@@ -1,0 +1,69 @@
+{
+  "personId": "anuj-shah",
+  "name": "Anuj Shah",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "caleb-newton",
+      "name": "Caleb Newton",
+      "why": "You should meet Caleb Newton; he shares your passion for startup strategy and has some great insights to exchange with you.",
+      "basis_kind": "same_work",
+      "via": "startup strategist",
+      "path_receipt": [
+        {
+          "from": "Anuj Shah",
+          "rel": "DOES",
+          "to": "startup strategist"
+        },
+        {
+          "from": "Caleb Newton",
+          "rel": "DOES",
+          "to": "startup strategist"
+        }
+      ]
+    },
+    {
+      "personId": "christian-friis",
+      "name": "Christian Friis",
+      "why": "You should meet Christian Friis because his innovative ideas about creativity align perfectly with your passion for bringing the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity starts when you know what someone needs before exhaustion erases the question.",
+      "path_receipt": [
+        {
+          "from": "Anuj Shah",
+          "rel": "SHARES_VALUE",
+          "to": "Christian Friis"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "CULTURE CONNECTOR",
+    "company": "",
+    "belief": "Creativity flows through people who've never met. It's finding the room where they should collide.",
+    "working_on": "Mapping untapped spaces where creatives from different disciplines accidentally ignite collaboration"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to cultivate unexpected connections, believing that true innovation arises from the beautiful chaos of diverse interactions.",
+  "gradient": {
+    "seed": 3146438918,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(304 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

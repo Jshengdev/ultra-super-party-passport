@@ -6,7 +6,7 @@
     {
       "personId": "charles",
       "name": "Charles",
-      "why": "You should meet Charles because you both share a passion for full-stack engineering and a love for music that could spark some great conversations.",
+      "why": "You should meet Charles because you both share a passion for music and the skills of a full-stack engineer, making for an inspiring conversation.",
       "basis_kind": "same_work",
       "via": "full-stack engineer, music",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "amelia",
       "name": "Amelia",
-      "why": "You should meet Amelia; her unique approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "why": "You would love to meet Amelia, as her innovative ideas in creativity are sure to inspire your own unique connections and projects.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "Feedback loops that close creation and curation into one continuous act instead of sequential steps.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "ECONOMIC SYSTEMS MAPPER",
     "company": "",
-    "belief": "Find the nodal point where information flows, restructure it, and the whole system reorganizes itself."
+    "belief": "Find the nodal point where information flows, restructure it, and the whole system reorganizes itself.",
+    "working_on": "mapping how music discovery cascades through communities when you kill algorithmic ranking"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep belief in the transformative power of connection, seeking to reveal and reshape the essence of community interaction.",
+  "magic_inference": "You are driven by a desire to empower authentic connections in music, believing that reshaping flow transforms not just discovery, but community itself.",
   "gradient": {
     "seed": 1887477371,
     "stops": [

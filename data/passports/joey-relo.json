@@ -1,0 +1,69 @@
+{
+  "personId": "joey-relo",
+  "name": "Joey relo",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "laila-l",
+      "name": "Laila L",
+      "why": "You’ll really enjoy chatting with Laila L, as you both share a passion for experimental sound artistry that sparks unique conversations.",
+      "basis_kind": "same_work",
+      "via": "experimental sound artist",
+      "path_receipt": [
+        {
+          "from": "Joey relo",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        },
+        {
+          "from": "Laila L",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        }
+      ]
+    },
+    {
+      "personId": "kayla-trinh",
+      "name": "Kayla Trinh",
+      "why": "You should meet Kayla Trinh, as her creative energy truly resonates and can spark meaningful connections just like yours.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Holding space for listeners to fill in what you didn't say requires the hardest kind of trust.",
+      "path_receipt": [
+        {
+          "from": "Joey relo",
+          "rel": "SHARES_VALUE",
+          "to": "Kayla Trinh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "EMBODIED EXPERIENCE DESIGNER",
+    "company": "",
+    "belief": "You've done something right when someone stops and notices what they've never noticed before.",
+    "working_on": "building a room-sized listening space that teaches your body what silence actually contains"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to awaken awareness, inviting others to explore the profound subtleties of their own experiences.",
+  "gradient": {
+    "seed": 1939147323,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(140 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

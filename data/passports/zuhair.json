@@ -1,0 +1,69 @@
+{
+  "personId": "zuhair",
+  "name": "Zuhair",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah, as you both share a passion for music production that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Zuhair",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma because his innovative ideas about collaboration could inspire your own creative projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The paradox is that platforms grow when they stop chasing growth and start solving real friction.",
+      "path_receipt": [
+        {
+          "from": "Advik Sharma",
+          "rel": "SHARES_VALUE",
+          "to": "Zuhair"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Business Administration",
+    "grad_year": "2026",
+    "position": "SPATIAL AUDIO DESIGNER",
+    "company": "",
+    "belief": "Sound shapes presence invisibly. Someone feels held in a room because you designed for attention, not just acoustics.",
+    "working_on": "Designing ambient audio environments that make remote workspaces feel less lonely and more grounded"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep empathy for connection, seeking to transform isolation into a shared experience through the power of sound.",
+  "gradient": {
+    "seed": 1447133044,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(158 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

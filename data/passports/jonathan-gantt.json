@@ -1,0 +1,69 @@
+{
+  "personId": "jonathan-gantt",
+  "name": "Jonathan Gantt",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You and Alexandra Siy share a passion for healthcare product design, making it a perfect opportunity to exchange insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Jonathan Gantt",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "josephine-ong",
+      "name": "Josephine Ong",
+      "why": "You should meet Josephine Ong because her innovative ideas about creativity could inspire you to rethink what's possible in your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "The camera reveals the apparatus once you point it at what people have been surviving inside.",
+      "path_receipt": [
+        {
+          "from": "Jonathan Gantt",
+          "rel": "SHARES_VALUE",
+          "to": "Josephine Ong"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Mechanical Engineering",
+    "grad_year": "2028",
+    "position": "SYSTEMS CLARITY ENGINEER",
+    "company": "",
+    "belief": "Making complex systems transparent terrifies institutions but frees people—that's the only metric that matters.",
+    "working_on": "redesigning how hospitals help a scared child understand what's happening so fear becomes readiness"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep empathy for vulnerable moments, believing that clarity can transform fear into empowerment for both children and families.",
+  "gradient": {
+    "seed": 243944107,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(61 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

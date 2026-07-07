@@ -1,0 +1,69 @@
+{
+  "personId": "sam",
+  "name": "sam",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You should connect with Christian Stiker, as you both share a passion for accessible interaction design that could lead to inspiring discussions and collaboration.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "sam",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "steph-ng",
+      "name": "Steph Ng",
+      "why": "You should meet Steph Ng because her innovative approach to creativity can inspire you to rethink what's possible in your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Genius is noticing a wall that seemed permanent and building a door",
+      "path_receipt": [
+        {
+          "from": "sam",
+          "rel": "SHARES_VALUE",
+          "to": "Steph Ng"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Human Tech Interaction",
+    "grad_year": "2027",
+    "position": "HUMAN-CENTERED DESIGN ADVOCATE",
+    "company": "",
+    "belief": "Universal design isn't nice. It's recognition that excluding people was always a choice.",
+    "working_on": "overhauling public health dashboards so visually impaired citizens navigate independently without third-party help"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to equity, believing that everyone deserves the autonomy to navigate the world on their own terms.",
+  "gradient": {
+    "seed": 3709640156,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(47 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

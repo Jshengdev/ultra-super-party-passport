@@ -1,0 +1,69 @@
+{
+  "personId": "justin",
+  "name": "Justin",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "diana-mundi",
+      "name": "Diana Mundi",
+      "why": "You should meet Diana Mundi because her work in environmental justice aligns beautifully with your passion for creating impactful change in the community.",
+      "basis_kind": "same_work",
+      "via": "environmental justice organizer",
+      "path_receipt": [
+        {
+          "from": "Justin",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        },
+        {
+          "from": "Diana Mundi",
+          "rel": "DOES",
+          "to": "environmental justice organizer"
+        }
+      ]
+    },
+    {
+      "personId": "kelly-keys",
+      "name": "Kelly Keys",
+      "why": "You should meet Kelly Keys because her innovative ideas about creativity can inspire you to rethink what's possible in your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Real estate markets hide their math; revealing it rewrites what communities can actually negotiate.",
+      "path_receipt": [
+        {
+          "from": "Justin",
+          "rel": "SHARES_VALUE",
+          "to": "Kelly Keys"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "POLLUTION CARTOGRAPHER",
+    "company": "",
+    "belief": "Exposing what was always there means people stop having to pretend they don't inhabit it.",
+    "working_on": "Visualizing industrial runoff patterns so soil samples become legal testimony."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire for truth and accountability, seeking to illuminate hidden realities that demand recognition and action.",
+  "gradient": {
+    "seed": 1312835332,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(270 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

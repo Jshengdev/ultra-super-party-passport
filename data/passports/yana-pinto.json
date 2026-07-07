@@ -1,0 +1,69 @@
+{
+  "personId": "yana-pinto",
+  "name": "Yana Pinto",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy, as her insights as a healthcare product designer could spark inspiring ideas for your own work.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Yana Pinto",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "zac-marcus",
+      "name": "Zac Marcus",
+      "why": "You should meet Zac Marcus because his innovative approach to creativity could inspire you to explore new possibilities in your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Removing a barrier that existed only because nobody thought kids like them deserved to try—that's the shift.",
+      "path_receipt": [
+        {
+          "from": "Yana Pinto",
+          "rel": "SHARES_VALUE",
+          "to": "Zac Marcus"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "HEALTHCARE EXPERIENCE DESIGNER",
+    "company": "",
+    "belief": "Fear collapses when someone finally sees what's actually going to happen. That clarity is the whole job.",
+    "working_on": "Designing intake experiences where kids with chronic illness understand their own medical timeline"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep compassion for children, seeking to transform fear into understanding, empowering them to navigate their health journeys confidently.",
+  "gradient": {
+    "seed": 1297734649,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(232 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

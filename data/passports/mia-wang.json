@@ -1,0 +1,69 @@
+{
+  "personId": "mia-wang",
+  "name": "Mia Wang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alex-wan",
+      "name": "Alex Wan",
+      "why": "You should meet Alex Wan, as both of you share a unique perspective as artist-coders, which could lead to inspiring conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "artist-coder",
+      "path_receipt": [
+        {
+          "from": "Mia Wang",
+          "rel": "DOES",
+          "to": "artist-coder"
+        },
+        {
+          "from": "Alex Wan",
+          "rel": "DOES",
+          "to": "artist-coder"
+        }
+      ]
+    },
+    {
+      "personId": "philip-camuto",
+      "name": "Philip Camuto",
+      "why": "You should meet Philip Camuto because his innovative ideas about collaboration in creativity could inspire your next project.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Serendipity doesn't happen. You build the lattice, choose the beads, watch them rearrange each other.",
+      "path_receipt": [
+        {
+          "from": "Mia Wang",
+          "rel": "SHARES_VALUE",
+          "to": "Philip Camuto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "CREATIVE TOOL MAKER",
+    "company": "",
+    "belief": "Stop performance and follow the pull—that's where the real creating starts.",
+    "working_on": "building utilities for other artists while chasing what actually calls to her own practice"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to nurture others while seeking authenticity in your own artistic journey, intertwining service with self-discovery.",
+  "gradient": {
+    "seed": 2839680006,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(161 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

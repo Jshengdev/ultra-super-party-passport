@@ -1,0 +1,69 @@
+{
+  "personId": "maceo",
+  "name": "Maceo",
+  "line2": "Cinematic Arts",
+  "find": [
+    {
+      "personId": "alexandra-oxenstierna",
+      "name": "Alexandra Oxenstierna",
+      "why": "You should meet Alexandra Oxenstierna because her insights as an investor could offer you valuable perspectives and opportunities in your shared field.",
+      "basis_kind": "same_work",
+      "via": "investor",
+      "path_receipt": [
+        {
+          "from": "Maceo",
+          "rel": "DOES",
+          "to": "investor"
+        },
+        {
+          "from": "Alexandra Oxenstierna",
+          "rel": "DOES",
+          "to": "investor"
+        }
+      ]
+    },
+    {
+      "personId": "mavis-zhang",
+      "name": "Mavis Zhang",
+      "why": "You should meet Mavis Zhang because her innovative ideas and artistic vision could spark inspiring conversations with your own creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Sound holds people without their knowing why—that invisibility is the entire lever.",
+      "path_receipt": [
+        {
+          "from": "Maceo",
+          "rel": "SHARES_VALUE",
+          "to": "Mavis Zhang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cinematic Arts",
+    "major": "Film & Media",
+    "grad_year": "2027",
+    "position": "TALENT SPOTTER & BACKER",
+    "company": "",
+    "belief": "Backing taste before proof, then trusting them to find their own path.",
+    "working_on": "placing early bets on students who haven't shipped yet but see the world differently"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief in potential, nurturing unique perspectives to foster innovation and empower others to chart their own journeys.",
+  "gradient": {
+    "seed": 1451469192,
+    "stops": [
+      {
+        "color": "hsl(180 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(188 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

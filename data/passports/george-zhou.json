@@ -1,0 +1,69 @@
+{
+  "personId": "george-zhou",
+  "name": "George Zhou",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "kaylie-meiqi-li",
+      "name": "kaylie meiqi li",
+      "why": "You should meet Kaylie MeiQi Li because her passion for electronics tinkering matches yours, and you'll both enjoy exchanging innovative ideas.",
+      "basis_kind": "same_work",
+      "via": "electronics tinkerer",
+      "path_receipt": [
+        {
+          "from": "George Zhou",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        },
+        {
+          "from": "kaylie meiqi li",
+          "rel": "DOES",
+          "to": "electronics tinkerer"
+        }
+      ]
+    },
+    {
+      "personId": "hattie-ugoretz",
+      "name": "Hattie Ugoretz",
+      "why": "You should meet Hattie Ugoretz because her innovative ideas about creativity will resonate with your passion for bringing unique concepts to life.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "When a robot watches and learns, that's proof creativity isn't abstract—it's purely physical.",
+      "path_receipt": [
+        {
+          "from": "George Zhou",
+          "rel": "SHARES_VALUE",
+          "to": "Hattie Ugoretz"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "HARDWARE INNOVATOR",
+    "company": "",
+    "belief": "Ideas are talk until the hardware boots up and makes actual sound—that's the proof.",
+    "working_on": "battery-free modular synthesizer charged entirely by sunlight that fits in a backpack"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize innovation with nature, transforming abstract concepts into tangible experiences that resonate deeply.",
+  "gradient": {
+    "seed": 2934642137,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(327 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

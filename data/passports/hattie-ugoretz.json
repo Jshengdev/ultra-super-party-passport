@@ -1,0 +1,69 @@
+{
+  "personId": "hattie-ugoretz",
+  "name": "Hattie Ugoretz",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "anushka",
+      "name": "anushka",
+      "why": "You would love to meet Anushka because she shares your passion for robotics engineering and has fascinating insights about the latest innovations in the field.",
+      "basis_kind": "same_work",
+      "via": "robotics engineer",
+      "path_receipt": [
+        {
+          "from": "Hattie Ugoretz",
+          "rel": "DOES",
+          "to": "robotics engineer"
+        },
+        {
+          "from": "anushka",
+          "rel": "DOES",
+          "to": "robotics engineer"
+        }
+      ]
+    },
+    {
+      "personId": "jefray-ding",
+      "name": "Jefray Ding",
+      "why": "You would enjoy meeting Jefray Ding because his innovative ideas about creativity align perfectly with your passion for bringing concepts to life.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Reality is the most honest critic; let it edit your vision before perfectionism paralyzes it.",
+      "path_receipt": [
+        {
+          "from": "Hattie Ugoretz",
+          "rel": "SHARES_VALUE",
+          "to": "Jefray Ding"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Double Major In Theater And Math",
+    "grad_year": "2027",
+    "position": "EMBODIED ENGINEER",
+    "company": "",
+    "belief": "When a robot watches and learns, that's proof creativity isn't abstract—it's purely physical.",
+    "working_on": "robot that learns complex assembly sequences from a single human demonstration"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to bridge the gap between human creativity and machine learning, revealing the artistry in physical intelligence.",
+  "gradient": {
+    "seed": 1019583607,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(84 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

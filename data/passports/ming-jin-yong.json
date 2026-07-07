@@ -1,0 +1,69 @@
+{
+  "personId": "ming-jin-yong",
+  "name": "Ming Jin Yong",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You should meet Christian Stiker, as you both share a passion for accessible interaction design that could spark inspiring conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "Ming Jin Yong",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "reem",
+      "name": "Reem",
+      "why": "You would enjoy meeting Reem because her innovative approach to creativity aligns perfectly with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Barriers vanish when you refuse to accept 'that's just how it is' as natural.",
+      "path_receipt": [
+        {
+          "from": "Ming Jin Yong",
+          "rel": "SHARES_VALUE",
+          "to": "Reem"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "INCLUSIVE DIGITAL ARCHITECT",
+    "company": "",
+    "belief": "Nobody woke up and chose to build walls. But you choose—every day—to tear them down.",
+    "working_on": "rebuilding municipal portals where assistive tech users find what they need immediately"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep commitment to inclusivity, transforming barriers into bridges so everyone can access vital resources with ease.",
+  "gradient": {
+    "seed": 2489849056,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(310 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

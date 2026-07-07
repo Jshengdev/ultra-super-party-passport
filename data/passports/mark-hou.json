@@ -1,0 +1,69 @@
+{
+  "personId": "mark-hou",
+  "name": "Mark Hou",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "arvin",
+      "name": "Arvin",
+      "why": "You’d enjoy meeting Arvin because he shares your passion for video essays and can discuss fascinating insights on the art form.",
+      "basis_kind": "same_work",
+      "via": "video essayist",
+      "path_receipt": [
+        {
+          "from": "Mark Hou",
+          "rel": "DOES",
+          "to": "video essayist"
+        },
+        {
+          "from": "Arvin",
+          "rel": "DOES",
+          "to": "video essayist"
+        }
+      ]
+    },
+    {
+      "personId": "paris",
+      "name": "Paris",
+      "why": "You should meet Paris, as both of you share a passion for creativity that truly resonates in making people feel something meaningful.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Work lingers in someone's skull three days after they heard it. That's the only test.",
+      "path_receipt": [
+        {
+          "from": "Mark Hou",
+          "rel": "SHARES_VALUE",
+          "to": "Paris"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "MONTAGE PHILOSOPHER",
+    "company": "",
+    "belief": "Meaning arrives when real fragments align—the moment before, it's just clips.",
+    "working_on": "stitching moments from cinema history to argue something true about how absence reshapes us"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to uncover deeper truths, believing that the interplay of absence and connection reveals the essence of our experiences.",
+  "gradient": {
+    "seed": 1089231497,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(22 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

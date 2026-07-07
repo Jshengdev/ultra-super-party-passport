@@ -1,0 +1,69 @@
+{
+  "personId": "dylan-reid",
+  "name": "Dylan Reid",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "byeongjun-moon",
+      "name": "Byeongjun Moon",
+      "why": "You should meet Byeongjun Moon, as you both share a passion for software engineering and documentary filmmaking that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "software engineer, documentarian",
+      "path_receipt": [
+        {
+          "from": "Dylan Reid",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        },
+        {
+          "from": "Byeongjun Moon",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        }
+      ]
+    },
+    {
+      "personId": "eshaan-kothari",
+      "name": "Eshaan Kothari",
+      "why": "You would enjoy meeting Eshaan Kothari because his innovative approach to creativity aligns perfectly with your passion for connecting unique ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Emergence happens at the moment making and responding become one step instead of two.",
+      "path_receipt": [
+        {
+          "from": "Dylan Reid",
+          "rel": "SHARES_VALUE",
+          "to": "Eshaan Kothari"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "ARCHIVE INTERPRETER",
+    "company": "",
+    "belief": "The architecture holds when you teach algorithms to speak about feeling in their own syntax. Bridge built.",
+    "working_on": "Reconstructing how film archives search—query by mood like melancholic or propulsive and the algorithm maps feelings to what to watch."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to deepen emotional connections through technology, transforming how people experience and engage with storytelling.",
+  "gradient": {
+    "seed": 3447698336,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(234 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

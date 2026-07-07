@@ -1,0 +1,69 @@
+{
+  "personId": "preston-thoman",
+  "name": "Preston Thoman",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alex-wan",
+      "name": "Alex Wan",
+      "why": "You should meet Alex Wan, as you both share a passion for blending art and coding in innovative ways.",
+      "basis_kind": "same_work",
+      "via": "artist-coder",
+      "path_receipt": [
+        {
+          "from": "Preston Thoman",
+          "rel": "DOES",
+          "to": "artist-coder"
+        },
+        {
+          "from": "Alex Wan",
+          "rel": "DOES",
+          "to": "artist-coder"
+        }
+      ]
+    },
+    {
+      "personId": "raina-wang",
+      "name": "Raina Wang",
+      "why": "You should meet Raina Wang because her innovative ideas about collaboration in creativity could inspire your own projects and spark meaningful conversations.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity erupts in the gap between how different minds name the same thing.",
+      "path_receipt": [
+        {
+          "from": "Preston Thoman",
+          "rel": "SHARES_VALUE",
+          "to": "Raina Wang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "ARTIST INFRASTRUCTURE BUILDER",
+    "company": "",
+    "belief": "Stop calling it creativity and call it what pulls you. The pull is always honest.",
+    "working_on": "open-source toolkit for musicians and visual artists to collaborate without platform lock-in"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire for genuine connection and freedom in collaboration, valuing authenticity over the constraints of conventional creativity.",
+  "gradient": {
+    "seed": 2691371964,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(168 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

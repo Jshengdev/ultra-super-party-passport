@@ -1,0 +1,69 @@
+{
+  "personId": "ava-rathenberg",
+  "name": "Ava Rathenberg",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "amanda",
+      "name": "Amanda",
+      "why": "You should meet Amanda because her innovative approach to product design could inspire new ideas for your own creative projects.",
+      "basis_kind": "same_work",
+      "via": "product designer",
+      "path_receipt": [
+        {
+          "from": "Ava Rathenberg",
+          "rel": "DOES",
+          "to": "product designer"
+        },
+        {
+          "from": "Amanda",
+          "rel": "DOES",
+          "to": "product designer"
+        }
+      ]
+    },
+    {
+      "personId": "chase-olivera",
+      "name": "Chase Olivera",
+      "why": "You'd enjoy meeting Chase Olivera, as both of you share a passion for creativity that reflects your unique tastes and bold perspectives.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Constraints are the brief. Respect the brief and everything you make has teeth.",
+      "path_receipt": [
+        {
+          "from": "Ava Rathenberg",
+          "rel": "SHARES_VALUE",
+          "to": "Chase Olivera"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "INVISIBLE PROBLEM SOLVER",
+    "company": "",
+    "belief": "Creativity solves the problem people didn't know they had, so gracefully they thank you without understanding what shifted.",
+    "working_on": "Designing cutlery that teaches proper grip silently—no instruction, the object itself is the teacher"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to inspire growth and understanding through subtle design, transforming everyday experiences into moments of unspoken learning.",
+  "gradient": {
+    "seed": 622439140,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(68 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

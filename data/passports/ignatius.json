@@ -1,0 +1,69 @@
+{
+  "personId": "ignatius",
+  "name": "Ignatius",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "anuj-shah",
+      "name": "Anuj Shah",
+      "why": "You should meet Anuj Shah because his insights as a startup strategist could spark valuable ideas for your own ventures.",
+      "basis_kind": "same_work",
+      "via": "startup strategist",
+      "path_receipt": [
+        {
+          "from": "Ignatius",
+          "rel": "DOES",
+          "to": "startup strategist"
+        },
+        {
+          "from": "Anuj Shah",
+          "rel": "DOES",
+          "to": "startup strategist"
+        }
+      ]
+    },
+    {
+      "personId": "isabella-smart",
+      "name": "Isabella Smart",
+      "why": "You’ll enjoy connecting with Isabella Smart, as her creativity often sparks inspiring conversations that bring the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity ignites in the discomfort between incompatible minds trying to speak the same language.",
+      "path_receipt": [
+        {
+          "from": "Ignatius",
+          "rel": "SHARES_VALUE",
+          "to": "Isabella Smart"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "CPNS",
+    "grad_year": "2028",
+    "position": "COMMUNITY ARCHITECT",
+    "company": "",
+    "belief": "Seeing the unmet need that everyone walks past—that's where connection becomes possible.",
+    "working_on": "initiative connecting humanities students with AI researchers who don't know they need each other"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate unseen potential, fostering collaboration that transforms overlooked opportunities into meaningful connections.",
+  "gradient": {
+    "seed": 863010019,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(353 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "miki-safronov-yamamoto",
+  "name": "Miki Safronov Yamamoto",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You would enjoy meeting Alexandra Siy because she shares your passion for innovative healthcare product design and has some fascinating insights to share.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Miki Safronov Yamamoto",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "ming-jin-yong",
+      "name": "Ming Jin Yong",
+      "why": "You would enjoy meeting Ming Jin Yong, as both of you share a passion for creativity and its power to transform possibilities for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Nobody woke up and chose to build walls. But you choose—every day—to tear them down.",
+      "path_receipt": [
+        {
+          "from": "Miki Safronov Yamamoto",
+          "rel": "SHARES_VALUE",
+          "to": "Ming Jin Yong"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "ACCESSIBILITY SYSTEMS DESIGNER",
+    "company": "",
+    "belief": "Clarity breeds courage. Your real work is making fear dissolve through honest explanation.",
+    "working_on": "redesigning pre-op procedures so anxious kids understand what happens next"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion, seeking to transform anxiety into understanding, empowering children to face their challenges with confidence.",
+  "gradient": {
+    "seed": 1570372164,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(153 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

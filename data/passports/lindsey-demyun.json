@@ -1,0 +1,69 @@
+{
+  "personId": "lindsey-demyun",
+  "name": "Lindsey Demyun",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jones-c-mays-ii",
+      "name": "Jones C Mays II",
+      "why": "You and Jones C Mays II both share a passion for art direction, making it a perfect opportunity to exchange creative ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "art director",
+      "path_receipt": [
+        {
+          "from": "Lindsey Demyun",
+          "rel": "DOES",
+          "to": "art director"
+        },
+        {
+          "from": "Jones C Mays II",
+          "rel": "DOES",
+          "to": "art director"
+        }
+      ]
+    },
+    {
+      "personId": "nadine-mcmahon",
+      "name": "Nadine McMahon",
+      "why": "You would love to meet Nadine McMahon because her bold creativity perfectly aligns with your shared appreciation for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Your best work disappears. When someone solves a problem and credits luck instead of design, you've won.",
+      "path_receipt": [
+        {
+          "from": "Lindsey Demyun",
+          "rel": "SHARES_VALUE",
+          "to": "Nadine McMahon"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "ANALOG STORYTELLER",
+    "company": "",
+    "belief": "Every constraint teaches you what you actually believe in as a storyteller.",
+    "working_on": "surrendering to physical film's non-negotiable limits, treating constraint as creative partner not obstacle"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to deepen your storytelling through the transformative power of embracing limitations, finding freedom within boundaries.",
+  "gradient": {
+    "seed": 3476293092,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

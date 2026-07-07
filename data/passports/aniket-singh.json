@@ -6,7 +6,7 @@
     {
       "personId": "alexandra-siy",
       "name": "Alexandra Siy",
-      "why": "You should meet Alexandra Siy because her innovative approach as a healthcare product designer aligns perfectly with your passion for improving patient experiences.",
+      "why": "You should meet Alexandra Siy because her innovative approach to healthcare product design aligns perfectly with your passion for improving patient experiences.",
       "basis_kind": "same_work",
       "via": "healthcare product designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "annie-long",
       "name": "Annie Long",
-      "why": "You should meet Annie Long because her innovative ideas about creativity will inspire you to think differently about what's possible for people.",
+      "why": "You would love to meet Annie Long, as her innovative approach to creativity aligns perfectly with your passion for changing what's possible for people.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Data made audible and visible so neighborhoods can name and resist the forces reshaping their blocks.",
@@ -48,7 +48,7 @@
     "working_on": "restructuring how hospitals explain procedures to adolescents so clinical anxiety doesn't override their capacity to consent"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep empathy for young patients, seeking to transform fear into understanding, empowering them to reclaim their voices in healthcare decisions.",
+  "magic_inference": "You are motivated by a deep empathy for vulnerable youth, seeking to empower them through clarity and understanding in daunting situations.",
   "gradient": {
     "seed": 1249136399,
     "stops": [

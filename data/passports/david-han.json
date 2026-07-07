@@ -1,0 +1,69 @@
+{
+  "personId": "david-han",
+  "name": "david han",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "antonis-ioannou",
+      "name": "Antonis Ioannou",
+      "why": "You should meet Antonis Ioannou because you both share a passion for documentary filmmaking that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "documentary filmmaker",
+      "path_receipt": [
+        {
+          "from": "david han",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        },
+        {
+          "from": "Antonis Ioannou",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        }
+      ]
+    },
+    {
+      "personId": "david-pilling",
+      "name": "David Pilling",
+      "why": "You should meet David Pilling because his innovative ideas in creativity could inspire you to explore new possibilities together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Complexity transforms when every step explains itself. Then fear finds ground instead of drowning.",
+      "path_receipt": [
+        {
+          "from": "david han",
+          "rel": "SHARES_VALUE",
+          "to": "David Pilling"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Cs",
+    "grad_year": "2027",
+    "position": "VISIBILITY FILMMAKER",
+    "company": "",
+    "belief": "Making what authorities ignore impossible to unsee anymore. That's the whole force.",
+    "working_on": "Editing a 60-minute documentary capturing street musicians fighting ordinances written to make their survival illegal."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound commitment to amplify marginalized voices, transforming their struggle into a powerful narrative that demands attention and change.",
+  "gradient": {
+    "seed": 1795919711,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(180 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

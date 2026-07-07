@@ -1,0 +1,69 @@
+{
+  "personId": "david-pilling",
+  "name": "David Pilling",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy because her insights as a healthcare product designer could inspire new ideas for your projects in the field.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "David Pilling",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "diana-mundi",
+      "name": "Diana Mundi",
+      "why": "You should meet Diana Mundi because her innovative approach to creativity aligns perfectly with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Revelation happens when you show what's been true all along. Then power has nowhere left to hide.",
+      "path_receipt": [
+        {
+          "from": "David Pilling",
+          "rel": "SHARES_VALUE",
+          "to": "Diana Mundi"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Chem E",
+    "grad_year": "2028",
+    "position": "CARE MAPPER",
+    "company": "",
+    "belief": "Complexity transforms when every step explains itself. Then fear finds ground instead of drowning.",
+    "working_on": "Mapping hospital intake touchpoints so a frightened child moves from panic to understanding through each station they enter."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion, aiming to replace fear with clarity, ensuring every child's journey is met with understanding and comfort.",
+  "gradient": {
+    "seed": 3343615821,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(108 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

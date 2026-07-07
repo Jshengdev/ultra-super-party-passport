@@ -1,0 +1,69 @@
+{
+  "personId": "jg",
+  "name": "Jg",
+  "line2": "Mann",
+  "find": [
+    {
+      "personId": "taliyah",
+      "name": "taliyah",
+      "why": "You should meet Taliyah; her innovative approach to data visualization design aligns beautifully with your passion for the field.",
+      "basis_kind": "same_work",
+      "via": "data visualization designer",
+      "path_receipt": [
+        {
+          "from": "Jg",
+          "rel": "DOES",
+          "to": "data visualization designer"
+        },
+        {
+          "from": "taliyah",
+          "rel": "DOES",
+          "to": "data visualization designer"
+        }
+      ]
+    },
+    {
+      "personId": "jiaqi-tang",
+      "name": "Jiaqi Tang",
+      "why": "You should meet Jiaqi Tang because their unique approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Connect the unconnected edges and the system grows without anyone's permission to expand it.",
+      "path_receipt": [
+        {
+          "from": "Jg",
+          "rel": "SHARES_VALUE",
+          "to": "Jiaqi Tang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Mann",
+    "major": "PDD",
+    "grad_year": "2027",
+    "position": "TEMPORAL BEHAVIOR MAPPER",
+    "company": "",
+    "belief": "Hidden circuits reveal themselves in the gap between time you measure and time you feel.",
+    "working_on": "charting the gap between time people report spending and where it actually lived in their feeling"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are motivated by a deep desire to unveil the unseen truths of human experience, bridging the disconnect between perception and reality.",
+  "gradient": {
+    "seed": 1782544110,
+    "stops": [
+      {
+        "color": "hsl(67 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(157 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

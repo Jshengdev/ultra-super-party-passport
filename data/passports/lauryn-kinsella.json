@@ -1,0 +1,69 @@
+{
+  "personId": "lauryn-kinsella",
+  "name": "Lauryn Kinsella",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jeffrey-yang",
+      "name": "Jeffrey Yang",
+      "why": "You should meet Jeffrey Yang because he shares your passion for event architecture and has some incredible insights to share.",
+      "basis_kind": "same_work",
+      "via": "event architect",
+      "path_receipt": [
+        {
+          "from": "Lauryn Kinsella",
+          "rel": "DOES",
+          "to": "event architect"
+        },
+        {
+          "from": "Jeffrey Yang",
+          "rel": "DOES",
+          "to": "event architect"
+        }
+      ]
+    },
+    {
+      "personId": "maceo",
+      "name": "Maceo",
+      "why": "You should meet Maceo because his innovative ideas about creativity could inspire your own artistic vision and deepen your connection to the community.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Backing taste before proof, then trusting them to find their own path.",
+      "path_receipt": [
+        {
+          "from": "Lauryn Kinsella",
+          "rel": "SHARES_VALUE",
+          "to": "Maceo"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "ALUMNI CONNECTOR",
+    "company": "",
+    "belief": "Magic's the split second two people realize they actually needed each other all along.",
+    "working_on": "systematizing 200+ Iovine grads into mentorship matches so nobody walks alone anymore"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to create meaningful connections, ensuring that everyone feels supported and valued in their journey.",
+  "gradient": {
+    "seed": 3172242844,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(329 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -6,7 +6,7 @@
     {
       "personId": "eshaan-kothari",
       "name": "Eshaan Kothari",
-      "why": "You should meet Eshaan Kothari, as you both have a deep passion for systems architecture and generative art that could spark an inspiring conversation.",
+      "why": "You would really enjoy meeting Eshaan Kothari, as you both share a passion for systems architecture and generative art.",
       "basis_kind": "same_work",
       "via": "systems architect, generative art",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "byeongjun-moon",
       "name": "Byeongjun Moon",
-      "why": "You’d enjoy meeting Byeongjun Moon because his unique approach to creativity might inspire new connections in your own artistic endeavors.",
+      "why": "You should meet Byeongjun Moon because his unique approach to creativity might inspire you to connect ideas in ways you’ve never imagined before.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "You translate human emotion into the algorithm's language, then write the code that bridges the gap between them.",
@@ -48,7 +48,7 @@
     "working_on": "wiring synthetic visuals to learn from human emotional response in real-time, closing the creation-consumption loop"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to harmonize creativity and experience, seeking to deepen connection and understanding through real-time emotional engagement.",
+  "magic_inference": "You are driven by a desire to harmonize human emotion with technology, seeking to create a seamless experience that fosters deeper connections.",
   "gradient": {
     "seed": 2376682952,
     "stops": [

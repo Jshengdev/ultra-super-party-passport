@@ -1,0 +1,69 @@
+{
+  "personId": "vineeta-muvvala",
+  "name": "vineeta muvvala",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma because you both share a passion for interaction design and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "vineeta muvvala",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "waverly-bagley",
+      "name": "Waverly Bagley",
+      "why": "You would enjoy meeting Waverly Bagley because her creative insights could spark exciting ideas for your projects together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity thrives when people stop performing for strangers and start creating for their actual peers.",
+      "path_receipt": [
+        {
+          "from": "vineeta muvvala",
+          "rel": "SHARES_VALUE",
+          "to": "Waverly Bagley"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "AUDIENCE ARCHITECT",
+    "company": "",
+    "belief": "Cutting out the middleman reveals something: creators and supporters find each other when algorithms stop deciding who matters.",
+    "working_on": "Building a platform where artists set their own participation rules—no algorithm deciding who matters"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek to empower genuine connections, believing that art flourishes when creators and supporters engage authentically, free from algorithmic constraints.",
+  "gradient": {
+    "seed": 865989164,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(295 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

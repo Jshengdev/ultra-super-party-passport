@@ -1,0 +1,69 @@
+{
+  "personId": "saniya-patel",
+  "name": "Saniya Patel",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "fiori-lee",
+      "name": "Fiori Lee",
+      "why": "You should meet Fiori Lee because you both share a passion for app building and could exchange valuable insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "app builder",
+      "path_receipt": [
+        {
+          "from": "Saniya Patel",
+          "rel": "DOES",
+          "to": "app builder"
+        },
+        {
+          "from": "Fiori Lee",
+          "rel": "DOES",
+          "to": "app builder"
+        }
+      ]
+    },
+    {
+      "personId": "vriddhi-toolsidass",
+      "name": "Vriddhi Toolsidass",
+      "why": "You should meet Vriddhi Toolsidass because her innovative approach to creativity will inspire you to bring your own ideas to life.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Touch changes everything. A working jacket teaches you more than a hundred concept sketches ever will.",
+      "path_receipt": [
+        {
+          "from": "Saniya Patel",
+          "rel": "SHARES_VALUE",
+          "to": "Vriddhi Toolsidass"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "CONSTRAINT ENGINEER",
+    "company": "",
+    "belief": "Making something broken-feeling that somehow works better than the frictionless version",
+    "working_on": "prototyping a message economy where less is the only option"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to challenge the status quo, believing that true connection emerges from embracing imperfections and constraints.",
+  "gradient": {
+    "seed": 3489073323,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(58 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

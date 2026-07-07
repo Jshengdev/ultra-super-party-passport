@@ -1,0 +1,69 @@
+{
+  "personId": "edith-chang",
+  "name": "Edith Chang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "antonis-ioannou",
+      "name": "Antonis Ioannou",
+      "why": "You and Antonis Ioannou both connect to the world of documentary filmmaking, making it a wonderful opportunity for you to share insights and inspiration.",
+      "basis_kind": "same_work",
+      "via": "documentary filmmaker",
+      "path_receipt": [
+        {
+          "from": "Edith Chang",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        },
+        {
+          "from": "Antonis Ioannou",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        }
+      ]
+    },
+    {
+      "personId": "ellie",
+      "name": "Ellie",
+      "why": "You'd love to meet Ellie because her innovative approach to creativity aligns perfectly with your passion for transforming possibilities for others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Making something that wasn't made for you into something that works for everyone—that's the only creativity that matters.",
+      "path_receipt": [
+        {
+          "from": "Edith Chang",
+          "rel": "SHARES_VALUE",
+          "to": "Ellie"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "JUSTICE DOCUMENTARIAN",
+    "company": "",
+    "belief": "Visibility shifts when the people affected become the storytellers instead of the story. That's all power.",
+    "working_on": "Piecing together a 60-minute film centered on street musicians' own voices as they navigate and resist criminalization ordinances."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to empowerment, believing that authentic voices can transform perceptions and reclaim agency in marginalized communities.",
+  "gradient": {
+    "seed": 4123944567,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(145 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "kim-sales",
+  "name": "kim sales",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "henry-warren",
+      "name": "Henry Warren",
+      "why": "You should meet Henry Warren, as you both share a passion for sustainability operations that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "sustainability operations lead",
+      "path_receipt": [
+        {
+          "from": "kim sales",
+          "rel": "DOES",
+          "to": "sustainability operations lead"
+        },
+        {
+          "from": "Henry Warren",
+          "rel": "DOES",
+          "to": "sustainability operations lead"
+        }
+      ]
+    },
+    {
+      "personId": "kristian-calderon",
+      "name": "Kristian Calderon",
+      "why": "You should meet Kristian Calderon because his innovative ideas about creativity could inspire you to rethink what's possible in your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Giving people the data to see the system gives them the ground to fight back from.",
+      "path_receipt": [
+        {
+          "from": "kim sales",
+          "rel": "SHARES_VALUE",
+          "to": "Kristian Calderon"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Real Estate Finance And Development",
+    "grad_year": "2029",
+    "position": "TRANSPARENCY SYSTEMS HACKER",
+    "company": "",
+    "belief": "Rig the incentives so the sustainable choice becomes cheaper and the industry has no escape.",
+    "working_on": "Public tracker forcing apparel manufacturers to disclose water consumption per garment in real time."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to hold industries accountable, believing transparency can transform consumer behavior and foster genuine sustainability.",
+  "gradient": {
+    "seed": 273077505,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(189 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

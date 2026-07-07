@@ -1,0 +1,69 @@
+{
+  "personId": "enoch-chang",
+  "name": "Enoch Chang",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "arely",
+      "name": "Arely",
+      "why": "You should meet Arely; her insights as a spatial designer will resonate with your own creative vision and spark inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "spatial designer",
+      "path_receipt": [
+        {
+          "from": "Enoch Chang",
+          "rel": "DOES",
+          "to": "spatial designer"
+        },
+        {
+          "from": "Arely",
+          "rel": "DOES",
+          "to": "spatial designer"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-wu",
+      "name": "Ethan Wu",
+      "why": "You'd enjoy meeting Ethan Wu because his unique perspective on creativity mirrors your own, making for an inspiring conversation about taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Reading what's broken and using damage as curriculum—that's designing for visceral truth.",
+      "path_receipt": [
+        {
+          "from": "Enoch Chang",
+          "rel": "SHARES_VALUE",
+          "to": "Ethan Wu"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "CS",
+    "grad_year": "2028",
+    "position": "INTERACTIVE ARCHITECT",
+    "company": "",
+    "belief": "At the boundary between control and surrender lies the design: you set rules, the space responds.",
+    "working_on": "algorithm that generates gallery installations from structural damage patterns and visitor movement"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your work reveals a deep curiosity about the interplay of chaos and order, seeking beauty in the unpredictable dance of structure and experience.",
+  "gradient": {
+    "seed": 3763976512,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(305 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

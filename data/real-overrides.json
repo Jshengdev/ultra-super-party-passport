@@ -1,7 +1,8 @@
 {
   "johnny-sheng": {
-    "company": "Lemma (YC F25)",
-    "position": "PART-TIME WARRIOR"
+    "company": "Unemployed",
+    "position": "PART-TIME WARRIOR",
+    "what_you_do": "part-time warrior"
   },
   "teri": {
     "company": "Lemma (YC F25)",
@@ -10,5 +11,8 @@
   "sarah-fan": {
     "company": "Lemma (YC F25)",
     "position": "COFOUNDER"
+  },
+  "esther-kim": {
+    "what_you_do": "part-time warrior"
   }
 }

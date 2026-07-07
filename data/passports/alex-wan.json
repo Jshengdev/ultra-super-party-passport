@@ -1,0 +1,69 @@
+{
+  "personId": "alex-wan",
+  "name": "Alex Wan",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jaden",
+      "name": "Jaden",
+      "why": "You’d enjoy meeting Jaden, as both of you share a passion for being artist-coders and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "artist-coder",
+      "path_receipt": [
+        {
+          "from": "Alex Wan",
+          "rel": "DOES",
+          "to": "artist-coder"
+        },
+        {
+          "from": "Jaden",
+          "rel": "DOES",
+          "to": "artist-coder"
+        }
+      ]
+    },
+    {
+      "personId": "alexandra-oxenstierna",
+      "name": "Alexandra Oxenstierna",
+      "why": "You’ll enjoy meeting Alexandra Oxenstierna, as her creative insights can spark inspiring conversations that resonate with your own innovative ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Taste is recognizing a perspective you haven't seen elsewhere and funding it before market validation arrives.",
+      "path_receipt": [
+        {
+          "from": "Alex Wan",
+          "rel": "SHARES_VALUE",
+          "to": "Alexandra Oxenstierna"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "IDBT",
+    "grad_year": "2026",
+    "position": "TOOL CATALYST",
+    "company": "",
+    "belief": "You clear your own obstacles and watch what others build with the space you freed up.",
+    "working_on": "building utilities for animators that I wish existed when I started, before I knew what I wanted to make"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to empower others, transforming your past frustrations into tools that inspire creativity and innovation in animation.",
+  "gradient": {
+    "seed": 2644307566,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(317 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

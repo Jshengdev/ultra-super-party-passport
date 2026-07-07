@@ -1,0 +1,69 @@
+{
+  "personId": "antonis-ioannou",
+  "name": "Antonis Ioannou",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "david-han",
+      "name": "david han",
+      "why": "You should meet David Han because you both share a passion for documentary filmmaking that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "documentary filmmaker",
+      "path_receipt": [
+        {
+          "from": "Antonis Ioannou",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        },
+        {
+          "from": "david han",
+          "rel": "DOES",
+          "to": "documentary filmmaker"
+        }
+      ]
+    },
+    {
+      "personId": "ben-flora",
+      "name": "Ben Flora",
+      "why": "You should meet Ben Flora, as his creative insights could inspire you to explore new possibilities in your projects together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Creativity hands people the instruments to see the system nobody let them see before. That changes everything.",
+      "path_receipt": [
+        {
+          "from": "Antonis Ioannou",
+          "rel": "SHARES_VALUE",
+          "to": "Ben Flora"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "VISIBILITY CREATOR",
+    "company": "",
+    "belief": "Visibility forces reckoning—you make what was hidden so undeniable that systems have to bend.",
+    "working_on": "editing a feature on street musicians and the city ordinances that criminalize their survival, making policy visceral"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion for marginalized voices, believing that revealing their struggles can spark necessary change in societal structures.",
+  "gradient": {
+    "seed": 1763972701,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(323 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "simran-malhotra",
+  "name": "Simran Malhotra",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "cooper-queen",
+      "name": "cooper queen",
+      "why": "You should meet Cooper Queen because you both share a passion for visual design and can inspire each other with fresh ideas.",
+      "basis_kind": "same_work",
+      "via": "visual designer",
+      "path_receipt": [
+        {
+          "from": "Simran Malhotra",
+          "rel": "DOES",
+          "to": "visual designer"
+        },
+        {
+          "from": "cooper queen",
+          "rel": "DOES",
+          "to": "visual designer"
+        }
+      ]
+    },
+    {
+      "personId": "skye",
+      "name": "Skye",
+      "why": "You would love to meet Skye, as both of you share a vibrant passion for creativity and a strong appreciation for unique perspectives.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Designing weird until weirdness becomes someone else's only way forward",
+      "path_receipt": [
+        {
+          "from": "Simran Malhotra",
+          "rel": "SHARES_VALUE",
+          "to": "Skye"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "MATERIAL MINIMALIST",
+    "company": "",
+    "belief": "Subtracting ruthlessly until each remaining element carries the weight of the whole",
+    "working_on": "reconstructing every package curve until nothing exists except what the product demands"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire for purity in design, seeking to elevate the essence of the product above all distractions.",
+  "gradient": {
+    "seed": 707353308,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(143 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

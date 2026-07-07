@@ -6,7 +6,7 @@
     {
       "personId": "advik-sharma",
       "name": "Advik Sharma",
-      "why": "You and Advik Sharma share a passion for interaction design, which could lead to inspiring conversations and innovative ideas.",
+      "why": "You should meet Advik Sharma because his innovative approach as an interaction designer will resonate with your own creative insights and experiences in the field.",
       "basis_kind": "same_work",
       "via": "interaction designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "amadeo",
       "name": "Amadeo",
-      "why": "You would enjoy meeting Amadeo because his unique approach to creativity will inspire you and spark a meaningful connection through your shared passion.",
+      "why": "You’ll love meeting Amadeo, as his creativity sparks genuine emotions, just like yours does.",
       "basis_kind": "shared_value",
       "via": "cluster-5",
       "match_belief": "Animation's tiny deliberate choices—a hesitation, a glance—plant themselves deeper than dialogue ever could.",
@@ -48,7 +48,7 @@
     "working_on": "writing error states that tell users the truth about what broke instead of hiding behind corporate politeness"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to cultivate authentic connections, believing that transparency can empower users and challenge the status quo.",
+  "magic_inference": "You seek to cultivate trust and authenticity in communication, believing that transparency can empower users and foster genuine connections.",
   "gradient": {
     "seed": 1023468819,
     "stops": [

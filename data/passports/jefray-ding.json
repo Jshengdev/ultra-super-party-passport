@@ -1,0 +1,69 @@
+{
+  "personId": "jefray-ding",
+  "name": "Jefray Ding",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "kelvin-ye",
+      "name": "Kelvin Ye",
+      "why": "You should meet Kelvin Ye because you both share a passion for indie game dev and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "indie game dev",
+      "path_receipt": [
+        {
+          "from": "Jefray Ding",
+          "rel": "DOES",
+          "to": "indie game dev"
+        },
+        {
+          "from": "Kelvin Ye",
+          "rel": "DOES",
+          "to": "indie game dev"
+        }
+      ]
+    },
+    {
+      "personId": "joanna",
+      "name": "Joanna",
+      "why": "You should meet Joanna because her innovative approach to creativity will inspire you to bring your ideas to life in exciting new ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Tools multiply—one person's strange becomes ten thousand people's possibility if you ship it right.",
+      "path_receipt": [
+        {
+          "from": "Jefray Ding",
+          "rel": "SHARES_VALUE",
+          "to": "Joanna"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "SHIPPED GAME DESIGNER",
+    "company": "",
+    "belief": "Reality is the most honest critic; let it edit your vision before perfectionism paralyzes it.",
+    "working_on": "making a roguelike about your parents' failing restaurant—three shipped versions beat any design document"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to confront and transform personal history into a playable narrative, embracing imperfection as part of the creative journey.",
+  "gradient": {
+    "seed": 291914937,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(118 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

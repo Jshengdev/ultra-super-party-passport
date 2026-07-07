@@ -1,0 +1,69 @@
+{
+  "personId": "waverly-bagley",
+  "name": "Waverly Bagley",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma, as you both share a passion for interaction design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Waverly Bagley",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "zain-sy",
+      "name": "Zain Sy",
+      "why": "You’ll enjoy meeting Zain Sy because his innovative ideas about collaboration in creativity resonate with your passion for bringing the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "One conversation at the right moment with the right person multiplies outward. Connecting those moments is the whole project.",
+      "path_receipt": [
+        {
+          "from": "Waverly Bagley",
+          "rel": "SHARES_VALUE",
+          "to": "Zain Sy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "COMMUNITY BUILDER",
+    "company": "",
+    "belief": "Creativity thrives when people stop performing for strangers and start creating for their actual peers.",
+    "working_on": "Creating a Discord for underrepresented artists to showcase work without exposure metrics"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to cultivate authentic connections among artists, nurturing a space where creativity can flourish without external pressures.",
+  "gradient": {
+    "seed": 71305244,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(64 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

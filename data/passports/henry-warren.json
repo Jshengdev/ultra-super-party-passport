@@ -1,0 +1,69 @@
+{
+  "personId": "henry-warren",
+  "name": "Henry Warren",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "kim-sales",
+      "name": "kim sales",
+      "why": "You and Kim Sales both share a passion for sustainability operations, making it a great opportunity to exchange ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "sustainability operations lead",
+      "path_receipt": [
+        {
+          "from": "Henry Warren",
+          "rel": "DOES",
+          "to": "sustainability operations lead"
+        },
+        {
+          "from": "kim sales",
+          "rel": "DOES",
+          "to": "sustainability operations lead"
+        }
+      ]
+    },
+    {
+      "personId": "joanne",
+      "name": "Joanne",
+      "why": "You should meet Joanne because her innovative ideas and passion for creativity can inspire you to change what's possible for others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Removing barriers you didn't create is the truest creative act there is.",
+      "path_receipt": [
+        {
+          "from": "Henry Warren",
+          "rel": "SHARES_VALUE",
+          "to": "Joanne"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "ACCOUNTABILITY ARCHITECT",
+    "company": "",
+    "belief": "Rig the system so the right choice is cheaper, faster, easier than any shortcut.",
+    "working_on": "public tracker forcing fashion brands to disclose water cost per garment in real dollars"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to hold industries accountable, transforming transparency into a powerful catalyst for sustainable change.",
+  "gradient": {
+    "seed": 3806720147,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

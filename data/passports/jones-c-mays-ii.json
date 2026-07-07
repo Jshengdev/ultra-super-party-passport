@@ -1,0 +1,69 @@
+{
+  "personId": "jones-c-mays-ii",
+  "name": "Jones C Mays II",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "kaitlyn-zhang",
+      "name": "kaitlyn zhang",
+      "why": "You should meet Kaitlyn Zhang, as you both have a passion for art direction that could spark inspiring conversations and creative collaborations.",
+      "basis_kind": "same_work",
+      "via": "art director",
+      "path_receipt": [
+        {
+          "from": "Jones C Mays II",
+          "rel": "DOES",
+          "to": "art director"
+        },
+        {
+          "from": "kaitlyn zhang",
+          "rel": "DOES",
+          "to": "art director"
+        }
+      ]
+    },
+    {
+      "personId": "lauren-budovsky",
+      "name": "Lauren Budovsky",
+      "why": "You’ll enjoy meeting Lauren Budovsky, as her bold creativity and unique perspective on art will resonate with your own artistic vision.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Taste looks inevitable only after refusing easier paths at every junction.",
+      "path_receipt": [
+        {
+          "from": "Jones C Mays II",
+          "rel": "SHARES_VALUE",
+          "to": "Lauren Budovsky"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "ANALOG RESTRAINT MAKER",
+    "company": "",
+    "belief": "Taste is knowing what to remove until only the exact right image remains.",
+    "working_on": "Composing shot sequences on 16mm where every frame must earn its weight; watching light change at 24 fps."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire for clarity, seeking to distill beauty and meaning from fleeting moments through meticulous observation and selection.",
+  "gradient": {
+    "seed": 3397421238,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(316 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

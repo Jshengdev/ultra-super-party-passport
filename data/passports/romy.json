@@ -1,0 +1,69 @@
+{
+  "personId": "romy",
+  "name": "Romy",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "xavier-gonzalez",
+      "name": "Xavier Gonzalez",
+      "why": "You should connect with Xavier Gonzalez because his insights as a civic data engineer could spark some exciting ideas for your projects.",
+      "basis_kind": "same_work",
+      "via": "civic data engineer",
+      "path_receipt": [
+        {
+          "from": "Romy",
+          "rel": "DOES",
+          "to": "civic data engineer"
+        },
+        {
+          "from": "Xavier Gonzalez",
+          "rel": "DOES",
+          "to": "civic data engineer"
+        }
+      ]
+    },
+    {
+      "personId": "sam",
+      "name": "sam",
+      "why": "You would enjoy meeting Sam, as both of you share a passion for creativity and its power to transform what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Universal design isn't nice. It's recognition that excluding people was always a choice.",
+      "path_receipt": [
+        {
+          "from": "Romy",
+          "rel": "SHARES_VALUE",
+          "to": "sam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Analytics",
+    "grad_year": "2026",
+    "position": "CIVIC DATA INTERPRETER",
+    "company": "",
+    "belief": "Complexity becomes power the moment someone without math sees the shape beneath the noise.",
+    "working_on": "parsing transit department budgets into visual stories that show where your payment actually lands"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to empower others, transforming intricate data into accessible narratives that illuminate the truth behind financial decisions.",
+  "gradient": {
+    "seed": 536971744,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(254 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

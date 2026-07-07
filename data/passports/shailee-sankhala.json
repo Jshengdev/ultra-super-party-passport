@@ -1,0 +1,69 @@
+{
+  "personId": "shailee-sankhala",
+  "name": "Shailee Sankhala",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "eason-tang",
+      "name": "Eason Tang",
+      "why": "You should meet Eason Tang; his innovative approach to type design aligns beautifully with your passion for typography.",
+      "basis_kind": "same_work",
+      "via": "type designer",
+      "path_receipt": [
+        {
+          "from": "Shailee Sankhala",
+          "rel": "DOES",
+          "to": "type designer"
+        },
+        {
+          "from": "Eason Tang",
+          "rel": "DOES",
+          "to": "type designer"
+        }
+      ]
+    },
+    {
+      "personId": "simran-malhotra",
+      "name": "Simran Malhotra",
+      "why": "You would love to meet Simran Malhotra because her unique perspective on creativity resonates with your own passion for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Subtracting ruthlessly until each remaining element carries the weight of the whole",
+      "path_receipt": [
+        {
+          "from": "Shailee Sankhala",
+          "rel": "SHARES_VALUE",
+          "to": "Simran Malhotra"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "LETTERFORM ARCHITECT",
+    "company": "",
+    "belief": "Refusing to be legible until your vision decides what legibility means",
+    "working_on": "hand-crafting typography where letterforms remember the ovens that baked beside them"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to evoke a deeper, personal connection to the craft, allowing interpretation to unfold on its own terms.",
+  "gradient": {
+    "seed": 2850263394,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(5 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

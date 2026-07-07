@@ -1,0 +1,69 @@
+{
+  "personId": "emily-vargas",
+  "name": "Emily Vargas",
+  "line2": "Annenberg",
+  "find": [
+    {
+      "personId": "chase-olivera",
+      "name": "Chase Olivera",
+      "why": "You should meet Chase Olivera, as you both share a passion for brand direction and can exchange valuable insights from your experiences.",
+      "basis_kind": "same_work",
+      "via": "brand director",
+      "path_receipt": [
+        {
+          "from": "Emily Vargas",
+          "rel": "DOES",
+          "to": "brand director"
+        },
+        {
+          "from": "Chase Olivera",
+          "rel": "DOES",
+          "to": "brand director"
+        }
+      ]
+    },
+    {
+      "personId": "enoch-chang",
+      "name": "Enoch Chang",
+      "why": "You should meet Enoch Chang because his bold creativity and unique perspective will resonate deeply with your own artistic vision.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "At the boundary between control and surrender lies the design: you set rules, the space responds.",
+      "path_receipt": [
+        {
+          "from": "Emily Vargas",
+          "rel": "SHARES_VALUE",
+          "to": "Enoch Chang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Annenberg",
+    "major": "Communication",
+    "grad_year": "2026",
+    "position": "VISUAL SYSTEMS ARCHITECT",
+    "company": "",
+    "belief": "Color budgets force honesty. You can't hide behind variety when you get five pigments and one idea.",
+    "working_on": "creating three-palette library system for nonprofits where every choice earns its space"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire for clarity and integrity, believing that limitations can inspire purposeful creativity in meaningful projects.",
+  "gradient": {
+    "seed": 531526818,
+    "stops": [
+      {
+        "color": "hsl(37 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(277 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

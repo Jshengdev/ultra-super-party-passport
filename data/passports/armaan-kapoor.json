@@ -1,0 +1,69 @@
+{
+  "personId": "armaan-kapoor",
+  "name": "Armaan Kapoor",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "eve-nepo",
+      "name": "Eve Nepo",
+      "why": "You should meet Eve Nepo, as her innovative approach to industrial design aligns beautifully with your own creative vision.",
+      "basis_kind": "same_work",
+      "via": "industrial designer",
+      "path_receipt": [
+        {
+          "from": "Armaan Kapoor",
+          "rel": "DOES",
+          "to": "industrial designer"
+        },
+        {
+          "from": "Eve Nepo",
+          "rel": "DOES",
+          "to": "industrial designer"
+        }
+      ]
+    },
+    {
+      "personId": "ava-rathenberg",
+      "name": "Ava Rathenberg",
+      "why": "You would enjoy meeting Ava Rathenberg because her unique perspective on creativity aligns perfectly with your own taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Creativity solves the problem people didn't know they had, so gracefully they thank you without understanding what shifted.",
+      "path_receipt": [
+        {
+          "from": "Armaan Kapoor",
+          "rel": "SHARES_VALUE",
+          "to": "Ava Rathenberg"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Psychology",
+    "grad_year": "2028",
+    "position": "HUMAN-CENTERED DESIGNER",
+    "company": "",
+    "belief": "Design that respects human dignity means every surface whispers protection, not extraction.",
+    "working_on": "Rethinking the work lamp so eight-hour days feel like you're cared for, not interrogated"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You’re driven by a deep desire to create environments that foster well-being, transforming mundane experiences into moments of genuine care and respect.",
+  "gradient": {
+    "seed": 1411382,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(328 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

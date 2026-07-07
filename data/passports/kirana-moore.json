@@ -1,0 +1,69 @@
+{
+  "personId": "kirana-moore",
+  "name": "Kirana Moore",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because you both share a passion for music production that could lead to inspiring conversations and creative collaborations.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Kirana Moore",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "larissa-oliveira",
+      "name": "Larissa Oliveira",
+      "why": "You should meet Larissa Oliveira, as her innovative ideas and vibrant energy will inspire your own creative projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The collision between different minds making art is where everyone learns what neither could alone.",
+      "path_receipt": [
+        {
+          "from": "Kirana Moore",
+          "rel": "SHARES_VALUE",
+          "to": "Larissa Oliveira"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "SONIC BELONGING DESIGNER",
+    "company": "",
+    "belief": "Sound wraps around you invisible; that's the geometry of making someone feel safely held.",
+    "working_on": "Virtual world soundscapes where ambient audio holds you; where you stay to feel supported, not to achieve."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create spaces that embrace and nurture, allowing others to experience a profound sense of belonging.",
+  "gradient": {
+    "seed": 2570785468,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(348 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

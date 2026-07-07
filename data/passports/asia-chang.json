@@ -1,0 +1,69 @@
+{
+  "personId": "asia-chang",
+  "name": "Asia Chang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "ryan-zhu",
+      "name": "Ryan Zhu",
+      "why": "You would enjoy meeting Ryan Zhu because he shares your passion for motion systems engineering and has some fascinating insights into the latest industry trends.",
+      "basis_kind": "same_work",
+      "via": "motion systems engineer",
+      "path_receipt": [
+        {
+          "from": "Asia Chang",
+          "rel": "DOES",
+          "to": "motion systems engineer"
+        },
+        {
+          "from": "Ryan Zhu",
+          "rel": "DOES",
+          "to": "motion systems engineer"
+        }
+      ]
+    },
+    {
+      "personId": "ayla",
+      "name": "Ayla",
+      "why": "You’ll love meeting Ayla; her unique approach to creativity complements your passion for making real things exist in inspiring ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Your tool becomes real when other artists can't imagine working without it. That's how you make your ideas infinite.",
+      "path_receipt": [
+        {
+          "from": "Asia Chang",
+          "rel": "SHARES_VALUE",
+          "to": "Ayla"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "MOTION ENGINEER",
+    "company": "",
+    "belief": "Thousands of in-between frames become a creature. That moment when it stops being pixels and starts being alive—that's everything.",
+    "working_on": "Building system that learns organic movement from video and generates new animations that feel alive, not computed"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bridge the digital and organic, creating experiences that evoke genuine life and connection.",
+  "gradient": {
+    "seed": 2679890107,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(229 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

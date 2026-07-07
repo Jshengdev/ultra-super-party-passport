@@ -1,0 +1,69 @@
+{
+  "personId": "arely",
+  "name": "Arely",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "chiara-neirick",
+      "name": "Chiara Neirick",
+      "why": "You would enjoy meeting Chiara Neirick, as you both share a passion for spatial design and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "spatial designer",
+      "path_receipt": [
+        {
+          "from": "Arely",
+          "rel": "DOES",
+          "to": "spatial designer"
+        },
+        {
+          "from": "Chiara Neirick",
+          "rel": "DOES",
+          "to": "spatial designer"
+        }
+      ]
+    },
+    {
+      "personId": "arushi-purkayastha",
+      "name": "Arushi Purkayastha",
+      "why": "You would love to meet Arushi Purkayastha because her innovative approach to creativity aligns beautifully with your passion for making real things exist.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "A tool that lets people tap their weirdness is how you multiply one person's strange idea across thousands.",
+      "path_receipt": [
+        {
+          "from": "Arely",
+          "rel": "SHARES_VALUE",
+          "to": "Arushi Purkayastha"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "SPATIAL STORYTELLER",
+    "company": "",
+    "belief": "You win when someone forgets the technology exists and just sees a completely different place.",
+    "working_on": "Overlaying forgotten neighborhood histories via AR so a walk through your block becomes a time-travel narrative"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to reconnect people with their community's rich past, transforming everyday spaces into immersive, meaningful experiences.",
+  "gradient": {
+    "seed": 1370846782,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(132 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

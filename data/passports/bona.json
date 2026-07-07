@@ -1,0 +1,69 @@
+{
+  "personId": "bona",
+  "name": "Bona",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "charles",
+      "name": "Charles",
+      "why": "You would enjoy meeting Charles, as he has fascinating insights about Viterbi that align with your own experiences and passions.",
+      "basis_kind": "shared_context",
+      "via": "Viterbi",
+      "path_receipt": [
+        {
+          "from": "Bona",
+          "rel": "STUDIES_AT",
+          "to": "Viterbi"
+        },
+        {
+          "from": "Charles",
+          "rel": "STUDIES_AT",
+          "to": "Viterbi"
+        }
+      ]
+    },
+    {
+      "personId": "eric-zhu",
+      "name": "Eric Zhu",
+      "why": "You should meet Eric Zhu, as his creative insights will inspire you and deepen your understanding of how to evoke true emotions in others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "A blink, a shoulder drop—the smallest motions are where humans see themselves in fiction.",
+      "path_receipt": [
+        {
+          "from": "Bona",
+          "rel": "SHARES_VALUE",
+          "to": "Eric Zhu"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Cs Games",
+    "grad_year": "2027",
+    "position": "NARRATIVE ENGINEER",
+    "company": "",
+    "belief": "Audiences feel the exact moment a creator stops trying and just lets something break open and happen.",
+    "working_on": "Rewriting a breakup scene so it stammers and stutters—real, raw, nothing like the cinematically polished versions"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek authenticity in vulnerability, believing that true emotion can resonate more powerfully than perfection ever could.",
+  "gradient": {
+    "seed": 3616594755,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(112 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

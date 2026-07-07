@@ -1,0 +1,69 @@
+{
+  "personId": "swastik-purathepparambil",
+  "name": "Swastik Purathepparambil",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "amelia",
+      "name": "Amelia",
+      "why": "You should meet Amelia; her insights on generative art and systems architecture are incredibly thought-provoking and align beautifully with your interests.",
+      "basis_kind": "same_work",
+      "via": "systems architect, generative art",
+      "path_receipt": [
+        {
+          "from": "Swastik Purathepparambil",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        },
+        {
+          "from": "Amelia",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        }
+      ]
+    },
+    {
+      "personId": "taliyah",
+      "name": "taliyah",
+      "why": "You would love to meet Taliyah because her unique approach to creativity might inspire new connections in your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "It's mapping what invisibly exists between the before and after, in the silence",
+      "path_receipt": [
+        {
+          "from": "Swastik Purathepparambil",
+          "rel": "SHARES_VALUE",
+          "to": "taliyah"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Reptile Sciences",
+    "grad_year": "2028",
+    "position": "FEEDBACK SYSTEMS ENGINEER",
+    "company": "",
+    "belief": "That mesh-point where creation and curation collapse into the same action—that's where things unlock",
+    "working_on": "closing the loop: AI makes, humans feel, feedback reshapes the maker instantly"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize creation and emotional resonance, believing that true innovation emerges from this interconnected experience.",
+  "gradient": {
+    "seed": 3352117003,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(257 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

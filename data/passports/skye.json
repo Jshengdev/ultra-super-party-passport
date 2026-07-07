@@ -1,0 +1,69 @@
+{
+  "personId": "skye",
+  "name": "Skye",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "eason-tang",
+      "name": "Eason Tang",
+      "why": "You should meet Eason Tang because his insights into type design will inspire your own creative journey.",
+      "basis_kind": "same_work",
+      "via": "type designer",
+      "path_receipt": [
+        {
+          "from": "Skye",
+          "rel": "DOES",
+          "to": "type designer"
+        },
+        {
+          "from": "Eason Tang",
+          "rel": "DOES",
+          "to": "type designer"
+        }
+      ]
+    },
+    {
+      "personId": "weston",
+      "name": "Weston",
+      "why": "You’ll love meeting Weston because his unique perspective on creativity aligns perfectly with your own passion for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "The space between frames contains what people feel. Everything else is just decoration.",
+      "path_receipt": [
+        {
+          "from": "Skye",
+          "rel": "SHARES_VALUE",
+          "to": "Weston"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "TYPOGRAPHIC PROVOCATEUR",
+    "company": "",
+    "belief": "Designing weird until weirdness becomes someone else's only way forward",
+    "working_on": "rendering words that recall the heat and motion of a working kitchen"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform the ordinary into an extraordinary experience, inviting others to embrace the beauty of the unconventional.",
+  "gradient": {
+    "seed": 1318231977,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(201 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

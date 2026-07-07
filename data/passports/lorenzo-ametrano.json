@@ -1,0 +1,69 @@
+{
+  "personId": "lorenzo-ametrano",
+  "name": "Lorenzo Ametrano",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You would really enjoy meeting Abriana, as you both share a deep passion for the intersection of Arts, Technology, and the Business of Innovation.",
+      "basis_kind": "shared_context",
+      "via": "Arts, Technology & the Business of Innovation",
+      "path_receipt": [
+        {
+          "from": "Lorenzo Ametrano",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        },
+        {
+          "from": "Abriana",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        }
+      ]
+    },
+    {
+      "personId": "lucy",
+      "name": "Lucy",
+      "why": "You should meet Lucy because her innovative ideas about connecting seemingly unrelated concepts will resonate with your own creative approach to problem-solving.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Borrow the pattern ants use and your whole industry suddenly looks different.",
+      "path_receipt": [
+        {
+          "from": "Lorenzo Ametrano",
+          "rel": "SHARES_VALUE",
+          "to": "Lucy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "MUSIC ECONOMY ARCHITECT",
+    "company": "",
+    "belief": "Most people miss the incentive collision. The gap appears once you see it's there.",
+    "working_on": "modeling how open-source funding mechanisms could sustain independent labels without rotting out creator economics"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize creativity and sustainability, seeking to bridge the unseen divides that hinder true artistic freedom.",
+  "gradient": {
+    "seed": 2104503248,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(59 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

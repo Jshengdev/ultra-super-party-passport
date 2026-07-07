@@ -1,0 +1,65 @@
+{
+  "personId": "eleanor-xie",
+  "name": "Eleanor Xie",
+  "line2": "Gould",
+  "find": [
+    {
+      "personId": "esther-kim",
+      "name": "Esther Kim",
+      "why": "You would enjoy meeting Esther Kim because her creative energy aligns perfectly with yours, making for inspiring conversations and fresh ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Naming what nobody said yet is the most generous creative act—it gives people permission to recognize themselves.",
+      "path_receipt": [
+        {
+          "from": "Eleanor Xie",
+          "rel": "SHARES_VALUE",
+          "to": "Esther Kim"
+        }
+      ]
+    },
+    {
+      "personId": "hamin-jin",
+      "name": "Hamin Jin",
+      "why": "You should meet Hamin Jin because their creative insights could inspire new ideas that resonate with your own innovative spirit.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Finding the gap nobody's looking at yet—that's where connection becomes possible.",
+      "path_receipt": [
+        {
+          "from": "Eleanor Xie",
+          "rel": "SHARES_VALUE",
+          "to": "Hamin Jin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Gould",
+    "major": "Legal Studies",
+    "grad_year": "",
+    "position": "ACCESS ENGINEER",
+    "company": "",
+    "belief": "Connection happens when the path clears and the right people can actually find each other.",
+    "working_on": "platform connecting student creators directly to commissioning orgs without the admin layer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to eliminate barriers, believing that authentic connections can flourish when opportunities are made accessible and streamlined.",
+  "gradient": {
+    "seed": 32557626,
+    "stops": [
+      {
+        "color": "hsl(250 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(270 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

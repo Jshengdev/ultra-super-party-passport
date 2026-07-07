@@ -1,0 +1,69 @@
+{
+  "personId": "taliyah",
+  "name": "taliyah",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jg",
+      "name": "Jg",
+      "why": "You should meet Jg because you both share a passion for data visualization design, which could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "data visualization designer",
+      "path_receipt": [
+        {
+          "from": "taliyah",
+          "rel": "DOES",
+          "to": "data visualization designer"
+        },
+        {
+          "from": "Jg",
+          "rel": "DOES",
+          "to": "data visualization designer"
+        }
+      ]
+    },
+    {
+      "personId": "teri",
+      "name": "teri",
+      "why": "You'd love to meet Teri, as her unique approach to creativity might spark some inspiring ideas for your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Revealing the space where people feel different from what they're measuring",
+      "path_receipt": [
+        {
+          "from": "taliyah",
+          "rel": "SHARES_VALUE",
+          "to": "teri"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "TEMPORAL ANALYST",
+    "company": "",
+    "belief": "It's mapping what invisibly exists between the before and after, in the silence",
+    "working_on": "visualizing the gap between felt time and actual time—where people leak attention"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate the unseen dynamics of human experience, seeking to bridge understanding and awareness in moments of transition.",
+  "gradient": {
+    "seed": 512845973,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(66 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

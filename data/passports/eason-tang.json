@@ -1,0 +1,69 @@
+{
+  "personId": "eason-tang",
+  "name": "Eason Tang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "lauren-hsueh",
+      "name": "Lauren Hsueh",
+      "why": "You should meet Lauren Hsueh because you both share a passion for type design that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "type designer",
+      "path_receipt": [
+        {
+          "from": "Eason Tang",
+          "rel": "DOES",
+          "to": "type designer"
+        },
+        {
+          "from": "Lauren Hsueh",
+          "rel": "DOES",
+          "to": "type designer"
+        }
+      ]
+    },
+    {
+      "personId": "elizabeth-kunz",
+      "name": "Elizabeth Kunz",
+      "why": "You'd love to meet Elizabeth Kunz because her bold creativity mirrors your own, and you both appreciate the courage that comes with a strong point of view.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Constraints aren't obstacles to work around. They're the exact pressure that forces elegance.",
+      "path_receipt": [
+        {
+          "from": "Eason Tang",
+          "rel": "SHARES_VALUE",
+          "to": "Elizabeth Kunz"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "HAND TYPOGRAPHER",
+    "company": "",
+    "belief": "Unfashionable today is just taste six months ahead. Hold it anyway.",
+    "working_on": "Hand-carving every word for a bakery's social feed so text looks baked by their ovens, not typed."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend artistry with authenticity, celebrating tradition while confidently anticipating the evolving tastes of tomorrow.",
+  "gradient": {
+    "seed": 3818328392,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(142 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

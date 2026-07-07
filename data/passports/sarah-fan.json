@@ -6,7 +6,7 @@
     {
       "personId": "johnny-sheng",
       "name": "johnny Sheng",
-      "why": "You should meet Johnny Sheng because you both share a connection to Lemma (YC F25) and can exchange valuable insights from your experiences.",
+      "why": "You should meet Johnny Sheng because you both connect to Lemma (YC F25) and can share valuable insights about your experiences there.",
       "basis_kind": "same_work",
       "via": "Lemma (YC F25)",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "shan",
       "name": "Shan",
-      "why": "You would enjoy meeting Shan, as both of you have a remarkable knack for creatively connecting ideas in unexpected ways.",
+      "why": "You should meet Shan because her innovative approach to creativity might inspire you to explore connections you haven't considered yet.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "Mastery in one system unlocks remixability across ten others you didn't know were listening",
@@ -48,7 +48,7 @@
     "working_on": "mapping how emotion layers sit beneath language; remixing one, keeping the other"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound curiosity about the unseen connections between emotion and language, seeking to illuminate the transformative power of recognition.",
+  "magic_inference": "You are driven by a desire to uncover the hidden bonds between emotion and language, celebrating the transformative power of connection.",
   "gradient": {
     "seed": 98470752,
     "stops": [

@@ -1,0 +1,69 @@
+{
+  "personId": "kayla-trinh",
+  "name": "Kayla Trinh",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "grant-howard",
+      "name": "Grant Howard",
+      "why": "You’ll love meeting Grant Howard, as he shares your passion for audio dramatism and has some fascinating insights into the art form.",
+      "basis_kind": "same_work",
+      "via": "audio dramatist",
+      "path_receipt": [
+        {
+          "from": "Kayla Trinh",
+          "rel": "DOES",
+          "to": "audio dramatist"
+        },
+        {
+          "from": "Grant Howard",
+          "rel": "DOES",
+          "to": "audio dramatist"
+        }
+      ]
+    },
+    {
+      "personId": "laila-l",
+      "name": "Laila L",
+      "why": "You should meet Laila L, as her unique perspective on creativity will inspire you and deepen your understanding of making people feel something true.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Notice something you've never noticed before and the whole practice has already been won.",
+      "path_receipt": [
+        {
+          "from": "Kayla Trinh",
+          "rel": "SHARES_VALUE",
+          "to": "Laila L"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "SILENCE NARRATIVE ENGINEER",
+    "company": "",
+    "belief": "Holding space for listeners to fill in what you didn't say requires the hardest kind of trust.",
+    "working_on": "Audio drama where your own forgotten moments become the haunting, not the script."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create intimacy, inviting listeners to confront their own vulnerabilities through shared, unspoken experiences.",
+  "gradient": {
+    "seed": 1585900489,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(154 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

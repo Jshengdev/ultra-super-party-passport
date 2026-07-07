@@ -1,0 +1,69 @@
+{
+  "personId": "rodin-s",
+  "name": "Rodin S",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "wesley",
+      "name": "Wesley",
+      "why": "You should meet Wesley because you both share a passion for fintech engineering that could lead to exciting collaborations and insights.",
+      "basis_kind": "same_work",
+      "via": "fintech engineer",
+      "path_receipt": [
+        {
+          "from": "Rodin S",
+          "rel": "DOES",
+          "to": "fintech engineer"
+        },
+        {
+          "from": "Wesley",
+          "rel": "DOES",
+          "to": "fintech engineer"
+        }
+      ]
+    },
+    {
+      "personId": "romy",
+      "name": "Romy",
+      "why": "You should meet Romy, as her innovative ideas about creativity might inspire you to change what's possible for people in exciting new ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Complexity becomes power the moment someone without math sees the shape beneath the noise.",
+      "path_receipt": [
+        {
+          "from": "Rodin S",
+          "rel": "SHARES_VALUE",
+          "to": "Romy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "FINANCIAL JUSTICE ENGINEER",
+    "company": "",
+    "belief": "Access to capital shouldn't require proving you were born into the right spreadsheet.",
+    "working_on": "lending platform designed specifically for delivery drivers, bypassing predatory short-term loan spirals"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to empowerment, believing that financial access should be fair and inclusive for all hardworking individuals.",
+  "gradient": {
+    "seed": 3380696629,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(357 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

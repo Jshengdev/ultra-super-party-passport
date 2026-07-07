@@ -1,0 +1,69 @@
+{
+  "personId": "claire-tolles",
+  "name": "Claire Tolles",
+  "line2": "Cinematic Arts",
+  "find": [
+    {
+      "personId": "christine-lai",
+      "name": "Christine Lai",
+      "why": "You should meet Christine Lai; her innovative work as a climate risk designer aligns perfectly with your passion for sustainability and environmental solutions.",
+      "basis_kind": "same_work",
+      "via": "climate risk designer",
+      "path_receipt": [
+        {
+          "from": "Claire Tolles",
+          "rel": "DOES",
+          "to": "climate risk designer"
+        },
+        {
+          "from": "Christine Lai",
+          "rel": "DOES",
+          "to": "climate risk designer"
+        }
+      ]
+    },
+    {
+      "personId": "clarence",
+      "name": "Clarence",
+      "why": "You should meet Clarence, as his innovative ideas about creativity could inspire you to explore new possibilities in your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Legibility is the first medicine. When someone understands, fear shrinks.",
+      "path_receipt": [
+        {
+          "from": "Claire Tolles",
+          "rel": "SHARES_VALUE",
+          "to": "Clarence"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cinematic Arts",
+    "major": "Game Art",
+    "grad_year": "2026",
+    "position": "SYSTEMS ANIMATOR",
+    "company": "",
+    "belief": "Abstract models become real when you drag a slider and watch a city flood. Then people get it.",
+    "working_on": "Creating interactive game environments that show how carbon cascades through weather, crops, and infrastructure across a playable timeline."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to bridge complex ideas with tangible experiences, making environmental consequences feel immediate and relatable.",
+  "gradient": {
+    "seed": 338388497,
+    "stops": [
+      {
+        "color": "hsl(180 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(97 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

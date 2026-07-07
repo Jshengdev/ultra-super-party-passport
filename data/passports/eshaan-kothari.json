@@ -1,0 +1,69 @@
+{
+  "personId": "eshaan-kothari",
+  "name": "Eshaan Kothari",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "amelia",
+      "name": "Amelia",
+      "why": "You should meet Amelia because her innovative approach to generative art as a systems architect will inspire and resonate with your own creative ideas.",
+      "basis_kind": "same_work",
+      "via": "systems architect, generative art",
+      "path_receipt": [
+        {
+          "from": "Eshaan Kothari",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        },
+        {
+          "from": "Amelia",
+          "rel": "DOES",
+          "to": "systems architect, generative art"
+        }
+      ]
+    },
+    {
+      "personId": "jasmine-yip",
+      "name": "jasmine yip",
+      "why": "You should meet Jasmine Yip because her unique perspective on creativity might spark some innovative ideas that resonate with your own connections.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Bridge human language and algorithms by teaching systems to recognize what bodies know before minds.",
+      "path_receipt": [
+        {
+          "from": "Eshaan Kothari",
+          "rel": "SHARES_VALUE",
+          "to": "jasmine yip"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "FEEDBACK ARCHITECT",
+    "company": "",
+    "belief": "Emergence happens at the moment making and responding become one step instead of two.",
+    "working_on": "feedback system where visual AI outputs train on what human audiences actually fixate on"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create deeper connections between human perception and technology, fostering a more intuitive understanding of interaction.",
+  "gradient": {
+    "seed": 4276977488,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(220 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

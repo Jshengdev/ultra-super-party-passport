@@ -1,0 +1,69 @@
+{
+  "personId": "byeongjun-moon",
+  "name": "Byeongjun Moon",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "chan-hwang",
+      "name": "Chan Hwang",
+      "why": "You should meet Chan Hwang because you both share a passion for software engineering and documentary storytelling, which could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "software engineer, documentarian",
+      "path_receipt": [
+        {
+          "from": "Byeongjun Moon",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        },
+        {
+          "from": "Chan Hwang",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        }
+      ]
+    },
+    {
+      "personId": "campbelle-searcy",
+      "name": "Campbelle Searcy",
+      "why": "You should meet Campbelle Searcy because their unique perspective on creativity will inspire you to explore new connections in your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "It's connecting the nodes that the centralized system deliberately left isolated. The network grows; the gatekeeper becomes irrelevant.",
+      "path_receipt": [
+        {
+          "from": "Byeongjun Moon",
+          "rel": "SHARES_VALUE",
+          "to": "Campbelle Searcy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "MOOD INDEXING ARCHITECT",
+    "company": "",
+    "belief": "You translate human emotion into the algorithm's language, then write the code that bridges the gap between them.",
+    "working_on": "Building searchable archives where films are indexed by feeling—'lonely,' 'joyful'—teaching algorithms to recognize human emotion in cinema"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to deepen connections between technology and human experience, transforming emotions into a language that resonates universally.",
+  "gradient": {
+    "seed": 3584552130,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(236 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "jacob-siasat",
+  "name": "Jacob Siasat",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma, as you both share a passion for interaction design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Jacob Siasat",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "jacqueline-sung",
+      "name": "Jacqueline Sung",
+      "why": "You would enjoy meeting Jacqueline Sung, as her unique perspective on creativity mirrors your own, fostering inspiring conversations about taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Your eye is a prism—once you've seen what you see, everyone else does too.",
+      "path_receipt": [
+        {
+          "from": "Jacob Siasat",
+          "rel": "SHARES_VALUE",
+          "to": "Jacqueline Sung"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Psych",
+    "grad_year": "2027",
+    "position": "INTERFACE PHILOSOPHER",
+    "company": "",
+    "belief": "True reduction means cutting until the remaining shape speaks for itself without explanation.",
+    "working_on": "building interaction patterns where each movement teaches you the logic underneath without speaking it"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to reveal understanding through experience, trusting that clarity emerges when complexity is elegantly distilled.",
+  "gradient": {
+    "seed": 2735305322,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(67 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

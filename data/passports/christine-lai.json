@@ -1,0 +1,69 @@
+{
+  "personId": "christine-lai",
+  "name": "Christine Lai",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "claire-tolles",
+      "name": "Claire Tolles",
+      "why": "You should meet Claire Tolles, as you both share a passion for climate risk design that could lead to inspiring ideas and collaboration.",
+      "basis_kind": "same_work",
+      "via": "climate risk designer",
+      "path_receipt": [
+        {
+          "from": "Christine Lai",
+          "rel": "DOES",
+          "to": "climate risk designer"
+        },
+        {
+          "from": "Claire Tolles",
+          "rel": "DOES",
+          "to": "climate risk designer"
+        }
+      ]
+    },
+    {
+      "personId": "clarence",
+      "name": "Clarence",
+      "why": "You would love to meet Clarence, as he shares your passion for creativity and is always exploring new ways to change what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Legibility is the first medicine. When someone understands, fear shrinks.",
+      "path_receipt": [
+        {
+          "from": "Christine Lai",
+          "rel": "SHARES_VALUE",
+          "to": "Clarence"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "CLIMATE STORYTELLER",
+    "company": "",
+    "belief": "Data becomes action only when the decision-maker sees themselves in the numbers. Translation is the work.",
+    "working_on": "Translating climate models into interactive maps showing a city council what rising seas mean for their district across fifty years."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to making complex data relatable, empowering decision-makers to envision a sustainable future for their communities.",
+  "gradient": {
+    "seed": 3668817553,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(201 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

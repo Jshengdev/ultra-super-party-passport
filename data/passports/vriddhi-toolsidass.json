@@ -1,0 +1,69 @@
+{
+  "personId": "vriddhi-toolsidass",
+  "name": "Vriddhi Toolsidass",
+  "line2": "Ivine And Young",
+  "find": [
+    {
+      "personId": "cat-wang",
+      "name": "cat wang",
+      "why": "You should definitely meet Cat Wang, as you both share a passion for wearable tech design that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "wearable tech designer",
+      "path_receipt": [
+        {
+          "from": "Vriddhi Toolsidass",
+          "rel": "DOES",
+          "to": "wearable tech designer"
+        },
+        {
+          "from": "cat wang",
+          "rel": "DOES",
+          "to": "wearable tech designer"
+        }
+      ]
+    },
+    {
+      "personId": "zavion",
+      "name": "Zavion",
+      "why": "You would enjoy meeting Zavion because both of you share a passion for creativity and making real things exist in innovative ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "You learn by shipping. Every player's unexpected choice rewrites your assumptions faster than any meeting could.",
+      "path_receipt": [
+        {
+          "from": "Vriddhi Toolsidass",
+          "rel": "SHARES_VALUE",
+          "to": "Zavion"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Ivine And Young",
+    "major": "MSCIT",
+    "grad_year": "2026",
+    "position": "WEARABLE ENGINEER",
+    "company": "",
+    "belief": "Touch changes everything. A working jacket teaches you more than a hundred concept sketches ever will.",
+    "working_on": "Prototyping responsive fabrics that sync haptic feedback between people wearing them"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bridge human connection through tactile experiences, transforming how people engage and learn together.",
+  "gradient": {
+    "seed": 4168397385,
+    "stops": [
+      {
+        "color": "hsl(357 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(104 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

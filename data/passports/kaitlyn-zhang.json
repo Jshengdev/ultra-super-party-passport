@@ -1,0 +1,69 @@
+{
+  "personId": "kaitlyn-zhang",
+  "name": "kaitlyn zhang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jones-c-mays-ii",
+      "name": "Jones C Mays II",
+      "why": "You should meet Jones C Mays II, as you both share a passion for art direction that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "art director",
+      "path_receipt": [
+        {
+          "from": "kaitlyn zhang",
+          "rel": "DOES",
+          "to": "art director"
+        },
+        {
+          "from": "Jones C Mays II",
+          "rel": "DOES",
+          "to": "art director"
+        }
+      ]
+    },
+    {
+      "personId": "lauren-budovsky",
+      "name": "Lauren Budovsky",
+      "why": "You would enjoy meeting Lauren Budovsky, as her bold creativity resonates with your own taste and craft, sparking inspiring conversations.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Taste looks inevitable only after refusing easier paths at every junction.",
+      "path_receipt": [
+        {
+          "from": "kaitlyn zhang",
+          "rel": "SHARES_VALUE",
+          "to": "Lauren Budovsky"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "GRAIN & CHOICE DIRECTOR",
+    "company": "",
+    "belief": "Constraints aren't limits—they're the lens that forces your taste into visibility.",
+    "working_on": "Shooting 35mm reversal stock in South LA; each photon carries consequence, zero digital escape hatches."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your pursuit reveals a deep belief that true artistry emerges from embracing limitations, transforming each constraint into a powerful catalyst for authenticity.",
+  "gradient": {
+    "seed": 1916474948,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(300 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "chan-hwang",
+  "name": "Chan Hwang",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "byeongjun-moon",
+      "name": "Byeongjun Moon",
+      "why": "You should meet Byeongjun Moon, as you both share a passion for software engineering and documentary filmmaking that could spark some fascinating discussions.",
+      "basis_kind": "same_work",
+      "via": "software engineer, documentarian",
+      "path_receipt": [
+        {
+          "from": "Chan Hwang",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        },
+        {
+          "from": "Byeongjun Moon",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        }
+      ]
+    },
+    {
+      "personId": "charles",
+      "name": "Charles",
+      "why": "You should meet Charles because his unique approach to creativity might inspire new connections in your work that you haven't yet imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "One stolen metaphor from technology suddenly lets an artist rethink their entire creative process. That's the power of systems thinking.",
+      "path_receipt": [
+        {
+          "from": "Chan Hwang",
+          "rel": "SHARES_VALUE",
+          "to": "Charles"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Physics",
+    "grad_year": "2029",
+    "position": "SEMANTIC SYSTEM DESIGNER",
+    "company": "",
+    "belief": "The hardest system to build is one where human emotion and machine logic speak to each other as equals.",
+    "working_on": "Creating film search systems where human emotions like 'haunting' or 'nervous' become the query language instead of metadata"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to bridge the chasm between human experience and technology, seeking harmony in their interaction.",
+  "gradient": {
+    "seed": 4043878359,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(44 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "tyler",
+  "name": "Tyler",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because you both share a passion for music production that could spark some incredible creative conversations.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Tyler",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "yeji",
+      "name": "Yeji",
+      "why": "You should meet Yeji because her unique perspective on creativity will inspire you and deepen your understanding of how it connects with genuine emotions.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Truth lands when people stop in your space and suddenly hear their own thoughts like they're part of the sound.",
+      "path_receipt": [
+        {
+          "from": "Tyler",
+          "rel": "SHARES_VALUE",
+          "to": "Yeji"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "English And Sports Industries",
+    "grad_year": "2027",
+    "position": "AMBIENT DOCUMENTARIAN",
+    "company": "",
+    "belief": "Art happens when listeners give up waiting for the sound to shift",
+    "working_on": "transforming abandoned space recordings into emotional endurance tests disguised as music"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to challenge perceptions, inviting listeners to confront their own emotional landscapes beyond conventional musical expectations.",
+  "gradient": {
+    "seed": 261196049,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(123 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

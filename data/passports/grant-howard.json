@@ -1,0 +1,69 @@
+{
+  "personId": "grant-howard",
+  "name": "Grant Howard",
+  "line2": "Thornton",
+  "find": [
+    {
+      "personId": "kayla-trinh",
+      "name": "Kayla Trinh",
+      "why": "You should meet Kayla Trinh because her insights as an audio dramatist will resonate with your own passion for storytelling in sound.",
+      "basis_kind": "same_work",
+      "via": "audio dramatist",
+      "path_receipt": [
+        {
+          "from": "Grant Howard",
+          "rel": "DOES",
+          "to": "audio dramatist"
+        },
+        {
+          "from": "Kayla Trinh",
+          "rel": "DOES",
+          "to": "audio dramatist"
+        }
+      ]
+    },
+    {
+      "personId": "jackson",
+      "name": "Jackson",
+      "why": "You should meet Jackson, as his unique perspective on creativity will inspire you to explore new ways of making people feel something truly meaningful.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "People change when they see their own lives reflected back clearer than memory allows.",
+      "path_receipt": [
+        {
+          "from": "Grant Howard",
+          "rel": "SHARES_VALUE",
+          "to": "Jackson"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Thornton",
+    "major": "Music Production",
+    "grad_year": "2027",
+    "position": "SONIC STORYTELLER",
+    "company": "",
+    "belief": "Leaving silence for the listener's own memory to fill isn't lazy—it's trusting them with the truth they already know.",
+    "working_on": "podcast-length ghost narrative with zero music, only ambience and the listener's own breathing as anchor"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief in the power of personal reflection, inviting listeners to confront their own truths in stillness.",
+  "gradient": {
+    "seed": 3999449251,
+    "stops": [
+      {
+        "color": "hsl(179 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(307 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

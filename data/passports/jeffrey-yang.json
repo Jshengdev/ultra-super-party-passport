@@ -1,0 +1,69 @@
+{
+  "personId": "jeffrey-yang",
+  "name": "Jeffrey Yang",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "lauryn-kinsella",
+      "name": "Lauryn Kinsella",
+      "why": "You should meet Lauryn Kinsella, as you both share a passion for event architecture and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "event architect",
+      "path_receipt": [
+        {
+          "from": "Jeffrey Yang",
+          "rel": "DOES",
+          "to": "event architect"
+        },
+        {
+          "from": "Lauryn Kinsella",
+          "rel": "DOES",
+          "to": "event architect"
+        }
+      ]
+    },
+    {
+      "personId": "jude",
+      "name": "jude",
+      "why": "You should meet Jude, as both of you share a passion for creativity and can inspire each other with your unique ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Every breakthrough spots the gap no one else saw as a threshold yet.",
+      "path_receipt": [
+        {
+          "from": "Jeffrey Yang",
+          "rel": "SHARES_VALUE",
+          "to": "jude"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "CSBA",
+    "grad_year": "2027",
+    "position": "MATCH ARCHITECT",
+    "company": "",
+    "belief": "When you reveal who actually needs what you carry, magic ignites in the match.",
+    "working_on": "remapping 200+ graduates into mentorship by revealing who actually completes each person, not clones them"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by the belief that authentic connections can catalyze transformative growth, illuminating unique paths for each individual.",
+  "gradient": {
+    "seed": 1783820802,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(120 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

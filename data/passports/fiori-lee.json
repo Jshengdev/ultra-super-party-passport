@@ -1,0 +1,69 @@
+{
+  "personId": "fiori-lee",
+  "name": "Fiori Lee",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "saniya-patel",
+      "name": "Saniya Patel",
+      "why": "You would love to meet Saniya Patel because you both share a passion for app building and can exchange creative ideas.",
+      "basis_kind": "same_work",
+      "via": "app builder",
+      "path_receipt": [
+        {
+          "from": "Fiori Lee",
+          "rel": "DOES",
+          "to": "app builder"
+        },
+        {
+          "from": "Saniya Patel",
+          "rel": "DOES",
+          "to": "app builder"
+        }
+      ]
+    },
+    {
+      "personId": "george-zhou",
+      "name": "George Zhou",
+      "why": "You should meet George Zhou because his innovative approach to creativity aligns perfectly with your passion for making real things exist.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Ideas are talk until the hardware boots up and makes actual sound—that's the proof.",
+      "path_receipt": [
+        {
+          "from": "Fiori Lee",
+          "rel": "SHARES_VALUE",
+          "to": "George Zhou"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "CONSTRAINT ENGINEER",
+    "company": "",
+    "belief": "Getting something both weird and working into the world is harder than a thousand polished normals.",
+    "working_on": "app giving one creative prompt daily that forces completion before unlocking the next"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to ignite creativity and embrace the messiness of innovation, valuing authentic expression over conventional perfection.",
+  "gradient": {
+    "seed": 1897529351,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(116 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

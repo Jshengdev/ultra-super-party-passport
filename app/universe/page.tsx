@@ -123,9 +123,10 @@ export default function UniversePage() {
             placeholder="what’s your name?"
             aria-label="search your name"
             style={{
-              width: '100%', padding: '11px 20px', borderRadius: 999,
-              border: '1px solid var(--usp-line, #e2e2de)', background: 'var(--usp-card, #fff)',
+              width: '100%', padding: '12px 20px', borderRadius: 999,
+              border: '1.5px solid var(--usp-ink, #2a2a28)', background: 'var(--usp-card, #fff)',
               fontSize: 15, textAlign: 'center', outline: 'none',
+              boxShadow: '0 10px 32px rgba(42,42,40,0.16)', fontWeight: 500,
             }}
           />
           {searchMatches.map((m) => (

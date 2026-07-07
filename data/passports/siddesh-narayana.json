@@ -1,0 +1,69 @@
+{
+  "personId": "siddesh-narayana",
+  "name": "Siddesh Narayana",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "dee-dee-dawson",
+      "name": "Dee Dee Dawson",
+      "why": "You and Dee Dee Dawson both share a passion for product strategy and voice, making for an engaging conversation about innovative ideas in the field.",
+      "basis_kind": "same_work",
+      "via": "product strategist, voice",
+      "path_receipt": [
+        {
+          "from": "Siddesh Narayana",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        },
+        {
+          "from": "Dee Dee Dawson",
+          "rel": "DOES",
+          "to": "product strategist, voice"
+        }
+      ]
+    },
+    {
+      "personId": "swastik-purathepparambil",
+      "name": "Swastik Purathepparambil",
+      "why": "You should meet Swastik Purathepparambil because his unique perspective on creativity will inspire you to see connections you never thought possible.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "That mesh-point where creation and curation collapse into the same action—that's where things unlock",
+      "path_receipt": [
+        {
+          "from": "Siddesh Narayana",
+          "rel": "SHARES_VALUE",
+          "to": "Swastik Purathepparambil"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Business Administration",
+    "grad_year": "2029",
+    "position": "ACOUSTIC TRANSLATOR",
+    "company": "",
+    "belief": "Magic surfaces when you realize two supposedly separate channels were always braided together",
+    "working_on": "reverse-engineering how vocal texture carries emotion independent of words"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to uncover the hidden connections between sound and emotion, revealing the beauty in their intertwining.",
+  "gradient": {
+    "seed": 2498134789,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(13 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

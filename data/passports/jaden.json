@@ -1,0 +1,69 @@
+{
+  "personId": "jaden",
+  "name": "Jaden",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "alex-wan",
+      "name": "Alex Wan",
+      "why": "You should meet Alex Wan, as you both share a unique passion for blending art and coding in your creative work.",
+      "basis_kind": "same_work",
+      "via": "artist-coder",
+      "path_receipt": [
+        {
+          "from": "Jaden",
+          "rel": "DOES",
+          "to": "artist-coder"
+        },
+        {
+          "from": "Alex Wan",
+          "rel": "DOES",
+          "to": "artist-coder"
+        }
+      ]
+    },
+    {
+      "personId": "jai-andersen",
+      "name": "Jai Andersen",
+      "why": "You should meet Jai Andersen because his creativity shines brightest when collaborating with inspiring people like you.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The magic lives in the gap—you just have to be intentional about who falls into it.",
+      "path_receipt": [
+        {
+          "from": "Jaden",
+          "rel": "SHARES_VALUE",
+          "to": "Jai Andersen"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "ISE",
+    "grad_year": "2028",
+    "position": "ARTIST TOOLS ENGINEER",
+    "company": "",
+    "belief": "Stop overthinking creativity—just build what your hands already want to hold.",
+    "working_on": "building software for people who know exactly what they need but have no code for it"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower others, believing that true creativity flourishes when barriers to expression are removed.",
+  "gradient": {
+    "seed": 3381762195,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(328 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

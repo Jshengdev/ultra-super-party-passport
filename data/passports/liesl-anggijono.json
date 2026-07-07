@@ -1,0 +1,69 @@
+{
+  "personId": "liesl-anggijono",
+  "name": "Liesl Anggijono",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "annie-long",
+      "name": "Annie Long",
+      "why": "You would love to meet Annie Long, as you both share a passion for being code artists and can exchange creative ideas.",
+      "basis_kind": "same_work",
+      "via": "code artist",
+      "path_receipt": [
+        {
+          "from": "Liesl Anggijono",
+          "rel": "DOES",
+          "to": "code artist"
+        },
+        {
+          "from": "Annie Long",
+          "rel": "DOES",
+          "to": "code artist"
+        }
+      ]
+    },
+    {
+      "personId": "maia-rocha",
+      "name": "Maia Rocha",
+      "why": "You should meet Maia Rocha because her innovative approach to creativity could inspire you both to change what's possible for people in remarkable ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Made it when a kid solved what yesterday was impossible, fear lifted, math became theirs.",
+      "path_receipt": [
+        {
+          "from": "Liesl Anggijono",
+          "rel": "SHARES_VALUE",
+          "to": "Maia Rocha"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "DATA JUSTICE ARTIST",
+    "company": "",
+    "belief": "Someone sees the machinery reshaping their neighborhood and power moves in that room.",
+    "working_on": "creating rooms where real estate abstractions become tangible through sound and projection, stripping invisibility from displacement"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are motivated by a deep desire to illuminate hidden realities, transforming abstract struggles into immersive experiences that foster understanding and connection.",
+  "gradient": {
+    "seed": 3779517795,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(277 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

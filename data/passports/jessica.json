@@ -1,0 +1,69 @@
+{
+  "personId": "jessica",
+  "name": "jessica",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You and Advik Sharma both share a passion for interaction design, making it a great opportunity to exchange ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "jessica",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "jones-c-mays-ii",
+      "name": "Jones C Mays II",
+      "why": "You will love meeting Jones C Mays II, as his unique approach to creativity beautifully reflects a strong point of view that resonates with yours.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Taste is knowing what to remove until only the exact right image remains.",
+      "path_receipt": [
+        {
+          "from": "jessica",
+          "rel": "SHARES_VALUE",
+          "to": "Jones C Mays II"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "INTERACTION DESIGNER",
+    "company": "",
+    "belief": "Clarity means stripping until someone gets it instantly; everything left must earn its place.",
+    "working_on": "making interfaces that teach themselves through how you move through them—no words needed"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create intuitive experiences that empower users, fostering understanding through simplicity and movement rather than complexity.",
+  "gradient": {
+    "seed": 89852209,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(17 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

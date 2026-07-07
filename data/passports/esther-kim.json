@@ -1,0 +1,69 @@
+{
+  "personId": "esther-kim",
+  "name": "Esther Kim",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "johnny-sheng",
+      "name": "johnny Sheng",
+      "why": "You should meet Johnny Sheng because you both share a passion for being part-time warriors and can swap inspiring stories from your experiences.",
+      "basis_kind": "same_work",
+      "via": "part-time warrior",
+      "path_receipt": [
+        {
+          "from": "Esther Kim",
+          "rel": "DOES",
+          "to": "part-time warrior"
+        },
+        {
+          "from": "johnny Sheng",
+          "rel": "DOES",
+          "to": "part-time warrior"
+        }
+      ]
+    },
+    {
+      "personId": "hamin-jin",
+      "name": "Hamin Jin",
+      "why": "You should meet Hamin Jin because both of you share a passion for creativity and the power of bringing the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Finding the gap nobody's looking at yet—that's where connection becomes possible.",
+      "path_receipt": [
+        {
+          "from": "Esther Kim",
+          "rel": "SHARES_VALUE",
+          "to": "Hamin Jin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "CULTURE CARTOGRAPHER",
+    "company": "",
+    "belief": "Naming what nobody said yet is the most generous creative act—it gives people permission to recognize themselves.",
+    "working_on": "documenting how Gen-Z reframed 'side hustle' into 'real practice' through language alone"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower others, believing that language can illuminate paths to self-identity and validation.",
+  "gradient": {
+    "seed": 294976512,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(88 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

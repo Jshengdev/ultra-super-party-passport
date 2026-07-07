@@ -1,0 +1,69 @@
+{
+  "personId": "ethan-wu",
+  "name": "Ethan Wu",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "arely",
+      "name": "Arely",
+      "why": "You should meet Arely because her innovative approach as a spatial designer perfectly complements your vision and could spark some exciting collaboration.",
+      "basis_kind": "same_work",
+      "via": "spatial designer",
+      "path_receipt": [
+        {
+          "from": "Ethan Wu",
+          "rel": "DOES",
+          "to": "spatial designer"
+        },
+        {
+          "from": "Arely",
+          "rel": "DOES",
+          "to": "spatial designer"
+        }
+      ]
+    },
+    {
+      "personId": "eve-nepo",
+      "name": "Eve Nepo",
+      "why": "You’d enjoy meeting Eve Nepo, as her unique perspective on creativity aligns beautifully with your own appreciation for taste and bold craftsmanship.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Designing for the eight-hour user means every curve is a choice, not an afterthought.",
+      "path_receipt": [
+        {
+          "from": "Ethan Wu",
+          "rel": "SHARES_VALUE",
+          "to": "Eve Nepo"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "SENSORY DESIGNER",
+    "company": "",
+    "belief": "Reading what's broken and using damage as curriculum—that's designing for visceral truth.",
+    "working_on": "immersive space using defunct building damage as the primary design material"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform neglect into meaning, revealing beauty and resilience in what society often overlooks.",
+  "gradient": {
+    "seed": 2217655006,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(286 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

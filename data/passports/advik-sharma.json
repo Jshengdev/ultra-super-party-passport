@@ -6,7 +6,7 @@
     {
       "personId": "ally-wong",
       "name": "Ally Wong",
-      "why": "You should meet Ally Wong because her innovative approach as an interaction designer aligns perfectly with your passion for creating engaging user experiences.",
+      "why": "You'd really enjoy meeting Ally Wong, as her insights on interaction design align beautifully with your own experiences and passions in the field.",
       "basis_kind": "same_work",
       "via": "interaction designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "alekh-singh",
       "name": "Alekh singh",
-      "why": "You should meet Alekh Singh, as his creative insights could inspire new collaborations and ideas that resonate with your own innovative spirit.",
+      "why": "You should meet Alekh Singh because his innovative ideas about creativity could inspire you both to explore new collaborative possibilities.",
       "basis_kind": "shared_value",
       "via": "cluster-2",
       "match_belief": "Collision works when you stage unfamiliar minds and let their friction produce insight nobody planned.",
@@ -48,7 +48,7 @@
     "working_on": "rebuilding creator platforms around what fans actually need between content drops, not just during them"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to cultivate genuine connections, believing that meaningful support for creators and fans fosters organic growth and fulfillment.",
+  "magic_inference": "You are driven by a desire to foster genuine connections, prioritizing meaningful interactions over mere metrics in the creator-fan relationship.",
   "gradient": {
     "seed": 732585239,
     "stops": [

@@ -1,0 +1,69 @@
+{
+  "personId": "kelvin-ye",
+  "name": "Kelvin Ye",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jefray-ding",
+      "name": "Jefray Ding",
+      "why": "You should meet Jefray Ding because his passion for indie game dev aligns perfectly with yours, leading to inspiring conversations and potential collaborations.",
+      "basis_kind": "same_work",
+      "via": "indie game dev",
+      "path_receipt": [
+        {
+          "from": "Kelvin Ye",
+          "rel": "DOES",
+          "to": "indie game dev"
+        },
+        {
+          "from": "Jefray Ding",
+          "rel": "DOES",
+          "to": "indie game dev"
+        }
+      ]
+    },
+    {
+      "personId": "mateo-morales",
+      "name": "Mateo Morales",
+      "why": "You should meet Mateo Morales because his innovative approach to creativity aligns perfectly with your passion for bringing ideas to life in cluster-6.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Build something that boots and hums—then you know the idea was never theoretical.",
+      "path_receipt": [
+        {
+          "from": "Kelvin Ye",
+          "rel": "SHARES_VALUE",
+          "to": "Mateo Morales"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "SHIPPED GAME DIRECTOR",
+    "company": "",
+    "belief": "Three games in the wild teach you more about design than one perfect document ever could.",
+    "working_on": "Releasing a roguelike each quarter about restaurant ownership, each one breaking in real time with players."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to embrace experimentation and growth, valuing real-world learning over theoretical perfection in your creative journey.",
+  "gradient": {
+    "seed": 1557805145,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(1 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "sinchana-nama",
+  "name": "sinchana nama",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alex-wan",
+      "name": "Alex Wan",
+      "why": "You should meet Alex Wan, as you both share a passion for blending art and coding in innovative ways.",
+      "basis_kind": "same_work",
+      "via": "artist-coder",
+      "path_receipt": [
+        {
+          "from": "sinchana nama",
+          "rel": "DOES",
+          "to": "artist-coder"
+        },
+        {
+          "from": "Alex Wan",
+          "rel": "DOES",
+          "to": "artist-coder"
+        }
+      ]
+    },
+    {
+      "personId": "vagis-kumar",
+      "name": "Vagis Kumar",
+      "why": "You would enjoy meeting Vagis Kumar because his creative approach to collaboration aligns perfectly with your passion for bringing the right people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Listening to what material wants becomes the conversation between makers and their work",
+      "path_receipt": [
+        {
+          "from": "sinchana nama",
+          "rel": "SHARES_VALUE",
+          "to": "Vagis Kumar"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "ARTIST INFRASTRUCTURE DESIGNER",
+    "company": "",
+    "belief": "Abandoning the performance of creativity for the thing that actually calls you",
+    "working_on": "building artist infrastructure while discovering what genuinely moves you, not what should"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to cultivate authenticity in creativity, seeking to connect deeply with your true passions rather than societal expectations.",
+  "gradient": {
+    "seed": 877634712,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(292 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

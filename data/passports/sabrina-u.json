@@ -1,0 +1,69 @@
+{
+  "personId": "sabrina-u",
+  "name": "Sabrina U.",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You and Abriana share a passion for Arts, Technology, and the Business of Innovation, making for an inspiring conversation filled with creative ideas.",
+      "basis_kind": "shared_context",
+      "via": "Arts, Technology & the Business of Innovation",
+      "path_receipt": [
+        {
+          "from": "Sabrina U.",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        },
+        {
+          "from": "Abriana",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        }
+      ]
+    },
+    {
+      "personId": "sophie-haggray",
+      "name": "Sophie Haggray",
+      "why": "You should meet Sophie Haggray because her creativity radiates warmth and authenticity, much like yours, and together you could inspire others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Locking listeners into a feeling long enough that it stops being about the sound",
+      "path_receipt": [
+        {
+          "from": "Sabrina U.",
+          "rel": "SHARES_VALUE",
+          "to": "Sophie Haggray"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "CINEMATIC MINIMALIST",
+    "company": "",
+    "belief": "Editing for silence is harder than editing for sound. Pauses hold more story than dialogue.",
+    "working_on": "short film capturing the moment two people recognize the distance that grew between them silently"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for the unspoken, believing that true connection often lies in the spaces between words.",
+  "gradient": {
+    "seed": 3068292499,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(302 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

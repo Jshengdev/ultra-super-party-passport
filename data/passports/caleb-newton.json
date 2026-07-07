@@ -1,0 +1,69 @@
+{
+  "personId": "caleb-newton",
+  "name": "Caleb Newton",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "anuj-shah",
+      "name": "Anuj Shah",
+      "why": "You should meet Anuj Shah, as you both share a passion for startup strategy and can exchange insights that could spark exciting new ideas.",
+      "basis_kind": "same_work",
+      "via": "startup strategist",
+      "path_receipt": [
+        {
+          "from": "Caleb Newton",
+          "rel": "DOES",
+          "to": "startup strategist"
+        },
+        {
+          "from": "Anuj Shah",
+          "rel": "DOES",
+          "to": "startup strategist"
+        }
+      ]
+    },
+    {
+      "personId": "christian-friis",
+      "name": "Christian Friis",
+      "why": "You should meet Christian Friis because his innovative approach to collaboration could ignite your creative ideas in ways you might not expect.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Creativity starts when you know what someone needs before exhaustion erases the question.",
+      "path_receipt": [
+        {
+          "from": "Caleb Newton",
+          "rel": "SHARES_VALUE",
+          "to": "Christian Friis"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Human Technology Interaction",
+    "grad_year": "2029",
+    "position": "NEED DETECTIVE",
+    "company": "",
+    "belief": "Creativity thrives where the right strangers find each other. Your job is removing the obstacles that keep them apart.",
+    "working_on": "Identifying friction points in creative communities where collaboration should flow but doesn't, then removing the obstacles blocking connection"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound belief in the transformative power of connection, seeking to harmonize creative energies for collective growth.",
+  "gradient": {
+    "seed": 3371821512,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(237 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

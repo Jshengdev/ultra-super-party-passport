@@ -1,0 +1,69 @@
+{
+  "personId": "sophie-haggray",
+  "name": "Sophie Haggray",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jash-shah",
+      "name": "Jash Shah",
+      "why": "You should meet Jash Shah because he has incredible insights about the music producer scene that I think you'd both appreciate and enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Sophie Haggray",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "tiffany-lutan",
+      "name": "Tiffany Lutan",
+      "why": "You should meet Tiffany Lutan because her creativity sparks deep emotions, just like yours, and I think you two would inspire each other.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Arranging the fragments until they suddenly point to something nobody else saw before",
+      "path_receipt": [
+        {
+          "from": "Sophie Haggray",
+          "rel": "SHARES_VALUE",
+          "to": "Tiffany Lutan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "SONIC ARCHITECT",
+    "company": "",
+    "belief": "Locking listeners into a feeling long enough that it stops being about the sound",
+    "working_on": "composing from warehouse silence—stretching 15 minutes until discomfort becomes texture"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek to transform stillness into a profound experience, inviting listeners to explore deeper layers of their own perceptions and emotions.",
+  "gradient": {
+    "seed": 1340368891,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(323 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

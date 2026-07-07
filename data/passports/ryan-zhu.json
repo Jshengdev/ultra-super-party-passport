@@ -1,0 +1,69 @@
+{
+  "personId": "ryan-zhu",
+  "name": "Ryan Zhu",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "asia-chang",
+      "name": "Asia Chang",
+      "why": "You would really enjoy meeting Asia Chang, as you both share a passion for motion systems engineering that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "motion systems engineer",
+      "path_receipt": [
+        {
+          "from": "Ryan Zhu",
+          "rel": "DOES",
+          "to": "motion systems engineer"
+        },
+        {
+          "from": "Asia Chang",
+          "rel": "DOES",
+          "to": "motion systems engineer"
+        }
+      ]
+    },
+    {
+      "personId": "saniya-patel",
+      "name": "Saniya Patel",
+      "why": "You should meet Saniya Patel because her innovative approach to creativity will inspire you and spark new ideas for your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Making something broken-feeling that somehow works better than the frictionless version",
+      "path_receipt": [
+        {
+          "from": "Ryan Zhu",
+          "rel": "SHARES_VALUE",
+          "to": "Saniya Patel"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "KINETIC SYSTEMS ENGINEER",
+    "company": "",
+    "belief": "A frame is static. Thousands of frames at sixty hertz become alive. That's the craft.",
+    "working_on": "neural animation pipeline that watches human motion and generates fluid character behavior from raw video"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to breathe life into stillness, transforming fleeting moments into a vibrant dance of creativity and connection.",
+  "gradient": {
+    "seed": 1008076295,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(356 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

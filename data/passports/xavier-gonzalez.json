@@ -1,0 +1,69 @@
+{
+  "personId": "xavier-gonzalez",
+  "name": "Xavier Gonzalez",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "romy",
+      "name": "Romy",
+      "why": "You should meet Romy because you both share a passion for civic data engineering and can exchange inspiring ideas on the subject.",
+      "basis_kind": "same_work",
+      "via": "civic data engineer",
+      "path_receipt": [
+        {
+          "from": "Xavier Gonzalez",
+          "rel": "DOES",
+          "to": "civic data engineer"
+        },
+        {
+          "from": "Romy",
+          "rel": "DOES",
+          "to": "civic data engineer"
+        }
+      ]
+    },
+    {
+      "personId": "yana-pinto",
+      "name": "Yana Pinto",
+      "why": "You should meet Yana Pinto, as her innovative ideas in creativity will resonate with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Fear collapses when someone finally sees what's actually going to happen. That clarity is the whole job.",
+      "path_receipt": [
+        {
+          "from": "Xavier Gonzalez",
+          "rel": "SHARES_VALUE",
+          "to": "Yana Pinto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Neuroscience",
+    "grad_year": "2028",
+    "position": "DATA SENSE-MAKER",
+    "company": "",
+    "belief": "Making the incomprehensible obvious—that's when someone leaves your work and can't stop talking about what they discovered.",
+    "working_on": "Mapping neuroscience research funding flows to show communities where discoveries translate to care"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to illuminate complex knowledge, empowering communities to engage with breakthroughs that can transform their lives.",
+  "gradient": {
+    "seed": 3730432095,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(79 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

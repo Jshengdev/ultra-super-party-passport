@@ -1,0 +1,69 @@
+{
+  "personId": "clarence",
+  "name": "Clarence",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy because her innovative approach as a healthcare product designer aligns perfectly with your shared passion for improving patient experiences.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Clarence",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "david-han",
+      "name": "david han",
+      "why": "You should meet David Han because his innovative approach to creativity can inspire you to change what's possible for others.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Making what authorities ignore impossible to unsee anymore. That's the whole force.",
+      "path_receipt": [
+        {
+          "from": "Clarence",
+          "rel": "SHARES_VALUE",
+          "to": "david han"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "",
+    "position": "CLARITY DESIGNER",
+    "company": "",
+    "belief": "Legibility is the first medicine. When someone understands, fear shrinks.",
+    "working_on": "Reworking hospital intake so a terrified child reads what's about to happen in language that calms instead of compounds fear."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion, striving to transform anxiety into understanding, believing that clarity can empower even the most vulnerable.",
+  "gradient": {
+    "seed": 2684725094,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(202 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

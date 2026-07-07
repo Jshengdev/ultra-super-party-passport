@@ -1,0 +1,69 @@
+{
+  "personId": "steven-dang",
+  "name": "steven dang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christian-stiker",
+      "name": "christian stiker",
+      "why": "You should meet Christian Stiker because you both share a passion for accessible interaction design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "accessible interaction designer",
+      "path_receipt": [
+        {
+          "from": "steven dang",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        },
+        {
+          "from": "christian stiker",
+          "rel": "DOES",
+          "to": "accessible interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "wesley",
+      "name": "Wesley",
+      "why": "You should meet Wesley, as his innovative approach to creativity aligns perfectly with your passion for changing what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Real change happens when someone can borrow without pretending to be who they're not.",
+      "path_receipt": [
+        {
+          "from": "steven dang",
+          "rel": "SHARES_VALUE",
+          "to": "Wesley"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "INCLUSIVE SYSTEMS DESIGNER",
+    "company": "",
+    "belief": "Creative is speaking to everyone in the room, not just the room you assumed was watching",
+    "working_on": "rebuilding civic infrastructure so every user arrives at the front door, not the back"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to foster inclusivity, ensuring that every voice is heard and valued in the community dialogue.",
+  "gradient": {
+    "seed": 4028488825,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(47 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

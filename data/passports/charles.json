@@ -1,0 +1,69 @@
+{
+  "personId": "charles",
+  "name": "Charles",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "aaron-figueroa",
+      "name": "Aaron Figueroa",
+      "why": "You should meet Aaron Figueroa because you both share a passion for full-stack engineering and music, which could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "full-stack engineer, music",
+      "path_receipt": [
+        {
+          "from": "Charles",
+          "rel": "DOES",
+          "to": "full-stack engineer, music"
+        },
+        {
+          "from": "Aaron Figueroa",
+          "rel": "DOES",
+          "to": "full-stack engineer, music"
+        }
+      ]
+    },
+    {
+      "personId": "dee-dee-dawson",
+      "name": "Dee Dee Dawson",
+      "why": "You should meet Dee Dee Dawson because her unique approach to creativity might spark ideas that connect your interests in unexpected ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Creative breakthroughs happen when you wire systems together that were never meant to talk. The novelty is in the bridge.",
+      "path_receipt": [
+        {
+          "from": "Charles",
+          "rel": "SHARES_VALUE",
+          "to": "Dee Dee Dawson"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Computer Engineering",
+    "grad_year": "2025",
+    "position": "SONIC ARCHITECTURE DESIGNER",
+    "company": "",
+    "belief": "One stolen metaphor from technology suddenly lets an artist rethink their entire creative process. That's the power of systems thinking.",
+    "working_on": "Building tools where musicians compose by stealing metaphors from systems design applied to everyday sound sampling and layering"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to bridge disciplines, believing that innovative connections can unlock new realms of creativity for artists.",
+  "gradient": {
+    "seed": 2857098003,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(229 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

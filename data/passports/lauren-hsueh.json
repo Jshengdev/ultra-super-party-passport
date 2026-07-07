@@ -6,7 +6,7 @@
     {
       "personId": "eason-tang",
       "name": "Eason Tang",
-      "why": "You should meet Eason Tang because you both share a passion for type design that can spark an inspiring conversation.",
+      "why": "You should meet Eason Tang because you both share a passion for type design that could lead to inspiring conversations and creative ideas.",
       "basis_kind": "same_work",
       "via": "type designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "lindsey-demyun",
       "name": "Lindsey Demyun",
-      "why": "You should meet Lindsey Demyun because her bold creativity resonates with your taste and craft, making for an inspiring conversation.",
+      "why": "You should meet Lindsey Demyun because her strong point of view on creativity aligns perfectly with your own, fostering inspiring conversations about taste and craft.",
       "basis_kind": "shared_value",
       "via": "cluster-4",
       "match_belief": "Every constraint teaches you what you actually believe in as a storyteller.",
@@ -48,7 +48,7 @@
     "working_on": "hand-drawing every piece of social copy so the bakery's voice looks like it came from inside the ovens"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to create authenticity, revealing your bakery's soul through your art, inviting others to appreciate its uniqueness.",
+  "magic_inference": "You are driven by a desire to authentically connect with others, transforming ordinary moments into a warmth that feels both familiar and necessary.",
   "gradient": {
     "seed": 4265883538,
     "stops": [

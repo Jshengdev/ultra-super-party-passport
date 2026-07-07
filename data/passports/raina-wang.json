@@ -1,0 +1,69 @@
+{
+  "personId": "raina-wang",
+  "name": "Raina Wang",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "christy",
+      "name": "Christy",
+      "why": "You and Christy both share a passion for education design, making it a great opportunity to exchange ideas and inspirations.",
+      "basis_kind": "same_work",
+      "via": "education designer",
+      "path_receipt": [
+        {
+          "from": "Raina Wang",
+          "rel": "DOES",
+          "to": "education designer"
+        },
+        {
+          "from": "Christy",
+          "rel": "DOES",
+          "to": "education designer"
+        }
+      ]
+    },
+    {
+      "personId": "sama-shah",
+      "name": "Sama Shah",
+      "why": "You should meet Sama Shah because her creativity and passion for bringing people together will inspire you both to explore new ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Architecting conditions where strangers become collaborators by pure proximity",
+      "path_receipt": [
+        {
+          "from": "Raina Wang",
+          "rel": "SHARES_VALUE",
+          "to": "Sama Shah"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Buad",
+    "grad_year": "2028",
+    "position": "CROSS-DISCIPLINE TRANSLATOR",
+    "company": "",
+    "belief": "Creativity erupts in the gap between how different minds name the same thing.",
+    "working_on": "residency where engineers write poems, artists debug code, each teaching the other to see"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound belief in the transformative power of collaboration, where diverse perspectives spark deeper understanding and innovation.",
+  "gradient": {
+    "seed": 3308371638,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(80 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

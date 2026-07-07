@@ -1,0 +1,69 @@
+{
+  "personId": "reem",
+  "name": "Reem",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joanne",
+      "name": "Joanne",
+      "why": "You should meet Joanne because her insights as a music technologist align perfectly with your passion for innovative soundscapes.",
+      "basis_kind": "same_work",
+      "via": "music technologist",
+      "path_receipt": [
+        {
+          "from": "Reem",
+          "rel": "DOES",
+          "to": "music technologist"
+        },
+        {
+          "from": "Joanne",
+          "rel": "DOES",
+          "to": "music technologist"
+        }
+      ]
+    },
+    {
+      "personId": "rodin-s",
+      "name": "Rodin S",
+      "why": "You’ll find a kindred spirit in Rodin S, as both of you share a passion for creativity and its power to change what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Access to capital shouldn't require proving you were born into the right spreadsheet.",
+      "path_receipt": [
+        {
+          "from": "Reem",
+          "rel": "SHARES_VALUE",
+          "to": "Rodin S"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Business Administration",
+    "grad_year": "2029",
+    "position": "CREATIVE ACCESS ENGINEER",
+    "company": "",
+    "belief": "Barriers vanish when you refuse to accept 'that's just how it is' as natural.",
+    "working_on": "browser-based music composition removing the need for hardware, unlocking production in resource-starved schools"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to democratizing creativity, believing that every aspiring musician deserves access to tools that empower their expression.",
+  "gradient": {
+    "seed": 3588794662,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(208 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

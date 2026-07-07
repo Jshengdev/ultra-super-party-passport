@@ -1,0 +1,69 @@
+{
+  "personId": "charlie-geraci-c7",
+  "name": "Charlie Geraci C7",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You should meet Abriana because her insights into the intersection of Arts, Technology, and the Business of Innovation will resonate with your interests.",
+      "basis_kind": "shared_context",
+      "via": "Arts, Technology & the Business of Innovation",
+      "path_receipt": [
+        {
+          "from": "Charlie Geraci C7",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        },
+        {
+          "from": "Abriana",
+          "rel": "MAJORS_IN",
+          "to": "Arts, Technology & the Business of Innovation"
+        }
+      ]
+    },
+    {
+      "personId": "fiori-lee",
+      "name": "Fiori Lee",
+      "why": "You should meet Fiori Lee, as her innovative approach to creativity beautifully complements your passion for making real things exist in cluster-6.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Getting something both weird and working into the world is harder than a thousand polished normals.",
+      "path_receipt": [
+        {
+          "from": "Charlie Geraci C7",
+          "rel": "SHARES_VALUE",
+          "to": "Fiori Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2024",
+    "position": "ARTIST INFRASTRUCTURE ENGINEER",
+    "company": "",
+    "belief": "You're not the creator—but when an artist shipped something impossible because your invisible infrastructure existed, you were essential to that.",
+    "working_on": "Designing deployment pipelines so visual artists can launch interactive installations without touching Git or infrastructure, just making"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek to empower artists by removing barriers, finding fulfillment in the transformative impact of your support rather than seeking recognition.",
+  "gradient": {
+    "seed": 1255033522,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(31 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

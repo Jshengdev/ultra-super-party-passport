@@ -1,0 +1,69 @@
+{
+  "personId": "kristian-calderon",
+  "name": "Kristian Calderon",
+  "line2": "Viterbi",
+  "find": [
+    {
+      "personId": "annie-long",
+      "name": "Annie Long",
+      "why": "You and Annie Long both share a passion for code art, making your conversation about creativity in technology truly inspiring.",
+      "basis_kind": "same_work",
+      "via": "code artist",
+      "path_receipt": [
+        {
+          "from": "Kristian Calderon",
+          "rel": "DOES",
+          "to": "code artist"
+        },
+        {
+          "from": "Annie Long",
+          "rel": "DOES",
+          "to": "code artist"
+        }
+      ]
+    },
+    {
+      "personId": "liesl-anggijono",
+      "name": "Liesl Anggijono",
+      "why": "You should meet Liesl Anggijono because her innovative ideas about creativity could inspire you to think differently about what's possible for people.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Someone sees the machinery reshaping their neighborhood and power moves in that room.",
+      "path_receipt": [
+        {
+          "from": "Kristian Calderon",
+          "rel": "SHARES_VALUE",
+          "to": "Liesl Anggijono"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Viterbi",
+    "major": "Electrical & Computer Engineering",
+    "grad_year": "2027",
+    "position": "GENTRIFICATION VISUALIZER",
+    "company": "",
+    "belief": "Giving people the data to see the system gives them the ground to fight back from.",
+    "working_on": "Installation merging property data with spatial audio so displacement becomes something you can hear moving."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to empower others, transforming abstract data into an immersive experience that fosters awareness and resilience.",
+  "gradient": {
+    "seed": 1692064737,
+    "stops": [
+      {
+        "color": "hsl(38 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(49 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

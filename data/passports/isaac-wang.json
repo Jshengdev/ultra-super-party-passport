@@ -1,0 +1,69 @@
+{
+  "personId": "isaac-wang",
+  "name": "Isaac Wang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You should meet Abriana; her innovative approach to motion design perfectly complements your creative ideas and could inspire some exciting collaborations.",
+      "basis_kind": "same_work",
+      "via": "motion designer",
+      "path_receipt": [
+        {
+          "from": "Isaac Wang",
+          "rel": "DOES",
+          "to": "motion designer"
+        },
+        {
+          "from": "Abriana",
+          "rel": "DOES",
+          "to": "motion designer"
+        }
+      ]
+    },
+    {
+      "personId": "jacob-siasat",
+      "name": "Jacob Siasat",
+      "why": "You would enjoy meeting Jacob Siasat because his unique perspectives on creativity align with your own passion for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "True reduction means cutting until the remaining shape speaks for itself without explanation.",
+      "path_receipt": [
+        {
+          "from": "Isaac Wang",
+          "rel": "SHARES_VALUE",
+          "to": "Jacob Siasat"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "BUIN",
+    "grad_year": "2028",
+    "position": "CONSTRAINT ARCHITECT",
+    "company": "",
+    "belief": "Discipline is saying no so loudly that what remains is impossible to ignore.",
+    "working_on": "designing each interaction to reveal one insight at a time, building restraint into motion itself"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create clarity through simplicity, ensuring each moment resonates with meaning and intention.",
+  "gradient": {
+    "seed": 4201846900,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(18 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

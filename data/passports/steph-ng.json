@@ -1,0 +1,69 @@
+{
+  "personId": "steph-ng",
+  "name": "Steph Ng",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joanne",
+      "name": "Joanne",
+      "why": "You should meet Joanne because she has fascinating insights into music technology that I think you'll both enjoy discussing together.",
+      "basis_kind": "same_work",
+      "via": "music technologist",
+      "path_receipt": [
+        {
+          "from": "Steph Ng",
+          "rel": "DOES",
+          "to": "music technologist"
+        },
+        {
+          "from": "Joanne",
+          "rel": "DOES",
+          "to": "music technologist"
+        }
+      ]
+    },
+    {
+      "personId": "steven-dang",
+      "name": "steven dang",
+      "why": "You should meet Steven Dang because his innovative ideas about creativity could inspire you to see new possibilities in your own work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Creative is speaking to everyone in the room, not just the room you assumed was watching",
+      "path_receipt": [
+        {
+          "from": "Steph Ng",
+          "rel": "SHARES_VALUE",
+          "to": "steven dang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2021",
+    "position": "ACCESS INNOVATOR",
+    "company": "",
+    "belief": "Genius is noticing a wall that seemed permanent and building a door",
+    "working_on": "creating an instrument where the school's walls and budget become the orchestra"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to transform limitations into opportunities, believing that creativity can unlock hidden potential in every space.",
+  "gradient": {
+    "seed": 1870630719,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(46 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

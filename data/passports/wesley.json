@@ -1,0 +1,69 @@
+{
+  "personId": "wesley",
+  "name": "Wesley",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "rodin-s",
+      "name": "Rodin S",
+      "why": "You should meet Rodin S because your shared experience as fintech engineers will spark fascinating conversations and insights about the industry.",
+      "basis_kind": "same_work",
+      "via": "fintech engineer",
+      "path_receipt": [
+        {
+          "from": "Wesley",
+          "rel": "DOES",
+          "to": "fintech engineer"
+        },
+        {
+          "from": "Rodin S",
+          "rel": "DOES",
+          "to": "fintech engineer"
+        }
+      ]
+    },
+    {
+      "personId": "xavier-gonzalez",
+      "name": "Xavier Gonzalez",
+      "why": "You should meet Xavier Gonzalez because his innovative ideas about creativity can inspire you to change what's possible for people in remarkable ways.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Making the incomprehensible obvious—that's when someone leaves your work and can't stop talking about what they discovered.",
+      "path_receipt": [
+        {
+          "from": "Wesley",
+          "rel": "SHARES_VALUE",
+          "to": "Xavier Gonzalez"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "CECS",
+    "grad_year": "2026",
+    "position": "FINANCIAL ACCESS DESIGNER",
+    "company": "",
+    "belief": "Real change happens when someone can borrow without pretending to be who they're not.",
+    "working_on": "Building credit-access tools for gig workers without requiring SSN or employment history"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to empower individuals, fostering authenticity and breaking barriers in the pursuit of financial independence.",
+  "gradient": {
+    "seed": 1553074624,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(0 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

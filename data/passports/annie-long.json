@@ -6,7 +6,7 @@
     {
       "personId": "ben-flora",
       "name": "Ben Flora",
-      "why": "You and Ben Flora both share a passion for code artistry, making a conversation between you two a fascinating exploration of creativity and technology.",
+      "why": "You and Ben Flora both share a passion for code artistry, making it a perfect opportunity for you to exchange creative ideas and inspirations.",
       "basis_kind": "same_work",
       "via": "code artist",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "ansh-sankhala",
       "name": "Ansh Sankhala",
-      "why": "You should meet Ansh Sankhala because his innovative ideas about creativity could inspire you to explore new possibilities together.",
+      "why": "You’ll find Ansh Sankhala inspiring, as he shares your belief that creativity can transform possibilities for people in remarkable ways.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "You've unlocked possibility for someone who walked in believing their circumstances were locked forever.",
@@ -48,7 +48,7 @@
     "working_on": "installing immersive exhibits where gentrification becomes visible through real estate layers and ambient sound design"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep commitment to empower communities, transforming complex realities into tangible experiences that spark awareness and collective action.",
+  "magic_inference": "You are driven by a desire to empower communities, transforming data into a tool for awareness and resilience against invisible pressures.",
   "gradient": {
     "seed": 294282635,
     "stops": [

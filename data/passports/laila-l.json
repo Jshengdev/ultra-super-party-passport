@@ -1,0 +1,69 @@
+{
+  "personId": "laila-l",
+  "name": "Laila L",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joey-relo",
+      "name": "Joey relo",
+      "why": "You should meet Joey relo because you both share a passion for experimental sound art that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "experimental sound artist",
+      "path_receipt": [
+        {
+          "from": "Laila L",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        },
+        {
+          "from": "Joey relo",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        }
+      ]
+    },
+    {
+      "personId": "maliq-wyatt",
+      "name": "Maliq Wyatt",
+      "why": "You should meet Maliq Wyatt because his creative approach truly resonates with others, just like yours, and you’ll find a meaningful connection.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Worked when someone freezes mid-step realizing something they'd always filtered out.",
+      "path_receipt": [
+        {
+          "from": "Laila L",
+          "rel": "SHARES_VALUE",
+          "to": "Maliq Wyatt"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "IMMERSIVE SILENCE COMPOSER",
+    "company": "",
+    "belief": "Notice something you've never noticed before and the whole practice has already been won.",
+    "working_on": "Room-sized resonance chamber teaching bodies how to listen when there's nowhere for sound to hide."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to awaken deeper awareness in others, revealing the beauty of subtlety in sound and silence.",
+  "gradient": {
+    "seed": 582151567,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(180 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

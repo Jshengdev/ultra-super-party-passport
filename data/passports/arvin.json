@@ -1,0 +1,69 @@
+{
+  "personId": "arvin",
+  "name": "Arvin",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "mark-hou",
+      "name": "Mark Hou",
+      "why": "You and Mark Hou both share a passion for video essays, making it a great opportunity to exchange insights and recommendations.",
+      "basis_kind": "same_work",
+      "via": "video essayist",
+      "path_receipt": [
+        {
+          "from": "Arvin",
+          "rel": "DOES",
+          "to": "video essayist"
+        },
+        {
+          "from": "Mark Hou",
+          "rel": "DOES",
+          "to": "video essayist"
+        }
+      ]
+    },
+    {
+      "personId": "badria",
+      "name": "Badria",
+      "why": "You should meet Badria because her unique approach to creativity will inspire you and spark meaningful conversations about making authentic connections.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "The details that take the longest to animate are precisely what people feel first, in their gut.",
+      "path_receipt": [
+        {
+          "from": "Arvin",
+          "rel": "SHARES_VALUE",
+          "to": "Badria"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Math",
+    "grad_year": "2029",
+    "position": "VISUAL ESSAYIST",
+    "company": "",
+    "belief": "Arrange existing pieces until the gap between them suddenly holds meaning nobody saw before.",
+    "working_on": "Assembling decades of cinema to argue something true about how humans process grief"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to illuminate shared human experiences, revealing profound truths that connect us through collective sorrow and resilience.",
+  "gradient": {
+    "seed": 1328261467,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(307 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

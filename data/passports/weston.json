@@ -1,0 +1,69 @@
+{
+  "personId": "weston",
+  "name": "Weston",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "abriana",
+      "name": "Abriana",
+      "why": "You should meet Abriana because her creative approach as a motion designer perfectly complements your unique style and could spark some inspiring collaboration.",
+      "basis_kind": "same_work",
+      "via": "motion designer",
+      "path_receipt": [
+        {
+          "from": "Weston",
+          "rel": "DOES",
+          "to": "motion designer"
+        },
+        {
+          "from": "Abriana",
+          "rel": "DOES",
+          "to": "motion designer"
+        }
+      ]
+    },
+    {
+      "personId": "amanda",
+      "name": "Amanda",
+      "why": "You should meet Amanda, as her bold creativity and unique perspective will resonate with your own passion for taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck.",
+      "path_receipt": [
+        {
+          "from": "Amanda",
+          "rel": "SHARES_VALUE",
+          "to": "Weston"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "MOTION DESIGNER",
+    "company": "",
+    "belief": "The space between frames contains what people feel. Everything else is just decoration.",
+    "working_on": "Designing micro-interactions where every 100ms of motion carries weight and intention"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to evoke genuine emotions, believing that subtle moments can create profound connections in human experience.",
+  "gradient": {
+    "seed": 2857834375,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(161 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

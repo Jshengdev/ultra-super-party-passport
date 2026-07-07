@@ -1,0 +1,69 @@
+{
+  "personId": "om",
+  "name": "Om",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "byeongjun-moon",
+      "name": "Byeongjun Moon",
+      "why": "You should meet Byeongjun Moon because you both share a passion for software engineering and documentary filmmaking that could spark intriguing conversations.",
+      "basis_kind": "same_work",
+      "via": "software engineer, documentarian",
+      "path_receipt": [
+        {
+          "from": "Om",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        },
+        {
+          "from": "Byeongjun Moon",
+          "rel": "DOES",
+          "to": "software engineer, documentarian"
+        }
+      ]
+    },
+    {
+      "personId": "renae-wang",
+      "name": "Renae Wang",
+      "why": "You should meet Renae Wang, as her innovative ideas and unique approach to creativity will inspire you to connect concepts in ways you never imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Every system hides its incentives. Spot them in one field and you'll redesign everything.",
+      "path_receipt": [
+        {
+          "from": "Om",
+          "rel": "SHARES_VALUE",
+          "to": "Renae Wang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "MOOD DATABASE ARCHITECT",
+    "company": "",
+    "belief": "Systems fail when they refuse the messy truth. Build for ambiguity and things click.",
+    "working_on": "parsing emotional undertones in music and film to create searchable emotional indices"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to honor complexity, believing that true connection emerges when we embrace the nuanced emotions that define human experiences.",
+  "gradient": {
+    "seed": 1681142921,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(29 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

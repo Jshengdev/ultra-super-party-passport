@@ -1,0 +1,69 @@
+{
+  "personId": "arushi-purkayastha",
+  "name": "Arushi Purkayastha",
+  "line2": "Annenberg",
+  "find": [
+    {
+      "personId": "ayla",
+      "name": "Ayla",
+      "why": "You should meet Ayla because you both share a passion for audio tool building and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "audio tool builder",
+      "path_receipt": [
+        {
+          "from": "Arushi Purkayastha",
+          "rel": "DOES",
+          "to": "audio tool builder"
+        },
+        {
+          "from": "Ayla",
+          "rel": "DOES",
+          "to": "audio tool builder"
+        }
+      ]
+    },
+    {
+      "personId": "asia-chang",
+      "name": "Asia Chang",
+      "why": "You should meet Asia Chang because her innovative approach to creativity will inspire you both to turn your imaginative ideas into tangible realities.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Thousands of in-between frames become a creature. That moment when it stops being pixels and starts being alive—that's everything.",
+      "path_receipt": [
+        {
+          "from": "Arushi Purkayastha",
+          "rel": "SHARES_VALUE",
+          "to": "Asia Chang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Annenberg",
+    "major": "PR & Advertising",
+    "grad_year": "2027",
+    "position": "SONIC TOOL INVENTOR",
+    "company": "",
+    "belief": "A tool that lets people tap their weirdness is how you multiply one person's strange idea across thousands.",
+    "working_on": "Building app that transforms random urban sounds into playable instruments musicians perform with in real time"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "Your drive stems from a desire to celebrate individuality, transforming the chaos of urban life into a shared musical experience that inspires creativity.",
+  "gradient": {
+    "seed": 2830263785,
+    "stops": [
+      {
+        "color": "hsl(37 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(86 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

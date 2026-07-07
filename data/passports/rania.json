@@ -1,0 +1,69 @@
+{
+  "personId": "rania",
+  "name": "Rania",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joey-relo",
+      "name": "Joey relo",
+      "why": "You should meet Joey relo because you both share a passion for experimental sound art that could spark a fascinating conversation.",
+      "basis_kind": "same_work",
+      "via": "experimental sound artist",
+      "path_receipt": [
+        {
+          "from": "Rania",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        },
+        {
+          "from": "Joey relo",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        }
+      ]
+    },
+    {
+      "personId": "sabrina-u",
+      "name": "Sabrina U.",
+      "why": "You would love to meet Sabrina U. because her creativity truly resonates with making people feel something genuine, just like yours.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Editing for silence is harder than editing for sound. Pauses hold more story than dialogue.",
+      "path_receipt": [
+        {
+          "from": "Rania",
+          "rel": "SHARES_VALUE",
+          "to": "Sabrina U."
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "EXPERIENTIAL SOUND DESIGNER",
+    "company": "",
+    "belief": "Perception shifts when you show someone what existed all along but they overlooked.",
+    "working_on": "architectural installation where proprioceptive movement becomes tuned instrument in your own body"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to awaken hidden awareness, transforming the body into a dynamic vessel for deeper connection and understanding.",
+  "gradient": {
+    "seed": 184465476,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(82 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

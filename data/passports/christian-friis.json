@@ -1,0 +1,69 @@
+{
+  "personId": "christian-friis",
+  "name": "Christian Friis",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "advik-sharma",
+      "name": "Advik Sharma",
+      "why": "You should meet Advik Sharma, as you both share a passion for interaction design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "interaction designer",
+      "path_receipt": [
+        {
+          "from": "Christian Friis",
+          "rel": "DOES",
+          "to": "interaction designer"
+        },
+        {
+          "from": "Advik Sharma",
+          "rel": "DOES",
+          "to": "interaction designer"
+        }
+      ]
+    },
+    {
+      "personId": "christy",
+      "name": "Christy",
+      "why": "You'd love to meet Christy, as her creativity and knack for connecting people will inspire and energize your own innovative ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Friction between thinking styles is the highest-leverage education. You're just building the collisions right.",
+      "path_receipt": [
+        {
+          "from": "Christian Friis",
+          "rel": "SHARES_VALUE",
+          "to": "Christy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "CREATOR ADVOCATE",
+    "company": "",
+    "belief": "Creativity starts when you know what someone needs before exhaustion erases the question.",
+    "working_on": "Dismantling the engagement machine between creators and audiences—building authentic connection when growth stops being the point."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to foster genuine connections that transcend superficial metrics, prioritizing true understanding over relentless pursuit of growth.",
+  "gradient": {
+    "seed": 4022069146,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(142 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

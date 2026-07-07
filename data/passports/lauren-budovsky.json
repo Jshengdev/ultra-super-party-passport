@@ -1,0 +1,69 @@
+{
+  "personId": "lauren-budovsky",
+  "name": "Lauren Budovsky",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "jones-c-mays-ii",
+      "name": "Jones C Mays II",
+      "why": "You would enjoy meeting Jones C Mays II, as he shares your passion for art direction and has fascinating insights to share.",
+      "basis_kind": "same_work",
+      "via": "art director",
+      "path_receipt": [
+        {
+          "from": "Lauren Budovsky",
+          "rel": "DOES",
+          "to": "art director"
+        },
+        {
+          "from": "Jones C Mays II",
+          "rel": "DOES",
+          "to": "art director"
+        }
+      ]
+    },
+    {
+      "personId": "lauren-hsueh",
+      "name": "Lauren Hsueh",
+      "why": "You should meet Lauren Hsueh because her creative insights beautifully align with your strong point of view on taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Being unfashionable in public until people realize they needed that view all along.",
+      "path_receipt": [
+        {
+          "from": "Lauren Budovsky",
+          "rel": "SHARES_VALUE",
+          "to": "Lauren Hsueh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "CELLULOID FILMMAKER",
+    "company": "",
+    "belief": "Taste looks inevitable only after refusing easier paths at every junction.",
+    "working_on": "shooting in 16mm without digital safety nets, letting the grain and chemistry dictate mood"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to embrace vulnerability, trusting the rawness of film to reveal authentic beauty in the creative process.",
+  "gradient": {
+    "seed": 429264658,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(107 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

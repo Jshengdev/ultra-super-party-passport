@@ -1,0 +1,69 @@
+{
+  "personId": "cat-wang",
+  "name": "cat wang",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "vriddhi-toolsidass",
+      "name": "Vriddhi Toolsidass",
+      "why": "You should meet Vriddhi Toolsidass, as you both share a passion for wearable tech design that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "wearable tech designer",
+      "path_receipt": [
+        {
+          "from": "cat wang",
+          "rel": "DOES",
+          "to": "wearable tech designer"
+        },
+        {
+          "from": "Vriddhi Toolsidass",
+          "rel": "DOES",
+          "to": "wearable tech designer"
+        }
+      ]
+    },
+    {
+      "personId": "charlie-geraci-c7",
+      "name": "Charlie Geraci C7",
+      "why": "You should meet Charlie Geraci C7, as his innovative approach to creativity aligns perfectly with your shared passion for bringing ideas to life.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "You're not the creator—but when an artist shipped something impossible because your invisible infrastructure existed, you were essential to that.",
+      "path_receipt": [
+        {
+          "from": "cat wang",
+          "rel": "SHARES_VALUE",
+          "to": "Charlie Geraci C7"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2029",
+    "position": "WEARABLE TECHNOLOGIST",
+    "company": "",
+    "belief": "Wearables become creative when someone would wear them even if nobody was watching. That's when you've truly made something.",
+    "working_on": "Designing jackets that light up when two friends wearing them enter the same space, making connection visible"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek to illuminate the bonds of friendship, crafting experiences that celebrate connection, even when no one else is looking.",
+  "gradient": {
+    "seed": 1083983253,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(16 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

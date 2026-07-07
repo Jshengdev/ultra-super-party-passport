@@ -1,0 +1,69 @@
+{
+  "personId": "sama-shah",
+  "name": "Sama Shah",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "alekh-singh",
+      "name": "Alekh singh",
+      "why": "You should meet Alekh Singh because you both share a passion for curating programs that inspire and engage communities.",
+      "basis_kind": "same_work",
+      "via": "program curator",
+      "path_receipt": [
+        {
+          "from": "Sama Shah",
+          "rel": "DOES",
+          "to": "program curator"
+        },
+        {
+          "from": "Alekh singh",
+          "rel": "DOES",
+          "to": "program curator"
+        }
+      ]
+    },
+    {
+      "personId": "sinchana-nama",
+      "name": "sinchana nama",
+      "why": "You should meet Sinchana Nama because her creative energy and innovative ideas will inspire you and spark exciting conversations.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Abandoning the performance of creativity for the thing that actually calls you",
+      "path_receipt": [
+        {
+          "from": "Sama Shah",
+          "rel": "SHARES_VALUE",
+          "to": "sinchana nama"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "COLLISION SPACE DESIGNER",
+    "company": "",
+    "belief": "Architecting conditions where strangers become collaborators by pure proximity",
+    "working_on": "designing collision spaces where unexpected backgrounds spark genuine momentum"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to cultivate serendipity, believing that genuine connections can ignite transformative possibilities in unexpected encounters.",
+  "gradient": {
+    "seed": 1310062564,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(15 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

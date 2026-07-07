@@ -1,0 +1,69 @@
+{
+  "personId": "mario-claborn",
+  "name": "Mario Claborn",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy because her innovative approach as a healthcare product designer aligns perfectly with your passion for improving patient experiences.",
+      "basis_kind": "same_work",
+      "via": "healthcare product designer",
+      "path_receipt": [
+        {
+          "from": "Mario Claborn",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        },
+        {
+          "from": "Alexandra Siy",
+          "rel": "DOES",
+          "to": "healthcare product designer"
+        }
+      ]
+    },
+    {
+      "personId": "miki-safronov-yamamoto",
+      "name": "Miki Safronov Yamamoto",
+      "why": "You’ll connect with Miki Safronov Yamamoto, who shares your passion for creativity and believes in its power to transform possibilities for everyone.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Clarity breeds courage. Your real work is making fear dissolve through honest explanation.",
+      "path_receipt": [
+        {
+          "from": "Mario Claborn",
+          "rel": "SHARES_VALUE",
+          "to": "Miki Safronov Yamamoto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Psychology",
+    "grad_year": "2027",
+    "position": "CLARITY ARCHITECT",
+    "company": "",
+    "belief": "Reduced complex to comprehensible and suddenly someone's less afraid—that's the actual artifact.",
+    "working_on": "redesigning hospital paperwork so a frightened kid understands what's about to happen to their body"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep compassion for vulnerable children, seeking to transform fear into understanding and empowerment in daunting situations.",
+  "gradient": {
+    "seed": 1108293731,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(178 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

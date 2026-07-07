@@ -1,0 +1,69 @@
+{
+  "personId": "connie-sun",
+  "name": "Connie Sun",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "christy",
+      "name": "Christy",
+      "why": "You and Christy both share a passion for education design, so you'll have fascinating insights and experiences to exchange.",
+      "basis_kind": "same_work",
+      "via": "education designer",
+      "path_receipt": [
+        {
+          "from": "Connie Sun",
+          "rel": "DOES",
+          "to": "education designer"
+        },
+        {
+          "from": "Christy",
+          "rel": "DOES",
+          "to": "education designer"
+        }
+      ]
+    },
+    {
+      "personId": "dylan",
+      "name": "Dylan",
+      "why": "You should meet Dylan, as his innovative ideas and passion for creativity align perfectly with your own vision for bringing inspiring people together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "It's asking what they're trying to say when everyone's tired, then building the thing that says it true.",
+      "path_receipt": [
+        {
+          "from": "Connie Sun",
+          "rel": "SHARES_VALUE",
+          "to": "Dylan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "PRACTICE BUILDER",
+    "company": "",
+    "belief": "Different thinking styles collide best without a predetermined answer. That friction becomes the language itself.",
+    "working_on": "Co-designing a residency where visual artists and technologists solve problems together in weeks, translating each other's fluency back."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to cultivate collaboration that transforms divergent ideas into a shared understanding, fostering innovation through creative tension.",
+  "gradient": {
+    "seed": 3945006822,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(39 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

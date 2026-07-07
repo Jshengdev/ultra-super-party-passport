@@ -1,0 +1,69 @@
+{
+  "personId": "kaitlin",
+  "name": "Kaitlin",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "lucy",
+      "name": "Lucy",
+      "why": "You and Lucy both share a passion for the creator economy, making it a perfect opportunity to exchange insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "creator economy strategist",
+      "path_receipt": [
+        {
+          "from": "Kaitlin",
+          "rel": "DOES",
+          "to": "creator economy strategist"
+        },
+        {
+          "from": "Lucy",
+          "rel": "DOES",
+          "to": "creator economy strategist"
+        }
+      ]
+    },
+    {
+      "personId": "kat",
+      "name": "Kat",
+      "why": "You should meet Kat because her unique approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Creativity happens when two separate systems recognize they've been trying to say the same thing.",
+      "path_receipt": [
+        {
+          "from": "Kaitlin",
+          "rel": "SHARES_VALUE",
+          "to": "Kat"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "COMMONS ARCHITECT",
+    "company": "",
+    "belief": "When you steal the pattern from ant colonies, your whole industry suddenly reorganizes.",
+    "working_on": "Parallel funding networks for artists inspired by mycelial root systems; underground abundance flows differently."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for interconnectedness, believing that nature’s systems can inspire transformative pathways for creative support and collaboration.",
+  "gradient": {
+    "seed": 272703239,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(262 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

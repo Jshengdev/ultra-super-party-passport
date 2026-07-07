@@ -1,0 +1,69 @@
+{
+  "personId": "zac-marcus",
+  "name": "Zac Marcus",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joanne",
+      "name": "Joanne",
+      "why": "You should meet Joanne because her insights as a music technologist will resonate with your passion for innovative sounds and technology in music.",
+      "basis_kind": "same_work",
+      "via": "music technologist",
+      "path_receipt": [
+        {
+          "from": "Zac Marcus",
+          "rel": "DOES",
+          "to": "music technologist"
+        },
+        {
+          "from": "Joanne",
+          "rel": "DOES",
+          "to": "music technologist"
+        }
+      ]
+    },
+    {
+      "personId": "alexandra-siy",
+      "name": "Alexandra Siy",
+      "why": "You should meet Alexandra Siy, as her innovative approach to creativity could inspire fresh perspectives on changing what's possible for people like you.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Making systems legible so fear doesn't override someone's ability to choose—that's the whole craft.",
+      "path_receipt": [
+        {
+          "from": "Alexandra Siy",
+          "rel": "SHARES_VALUE",
+          "to": "Zac Marcus"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "MUSIC ACCESS BUILDER",
+    "company": "",
+    "belief": "Removing a barrier that existed only because nobody thought kids like them deserved to try—that's the shift.",
+    "working_on": "Creating a songwriting app that lets kids produce full arrangements through their phone's speaker"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to empower young voices, believing that creativity should be accessible to everyone, regardless of age.",
+  "gradient": {
+    "seed": 301359469,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(69 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

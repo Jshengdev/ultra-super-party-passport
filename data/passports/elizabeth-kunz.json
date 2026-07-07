@@ -1,0 +1,69 @@
+{
+  "personId": "elizabeth-kunz",
+  "name": "Elizabeth Kunz",
+  "line2": "Dornsife",
+  "find": [
+    {
+      "personId": "arely",
+      "name": "Arely",
+      "why": "You would love to meet Arely, as you both share a passion for spatial design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "spatial designer",
+      "path_receipt": [
+        {
+          "from": "Elizabeth Kunz",
+          "rel": "DOES",
+          "to": "spatial designer"
+        },
+        {
+          "from": "Arely",
+          "rel": "DOES",
+          "to": "spatial designer"
+        }
+      ]
+    },
+    {
+      "personId": "emily-vargas",
+      "name": "Emily Vargas",
+      "why": "You should meet Emily Vargas because her bold creativity aligns perfectly with your taste and craft, promising a vibrant exchange of ideas.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Color budgets force honesty. You can't hide behind variety when you get five pigments and one idea.",
+      "path_receipt": [
+        {
+          "from": "Elizabeth Kunz",
+          "rel": "SHARES_VALUE",
+          "to": "Emily Vargas"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dornsife",
+    "major": "Physics, Classics",
+    "grad_year": "2027",
+    "position": "SPATIAL PHYSICIST",
+    "company": "",
+    "belief": "Constraints aren't obstacles to work around. They're the exact pressure that forces elegance.",
+    "working_on": "turning a condemned classical theater into an installation by reading its cracks as text"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to find beauty in imperfection, using limitations as a canvas for creativity and deeper understanding.",
+  "gradient": {
+    "seed": 3220359922,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(66 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

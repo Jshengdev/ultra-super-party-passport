@@ -1,0 +1,69 @@
+{
+  "personId": "jash-shah",
+  "name": "Jash Shah",
+  "line2": "Marshall",
+  "find": [
+    {
+      "personId": "kirana-moore",
+      "name": "Kirana Moore",
+      "why": "You should meet Kirana Moore, as you both share a passion for music production that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "music producer",
+      "path_receipt": [
+        {
+          "from": "Jash Shah",
+          "rel": "DOES",
+          "to": "music producer"
+        },
+        {
+          "from": "Kirana Moore",
+          "rel": "DOES",
+          "to": "music producer"
+        }
+      ]
+    },
+    {
+      "personId": "joey-relo",
+      "name": "Joey relo",
+      "why": "You should meet Joey Relo because his unique perspective on creativity will inspire you and spark a meaningful conversation about making authentic connections.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "You've done something right when someone stops and notices what they've never noticed before.",
+      "path_receipt": [
+        {
+          "from": "Jash Shah",
+          "rel": "SHARES_VALUE",
+          "to": "Joey relo"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Marshall",
+    "major": "Entrepreneurship",
+    "grad_year": "2026",
+    "position": "SONIC ARCHITECT",
+    "company": "",
+    "belief": "Music's only truly working when it makes someone sit inside a feeling they normally flee from.",
+    "working_on": "composing a piece from warehouse silence that holds you still instead of pulling you forward"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform avoidance into stillness, inviting others to embrace their inner landscapes through the power of sound.",
+  "gradient": {
+    "seed": 648176148,
+    "stops": [
+      {
+        "color": "hsl(283 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(41 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

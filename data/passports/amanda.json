@@ -6,7 +6,7 @@
     {
       "personId": "anjali",
       "name": "Anjali",
-      "why": "You should meet Anjali because her innovative approach to product design aligns perfectly with your own creative vision.",
+      "why": "You should meet Anjali because her innovative approach to product design aligns beautifully with your vision and could spark some exciting ideas together.",
       "basis_kind": "same_work",
       "via": "product designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "armaan-kapoor",
       "name": "Armaan Kapoor",
-      "why": "You'd enjoy meeting Armaan Kapoor because his unique creativity and bold perspective on taste and craft align beautifully with your own artistic vision.",
+      "why": "You should meet Armaan Kapoor, as his unique perspective on creativity aligns perfectly with your passion for taste and craft.",
       "basis_kind": "shared_value",
       "via": "cluster-4",
       "match_belief": "Design that respects human dignity means every surface whispers protection, not extraction.",
@@ -48,7 +48,7 @@
     "working_on": "engineering utensils that teach young hands grip and balance without a single word of instruction"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to unlock potential through intuitive design, fostering exploration and learning in a silent yet profound manner.",
+  "magic_inference": "You are driven by a desire to empower young minds through intuitive design, facilitating growth and discovery without the constraints of language.",
   "gradient": {
     "seed": 50564095,
     "stops": [

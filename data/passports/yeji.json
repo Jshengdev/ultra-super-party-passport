@@ -1,0 +1,69 @@
+{
+  "personId": "yeji",
+  "name": "Yeji",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "joey-relo",
+      "name": "Joey relo",
+      "why": "You should meet Joey relo because you both share a passion for experimental sound artistry that could lead to some fascinating conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "experimental sound artist",
+      "path_receipt": [
+        {
+          "from": "Yeji",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        },
+        {
+          "from": "Joey relo",
+          "rel": "DOES",
+          "to": "experimental sound artist"
+        }
+      ]
+    },
+    {
+      "personId": "aditya-kamboj",
+      "name": "Aditya Kamboj",
+      "why": "You should meet Aditya Kamboj because his unique take on creativity will inspire you to explore new ways to evoke genuine emotions in your work.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "When someone's motivation becomes sympathetic, you stop inventing heroes and start writing humans.",
+      "path_receipt": [
+        {
+          "from": "Aditya Kamboj",
+          "rel": "SHARES_VALUE",
+          "to": "Yeji"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2026",
+    "position": "SONIC STORYTELLER",
+    "company": "",
+    "belief": "Truth lands when people stop in your space and suddenly hear their own thoughts like they're part of the sound.",
+    "working_on": "Installing interactive soundscapes that teach you to listen to what's not being played"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You seek to create moments of introspection, inviting others to discover the depth of their own thoughts through the art of listening.",
+  "gradient": {
+    "seed": 2710602182,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(293 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

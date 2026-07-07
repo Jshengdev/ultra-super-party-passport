@@ -1,0 +1,69 @@
+{
+  "personId": "chase-olivera",
+  "name": "Chase Olivera",
+  "line2": "Cinematic Arts",
+  "find": [
+    {
+      "personId": "emily-vargas",
+      "name": "Emily Vargas",
+      "why": "You should meet Emily Vargas because you both share a connection to brand director, and I think you’ll find her insights valuable.",
+      "basis_kind": "same_work",
+      "via": "brand director",
+      "path_receipt": [
+        {
+          "from": "Chase Olivera",
+          "rel": "DOES",
+          "to": "brand director"
+        },
+        {
+          "from": "Emily Vargas",
+          "rel": "DOES",
+          "to": "brand director"
+        }
+      ]
+    },
+    {
+      "personId": "chiara-neirick",
+      "name": "Chiara Neirick",
+      "why": "You should meet Chiara Neirick because her bold creativity and unique perspective will inspire and resonate with your own artistic journey.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "The best spaces don't forgive sloppiness. They refuse to.",
+      "path_receipt": [
+        {
+          "from": "Chase Olivera",
+          "rel": "SHARES_VALUE",
+          "to": "Chiara Neirick"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cinematic Arts",
+    "major": "Film & Media",
+    "grad_year": "2027",
+    "position": "COLOR STRATEGIST",
+    "company": "",
+    "belief": "Constraints are the brief. Respect the brief and everything you make has teeth.",
+    "working_on": "Designing visual systems for nonprofits where shrinking color budgets force every hue to earn its place."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a passion for creativity that thrives within limitations, transforming constraints into powerful, meaningful visual narratives.",
+  "gradient": {
+    "seed": 370705466,
+    "stops": [
+      {
+        "color": "hsl(180 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(283 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

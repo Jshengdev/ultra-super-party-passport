@@ -1,0 +1,69 @@
+{
+  "personId": "badria",
+  "name": "Badria",
+  "line2": "Iovine & Young Academy",
+  "find": [
+    {
+      "personId": "amadeo",
+      "name": "Amadeo",
+      "why": "You should meet Amadeo because he shares your passion for animation and illustration, and you both have inspiring creative stories to exchange.",
+      "basis_kind": "same_work",
+      "via": "animator illustrator",
+      "path_receipt": [
+        {
+          "from": "Badria",
+          "rel": "DOES",
+          "to": "animator illustrator"
+        },
+        {
+          "from": "Amadeo",
+          "rel": "DOES",
+          "to": "animator illustrator"
+        }
+      ]
+    },
+    {
+      "personId": "bodie-currier",
+      "name": "Bodie Currier",
+      "why": "You should meet Bodie Currier because his unique perspective on creativity will inspire you and spark a meaningful conversation about making people feel something true.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "The best storytelling disappears so completely the audience forgets it's being told. They just feel.",
+      "path_receipt": [
+        {
+          "from": "Badria",
+          "rel": "SHARES_VALUE",
+          "to": "Bodie Currier"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "CHARACTER TECHNICIAN",
+    "company": "",
+    "belief": "The details that take the longest to animate are precisely what people feel first, in their gut.",
+    "working_on": "Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Assembling decades of cinema to argue something true about how humans process grief.\" Go find them.",
+  "magic_inference": "You are driven by a profound understanding that true connection lies in the smallest, often unnoticed moments that resonate deeply within us.",
+  "gradient": {
+    "seed": 803584636,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(201 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

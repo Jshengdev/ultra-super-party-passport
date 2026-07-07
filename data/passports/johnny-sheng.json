@@ -1,31 +1,31 @@
 {
   "personId": "johnny-sheng",
   "name": "johnny Sheng",
-  "line2": "Lemma (YC F25)",
+  "line2": "Unemployed",
   "find": [
     {
-      "personId": "sarah-fan",
-      "name": "Sarah Fan",
-      "why": "You should meet Sarah Fan because you both share a valuable connection through Lemma (YC F25) and can exchange insights from your experiences.",
+      "personId": "esther-kim",
+      "name": "Esther Kim",
+      "why": "You’ll really enjoy meeting Esther Kim; she has incredible insights about being a part-time warrior that resonate with your own experiences.",
       "basis_kind": "same_work",
-      "via": "Lemma (YC F25)",
+      "via": "part-time warrior",
       "path_receipt": [
         {
           "from": "johnny Sheng",
-          "rel": "WORKS_AT",
-          "to": "Lemma (YC F25)"
+          "rel": "DOES",
+          "to": "part-time warrior"
         },
         {
-          "from": "Sarah Fan",
-          "rel": "WORKS_AT",
-          "to": "Lemma (YC F25)"
+          "from": "Esther Kim",
+          "rel": "DOES",
+          "to": "part-time warrior"
         }
       ]
     },
     {
       "personId": "jonathan-gantt",
       "name": "Jonathan Gantt",
-      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire your own unique perspectives on changing what's possible for people.",
+      "why": "You would love to meet Jonathan Gantt because his innovative ideas about creativity could inspire your own vision for changing what's possible for people.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Making complex systems transparent terrifies institutions but frees people—that's the only metric that matters.",
@@ -43,12 +43,12 @@
     "major": "Arts, Technology & the Business of Innovation",
     "grad_year": "2027",
     "position": "PART-TIME WARRIOR",
-    "company": "Lemma (YC F25)",
+    "company": "Unemployed",
     "belief": "Expanding what's possible for someone means showing them doors they didn't know they could choose.",
     "working_on": "identifying founders remaking education, health, and justice systems—not another app, but actual structural change"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound desire to unlock potential, believing that true transformation begins with illuminating unseen possibilities for others.",
+  "magic_inference": "You are driven by a deep desire to illuminate pathways for transformation, believing that true change begins with awareness and opportunity.",
   "gradient": {
     "seed": 3490936393,
     "stops": [
