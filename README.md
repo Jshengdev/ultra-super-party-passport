@@ -1,14 +1,30 @@
-# Ultra Super Party Passport
+# The Ultra Super Social Passport™
+
+**Live:** [ultra-super-party-passport.butterbase.dev](https://ultra-super-party-passport.butterbase.dev) ·
+**Deck:** [/deck](https://ultra-super-party-passport.butterbase.dev/deck) ·
+**Positioning:** [/positioning.html](https://ultra-super-party-passport.butterbase.dev/positioning.html) ·
+**Demo video:** [Drive](https://drive.google.com/drive/folders/1DDGzIAD0a9tTNt1ZJwswI6IPLzXwfc9H?usp=drive_link)
+
+**193 guests · 6 value clouds · 3,133 shared-value ties · 164 distilled interests · 193 passports · 0 unreceipted claims**
 
 **Sign up to a party, and a passport writes itself** — the two people you'd click with tonight and one
 thing it somehow knew about you. It's **relational, not a knowledge graph** (it connects people, not
 your tags), and the AI is completely **invisible**.
 
-Our HackwithBay 3.0 entry. Built for a real event: an LA intern party for creatives (7/18). Everyone
-signs up through a Luma-style form with one extra question — *"what do you think it means to be
-creative?"* — and gets back a personalized passport: the two people to find (one who shares your work,
-one who shares your values, each with a real reason), a hidden scavenger prompt, a **magic inference**
-(something you never typed — "how does it know?"), and a gradient generated from who you are.
+Our HackwithBay 3.0 entry (submitted — entry `d7a73662`, v3). Built for a real event: an LA intern
+party for creatives (7/18), running on the party's REAL 193-guest list. Everyone signs up through a
+Luma-style form with one extra question — *"what do you think it means to be creative?"* — and gets
+back a personalized passport: the two people to find (one who shares your work, one who shares your
+values, each with a receipted reason), a hidden scavenger prompt, a **magic inference** (something you
+never typed — "how does it know?"), and a gradient generated from who you are.
+
+**The full experience:** drop the guest CSV → the analysis plays (every number parsed live from the
+file) → the room: a paper-white relational map where each person wears their value cloud's color,
+shared interests bridge the clouds as amber touchpoints, and hubs are sized by the people they hold →
+type your name (the matched name waves in gradient on the map) → *I'm going* → **Generate my
+passport** → the cover flips open: Teri's document with foil tilt + holo sheen, stamps, the MRZ line —
+plus a sketch-your-headshot frame (the brush ink IS the brand gradient) and a QR that puts your
+passport on your phone.
 
 ---
 
@@ -63,7 +79,8 @@ Three integrations are load-bearing (deep-integration or it doesn't count):
 cp .env.example .env     # fill Neo4j + Butterbase (+ RocketRide) creds; runs DEGRADED without them
 npm install              # deps are pinned (next15 / react19 / neo4j-driver6 / openai / zod / tsx …)
 
-npm run gen:csv          # synthesize the ~40-creative test CSV → data/test-party.csv
+npx tsx scripts/precache.ts <luma-export.csv> data/party.csv   # normalize + enrich the real guest list
+# (or: npm run gen:csv for the synthetic 40-person test CSV)
 npm run ingest           # CSV → ontology-gated graph (through the deployed .pipe / gateway)
 npm run passports        # agent traverses the graph → data/passports/<personId>.json
 npm run dev              # http://localhost:3000 — the Universe + passport surfaces
@@ -98,4 +115,7 @@ machine made it concrete, under receipts.*
 ---
 
 Contract: `gx/goals/usp-v1.md`. Project brain + laws + window-ownership map: `CLAUDE.md`.
-Demo: `docs/DEMO-SCRIPT.md`. Submission: `docs/SUBMISSION.md`.
+Demo: `docs/DEMO-SCRIPT.md`. Submission: `docs/SUBMISSION.md`. Positioning: `docs/POSITIONING.md`.
+
+**Team:** JOHNNY SHENG — PART-TIME WARRIOR · TERI SHIM — FOUNDING DESIGNER.
+Built live by an AI lab · human-originated · fully disclosed.
