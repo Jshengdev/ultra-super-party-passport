@@ -149,7 +149,7 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
           name={result.data.name}
           connections={result.data.find.reduce((n, f) => n + f.path_receipt.length, 0)}
         >
-          <PassportDocument data={data} gradientStops={gradientStops} />
+          <PassportDocument data={data} gradientStops={gradientStops} sketchId={id} />
         </Reveal>
         <DownloadButton personId={result.data.personId} />
       </div>

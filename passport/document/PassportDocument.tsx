@@ -16,6 +16,7 @@ import { injectSvg, withRootAttrs } from './injectSvg'
 import { wrapLines } from './textMetrics'
 import { TextureDefs } from './TextureDefs'
 import { FoilLayer } from './FoilLayer'
+import { SketchLayer } from './SketchLayer'
 import { useFoilTilt } from './useFoilTilt'
 import {
   CONTEXT_LABEL,
@@ -88,9 +89,11 @@ function NestedArtifact({
 export function PassportDocument({
   data,
   gradientStops,
+  sketchId,
 }: {
   data: DocPassportData
   gradientStops?: DocGradientStop[]
+  sketchId?: string
 }) {
   const rootRef = useRef<HTMLDivElement>(null)
   useFoilTilt(rootRef)
@@ -314,6 +317,7 @@ export function PassportDocument({
         <div className="passport-reveal">
           {documentSvg(`0 0 ${PAGE.width} ${PAGE.height}`)}
           <FoilLayer placements={placements} mrz={mrz} title={data.meta.title} />
+          {sketchId && <SketchLayer sketchId={sketchId} />}
         </div>
         <div className="passport-cover" aria-hidden="true">
           <div className="cover-flip">
