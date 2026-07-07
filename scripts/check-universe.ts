@@ -20,7 +20,9 @@ import path from 'path';
 import Papa from 'papaparse';
 import type { GraphPayload } from '@/app/universe/lib/graph';
 
-const CSV_PATH = path.join(process.cwd(), 'data', 'test-party.csv');
+const CSV_PATH = process.env.CSV_PATH
+  ? path.resolve(process.cwd(), process.env.CSV_PATH)
+  : path.join(process.cwd(), 'data', 'test-party.csv');
 
 function norm(s: string): string {
   return s.trim().toLowerCase();
