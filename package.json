@@ -1,0 +1,32 @@
+{
+  "name": "ultra-super-party-passport",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "gen:csv": "tsx scripts/gen-test-csv.ts",
+    "ingest": "tsx scripts/ingest.ts",
+    "passports": "tsx scripts/generate-passports.ts",
+    "verify:goal": "bash scripts/verify-goal.sh"
+  },
+  "dependencies": {
+    "neo4j-driver": "^6",
+    "next": "^15",
+    "openai": "^5",
+    "papaparse": "^5",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-force-graph-2d": "^1",
+    "zod": "^3"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/papaparse": "^5",
+    "@types/react": "^19",
+    "tsx": "^4",
+    "typescript": "^5"
+  }
+}
