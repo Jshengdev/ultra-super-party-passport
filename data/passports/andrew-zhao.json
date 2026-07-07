@@ -6,7 +6,7 @@
     {
       "personId": "ansh-sankhala",
       "name": "Ansh Sankhala",
-      "why": "You should meet Ansh Sankhala, as you both share a passion for impact investing and can exchange valuable insights on making a difference.",
+      "why": "You should meet Ansh Sankhala because he shares your passion for impact investing and can offer valuable insights on meaningful projects.",
       "basis_kind": "same_work",
       "via": "impact investor",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "aniket-singh",
       "name": "Aniket Singh",
-      "why": "You should meet Aniket Singh because his innovative ideas about creativity could inspire you to see new possibilities in your own work.",
+      "why": "You would enjoy meeting Aniket Singh, as both of you share a passion for creativity and its power to transform possibilities for people.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Legibility returns agency to someone whose fear was built on misunderstanding, not actual threat.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "IMPACT FINDER",
     "company": "",
-    "belief": "Expanding someone's future to include possibility that wasn't there before they met you matters."
+    "belief": "Expanding someone's future to include possibility that wasn't there before they met you matters.",
+    "working_on": "identifying founders working on education, health, and justice problems—the unglamorous work nobody tweets about"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound commitment to illuminate paths for others, transforming potential into reality through meaningful connections and insights.",
+  "magic_inference": "You are driven by a deep desire to illuminate pathways for others, transforming overlooked potential into vibrant opportunities for growth and change.",
   "gradient": {
     "seed": 538021101,
     "stops": [

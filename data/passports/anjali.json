@@ -6,7 +6,7 @@
     {
       "personId": "amanda",
       "name": "Amanda",
-      "why": "You would really enjoy meeting Amanda, as you both share a passion for product design that could spark some inspiring conversations.",
+      "why": "You should meet Amanda; her innovative approach as a product designer could spark some inspiring ideas for your own projects.",
       "basis_kind": "same_work",
       "via": "product designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "anushka",
       "name": "anushka",
-      "why": "You would love meeting Anushka because her innovative approach to creativity aligns perfectly with your passion for making real things exist.",
+      "why": "You should meet Anushka because her unique approach to creativity will inspire you to bring your own imaginative ideas to life.",
       "basis_kind": "shared_value",
       "via": "cluster-6",
       "match_belief": "It counts as creation only when the machine succeeds independently. That's when you know you built something real.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "BEHAVIORAL DESIGNER",
     "company": "",
-    "belief": "Real products solve for the hand holding them and habits of the person using them every day."
+    "belief": "Real products solve for the hand holding them and habits of the person using them every day.",
+    "working_on": "rethinking water bottles so the form itself reminds you to drink, making hydration reflexive not deliberate"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to transform everyday routines into effortless rituals, making well-being an intrinsic part of life.",
+  "magic_inference": "You are driven by a desire to transform daily routines into effortless, mindful practices that enhance well-being through thoughtful design.",
   "gradient": {
     "seed": 3526015968,
     "stops": [

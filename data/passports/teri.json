@@ -6,7 +6,7 @@
     {
       "personId": "johnny-sheng",
       "name": "johnny Sheng",
-      "why": "You would really enjoy meeting Johnny Sheng, as you both have a unique connection through Lemma (YC F25) that could spark some great conversations.",
+      "why": "You should meet Johnny Sheng; his insights from Lemma (YC F25) could spark some exciting conversations and ideas for you both.",
       "basis_kind": "same_work",
       "via": "Lemma (YC F25)",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "tj-weir",
       "name": "TJ Weir",
-      "why": "You should connect with TJ Weir, as both of you share a unique passion for creativity and connecting unexpected ideas in inspiring ways.",
+      "why": "You’d love to meet TJ Weir, as his unique approach to creativity mirrors your own talent for connecting unexpected ideas.",
       "basis_kind": "shared_value",
       "via": "cluster-3",
       "match_belief": "Building a new graph by wiring every node the old system ignored",
@@ -44,10 +44,11 @@
     "grad_year": "2027",
     "position": "FOUNDING DESIGNER",
     "company": "Lemma (YC F25)",
-    "belief": "Revealing the space where people feel different from what they're measuring"
+    "belief": "Revealing the space where people feel different from what they're measuring",
+    "working_on": "building time-tracking that reveals where intention and reality silently separate"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to illuminate the hidden dissonance between aspirations and actions, fostering deeper self-awareness and authenticity.",
+  "magic_inference": "You are driven by a desire to illuminate the hidden dissonance between aspirations and actions, fostering deeper self-awareness and growth.",
   "gradient": {
     "seed": 2664306827,
     "stops": [

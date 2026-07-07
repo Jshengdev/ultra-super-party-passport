@@ -121,6 +121,14 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
         gradYear: passport.profile?.grad_year ?? '',
         school: (passport.profile?.school ?? '').toUpperCase(),
         major: shortMajor(passport.profile?.major ?? '').toUpperCase(),
+        note: passport.profile?.working_on
+          ? `currently — ${(() => {
+              const w = passport.profile.working_on
+              if (w.length <= 58) return w
+              const cut = w.slice(0, 58)
+              return cut.slice(0, cut.lastIndexOf(' ')) + '…'
+            })()}`
+          : undefined,
         prompt: passport.profile?.belief
           ? { question: 'What is a creative?', answer: passport.profile.belief.toUpperCase() }
           : { question: 'Your hidden mission', answer: passport.hidden_prompt },

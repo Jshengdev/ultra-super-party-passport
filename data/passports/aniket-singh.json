@@ -6,7 +6,7 @@
     {
       "personId": "alexandra-siy",
       "name": "Alexandra Siy",
-      "why": "You should meet Alexandra Siy because her insights as a healthcare product designer could spark inspiring ideas for your own projects.",
+      "why": "You should meet Alexandra Siy because her innovative approach as a healthcare product designer aligns perfectly with your passion for improving patient experiences.",
       "basis_kind": "same_work",
       "via": "healthcare product designer",
       "path_receipt": [
@@ -44,10 +44,11 @@
     "grad_year": "2027",
     "position": "COMPLEXITY SIMPLIFIER",
     "company": "",
-    "belief": "Legibility returns agency to someone whose fear was built on misunderstanding, not actual threat."
+    "belief": "Legibility returns agency to someone whose fear was built on misunderstanding, not actual threat.",
+    "working_on": "restructuring how hospitals explain procedures to adolescents so clinical anxiety doesn't override their capacity to consent"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep empathy for adolescents, seeking to empower them with clarity in moments where fear can overshadow their voice.",
+  "magic_inference": "You are driven by a deep empathy for young patients, seeking to transform fear into understanding, empowering them to reclaim their voices in healthcare decisions.",
   "gradient": {
     "seed": 1249136399,
     "stops": [

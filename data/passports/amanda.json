@@ -6,7 +6,7 @@
     {
       "personId": "anjali",
       "name": "Anjali",
-      "why": "You should meet Anjali because her innovative approach to product design aligns perfectly with your creative vision and could spark some exciting collaboration.",
+      "why": "You should meet Anjali because her innovative approach to product design aligns perfectly with your own creative vision.",
       "basis_kind": "same_work",
       "via": "product designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "armaan-kapoor",
       "name": "Armaan Kapoor",
-      "why": "You would love to meet Armaan Kapoor because his bold creativity perfectly complements your own taste and craft, sparking inspiring conversations.",
+      "why": "You'd enjoy meeting Armaan Kapoor because his unique creativity and bold perspective on taste and craft align beautifully with your own artistic vision.",
       "basis_kind": "shared_value",
       "via": "cluster-4",
       "match_belief": "Design that respects human dignity means every surface whispers protection, not extraction.",
@@ -44,10 +44,11 @@
     "grad_year": "2027",
     "position": "INVISIBLE PROBLEM SOLVER",
     "company": "",
-    "belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck."
+    "belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck.",
+    "working_on": "engineering utensils that teach young hands grip and balance without a single word of instruction"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep desire to empower creativity and independence in children, transforming learning into an intuitive, joyful experience.",
+  "magic_inference": "You are driven by a desire to unlock potential through intuitive design, fostering exploration and learning in a silent yet profound manner.",
   "gradient": {
     "seed": 50564095,
     "stops": [

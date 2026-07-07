@@ -22,6 +22,7 @@ export interface DocHolder {
   school: string
   major: string
   prompt: { question: string; answer: string }
+  note?: string // one subtle personal line (small italic, above the MRZ)
   photoUrl?: string
 }
 

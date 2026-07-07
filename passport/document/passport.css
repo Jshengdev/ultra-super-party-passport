@@ -304,3 +304,12 @@
     opacity: 0;
   }
 }
+
+/* the subtle personal line — small italic, quieter than every id field */
+.personal-note {
+  font-family: var(--np-garamond, serif);
+  font-style: italic;
+  font-size: 10.5px;
+  fill: oklch(36% 0.045 285 / 0.62);
+  letter-spacing: 0.01em;
+}

@@ -6,7 +6,7 @@
     {
       "personId": "jai-andersen",
       "name": "Jai Andersen",
-      "why": "You should meet Jai Andersen because you both share a passion for program curation that could spark some exciting collaborative ideas.",
+      "why": "You should meet Jai Andersen, as you both share a passion for curating programs that engage and inspire audiences.",
       "basis_kind": "same_work",
       "via": "program curator",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "alex-wan",
       "name": "Alex Wan",
-      "why": "You should meet Alex Wan because his innovative ideas about creativity could inspire your own projects and lead to exciting collaborations.",
+      "why": "You should meet Alex Wan because his innovative ideas could spark a creative collaboration that enhances your projects and expands your network.",
       "basis_kind": "shared_value",
       "via": "cluster-2",
       "match_belief": "You clear your own obstacles and watch what others build with the space you freed up.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "FRICTION FACILITATOR",
     "company": "",
-    "belief": "Collision works when you stage unfamiliar minds and let their friction produce insight nobody planned."
+    "belief": "Collision works when you stage unfamiliar minds and let their friction produce insight nobody planned.",
+    "working_on": "hosting unexpected collaborations between ceramicists, engineers, and poets to see what only happens in that friction"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep curiosity for the magic that emerges from uncharted connections, believing in the transformative power of unexpected collaboration.",
+  "magic_inference": "You are driven by a deep curiosity for the transformative power of diverse voices, believing that true innovation emerges from unexpected interactions.",
   "gradient": {
     "seed": 1617749744,
     "stops": [

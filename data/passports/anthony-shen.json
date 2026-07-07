@@ -6,7 +6,7 @@
     {
       "personId": "andrew-zhao",
       "name": "Andrew Zhao",
-      "why": "You should meet Andrew Zhao because you both share a passion for impact investing and can exchange valuable insights on driving meaningful change.",
+      "why": "You should meet Andrew Zhao because he shares your passion for impact investing and has some fascinating insights to enhance your conversations.",
       "basis_kind": "same_work",
       "via": "impact investor",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "antonis-ioannou",
       "name": "Antonis Ioannou",
-      "why": "You should meet Antonis Ioannou because his innovative ideas about creativity could inspire you to explore new possibilities together.",
+      "why": "You should meet Antonis Ioannou, as his innovative approach to creativity aligns perfectly with your vision of transforming possibilities for people.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Visibility forces reckoning—you make what was hidden so undeniable that systems have to bend.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "JUSTICE RESEARCHER",
     "company": "",
-    "belief": "Rendering invisibility so acute it forces witnesses to confront what they've been avoiding."
+    "belief": "Rendering invisibility so acute it forces witnesses to confront what they've been avoiding.",
+    "working_on": "mining deep-web forums and public records to find stories of workers nobody's made visible yet"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound desire to illuminate overlooked narratives, challenging society to acknowledge and engage with uncomfortable truths.",
+  "magic_inference": "You are driven by a profound desire to illuminate hidden narratives, compelling society to acknowledge and engage with overlooked human experiences.",
   "gradient": {
     "seed": 1671798177,
     "stops": [

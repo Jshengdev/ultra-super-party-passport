@@ -6,7 +6,7 @@
     {
       "personId": "chase-olivera",
       "name": "Chase Olivera",
-      "why": "You would really enjoy meeting Chase Olivera, as you both share a passion for Cinematic Arts that could spark some fascinating conversations.",
+      "why": "You would enjoy meeting Chase Olivera because you both share a deep passion for Cinematic Arts and can exchange creative insights and inspirations.",
       "basis_kind": "shared_context",
       "via": "Cinematic Arts",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "ally-wong",
       "name": "Ally Wong",
-      "why": "You should meet Ally Wong because her unique perspective on creativity will inspire you and deepen your understanding of how to evoke genuine emotions.",
+      "why": "You should meet Ally Wong because her unique perspective on creativity will inspire you to explore new ways of making people feel something true.",
       "basis_kind": "shared_value",
       "via": "cluster-5",
       "match_belief": "Honesty reads as refreshingly radical when everything around you is performing for engagement metrics.",
@@ -44,10 +44,11 @@
     "grad_year": "2028",
     "position": "CHARACTER ARCHITECT",
     "company": "",
-    "belief": "When someone's motivation becomes sympathetic, you stop inventing heroes and start writing humans."
+    "belief": "When someone's motivation becomes sympathetic, you stop inventing heroes and start writing humans.",
+    "working_on": "crafting an antagonist whose cruelty makes sense, so audiences hate her logic not her humanity"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You seek to create complexity in character, inviting audiences to wrestle with their own moral judgments and the nature of humanity.",
+  "magic_inference": "You are driven by a desire to explore the complexity of humanity, revealing that even cruelty can stem from relatable motivations.",
   "gradient": {
     "seed": 3546848820,
     "stops": [

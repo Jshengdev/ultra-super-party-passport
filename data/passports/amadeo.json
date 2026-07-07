@@ -6,7 +6,7 @@
     {
       "personId": "badria",
       "name": "Badria",
-      "why": "You should meet Badria because her unique animation style complements your work beautifully, and I think you both would inspire each other.",
+      "why": "You should meet Badria, as you both share a passion for animation and illustration that could spark some inspiring creative conversations.",
       "basis_kind": "same_work",
       "via": "animator illustrator",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "anika-mantripragada",
       "name": "Anika Mantripragada",
-      "why": "You should meet Anika Mantripragada because her creativity deeply resonates with others, sparking genuine emotions and connections that you both value.",
+      "why": "You should meet Anika Mantripragada because her creativity resonates deeply, making people feel something true, just like you do.",
       "basis_kind": "shared_value",
       "via": "cluster-5",
       "match_belief": "Specificity is the opposite of generic—it's the detail that makes people feel personally witnessed.",
@@ -44,10 +44,11 @@
     "grad_year": "2029",
     "position": "EMOTION ANIMATOR",
     "company": "",
-    "belief": "Animation's tiny deliberate choices—a hesitation, a glance—plant themselves deeper than dialogue ever could."
+    "belief": "Animation's tiny deliberate choices—a hesitation, a glance—plant themselves deeper than dialogue ever could.",
+    "working_on": "moving a character's eyelids to show panic in a way dialogue never could, one frame at a time"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to capture the raw, unspoken emotions that linger beneath the surface, revealing deeper truths through subtle movements.",
+  "magic_inference": "You seek to evoke raw emotion, believing that subtle movements can convey the depths of human experience more powerfully than words alone.",
   "gradient": {
     "seed": 2072639762,
     "stops": [

@@ -6,7 +6,7 @@
     {
       "personId": "maceo",
       "name": "Maceo",
-      "why": "You should meet Maceo, as you both have valuable insights and experiences related to investors that could spark some exciting conversations.",
+      "why": "You and Maceo both connect to an investor, so it would be great for you to exchange insights and experiences in that area.",
       "basis_kind": "same_work",
       "via": "investor",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "anuj-shah",
       "name": "Anuj Shah",
-      "why": "You’ll enjoy meeting Anuj Shah, as both of you share a passion for bringing creative minds together in inspiring ways.",
+      "why": "You would really enjoy meeting Anuj Shah, as his innovative ideas about collaboration could inspire your own creative projects.",
       "basis_kind": "shared_value",
       "via": "cluster-2",
       "match_belief": "Creativity flows through people who've never met. It's finding the room where they should collide.",
@@ -44,10 +44,11 @@
     "grad_year": "2027",
     "position": "TASTE INVESTOR",
     "company": "",
-    "belief": "Taste is recognizing a perspective you haven't seen elsewhere and funding it before market validation arrives."
+    "belief": "Taste is recognizing a perspective you haven't seen elsewhere and funding it before market validation arrives.",
+    "working_on": "backing five underestimated students whose sensibilities you recognize before they've shipped a single project"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a deep belief in potential, nurturing unseen talent and fostering diverse perspectives that enrich the creative landscape.",
+  "magic_inference": "You are driven by a deep empathy for untapped potential, seeking to champion unique voices that challenge conventional narratives and enrich experiences.",
   "gradient": {
     "seed": 819440086,
     "stops": [

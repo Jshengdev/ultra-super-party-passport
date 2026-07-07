@@ -360,6 +360,7 @@ export async function buildPassport(personId: string, partyId?: string | null): 
       position: me.position,
       company: me.companies[0] ?? "",
       belief: me.beliefs[0] ?? "",
+      working_on: me.workingOn[0] ?? "",
     },
     find: [find1, find2],
     hidden_prompt,

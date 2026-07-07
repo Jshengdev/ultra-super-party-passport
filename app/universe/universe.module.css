@@ -335,3 +335,96 @@
 }
 .generateBtn:hover { opacity: 0.92; transform: translateY(-1px); }
 .generateBtn:active { opacity: 1; transform: translateY(0); }
+
+
+/* ------------------------------------------------------------------ */
+/* The cover's visual language on the graph page (raw: "style the      */
+/* knowledge graph around the visual language of the gradient opening  */
+/* rainbow page"). Soft rainbow presence, cream base, mono small-caps. */
+/* ------------------------------------------------------------------ */
+
+/* a whisper of the cover's bands, bleeding in from the top edge */
+.shell::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 220px;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(60% 140% at 18% -40%, color-mix(in oklab, var(--usp-spectrum-0, #e8a8b8) 26%, transparent), transparent 70%),
+    radial-gradient(55% 130% at 50% -45%, color-mix(in oklab, var(--usp-spectrum-3, #e8c65c) 20%, transparent), transparent 70%),
+    radial-gradient(60% 140% at 84% -40%, color-mix(in oklab, var(--usp-spectrum-4, #7fb2e5) 24%, transparent), transparent 70%);
+  filter: blur(22px) saturate(1.05);
+  opacity: 0.85;
+}
+
+/* header text: the cover's typographic voice */
+.title {
+  letter-spacing: -0.015em;
+}
+.subtitle {
+  font-family: var(--usp-font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* the gradient thread: a hairline rainbow under the header, like the cover's spine */
+.header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--usp-spectrum-0, #e8a8b8),
+    var(--usp-spectrum-3, #e8c65c),
+    var(--usp-spectrum-4, #7fb2e5),
+    var(--usp-spectrum-5, #37618f)
+  );
+  opacity: 0.55;
+}
+.header { position: relative; }
+
+/* legend: quieter card, mono voice */
+.legend {
+  border: 1px solid color-mix(in oklab, var(--usp-line, #e2e2de) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+.legendRow,
+.legendHint {
+  font-family: var(--usp-font-mono, ui-monospace, monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* the panel picks up the passport's vibes: gradient keyline + soft entrance */
+.panelFooter { position: relative; }
+.generateBtn {
+  position: relative;
+  overflow: hidden;
+}
+.generateBtn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    color-mix(in oklab, var(--usp-spectrum-3, #e8c65c) 35%, transparent) 46%,
+    color-mix(in oklab, var(--usp-spectrum-0, #e8a8b8) 32%, transparent) 52%,
+    transparent 68%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.generateBtn:hover::after {
+  transform: translateX(120%);
+}

@@ -274,6 +274,19 @@ export function PassportDocument({
             </tspan>
           ))}
         </text>
+        {holder.note && (
+          <text
+            className="personal-note"
+            x={PROMPT_QA.x}
+            y={Math.min(
+              PROMPT_QA.y + PROMPT_QA.answerOffsetY + answerLines.length * answerLineHeight + 14,
+              MRZ_BAND.y - 12,
+            )}
+            dominantBaseline="text-before-edge"
+          >
+            {holder.note}
+          </text>
+        )}
       </g>
 
       <g filter="url(#press-strong)">

@@ -57,6 +57,7 @@ export const passportSchema = z.object({
       position: z.string().default(""),
       company: z.string().default(""),
       belief: z.string().default(""), // their own what-is-a-creative answer
+      working_on: z.string().default(""), // the subtle personal line on the document
     })
     .optional(),
   hidden_prompt: z.string().min(1),              // about someone ELSE to find, never the holder

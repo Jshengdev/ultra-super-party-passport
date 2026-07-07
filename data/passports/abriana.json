@@ -6,7 +6,7 @@
     {
       "personId": "anika-mantripragada",
       "name": "Anika Mantripragada",
-      "why": "You and Anika Mantripragada both share a passion for motion design, making it a perfect opportunity to exchange ideas and inspiration.",
+      "why": "You and Anika Mantripragada both share a passion for motion design, making your conversation a perfect opportunity to exchange ideas and inspiration.",
       "basis_kind": "same_work",
       "via": "motion designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "amanda",
       "name": "Amanda",
-      "why": "You’ll love meeting Amanda because her creative perspective on taste and craft perfectly aligns with your passion for bold ideas.",
+      "why": "You'd love to meet Amanda because her bold creativity perfectly aligns with your own strong point of view on taste and craft.",
       "basis_kind": "shared_value",
       "via": "cluster-4",
       "match_belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck.",
@@ -44,10 +44,11 @@
     "grad_year": "2027",
     "position": "INTERFACE CURATOR",
     "company": "",
-    "belief": "It's ignoring everything except what actually matters, so what remains feels inevitable."
+    "belief": "It's ignoring everything except what actually matters, so what remains feels inevitable.",
+    "working_on": "perfecting a ten-second app onboarding that says everything through motion and white space"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to distill complexity into clarity, creating an experience that feels both essential and intuitive for users.",
+  "magic_inference": "You are driven by a desire to distill complexity into simplicity, believing that clarity through minimalism fosters a more intuitive user experience.",
   "gradient": {
     "seed": 951798219,
     "stops": [

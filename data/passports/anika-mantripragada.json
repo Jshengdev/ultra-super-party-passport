@@ -6,7 +6,7 @@
     {
       "personId": "abriana",
       "name": "Abriana",
-      "why": "You should meet Abriana because her innovative approach as a motion designer perfectly complements your creative style and could spark some exciting collaborations.",
+      "why": "You should meet Abriana because her innovative approach as a motion designer aligns beautifully with your creative vision and passion for storytelling.",
       "basis_kind": "same_work",
       "via": "motion designer",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "arvin",
       "name": "Arvin",
-      "why": "You should meet Arvin because his unique approach to creativity will resonate with your passion for making people feel something genuine.",
+      "why": "You should meet Arvin, as both of you share a passion for creativity that truly resonates with people and inspires meaningful connections.",
       "basis_kind": "shared_value",
       "via": "cluster-5",
       "match_belief": "Arrange existing pieces until the gap between them suddenly holds meaning nobody saw before.",
@@ -44,10 +44,11 @@
     "grad_year": "2028",
     "position": "MICRO-EXPRESSION SPECIALIST",
     "company": "",
-    "belief": "Specificity is the opposite of generic—it's the detail that makes people feel personally witnessed."
+    "belief": "Specificity is the opposite of generic—it's the detail that makes people feel personally witnessed.",
+    "working_on": "animating the millisecond of doubt that flickers across a character's face before they lie to themselves"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a desire to illuminate the nuanced emotions that often go unnoticed, fostering deeper connections through authenticity and detail.",
+  "magic_inference": "You are driven by a desire to illuminate the fragile moments of self-deception, revealing the profound depth of human experience through nuanced detail.",
   "gradient": {
     "seed": 1990133957,
     "stops": [

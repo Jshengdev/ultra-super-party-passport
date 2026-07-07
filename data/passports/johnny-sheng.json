@@ -6,7 +6,7 @@
     {
       "personId": "sarah-fan",
       "name": "Sarah Fan",
-      "why": "You should meet Sarah Fan because you both share an exciting connection through Lemma (YC F25), and I think you'd have a lot to discuss.",
+      "why": "You should meet Sarah Fan because you both share a valuable connection through Lemma (YC F25) and can exchange insights from your experiences.",
       "basis_kind": "same_work",
       "via": "Lemma (YC F25)",
       "path_receipt": [
@@ -25,7 +25,7 @@
     {
       "personId": "jonathan-gantt",
       "name": "Jonathan Gantt",
-      "why": "You should meet Jonathan Gantt because his innovative ideas on creativity could inspire you to change what's possible for people in remarkable ways.",
+      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire your own unique perspectives on changing what's possible for people.",
       "basis_kind": "shared_value",
       "via": "cluster-1",
       "match_belief": "Making complex systems transparent terrifies institutions but frees people—that's the only metric that matters.",
@@ -42,12 +42,13 @@
     "school": "Iovine & Young Academy",
     "major": "Arts, Technology & the Business of Innovation",
     "grad_year": "2027",
-    "position": "FOUNDING ENGINEER",
+    "position": "PART-TIME WARRIOR",
     "company": "Lemma (YC F25)",
-    "belief": "Expanding what's possible for someone means showing them doors they didn't know they could choose."
+    "belief": "Expanding what's possible for someone means showing them doors they didn't know they could choose.",
+    "working_on": "identifying founders remaking education, health, and justice systems—not another app, but actual structural change"
   },
   "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
-  "magic_inference": "You are driven by a profound desire to illuminate unseen possibilities, empowering others to reshape foundational systems for a more equitable future.",
+  "magic_inference": "You are driven by a profound desire to unlock potential, believing that true transformation begins with illuminating unseen possibilities for others.",
   "gradient": {
     "seed": 3490936393,
     "stops": [
