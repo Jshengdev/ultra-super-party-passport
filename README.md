@@ -67,6 +67,74 @@ Three integrations are load-bearing (deep-integration or it doesn't count):
                                                (2 people to find + why · magic line · gradient)
 ```
 
+## Architecture, in detail
+
+**The data flow, end to end:**
+`Luma CSV → precache (normalize + enrich) → ontology-gated ingest → Neo4j property graph →
+typed traversal → passport JSON (receipted) → static build (graph + 193 passport pages baked) →
+Butterbase CDN`
+
+### 1 · The frontend (Next.js 15 · React 19 · TypeScript strict · Tailwind 4 · framer-motion)
+App Router throughout. The deploy is a **static export** (`output: 'export'`): every React page —
+including all 193 passports via `generateStaticParams` — pre-renders to HTML at build, then hydrates
+client-side. `/api/graph` is a route handler that runs live Cypher at build time, so **the graph
+snapshot is baked into the bundle** (the "invisible precache" — the analysis page replays real,
+pre-computed work with numbers parsed live from the dropped file). Surfaces: `/` (analysis theater),
+`/universe` (force-graph canvas: color = value cloud, amber = shared interests, hub size = people
+held, always-animating gradient wave on matched names), `/passport/[id]` (Teri's document: foil tilt,
+holo sheen, sketch frame, QR), `/deck` (Teri's React slide system).
+
+### 2 · The ontology + the gate (Neo4j Aura · `ontology/manifest.ts` · `lib/ontology-gate.ts`)
+One zod manifest is the single source of truth: object types (`Person, School, Major, Activity,
+Belief, ValueCluster, Interest, Party, Company`), a **patterns allowlist** of legal
+`(subject)-[REL]->(object)` triples (`STUDIES_AT, MAJORS_IN, WORKS_AT, DOES, WORKING_ON, BELIEVES,
+IN_CLUSTER, SHARES_VALUE, INTERESTED_IN, SIGNED_UP`), and **typed ACTION definitions**
+(`ingest_person, write_value_cluster, write_interests, check_in`) — each a zod schema + parameterized
+Cypher template. `lib/ontology-gate.ts:dispatch()` is the ONLY write path: validate against the
+manifest → refuse unknown labels/patterns (`OffOntologyWrite`) → parameterized MERGE → provenance
+props (`_src, _ts, _actor`) on every node and edge. **An off-ontology fact is unrepresentable.**
+Plain Cypher only (no GDS): value clouds cluster app-side; causal/shared paths use variable-length
+traversal.
+
+### 3 · The agent layer (`lib/traverse.ts` · `lib/passport.ts`)
+The agent never freeforms Cypher. It reads through **typed traversal templates** —
+`sameWorkPath`, `valuesPath`, `sharedContextPath`, `personNeighborhood`, `standoutFacts` — each
+returning candidates WITH their `path_receipt` (`[{from, rel, to}]`, the actual edges walked).
+`buildPassport()` assembles: two finds (same-work + values-aligned, deduped), why-lines through a
+**deterministic guard** (a why may reference ONLY proper nouns present in its receipt — one retry,
+then fail loud), the hidden scavenger prompt (deterministic, from the rarest standout fact), the
+**magic inference** (an interpretive read of the person's own words — guarded to never restate
+verbatim, never invent facts), and a gradient derived from stable hashes of who they are. Output
+validates against `passport/schema.ts` — grounding by construction.
+
+### 4 · The inference pipeline (RocketRide Cloud · `pipeline/party-passport.pipe`)
+The `.pipe` (portable JSON DAG) is **deployed and resident** on cloud.rocketride.ai; invocation is
+task-token-gated (`pipeline/client.ts`: `runInference()` → pipe first, Butterbase-gateway fallback so
+the build never blocks). The `passport_inference` leg (magic inference) routes through it — the app
+as thin client over a managed production endpoint.
+
+### 5 · The model plane (Butterbase AI gateway · `lib/gateway.ts`)
+Every LLM and embedding call routes through Butterbase's OpenAI-compatible gateway with one key:
+`chat(model, messages, zodSchema)` gives schema-validated JSON with one corrective retry then a loud
+`GatewaySchemaError`; `embed()` for vectors. Mid-event the gateway's embeddings surface 502'd across
+all models — clustering fell back to **chat-surface grouping under a deterministic partition-repair
+guard** (code enforces the partition; the model only proposes) — method changed, bar unchanged,
+provenance says so.
+
+### 6 · The audit (`scripts/audit-receipts.ts` + the goal gate)
+`verify-goal.sh` runs a leg per goal (contract: `gx/goals/usp-v1.md`): ontology conformance (zero
+off-manifest labels/rels, zero unprovenanced writes), cluster cardinality, **the receipts audit** —
+every `path_receipt` edge and every recommended person on every passport must exist in the live
+graph or the gate exits nonzero. Current run: **0 unreceipted claims across 193 passports.**
+
+### 7 · The enrichment layer (provenance-marked, honest)
+The real Luma export carries name/school/major/year. `scripts/precache.ts` normalizes the mess (six
+spellings of IYA → one node) and enriches deterministically from a **persona-archetype library**
+(cheap-model swarm) + a **unique-voice pass** (193 distinct working-on/belief lines, zero repeats) +
+an **interest distillation** (what people SAY → 164 canonical tags, 48 shared — the amber bridges).
+Every derived field is marked derived in provenance; founder rows carry real data via
+`data/real-overrides.json`.
+
 **Bonus integrations (status kept honest):**
 
 - **Cognee** — agent memory (OSS, Neo4j-backed). Planned; wired only after the three mandatories are
