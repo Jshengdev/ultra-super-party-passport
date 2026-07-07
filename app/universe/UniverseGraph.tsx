@@ -300,6 +300,9 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
       const r = radiusOf(node);
       const selected = node.id === selectedId;
 
+      // the count inside sizable hubs — the number the size speaks for (pre-narrowing)
+      const hubCount = node.type !== 'Person' ? (hubDegree.get(String(node.id)) ?? 0) : 0;
+
       // focus+context (dial 2): when someone is selected, everything outside
       // their web recedes to paper.
       const dimmed = egoSet ? !egoSet.has(String(node.id)) : false;
@@ -351,6 +354,17 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
         node.type === 'Interest' && node.label
           ? node.label.split(/\s+/).slice(0, 3).join(' ')
           : node.label;
+      if (hubCount >= 4) {
+        const rr = radiusOf(node);
+        if (rr >= 6.5) {
+          ctx.font = `600 ${Math.max(rr * 0.9, 5)}px ${fontFamily}`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = withAlpha(palette.ink, 0.75);
+          ctx.fillText(String(hubCount), x, y);
+        }
+      }
+
       const showLabel =
         selected ||
         (node.type === 'ValueCluster' && scale > 2.2) || // higher-level names live deeper, never on the instant view (raw/0034)
@@ -380,19 +394,6 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
         ctx.fillStyle = withAlpha(palette.ink, 0.8);
         ctx.fillText(text, 0, padY);
         ctx.restore();
-      // the count inside sizable hubs — the number the size speaks for
-      if (node.type !== 'Person') {
-        const d = hubDegree.get(String(node.id)) ?? 0;
-        const r = radiusOf(node);
-        if (d >= 4 && r >= 6.5) {
-          ctx.font = `600 ${Math.max(r * 0.9, 5) / 1}px ${fontFamily}`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = withAlpha(palette.ink, 0.75);
-          ctx.fillText(String(d), x, y);
-        }
-      }
-
       } else if ((showLabel || matched) && node.label) {
         const fontPx = (node.type === 'Person' ? 10 : 8) / scale;
         ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 600 : 420} ${fontPx}px ${fontFamily}`;
