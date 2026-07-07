@@ -15,15 +15,13 @@ const TITLES: Record<string, string> = {
   "community-weavers": "The Community Weavers",
 };
 const arch = JSON.parse(readFileSync("data/archetypes.json", "utf8"));
-const beliefToFamily = new Map<string, string>();
-for (const f of arch.families) for (const p of f.personas) beliefToFamily.set(p.belief_creative, f.family);
 const themes = new Map<string, string>(arch.families.map((f: { family: string; belief_theme: string }) => [f.family, f.belief_theme]));
 
 async function main() {
   const rows = Papa.parse<Record<string, string>>(readFileSync(CSV_PATH, "utf8"), { header: true, skipEmptyLines: true }).data;
   const groups = new Map<string, string[]>();
   for (const r of rows) {
-    const fam = beliefToFamily.get(r.belief_creative);
+    const fam = r.family; // precache v3 ground truth
     if (!fam) continue;
     const slug = r.email.split("@")[0];
     groups.set(fam, [...(groups.get(fam) ?? []), slug]);

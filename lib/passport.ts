@@ -213,7 +213,16 @@ async function candidateToFind(me: Neighborhood, c: Candidate): Promise<Find> {
     (s) => whyGuard(s, c.path_receipt, names),
     `why:${c.personId}`,
   );
-  return { personId: c.personId, name: c.name, why, path_receipt: c.path_receipt };
+  const basis_kind =
+    c.viaKind === "ValueCluster" ? ("shared_value" as const)
+    : c.viaKind === "Activity" || c.viaKind === "Company" ? ("same_work" as const)
+    : ("shared_context" as const);
+  let match_belief: string | undefined;
+  if (basis_kind === "shared_value") {
+    const other = await personNeighborhood(c.personId);
+    match_belief = other?.beliefs[0];
+  }
+  return { personId: c.personId, name: c.name, why, path_receipt: c.path_receipt, basis_kind, via: c.via, match_belief };
 }
 
 async function buildHiddenPrompt(holderId: string, partyId?: string | null): Promise<string> {
@@ -344,6 +353,14 @@ export async function buildPassport(personId: string, partyId?: string | null): 
     personId,
     name: me.name,
     line2,
+    profile: {
+      school: me.schools[0] ?? "",
+      major: me.majors[0] ?? "",
+      grad_year: me.gradYear,
+      position: me.position,
+      company: me.companies[0] ?? "",
+      belief: me.beliefs[0] ?? "",
+    },
     find: [find1, find2],
     hidden_prompt,
     magic_inference,

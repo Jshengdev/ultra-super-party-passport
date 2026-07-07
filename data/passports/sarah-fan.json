@@ -6,24 +6,29 @@
     {
       "personId": "dee-dee-dawson",
       "name": "Dee Dee Dawson",
-      "why": "You should meet Dee Dee Dawson because you both share a passion for building innovative software that transforms how we understand and express voice patterns.",
+      "why": "You and Dee Dee Dawson both have a passion for product strategy and voice, making your conversation rich with shared insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "product strategist, voice",
       "path_receipt": [
         {
           "from": "Sarah Fan",
-          "rel": "WORKING_ON",
-          "to": "building software that learns voice patterns and lets you change emotional tone while keeping meaning intact"
+          "rel": "DOES",
+          "to": "product strategist, voice"
         },
         {
           "from": "Dee Dee Dawson",
-          "rel": "WORKING_ON",
-          "to": "building software that learns voice patterns and lets you change emotional tone while keeping meaning intact"
+          "rel": "DOES",
+          "to": "product strategist, voice"
         }
       ]
     },
     {
       "personId": "shan",
       "name": "Shan",
-      "why": "You should meet Shan, as both of you share a remarkable talent for connecting ideas in unexpected ways, sparking creativity that inspires others.",
+      "why": "You should meet Shan because her innovative ideas about creativity will inspire you to connect concepts in ways you haven't imagined yet.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Mastery in one system unlocks remixability across ten others you didn't know were listening",
       "path_receipt": [
         {
           "from": "Sarah Fan",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "Your drive stems from a desire to harmonize communication, enabling deeper emotional connections through the nuanced interplay of voice and meaning.",
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "SYSTEMS CARTOGRAPHER",
+    "company": "",
+    "belief": "When two separate machines suddenly recognize each other, creation happens in that moment of connection"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a profound curiosity about the interplay of emotion and language, seeking to reveal the hidden connections that inspire creativity.",
   "gradient": {
     "seed": 98470752,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(337 72% 48%)",
+        "color": "hsl(195 72% 48%)",
         "at": 1
       }
     ]

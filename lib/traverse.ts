@@ -91,6 +91,8 @@ export type Neighborhood = {
   does: string[]; // normalized what-you-do Activity names
   workingOn: string[]; // normalized working-on Activity names
   beliefs: string[]; // raw Belief text
+  gradYear: string;
+  position: string;
 };
 
 export type Standout = {
@@ -228,6 +230,8 @@ export async function personNeighborhood(personId: string): Promise<Neighborhood
     does: string[];
     workingOn: string[];
     beliefs: string[];
+    gradYear: string | null;
+    position: string | null;
   }>(
     `
     MATCH (me:Person {id:$personId})
@@ -238,6 +242,7 @@ export async function personNeighborhood(personId: string): Promise<Neighborhood
     OPTIONAL MATCH (me)-[:WORKING_ON]->(wa:Activity)
     OPTIONAL MATCH (me)-[:BELIEVES]->(b:Belief)
     RETURN me.name AS name, me.email AS email,
+           me.grad_year AS gradYear, me.position AS position,
            collect(DISTINCT sch.name)  AS schools,
            collect(DISTINCT maj.name)  AS majors,
            collect(DISTINCT co.name)   AS companies,
@@ -260,6 +265,8 @@ export async function personNeighborhood(personId: string): Promise<Neighborhood
     does: clean(r.does),
     workingOn: clean(r.workingOn),
     beliefs: clean(r.beliefs),
+    gradYear: r.gradYear ?? "",
+    position: r.position ?? "",
   };
 }
 

@@ -25,6 +25,9 @@ export const findSchema = z.object({
   personId: z.string().min(1),
   name: z.string().min(1),
   why: z.string().min(1),                       // cites ONLY entities in path_receipt (+ the two names)
+  basis_kind: z.enum(["same_work", "shared_value", "shared_context"]).optional(),
+  via: z.string().optional(),          // the shared thing's display name
+  match_belief: z.string().optional(), // the matched person's own belief line (values finds)
   path_receipt: z.array(receiptEdgeSchema).min(1),
 });
 export type Find = z.infer<typeof findSchema>;
@@ -46,6 +49,16 @@ export const passportSchema = z.object({
   name: z.string().min(1),
   line2: z.string(),                             // company || school (may be "" if neither exists)
   find: z.array(findSchema).length(2),           // exactly two: [0] same-work, [1] values-aligned
+  profile: z
+    .object({
+      school: z.string().default(""),
+      major: z.string().default(""),
+      grad_year: z.string().default(""),
+      position: z.string().default(""),
+      company: z.string().default(""),
+      belief: z.string().default(""), // their own what-is-a-creative answer
+    })
+    .optional(),
   hidden_prompt: z.string().min(1),              // about someone ELSE to find, never the holder
   magic_inference: z.string().min(1),            // INTERPRETIVE read of the holder's own text; never a verbatim restatement
   gradient: gradientSchema,

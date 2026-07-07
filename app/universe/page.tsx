@@ -91,6 +91,15 @@ export default function UniversePage() {
 
   const onSelect = useCallback((node: GraphNode | null) => setSelectedId(node ? node.id : null), []);
 
+  const [query, setQuery] = useState('');
+  const searchMatches = useMemo(() => {
+    const s = query.trim().toLowerCase();
+    if (s.length < 2 || !payload) return [];
+    return payload.nodes
+      .filter((n) => n.type === 'Person' && n.label.toLowerCase().includes(s))
+      .slice(0, 6);
+  }, [query, payload]);
+
   const counts = payload?.meta?.counts;
 
   return (
@@ -100,6 +109,44 @@ export default function UniversePage() {
           <UniverseGraph payload={payload} selectedId={selectedId} onSelect={onSelect} />
         )}
       </div>
+
+      {(status === 'live' || status === 'demo') && (
+        <div
+          style={{
+            position: 'absolute', top: 18, left: '50%', transform: 'translateX(-50%)',
+            zIndex: 30, width: 'min(360px, 86vw)', display: 'flex', flexDirection: 'column', gap: 6,
+          }}
+        >
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="what’s your name?"
+            aria-label="search your name"
+            style={{
+              width: '100%', padding: '11px 20px', borderRadius: 999,
+              border: '1px solid var(--usp-line, #e2e2de)', background: 'var(--usp-card, #fff)',
+              fontSize: 15, textAlign: 'center', outline: 'none',
+            }}
+          />
+          {searchMatches.map((m) => (
+            <button
+              key={m.id}
+              onClick={() => {
+                setSelectedId(m.id);
+                setQuery('');
+              }}
+              style={{
+                width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+                padding: '9px 18px', borderRadius: 12, border: '1px solid var(--usp-line, #e2e2de)',
+                background: 'var(--usp-card, #fff)', cursor: 'pointer', fontSize: 14,
+              }}
+            >
+              <span>{m.label}</span>
+              <span style={{ fontSize: 12, color: 'var(--usp-muted, #8a8a86)' }}>find yourself →</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       <header className={styles.header}>
         <div className={styles.titleWrap}>

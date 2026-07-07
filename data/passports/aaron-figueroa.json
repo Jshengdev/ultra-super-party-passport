@@ -6,24 +6,29 @@
     {
       "personId": "charles",
       "name": "Charles",
-      "why": "You'd enjoy meeting Charles because he shares your passion for building innovative tools that empower musicians to creatively sample everyday sounds like doors and glass.",
+      "why": "You should meet Charles because you both share a passion for full-stack engineering and a love for music that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "full-stack engineer, music",
       "path_receipt": [
         {
           "from": "Aaron Figueroa",
-          "rel": "WORKING_ON",
-          "to": "building tools that let musicians compose by sampling everyday sounds like doors or glass"
+          "rel": "DOES",
+          "to": "full-stack engineer, music"
         },
         {
           "from": "Charles",
-          "rel": "WORKING_ON",
-          "to": "building tools that let musicians compose by sampling everyday sounds like doors or glass"
+          "rel": "DOES",
+          "to": "full-stack engineer, music"
         }
       ]
     },
     {
       "personId": "amelia",
       "name": "Amelia",
-      "why": "You’ll love meeting Amelia, as her unique perspective on creativity might inspire you to connect ideas in ways you haven’t imagined yet.",
+      "why": "You should meet Amelia; her unique approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Feedback loops that close creation and curation into one continuous act instead of sequential steps.",
       "path_receipt": [
         {
           "from": "Aaron Figueroa",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "You are driven by a desire to transform the mundane into artistic inspiration, encouraging musicians to discover creativity in unexpected places.",
+  "profile": {
+    "school": "Dornsife",
+    "major": "Economics",
+    "grad_year": "2029",
+    "position": "ECONOMIC SYSTEMS MAPPER",
+    "company": "",
+    "belief": "Find the nodal point where information flows, restructure it, and the whole system reorganizes itself."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep belief in the transformative power of connection, seeking to reveal and reshape the essence of community interaction.",
   "gradient": {
     "seed": 1887477371,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(260 72% 48%)",
+        "color": "hsl(255 72% 48%)",
         "at": 1
       }
     ]

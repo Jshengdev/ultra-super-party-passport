@@ -146,8 +146,8 @@ export default function PersonPanel({ node, adjacency, hueFor, clusterName, onSe
           </div>
         )}
 
-        <a className={styles.passportBtn} href={`/passport/${encodeURIComponent(node.id)}`}>
-          View passport →
+        <a className={styles.passportBtn} href={`/passport/${encodeURIComponent(node.id)}?reveal=1`}>
+          Generate passport →
         </a>
       </aside>
     );

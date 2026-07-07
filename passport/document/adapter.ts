@@ -26,6 +26,18 @@ function orgFromReceipt(find: Find): string | undefined {
  * and cut at a word boundary so it wraps cleanly across the stamp's lines.
  */
 function beliefFromReceipt(find: Find, holderName: string): string {
+  // Preferred: the matched person's own belief line, surfaced by the traversal (schema v2).
+  if (find.match_belief) {
+    const budget = 52
+    if (find.match_belief.length <= budget) return find.match_belief
+    const words = find.match_belief.split(/\s+/)
+    let out = ''
+    for (const word of words) {
+      if (out && (out + ' ' + word).length > budget) break
+      out = out ? `${out} ${word}` : word
+    }
+    return out
+  }
   const names = new Set([find.name.toLowerCase(), holderName.toLowerCase()])
   const valueEdge = find.path_receipt.find(
     (e: ReceiptEdge) => e.rel === 'SHARES_VALUE' && !names.has(e.to.toLowerCase()),
@@ -93,12 +105,14 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
       meta: { title: DOC_TITLE, context: PARTY_CONTEXT, issued: ISSUED },
       holder: {
         fullName: passport.name.toUpperCase(),
-        company: passport.line2.toUpperCase(),
-        position: '',
-        gradYear: '',
-        school: '',
-        major: '',
-        prompt: { question: 'Your hidden mission', answer: passport.hidden_prompt },
+        company: (passport.profile?.company || passport.line2).toUpperCase(),
+        position: (passport.profile?.position ?? '').toUpperCase(),
+        gradYear: passport.profile?.grad_year ?? '',
+        school: (passport.profile?.school ?? '').toUpperCase(),
+        major: (passport.profile?.major ?? '').toUpperCase(),
+        prompt: passport.profile?.belief
+          ? { question: 'What is a creative?', answer: passport.profile.belief.toUpperCase() }
+          : { question: 'Your hidden mission', answer: passport.hidden_prompt },
       },
       connections,
     },

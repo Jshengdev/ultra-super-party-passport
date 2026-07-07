@@ -25,6 +25,8 @@ export const OBJECT_SCHEMAS = {
     name: z.string().min(1),
     email: z.string().email(),
     handles: z.string(), // JSON string: {"instagram": string|null, "x": string|null}
+    grad_year: z.string().default(""),
+    position: z.string().default(""), // derived role line (never an employer claim)
   }),
   School: z.object({ name: z.string().min(1) }),
   Major: z.object({ name: z.string().min(1) }),
@@ -116,6 +118,7 @@ export type IngestPersonParams = z.infer<typeof IngestPersonParams>;
 const INGEST_PERSON_CYPHER = `
 MERGE (p:Person {id: $person.id})
 SET p.name = $person.name, p.email = $person.email, p.handles = $person.handles,
+    p.grad_year = $person.grad_year, p.position = $person.position,
     p._src = $_src, p._ts = $_ts, p._actor = $_actor
 MERGE (party:Party {id: $party.id})
 SET party.name = $party.name, party.date = $party.date,

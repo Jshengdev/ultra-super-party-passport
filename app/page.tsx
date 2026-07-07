@@ -1,123 +1,141 @@
 "use client";
 
 /**
- * The entry experience (raw/0020): the passport cover, "what's your name?",
- * Discover your passport → /passport/<id>?reveal=1 (the live-generation reveal),
- * and the door: Enter the Social Universe. Tailwind + framer-motion; design
- * language referenced from pepl, all colors routed through Teri-ownable tokens.
+ * The demo's first page (raw/0025): drop the guest-list CSV → the analysis runs →
+ * the room appears. The heavy graph construction is precached; this surface presents
+ * the analysis as one continuous act and routes into /universe when it completes.
+ * The numbers shown are REAL — parsed client-side from the actual file dropped.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Papa from "papaparse";
 
-interface GNode {
-  id: string;
-  label: string;
-  type: string;
-}
+type Stage = { label: string; detail?: string };
 
-export default function Entry() {
+export default function AnalyzePage() {
   const router = useRouter();
-  const [people, setPeople] = useState<GNode[]>([]);
-  const [q, setQ] = useState("");
-  const [err, setErr] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [rows, setRows] = useState<number>(0);
+  const [stageIdx, setStageIdx] = useState<number>(-1);
+  const [running, setRunning] = useState(false);
 
-  useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_GRAPH_API || "/api/graph")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`graph ${r.status}`))))
-      .then((g) => setPeople((g.nodes as GNode[]).filter((n) => n.type === "Person")))
-      .catch((e) => setErr(String(e.message ?? e)));
-  }, []);
+  const stages: Stage[] = [
+    { label: `Parsing ${rows || "the"} guests…` },
+    { label: "Normalizing schools & majors…", detail: "Iovine & Young Academy, six spellings, one node" },
+    { label: "Mapping who does what…" },
+    { label: "Reading what everyone believes…" },
+    { label: "Clustering shared values…", detail: "the clouds are forming" },
+    { label: "Drawing the room…" },
+  ];
 
-  const matches = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    if (s.length < 2) return [];
-    return people.filter((p) => p.label.toLowerCase().includes(s)).slice(0, 6);
-  }, [q, people]);
+  const runAnalysis = useCallback(
+    (csvRowCount: number) => {
+      setRunning(true);
+      setRows(csvRowCount);
+      let i = 0;
+      const tick = () => {
+        setStageIdx(i);
+        i += 1;
+        if (i <= 5) {
+          setTimeout(tick, 850 + Math.floor(csvRowCount / 2));
+        } else {
+          setTimeout(() => router.push("/universe"), 900);
+        }
+      };
+      tick();
+    },
+    [router],
+  );
+
+  const onFile = useCallback(
+    (file: File) => {
+      setFileName(file.name);
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (res) => runAnalysis(res.data.length),
+        error: () => runAnalysis(0),
+      });
+    },
+    [runAnalysis],
+  );
 
   return (
-    <main className="min-h-screen flex justify-center bg-cloud text-charcoal">
-      <div className="w-[min(440px,92vw)] flex flex-col items-center gap-5 py-12 pb-16">
-        <motion.input
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full rounded-full border border-mist bg-white px-6 py-4 text-center text-[17px] outline-none transition-colors focus:border-ocean"
-          placeholder="what’s your name?"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          aria-label="what's your name?"
-        />
-
-        <AnimatePresence>
-          {matches.length > 0 && (
-            <motion.ul
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="w-full flex flex-col gap-1.5 overflow-hidden"
-            >
-              {matches.map((m) => (
-                <li key={m.id}>
-                  <button
-                    onClick={() => router.push(`/passport/${m.id}?reveal=1`)}
-                    className="w-full flex items-baseline justify-between rounded-2xl border border-mist bg-white px-5 py-3 text-[15px] hover:border-ocean transition-colors cursor-pointer"
-                  >
-                    <span>{m.label}</span>
-                    <span className="text-[12.5px] text-stone">discover your passport →</span>
-                  </button>
-                </li>
-              ))}
-            </motion.ul>
+    <main className="min-h-screen flex items-center justify-center bg-cloud text-charcoal">
+      <div className="w-[min(560px,92vw)] flex flex-col items-center gap-8 py-16">
+        <AnimatePresence mode="wait">
+          {!running ? (
+            <motion.div key="drop" exit={{ opacity: 0, y: -10 }} className="w-full flex flex-col items-center gap-6">
+              <motion.p
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-mono text-[11px] tracking-[0.2em] text-stone"
+              >
+                THE ULTRA SUPER SOCIAL PASSPORT
+              </motion.p>
+              <motion.h1
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-center text-[30px] leading-tight font-medium"
+              >
+                Every event is curated.
+                <br />
+                See how this one is curated toward you.
+              </motion.h1>
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.25 }}
+                onClick={() => fileRef.current?.click()}
+                className="rounded-full bg-charcoal px-8 py-4 text-[15.5px] text-cloud hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                Drop the guest list
+              </motion.button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept=".csv,text/csv"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])}
+              />
+              <p className="text-[12.5px] text-stone">a Luma export, a spreadsheet — any guest CSV</p>
+            </motion.div>
+          ) : (
+            <motion.div key="run" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full flex flex-col items-center gap-7">
+              <p className="font-mono text-[11px] tracking-[0.2em] text-stone">{fileName?.toUpperCase()}</p>
+              <motion.div
+                className="h-3.5 w-3.5 rounded-full bg-ocean"
+                animate={{ scale: [1, 1.6, 1], opacity: [0.45, 1, 0.45] }}
+                transition={{ repeat: Infinity, duration: 1.15, ease: "easeInOut" }}
+              />
+              <div className="flex w-full flex-col gap-2.5">
+                {stages.map((s, i) => (
+                  <AnimatePresence key={s.label}>
+                    {i <= stageIdx && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: i === stageIdx ? 1 : 0.45 }}
+                        className="flex items-baseline justify-between"
+                      >
+                        <span className="font-mono text-[13px] tracking-[0.06em]">
+                          {i < stageIdx ? "✓ " : "· "}
+                          {s.label}
+                        </span>
+                        {s.detail && i === stageIdx && (
+                          <span className="text-[11.5px] text-stone">{s.detail}</span>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                ))}
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
-        {q.trim().length >= 2 && matches.length === 0 && people.length > 0 && (
-          <p className="text-[13px] text-stone">not on this guest list yet — find yourself in the room instead</p>
-        )}
-        {err && <p className="text-[13px] text-stone">guest list unavailable: {err}</p>}
-
-        <motion.div
-          initial={{ opacity: 0, y: 24, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-          className="relative w-full overflow-hidden rounded-[22px] shadow-[0_24px_60px_rgba(42,42,40,0.14)]"
-          style={{ aspectRatio: "3 / 4.1", background: "#f1f1ee" }}
-          role="img"
-          aria-label="your passport cover"
-        >
-          <p className="absolute top-4 left-0 right-0 z-10 text-center font-mono text-[11px] tracking-[0.18em] opacity-70">
-            THE ULTRA SUPER SOCIAL PASSPORT
-          </p>
-          <div
-            className="absolute inset-0 scale-[1.12]"
-            style={{
-              background: `
-                radial-gradient(120% 55% at 50% 108%, var(--color-ocean) 0%, transparent 62%),
-                radial-gradient(120% 52% at 50% 88%, var(--color-sky) 0%, transparent 60%),
-                radial-gradient(130% 48% at 50% 66%, var(--color-gold) 0%, transparent 58%),
-                radial-gradient(130% 44% at 50% 48%, var(--color-sunset-orange) 0%, transparent 56%),
-                radial-gradient(140% 40% at 50% 32%, var(--color-sunset-pink) 0%, transparent 54%)`,
-              filter: "blur(18px) saturate(1.15)",
-            }}
-          />
-          <p className="absolute bottom-4 left-0 right-0 z-10 text-center font-mono text-[11px] tracking-[0.18em] opacity-70">
-            IYA WELCOME BACK · LOS ANGELES
-          </p>
-        </motion.div>
-
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.45 }}
-          onClick={() => router.push("/universe")}
-          className="mt-1 rounded-full bg-charcoal px-7 py-3.5 text-[15.5px] text-cloud hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Enter the Social Universe
-        </motion.button>
-        <p className="text-center text-[12px] text-stone">
-          every claim on every passport traces to a real connection in the room
-        </p>
       </div>
     </main>
   );

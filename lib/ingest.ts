@@ -20,6 +20,11 @@ export interface CsvRow {
   instagram: string;
   x_handle: string;
   belief_creative: string;
+  grad_year?: string;
+  position?: string;
+  company?: string;
+  family?: string;
+  status?: string;
 }
 
 /** trim + collapse internal whitespace, preserve case (for readable Activity/working_on) */
@@ -63,11 +68,13 @@ export function rowToParams(row: CsvRow): IngestPersonParams {
       id: personIdFor(row.email),
       name: clean(row.name),
       email: row.email.trim(),
+      grad_year: row.grad_year ?? "",
+      position: row.position ?? "",
       handles: JSON.stringify({ instagram, x }),
     },
     school: clean(row.school) || null,
     major: clean(row.major) || null,
-    company: null, // no company column in the CSV; WORKS_AT stays available but unpopulated
+    company: (row.company || "").trim() || null, // no company column in the CSV; WORKS_AT stays available but unpopulated
     does: clean(row.what_you_do) ? [normActivity(row.what_you_do)] : [],
     workingOn: clean(row.working_on) ? [clean(row.working_on)] : [],
     belief: clean(row.belief_creative) || null,

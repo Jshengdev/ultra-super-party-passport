@@ -6,24 +6,29 @@
     {
       "personId": "eason-tang",
       "name": "Eason Tang",
-      "why": "You should meet Eason Tang, as you both share a passion for hand-lettering all social copy for a bakery, creating beautiful, oven-inspired text.",
+      "why": "You would really enjoy meeting Eason Tang, as both of you share a passion for type design that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "type designer",
       "path_receipt": [
         {
           "from": "Lauren Hsueh",
-          "rel": "WORKING_ON",
-          "to": "hand-lettering all social copy for a bakery, making text look hand-carved by their ovens"
+          "rel": "DOES",
+          "to": "type designer"
         },
         {
           "from": "Eason Tang",
-          "rel": "WORKING_ON",
-          "to": "hand-lettering all social copy for a bakery, making text look hand-carved by their ovens"
+          "rel": "DOES",
+          "to": "type designer"
         }
       ]
     },
     {
       "personId": "lindsey-demyun",
       "name": "Lindsey Demyun",
-      "why": "You should meet Lindsey Demyun, as her bold creativity and unique perspective will resonate beautifully with your own artistic vision.",
+      "why": "You should meet Lindsey Demyun because her unique perspective on creativity beautifully complements your own, making for an inspiring conversation about taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Every constraint teaches you what you actually believe in as a storyteller.",
       "path_receipt": [
         {
           "from": "Lauren Hsueh",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "You are driven by a desire to celebrate authenticity, transforming ordinary words into art that reflects the unique spirit of the bakery.",
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2028",
+    "position": "BESPOKE TYPE CRAFTSPERSON",
+    "company": "",
+    "belief": "Being unfashionable in public until people realize they needed that view all along."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create authenticity, believing that true value emerges when uniqueness is embraced and recognized over time.",
   "gradient": {
     "seed": 4265883538,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(126 72% 48%)",
+        "color": "hsl(162 72% 48%)",
         "at": 1
       }
     ]

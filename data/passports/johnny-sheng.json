@@ -6,24 +6,29 @@
     {
       "personId": "andrew-zhao",
       "name": "Andrew Zhao",
-      "why": "You should meet Andrew Zhao because you both share a passion for finding founders who are tackling real problems in education, health, and justice.",
+      "why": "You should meet Andrew Zhao because you both share a passion for impact investing and can exchange valuable insights on making a difference.",
+      "basis_kind": "same_work",
+      "via": "impact investor",
       "path_receipt": [
         {
           "from": "johnny Sheng",
-          "rel": "WORKING_ON",
-          "to": "finding founders solving real problems in education, health, justice—not just another app"
+          "rel": "DOES",
+          "to": "impact investor"
         },
         {
           "from": "Andrew Zhao",
-          "rel": "WORKING_ON",
-          "to": "finding founders solving real problems in education, health, justice—not just another app"
+          "rel": "DOES",
+          "to": "impact investor"
         }
       ]
     },
     {
       "personId": "jonathan-gantt",
       "name": "Jonathan Gantt",
-      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire you to explore new possibilities in your own work.",
+      "why": "You should meet Jonathan Gantt because his innovative ideas about creativity could inspire you to rethink what's possible for your own projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Making complex systems transparent terrifies institutions but frees people—that's the only metric that matters.",
       "path_receipt": [
         {
           "from": "johnny Sheng",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "You are driven by a deep desire to empower others, creating pathways to brighter futures through meaningful solutions that truly address systemic challenges.",
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "IMPACT VENTURE SCOUT",
+    "company": "",
+    "belief": "Expanding what's possible for someone means showing them doors they didn't know they could choose."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to unlocking potential, believing that transformative choices can reshape lives and create a more equitable world.",
   "gradient": {
     "seed": 3490936393,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(95 72% 48%)",
+        "color": "hsl(200 72% 48%)",
         "at": 1
       }
     ]

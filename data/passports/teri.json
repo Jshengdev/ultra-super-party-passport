@@ -6,24 +6,29 @@
     {
       "personId": "jg",
       "name": "Jg",
-      "why": "You and Jg both share a passion for charting how people feel about their time spent versus where it actually goes, making for an enriching conversation.",
+      "why": "You should meet Jg because both of you share a passion for data visualization design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "data visualization designer",
       "path_receipt": [
         {
           "from": "teri",
-          "rel": "WORKING_ON",
-          "to": "charting how people feel about their time spent versus where it actually goes"
+          "rel": "DOES",
+          "to": "data visualization designer"
         },
         {
           "from": "Jg",
-          "rel": "WORKING_ON",
-          "to": "charting how people feel about their time spent versus where it actually goes"
+          "rel": "DOES",
+          "to": "data visualization designer"
         }
       ]
     },
     {
       "personId": "tj-weir",
       "name": "TJ Weir",
-      "why": "You should meet TJ Weir because his innovative approach to creativity might inspire you to connect ideas in ways you’ve never imagined.",
+      "why": "You should meet TJ Weir because his innovative approach to creativity will inspire you to connect ideas in ways you never imagined.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "Building a new graph by wiring every node the old system ignored",
       "path_receipt": [
         {
           "from": "teri",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "You are driven by a desire to illuminate the often-overlooked connections between effort and experience, fostering deeper understanding and creativity in others.",
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "ATTENTION MAPPER",
+    "company": "",
+    "belief": "Revealing the space where people feel different from what they're measuring"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate the dissonance between aspirations and actions, fostering deeper self-awareness and growth in others.",
   "gradient": {
     "seed": 2664306827,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(195 72% 48%)",
+        "color": "hsl(302 72% 48%)",
         "at": 1
       }
     ]

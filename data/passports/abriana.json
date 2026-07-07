@@ -4,26 +4,31 @@
   "line2": "Iovine & Young Academy",
   "find": [
     {
-      "personId": "isaac-wang",
-      "name": "Isaac Wang",
-      "why": "You should meet Isaac Wang, as you both share a passion for animating UI for that innovative app that highlights exactly three things.",
+      "personId": "anika-mantripragada",
+      "name": "Anika Mantripragada",
+      "why": "You should meet Anika Mantripragada because her innovative approach to motion design could spark some inspiring ideas for your own projects.",
+      "basis_kind": "same_work",
+      "via": "motion designer",
       "path_receipt": [
         {
           "from": "Abriana",
-          "rel": "WORKING_ON",
-          "to": "animating UI for an app that shows you exactly three things, nothing more"
+          "rel": "DOES",
+          "to": "motion designer"
         },
         {
-          "from": "Isaac Wang",
-          "rel": "WORKING_ON",
-          "to": "animating UI for an app that shows you exactly three things, nothing more"
+          "from": "Anika Mantripragada",
+          "rel": "DOES",
+          "to": "motion designer"
         }
       ]
     },
     {
       "personId": "amanda",
       "name": "Amanda",
-      "why": "You’ll love meeting Amanda because her unique perspective on creativity mirrors your own passion for taste and craft.",
+      "why": "You'd really enjoy meeting Amanda, as her unique perspective on creativity aligns beautifully with your own taste and craft.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "Design solves the problem nobody knew they had until the solution made them realize they were stuck.",
       "path_receipt": [
         {
           "from": "Abriana",
@@ -33,8 +38,16 @@
       ]
     }
   ],
-  "hidden_prompt": "Somewhere in this room is the person behind \"AR layer showing what the neighborhood looked like fifty years ago.\" Go find them.",
-  "magic_inference": "You are driven by a desire to refine experiences, revealing beauty in simplicity and timing, inviting users to savor each moment.",
+  "profile": {
+    "school": "Iovine & Young Academy",
+    "major": "Arts, Technology & the Business of Innovation",
+    "grad_year": "2027",
+    "position": "INTERFACE CURATOR",
+    "company": "",
+    "belief": "It's ignoring everything except what actually matters, so what remains feels inevitable."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"Animating character fear through micro-gestures—eye flickers, breath catches—so subtle audiences feel it before they know they're watching.\" Go find them.",
+  "magic_inference": "You are driven by a desire to distill complexity into clarity, creating meaningful experiences that resonate through simplicity and intention.",
   "gradient": {
     "seed": 951798219,
     "stops": [
@@ -47,7 +60,7 @@
         "at": 0.5
       },
       {
-        "color": "hsl(111 72% 48%)",
+        "color": "hsl(80 72% 48%)",
         "at": 1
       }
     ]
