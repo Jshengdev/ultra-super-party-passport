@@ -93,6 +93,7 @@ const TYPE_PRIORITY: NodeType[] = [
   'School',
   'Major',
   'Activity',
+  'Interest',
 ];
 
 /** Pick the single rendered type from a node's Neo4j label set. */
