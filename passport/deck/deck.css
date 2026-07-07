@@ -1,0 +1,696 @@
+/* Slide deck chrome + slide framing, in the passport design system. */
+
+.deck-root {
+  min-height: 100vh;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-document);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  box-sizing: border-box;
+}
+
+/* the 16:9 stage the current slide is fit into */
+.deck-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: min(100%, calc((100vh - 140px) * 16 / 9));
+  margin: 0 auto;
+  border-radius: var(--radius-page);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 var(--space-sm) var(--space-xl) oklch(from var(--paper-shadow) l c h / 0.4);
+}
+
+.deck-stage.is-fullscreen {
+  aspect-ratio: auto;
+  max-width: none;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  background: var(--canvas);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* fullscreen keeps the 16:9 slide centered with letterboxing */
+.deck-stage.is-fullscreen .slide-fit {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* click targets to advance / go back (kept behind the expand button) */
+.deck-hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.deck-hit--prev {
+  left: 0;
+  width: 22%;
+}
+.deck-hit--next {
+  right: 0;
+  width: 78%;
+}
+
+.slide-fit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* let clicks fall through to the nav hit-zones beneath; interactive slide
+     bits (e.g. the hover title) opt back in with pointer-events: auto */
+  pointer-events: none;
+}
+
+.slide-canvas {
+  transform-origin: center center;
+  flex: none;
+  position: relative;
+}
+
+/* Monet painterly surface (from pepl-tech): a lit canvas/impasto weave
+   composited soft-light, plus fine desaturated film grain. Sits above slide
+   content so text picks up the paper tooth; pointer-transparent. */
+.slide-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.slide-paper-texture,
+.slide-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+.slide-paper-texture {
+  opacity: 0.5;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.34' numOctaves='2' stitchTiles='stitch' result='n'/%3E%3CfeDiffuseLighting in='n' surfaceScale='1.4' diffuseConstant='1.05'%3E%3CfeDistantLight azimuth='235' elevation='56'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 150px 150px;
+}
+.slide-grain {
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* hand-painted rough edge on big text (pepl .paint-text) */
+.paint-text {
+  filter: url(#paintTexture);
+}
+
+/* a slide fills the authoring canvas */
+.slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* overlay controls */
+.deck-expand,
+.deck-counter {
+  position: absolute;
+  z-index: 4;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.deck-expand {
+  top: var(--space-md);
+  right: var(--space-md);
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--ink-faint);
+  border-radius: 999px;
+  background: oklch(100% 0 0 / 0.7);
+  color: var(--ink);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.deck-expand:hover {
+  background: oklch(100% 0 0 / 0.9);
+}
+.deck-expand:focus-visible {
+  outline: 2px solid var(--ink-accent);
+  outline-offset: 2px;
+}
+
+.deck-counter {
+  bottom: var(--space-md);
+  right: var(--space-md);
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+
+/* bottom navigation row */
+.deck-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.deck-btn {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.deck-btn:disabled {
+  color: var(--ink-faint);
+  cursor: default;
+  text-decoration: none;
+}
+.deck-btn:focus-visible {
+  outline: 2px solid var(--ink-accent);
+  outline-offset: 2px;
+}
+
+.deck-dots {
+  display: flex;
+  gap: var(--space-sm);
+}
+.deck-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-faint);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.deck-dot.is-active {
+  background: var(--ink-accent);
+  border-color: var(--ink-accent);
+}
+
+/* ================================================= shared slide primitives */
+
+/* editorial content slide: text column + optional visual, on paper */
+.content-slide {
+  padding: 66px 90px;
+  box-sizing: border-box;
+}
+
+.slide-col {
+  position: relative;
+  z-index: 2;
+}
+.slide-col--text {
+  max-width: 620px;
+}
+
+.slide-kicker {
+  margin: 0 0 26px;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+}
+
+.slide-headline {
+  margin: 0 0 24px;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.slide-body {
+  margin: 0 0 20px;
+  max-width: 30ch;
+  font-family: var(--font-document);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.42;
+  color: var(--ink-muted, var(--ink));
+}
+
+.slide-lede {
+  margin: 0 0 16px;
+  max-width: 32ch;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.slide-punch {
+  margin: 0;
+  font-family: var(--font-official);
+  font-size: 32px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.punch-cold {
+  font-family: var(--font-typewriter);
+  font-size: 0.82em;
+  color: var(--ink-faint);
+  letter-spacing: 0.02em;
+}
+.punch-warm {
+  font-weight: 500;
+  color: transparent;
+  background: linear-gradient(100deg, var(--holo-1), var(--holo-3), var(--holo-4), var(--holo-5));
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* ---------------------------------------------- problem slide spreadsheet */
+.problem-text {
+  padding-top: 8px;
+}
+
+.problem-visual {
+  position: absolute;
+  z-index: 2;
+  right: 74px;
+  top: 50%;
+  transform: translateY(-50%) rotate(3deg);
+  width: 452px;
+}
+
+/* cold, trapped sign-up data */
+.ss-card {
+  background: oklch(97.5% 0.003 285);
+  border: 1px solid var(--ink-faint);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px oklch(from var(--paper-shadow) l c h / 0.4);
+  overflow: hidden;
+  filter: saturate(0.5);
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+}
+.ss-row {
+  display: grid;
+  grid-template-columns: 1.1fr 0.8fr 1.4fr;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid oklch(from var(--ink-faint) l c h / 0.5);
+  font-family: var(--font-typewriter);
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--ink-muted, var(--ink-faint));
+}
+.ss-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ss-head {
+  background: oklch(94% 0.006 285);
+  color: var(--ink-faint);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+/* the warm artifact, lifting out of the cold data */
+.ss-sticker {
+  position: absolute;
+  top: -46px;
+  right: -40px;
+  width: 300px;
+  transform: rotate(-11deg);
+  filter: drop-shadow(0 8px 16px oklch(from var(--paper-shadow) l c h / 0.4));
+}
+
+.headline-chroma {
+  color: transparent;
+  background: linear-gradient(100deg, var(--holo-1), var(--holo-3), var(--holo-4), var(--holo-5));
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* ------------------------------------------------- solution slide flow */
+.solution-body {
+  max-width: 40ch;
+}
+.flow-band {
+  position: absolute;
+  z-index: 2;
+  left: 90px;
+  right: 90px;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.flow-step {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 300px;
+}
+.flow-viz {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: oklch(from var(--paper-edge) l c h / 0.5);
+  border: 1px solid oklch(from var(--ink-faint) l c h / 0.5);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px oklch(from var(--paper-shadow) l c h / 0.28);
+}
+.flow-viz--stamp {
+  background: var(--paper);
+  padding: 10px 24px;
+}
+.flow-viz--stamp > div {
+  width: 200px;
+}
+.flow-form {
+  width: 78%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.flow-form-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  background: oklch(98% 0.003 285);
+  border: 1px solid oklch(from var(--ink-faint) l c h / 0.4);
+  border-radius: 6px;
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  color: var(--ink-muted, var(--ink-faint));
+}
+.flow-form-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ink-faint);
+  flex: none;
+}
+.flow-graph {
+  width: 200px;
+  height: 150px;
+}
+.flow-edge {
+  stroke: var(--ink-faint);
+  stroke-width: 1.2;
+}
+.flow-node {
+  fill: var(--ink-stamp);
+}
+.flow-node--accent {
+  fill: var(--ink-accent);
+}
+.flow-cap {
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.flow-arrow {
+  font-family: var(--font-document);
+  font-size: 34px;
+  line-height: 1;
+  margin-top: -26px;
+  color: transparent;
+  background: linear-gradient(120deg, var(--holo-2), var(--holo-4));
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* ------------------------------------------------------- use-cases slide */
+.uses-grid {
+  position: absolute;
+  z-index: 2;
+  left: 90px;
+  right: 90px;
+  top: 250px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+}
+.use-card {
+  padding: 30px 30px 34px;
+  background: oklch(from var(--paper-edge) l c h / 0.45);
+  border: 1px solid oklch(from var(--ink-faint) l c h / 0.45);
+  border-radius: 16px;
+}
+.use-n {
+  font-family: var(--font-typewriter);
+  font-size: 16px;
+  color: var(--ink-label);
+  letter-spacing: 0.1em;
+}
+.use-label {
+  margin: 14px 0 12px;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 34px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.use-body {
+  margin: 0;
+  font-family: var(--font-document);
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--ink-muted, var(--ink));
+}
+.uses-tagline {
+  position: absolute;
+  z-index: 2;
+  left: 90px;
+  bottom: 66px;
+}
+
+/* ------------------------------------------------------------ stack slide */
+.stack-head {
+  margin-bottom: 8px;
+}
+.stack-grid {
+  position: absolute;
+  z-index: 2;
+  left: 90px;
+  right: 90px;
+  top: 236px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.stack-card {
+  padding: 24px 28px 26px;
+  background: oklch(from var(--paper-edge) l c h / 0.5);
+  border: 1px solid oklch(from var(--ink-faint) l c h / 0.5);
+  border-radius: 14px;
+}
+.stack-card--bonus {
+  background: oklch(from var(--paper-edge) l c h / 0.28);
+  border-style: dashed;
+}
+.stack-card-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.stack-name {
+  margin: 0;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 27px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.stack-tag {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+  padding: 3px 9px;
+  border: 1px solid oklch(from var(--ink-label) l c h / 0.4);
+  border-radius: 999px;
+}
+.stack-role {
+  margin: 0 0 10px;
+  font-family: var(--font-official);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--ink-muted, var(--ink));
+}
+.stack-body {
+  margin: 0;
+  font-family: var(--font-document);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink-muted, var(--ink-faint));
+}
+
+/* ============================================================= title slide */
+
+.title-slide {
+  background: transparent;
+}
+
+.slide-paper {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, oklch(100% 0 0 / 0.18), transparent 45%, oklch(from var(--paper-shadow) l c h / 0.35)),
+    var(--paper);
+}
+
+.slide-bgtext {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  overflow: hidden;
+}
+.slide-bgtext > div,
+.slide-bgtext svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.title-stamp {
+  position: absolute;
+  filter: drop-shadow(0 4px 10px oklch(from var(--paper-shadow) l c h / 0.35));
+}
+.title-stamp--nametag {
+  width: 430px;
+  top: 44px;
+  left: 40px;
+}
+.title-stamp--belief {
+  width: 400px;
+  top: 60px;
+  right: 30px;
+}
+.title-stamp--round {
+  width: 400px;
+  bottom: 30px;
+  left: 70px;
+}
+
+.title-block {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  padding: 40px 90px;
+}
+/* soft paper halo so the hero reads cleanly over the stamp collage */
+.title-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 62% 58% at 50% 50%,
+    oklch(from var(--paper) l c h / 0.92) 0%,
+    oklch(from var(--paper) l c h / 0.75) 42%,
+    transparent 78%
+  );
+}
+
+.title-kicker {
+  margin: 0 0 8px;
+  font-family: var(--font-document);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+  padding-left: 0.5em;
+}
+
+.title-hero {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* size each line to content so the chroma ::after overlays exactly */
+  line-height: 0.92;
+  font-family: var(--font-document);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  pointer-events: auto; /* opt back in so the hero receives hover */
+}
+
+/* solid dark ink with the pepl hand-painted Monet edge (#paintTexture) */
+.title-line {
+  position: relative;
+  display: inline-block;
+  font-size: 150px;
+  color: var(--ink);
+  filter: url(#paintTexture);
+}
+
+/* a hint of chromatic foil shine, revealed on hover */
+.title-line::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: transparent;
+  background: linear-gradient(100deg, var(--holo-1), var(--holo-2), var(--holo-3), var(--holo-4), var(--holo-5), var(--holo-3));
+  background-size: 220% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.title-hero:hover .title-line::after {
+  opacity: 0.42;
+  animation: title-sweep 6s ease-in-out infinite alternate;
+}
+
+@keyframes title-sweep {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-hero:hover .title-line::after {
+    animation: none;
+    background-position: 45% 50%;
+  }
+}
