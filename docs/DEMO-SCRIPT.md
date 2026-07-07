@@ -35,14 +35,14 @@ answers both — **see the curation before; carry it with you during.**
 |---|-----|
 | 0:00–0:10 | *(hold up a passport)* "Every event you've ever been to was curated. You just never got to see it. Everyone at this party does — and gets one of these." |
 | 0:10–0:35 | "Events sell you the lineup, the venue, the CTAs — never the people. And people come for the people. Someone built that room *for* you, and you walk in blind — so the who-should-I-meet math happens in your head, alone. That's why events are exhausting." |
-| 0:35–0:55 | "Here, you see the curation. Sign up — three facts and one belief — and the room wires itself toward you: school, work, what you make, what you *believe* creativity is. Watch —" *(live sign-up → the room wires them in)* |
-| 0:55–1:15 | "And the passport writes itself: the two people to find tonight and the real reason why — every claim traces to actual paths in the graph. Then this line —" *(read the magic inference, pause)* "— we never told it that." |
+| 0:35–0:55 | "Here, you see the curation. This is the room — everyone who signed up, wired by shared work and shared values. I search my name, hit *generate* — and watch the lines glow: that's the agent walking MY relationships, live." *(the glow-search)* |
+| 0:55–1:15 | "And the passport writes itself: gradient cover from who I am, and inside — the two people to find tonight with the real *why*. Not '200 software engineers' — the actual paths. Then this line —" *(read the magic inference, pause)* "— we never told it that." |
 | 1:15–1:30 | "Before the event it shows you how the room is curated toward you; during, it curates live as people check in. Relational, not a knowledge graph. The AI is invisible — guests just get a passport. Live at [URL], pipeline on RocketRide, backend on Butterbase, every claim receipted in Neo4j." |
 
 ## The messaging spine (repeat everywhere — README, submission, demo, marketing)
 
 1. **"Every event you've been to was curated — you just never got to see it."**
-2. **"See how the room is curated toward you — before you arrive, and live while you're there."**
+2. **"Curated toward you, not stat-listed — you see your paths into the room, not 200 titles."** *(raw/0023)*
 3. **"Sign up to a party; a passport writes itself."**
 4. **"Relational, not a knowledge graph — it connects people, not taglines."**
 5. **"It never says AI and never feels like AI — the room just knows you."**
@@ -59,18 +59,25 @@ Universe is the visual money shot — that must land by 0:30.
 
 ---
 
-## The beats (timed)
+## The beats (timed — THE LOCKED FLOW, raw/0022: graph is the entry surface; the wow is the GLOW-SEARCH)
 
 | t | Beat | On screen | Who | Say |
 |---|------|-----------|-----|-----|
-| 0:00–0:08 | **Cold-open on the wow.** | A single finished passport, beautiful, Teri-skinned. | Johnny | "This is a party for creatives. Everyone who signed up got **this**." (hold up the passport) |
-| 0:08–0:20 | **Sign up live.** | The Luma-style form → submit. | Johnny | "Watch — I sign up. Name, and one question: *what does it mean to be creative?*" (type a real answer, submit) |
-| 0:20–0:32 | **The star ignites.** | The new node joins the Universe; edges snap to their shared-work + values cloud, which glows. | Teri | "There I am. It just wired me to the people I share work and values with — every edge is real." |
-| 0:32–0:48 | **The passport writes itself.** | Passport renders: 2 people to find + why (one same-work, one same-values); flip to the gradient back. | Johnny | "My passport: the two people to find tonight, and *why*. And this line — *[read the magic inference out loud, let it land]* — I never told it that. **How does it know?**" |
-| 0:48–0:60 | **Land the spine + the ship.** | The URL + one-line architecture. | Teri → Johnny | Teri: "It's **relational, not a knowledge graph** — it connects people." Johnny: "The AI is invisible — they just got a passport. Live at **[URL]**, deployed pipe, open repo." |
+| 0:00–0:10 | **Cold-open on the room.** | The room's graph, already alive (pre-seeded ~40 people), value-clouds glowing softly. | Johnny | "Every event you've ever been to was curated — you just never got to see it. This room, you do. **Watch it show me.**" |
+| 0:10–0:20 | **Search your name.** | Type name in the graph's search → their node centers. | Johnny | "That's me. Around me — everyone I share work with, everyone who believes what I believe. Not a guest list. *My* room." |
+| 0:20–0:35 | **THE GLOW-SEARCH (the wow).** | Hit **Generate passport** → the agent traverses live and **the lines it walks GLOW**, path by path, across the room. | Teri | "It's searching — those glowing lines are the agent literally walking my relationships. Every path it lights up is real." |
+| 0:35–0:50 | **The passport reveals.** | Gradient-flute cover (derived from who you are) → opens: the two people to find + *why* → the magic line. | Johnny | "My passport. Two people to find tonight — and *why*: not '200 software engineers,' the actual paths. And this line — *[read the magic inference, pause]* — I never told it that. **How does it know?**" |
+| 0:50–0:60 | **The share + the ship.** | The shareable inside / gradient cover held up; URL on screen. | Teri → Johnny | Teri: "**Curated toward you, not stat-listed** — relational, not a knowledge graph." Johnny: "The AI is invisible — you just get a passport. Live at **[URL]**, deployed pipe, open repo." |
 
-**Emotional peak** = the magic-inference line at ~0:40. Read it slowly. Silence after it is good.
-**Last words** = the three-word differentiator ("relational, not knowledge-graph") + proof it ships.
+**Emotional peaks (two):** the GLOW-SEARCH at ~0:25 (the agent made visible — the Neo4j money shot)
+and the magic-inference line at ~0:42 (silence after it is good).
+**Last words** = "curated toward you, not stat-listed" + proof it ships.
+**The stat-listing contrast (raw/0023, say it whenever titles come up):** *"A list of 200 people
+says 'software engineer' two hundred times. Your passport shows the paths — how this room was
+actually curated toward you."*
+**Form factor (locked):** living page (the passport is a URL that stays alive); wallet-pass =
+spoken roadmap only. Live sign-up (form → node joins the room) is a PRE-BEAT if time allows —
+never at the cost of the glow-search.
 
 ---
 
