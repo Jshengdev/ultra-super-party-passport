@@ -241,6 +241,111 @@ function RoomSketch({ beat, entering }: { beat: number; entering: boolean }) {
 
 /* -------------------------------------------------------------------- page */
 
+
+/* -------------------------------------------- the hero card's hover physics
+   (raw/0033): sheen luminance + chromatic aberration + fine dither grain +
+   slight tilt, all tracking the cursor. Premium, elegant, reduced-motion-safe. */
+
+const DITHER_URI =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>`,
+  );
+
+function HeroCard({ onOpen, children }: { onOpen: () => void; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pt, setPt] = useState({ x: 0.5, y: 0.5, over: false });
+
+  const onMove = useCallback((e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setPt({ x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, over: true });
+  }, []);
+
+  const tiltX = pt.over ? (0.5 - pt.y) * 7 : 0;
+  const tiltY = pt.over ? (pt.x - 0.5) * 9 : 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 26, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+      style={{ perspective: 1200 }}
+      className="w-[min(420px,86vw)]"
+    >
+      <motion.div
+        ref={ref}
+        onClick={onOpen}
+        onMouseMove={onMove}
+        onMouseLeave={() => setPt((p) => ({ ...p, over: false }))}
+        animate={{ rotateX: tiltX, rotateY: tiltY, y: pt.over ? -3 : 0 }}
+        transition={{ type: "spring", stiffness: 160, damping: 18, mass: 0.6 }}
+        className="relative cursor-pointer overflow-hidden rounded-[26px] shadow-[0_30px_80px_rgba(42,42,40,0.16)]"
+        style={{ aspectRatio: "3 / 4.35", background: "#f2f1ee", transformStyle: "preserve-3d" }}
+        role="img"
+        aria-label="the passport cover — drop a guest list to begin"
+      >
+        {children}
+        {/* chromatic aberration: two hue-shifted echoes of the bloom, parting slightly with the cursor */}
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[94%] transition-opacity duration-300"
+          style={{
+            background: `linear-gradient(180deg, rgba(247,246,243,0) 0%, rgba(255,120,150,0.5) 30%, rgba(255,80,80,0.35) 100%)`,
+            filter: "blur(16px)",
+            mixBlendMode: "screen",
+            opacity: pt.over ? 0.28 : 0,
+            transform: `translate(${(pt.x - 0.5) * -7}px, ${(pt.y - 0.5) * -4}px) scale(1.06)`,
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-[94%] transition-opacity duration-300"
+          style={{
+            background: `linear-gradient(180deg, rgba(247,246,243,0) 0%, rgba(110,160,255,0.5) 40%, rgba(90,110,255,0.35) 100%)`,
+            filter: "blur(16px)",
+            mixBlendMode: "screen",
+            opacity: pt.over ? 0.24 : 0,
+            transform: `translate(${(pt.x - 0.5) * 7}px, ${(pt.y - 0.5) * 4}px) scale(1.06)`,
+          }}
+        />
+        {/* sheen: a soft luminance bloom following the cursor */}
+        <div
+          aria-hidden
+          className="absolute inset-0 transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(42% 34% at ${pt.x * 100}% ${pt.y * 100}%, rgba(255,255,255,0.5), rgba(255,255,255,0) 70%)`,
+            mixBlendMode: "soft-light",
+            opacity: pt.over ? 1 : 0,
+          }}
+        />
+        {/* the glint band, sweeping with the cursor's x */}
+        <div
+          aria-hidden
+          className="absolute inset-0 transition-opacity duration-300"
+          style={{
+            background: `linear-gradient(${105 + (pt.x - 0.5) * 20}deg, transparent ${pt.x * 100 - 16}%, rgba(255,255,255,0.28) ${pt.x * 100}%, transparent ${pt.x * 100 + 16}%)`,
+            mixBlendMode: "screen",
+            opacity: pt.over ? 0.85 : 0,
+          }}
+        />
+        {/* fine dither grain — granular, barely-there, alive on hover */}
+        <div
+          aria-hidden
+          className="absolute inset-0 transition-opacity duration-500"
+          style={{
+            backgroundImage: `url("${DITHER_URI}")`,
+            backgroundSize: "140px 140px",
+            mixBlendMode: "overlay",
+            opacity: pt.over ? 0.16 : 0.07,
+          }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function AnalyzePage() {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -329,20 +434,10 @@ export default function AnalyzePage() {
               />
 
               {/* the card: soft grey field, vivid stepped bands blooming from the bottom */}
-              <motion.div
-                initial={{ opacity: 0, y: 26, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
-                onClick={() => fileRef.current?.click()}
-                className="relative w-[min(420px,86vw)] cursor-pointer overflow-hidden rounded-[26px] shadow-[0_30px_80px_rgba(42,42,40,0.16)]"
-                style={{ aspectRatio: "3 / 4.35", background: "#f2f1ee" }}
-                role="img"
-                aria-label="the passport cover — drop a guest list to begin"
-              >
+              <HeroCard onOpen={() => fileRef.current?.click()}>
                 <p className="absolute top-5 left-0 right-0 z-10 text-center font-mono text-[10.5px] tracking-[0.22em] text-charcoal/60">
                   THE ULTRA SUPER SOCIAL PASSPORT<sup style={{ fontSize: "0.42em", opacity: 0.65, letterSpacing: 0 }}>™</sup>
                 </p>
-                {/* stepped bloom: three columns, center swell — saturated, lightly blurred so the bands keep their step */}
                 <div
                   className="absolute inset-x-0 bottom-0 h-[94%]"
                   style={{
@@ -355,7 +450,7 @@ export default function AnalyzePage() {
                     transform: "scale(1.06)",
                   }}
                 />
-              </motion.div>
+              </HeroCard>
 
               <motion.p
                 initial={{ opacity: 0 }}
