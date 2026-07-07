@@ -1,0 +1,55 @@
+{
+  "personId": "lena-haddad3",
+  "name": "Lena Haddad",
+  "line2": "Otis",
+  "find": [
+    {
+      "personId": "bruno-okafor22",
+      "name": "Bruno Okafor",
+      "why": "You should meet Bruno Okafor, as you both share a passion for fashion design that could spark some inspiring conversations.",
+      "path_receipt": [
+        {
+          "from": "Lena Haddad",
+          "rel": "DOES",
+          "to": "fashion designer"
+        },
+        {
+          "from": "Bruno Okafor",
+          "rel": "DOES",
+          "to": "fashion designer"
+        }
+      ]
+    },
+    {
+      "personId": "malik-rivera11",
+      "name": "Malik Rivera",
+      "why": "You should meet Malik Rivera, as his innovative approach to creativity aligns perfectly with your passion for breaking norms and exploring the unknown.",
+      "path_receipt": [
+        {
+          "from": "Lena Haddad",
+          "rel": "SHARES_VALUE",
+          "to": "Malik Rivera"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to redefine boundaries, inviting others to explore new dimensions of experience and challenge conventional norms.",
+  "gradient": {
+    "seed": 3859990373,
+    "stops": [
+      {
+        "color": "hsl(114 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(252 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

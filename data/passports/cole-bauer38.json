@@ -1,0 +1,55 @@
+{
+  "personId": "cole-bauer38",
+  "name": "Cole Bauer",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "lena-haddad3",
+      "name": "Lena Haddad",
+      "why": "You should meet Lena Haddad; her insights into fashion design could spark some inspiring conversations with you.",
+      "path_receipt": [
+        {
+          "from": "Cole Bauer",
+          "rel": "DOES",
+          "to": "fashion designer"
+        },
+        {
+          "from": "Lena Haddad",
+          "rel": "DOES",
+          "to": "fashion designer"
+        }
+      ]
+    },
+    {
+      "personId": "maya-patel2",
+      "name": "Maya Patel",
+      "why": "You should meet Maya Patel because her insights on authenticity and vulnerability in creative expression will resonate deeply with your artistic journey.",
+      "path_receipt": [
+        {
+          "from": "Cole Bauer",
+          "rel": "SHARES_VALUE",
+          "to": "Maya Patel"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "Your project reveals a deep yearning for connection, using the shared joy of food to bridge solitude and foster community.",
+  "gradient": {
+    "seed": 3781729777,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(132 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

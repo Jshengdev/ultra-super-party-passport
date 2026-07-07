@@ -1,0 +1,55 @@
+{
+  "personId": "bruno-delgado4",
+  "name": "Bruno Delgado",
+  "line2": "CalArts",
+  "find": [
+    {
+      "personId": "andre-adeyemi29",
+      "name": "Andre Adeyemi",
+      "why": "You should meet Andre Adeyemi because he has incredible insights about the mural project across every laundromat in Echo Park that you both care about.",
+      "path_receipt": [
+        {
+          "from": "Bruno Delgado",
+          "rel": "WORKING_ON",
+          "to": "a mural project across every laundromat in Echo Park"
+        },
+        {
+          "from": "Andre Adeyemi",
+          "rel": "WORKING_ON",
+          "to": "a mural project across every laundromat in Echo Park"
+        }
+      ]
+    },
+    {
+      "personId": "kai-reyes0",
+      "name": "Kai Reyes",
+      "why": "You should meet Kai Reyes because his dedication to consistent practice has led to remarkable creative success, much like your own journey.",
+      "path_receipt": [
+        {
+          "from": "Bruno Delgado",
+          "rel": "SHARES_VALUE",
+          "to": "Kai Reyes"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform everyday spaces into vibrant expressions of community, finding beauty in the rhythm of persistence.",
+  "gradient": {
+    "seed": 3924117190,
+    "stops": [
+      {
+        "color": "hsl(197 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

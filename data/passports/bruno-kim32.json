@@ -1,0 +1,55 @@
+{
+  "personId": "bruno-kim32",
+  "name": "Bruno Kim",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "chloe-ferreira6",
+      "name": "Chloe Ferreira",
+      "why": "You should meet Chloe Ferreira, as you both share an incredible adventure hitchhiking from LA to Portland with just a Polaroid and a tent.",
+      "path_receipt": [
+        {
+          "from": "Bruno Kim",
+          "rel": "WORKING_ON",
+          "to": "I hitchhiked from LA to Portland with only a Polaroid and a tent"
+        },
+        {
+          "from": "Chloe Ferreira",
+          "rel": "WORKING_ON",
+          "to": "I hitchhiked from LA to Portland with only a Polaroid and a tent"
+        }
+      ]
+    },
+    {
+      "personId": "kai-reyes0",
+      "name": "Kai Reyes",
+      "why": "You should meet Kai Reyes, as both of you share a commitment to consistent practice and dedication, which fuels your creative successes.",
+      "path_receipt": [
+        {
+          "from": "Bruno Kim",
+          "rel": "SHARES_VALUE",
+          "to": "Kai Reyes"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to capture fleeting moments and create meaning through persistence and authenticity in your journey.",
+  "gradient": {
+    "seed": 1423746928,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(351 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

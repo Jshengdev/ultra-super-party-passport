@@ -1,0 +1,55 @@
+{
+  "personId": "andre-adeyemi29",
+  "name": "Andre Adeyemi",
+  "line2": "ArtCenter",
+  "find": [
+    {
+      "personId": "bruno-delgado4",
+      "name": "Bruno Delgado",
+      "why": "You should meet Bruno Delgado; he has some incredible insights about the mural project across every laundromat in Echo Park that you'll both appreciate.",
+      "path_receipt": [
+        {
+          "from": "Andre Adeyemi",
+          "rel": "WORKING_ON",
+          "to": "a mural project across every laundromat in Echo Park"
+        },
+        {
+          "from": "Bruno Delgado",
+          "rel": "WORKING_ON",
+          "to": "a mural project across every laundromat in Echo Park"
+        }
+      ]
+    },
+    {
+      "personId": "omar-cohen1",
+      "name": "Omar Cohen",
+      "why": "You should meet Omar Cohen because his innovative approach to creativity will inspire and resonate with your own artistic endeavors.",
+      "path_receipt": [
+        {
+          "from": "Andre Adeyemi",
+          "rel": "SHARES_VALUE",
+          "to": "Omar Cohen"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to foster community connection, transforming everyday spaces into vibrant dialogues that celebrate collective experiences.",
+  "gradient": {
+    "seed": 2213369595,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

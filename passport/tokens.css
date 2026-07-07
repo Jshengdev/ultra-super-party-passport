@@ -1,0 +1,123 @@
+/* =============================================================================
+ * passport/tokens.css — THE DESIGN-TOKEN HANDLE (Teri owns this file).
+ *
+ * Every colour, radius, and type step for the Universe + Passport lives here as a
+ * CSS custom property. Components and the force-graph canvas READ these — they
+ * never hardcode a hex. Change a value here and both surfaces follow.
+ *
+ * DESIGN LAW (raw/0012): NOT space themed. No planets, no stars, no black void.
+ * Clean, light canvas. "Glass-orb / spectrum" — soft radial fills, muted pastel
+ * accents, halo hues per value-cluster. Anti-Eunice: not the cheap Obsidian
+ * knowledge-graph ball look.
+ *
+ * Teri: the blocks tagged  ▸ TWEAK  are the ones to reach for first.
+ * ========================================================================== */
+
+:root {
+  /* ▸ TWEAK — core neutral base (the "clean light canvas") ------------------ */
+  --usp-bg: #f4f2ee;            /* page background (warm paper) */
+  --usp-canvas-bg: #f7f6f3;     /* the universe canvas fill */
+  --usp-surface: #ffffff;       /* cards, panels */
+  --usp-surface-2: #fbfaf8;     /* subtle raised surface */
+  --usp-ink: #1b1b1f;           /* primary text */
+  --usp-ink-muted: #6b6b74;     /* secondary text */
+  --usp-ink-faint: #9a9aa2;     /* tertiary / captions */
+  --usp-border: #e7e4de;        /* hairlines */
+
+  /* ▸ TWEAK — the spectrum (value-cluster hues; glass-orb tints) ------------
+   * Muted pastels on purpose. Add/remove stops freely; the canvas hashes a
+   * cluster id into whatever stops exist (palette.ts reads --usp-spectrum-0..7). */
+  --usp-spectrum-0: #f2a6a0;    /* coral */
+  --usp-spectrum-1: #f4c98a;    /* amber */
+  --usp-spectrum-2: #8ad3c6;    /* teal */
+  --usp-spectrum-3: #b3a6ef;    /* violet */
+  --usp-spectrum-4: #f3a8c8;    /* rose */
+  --usp-spectrum-5: #bcd98f;    /* lime */
+  --usp-spectrum-6: #9cc9ef;    /* sky */
+  --usp-spectrum-7: #a9a0e6;    /* indigo */
+
+  /* orb rendering (people) ------------------------------------------------- */
+  --usp-orb-core: #ffffff;      /* radial-gradient centre (the glass highlight) */
+  --usp-orb-tint: #c9c6ff;      /* default edge tint when a person has no cluster */
+  --usp-ring: rgba(27, 27, 31, 0.14);        /* node hairline ring */
+  --usp-ring-strong: rgba(27, 27, 31, 0.55); /* selected node ring */
+
+  /* affinity nodes (school / major / company / activity) ------------------- */
+  --usp-affinity: #e7e5e0;      /* small neutral hub dot */
+  --usp-affinity-ink: #7a7873;  /* affinity label text */
+
+  /* links ------------------------------------------------------------------ */
+  --usp-link-faint: rgba(27, 27, 31, 0.08);   /* affinity edges (quiet) */
+  --usp-link-share: rgba(120, 110, 220, 0.38);/* SHARES_VALUE peer edges */
+
+  /* ▸ TWEAK — radii + elevation ------------------------------------------- */
+  --usp-radius-sm: 8px;
+  --usp-radius-md: 14px;
+  --usp-radius-lg: 22px;
+  --usp-radius-pill: 999px;
+  --usp-shadow-panel: 0 12px 40px rgba(24, 22, 30, 0.14);
+  --usp-shadow-soft: 0 2px 10px rgba(24, 22, 30, 0.06);
+
+  /* ▸ TWEAK — typography --------------------------------------------------- */
+  --usp-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --usp-font-serif: ui-serif, Georgia, "Times New Roman", serif;
+  --usp-fs-xs: 0.72rem;
+  --usp-fs-sm: 0.84rem;
+  --usp-fs-md: 0.98rem;
+  --usp-fs-lg: 1.25rem;
+  --usp-fs-xl: 1.9rem;
+  --usp-fs-2xl: 2.6rem;
+  --usp-weight-normal: 420;
+  --usp-weight-medium: 560;
+  --usp-weight-bold: 680;
+  --usp-tracking-tight: -0.02em;
+  --usp-tracking-wide: 0.08em;
+
+  /* passport-specific ------------------------------------------------------ */
+  --usp-passport-front-bg: #16151a;   /* the "black" front face */
+  --usp-passport-front-ink: #f6f4ef;
+  --usp-passport-front-muted: rgba(246, 244, 239, 0.62);
+
+  /* PASSPORT CARD ALIASES --------------------------------------------------
+   * The passport window's card (passport/template.tsx) reads a --passport-*
+   * namespace. We alias it onto Teri's --usp-* palette here so THIS file stays
+   * the single design handle: edit a --usp-* value and both the Universe and the
+   * passport card follow. (These inherit dark-mode automatically — they point at
+   * --usp-* vars that already flip below.) */
+  --passport-font: var(--usp-font-sans);
+  --passport-bg: var(--usp-surface);
+  --passport-ink: var(--usp-ink);
+  --passport-muted: var(--usp-ink-muted);
+  --passport-border: var(--usp-border);
+  --passport-radius: var(--usp-radius-lg);
+  --passport-pad: 28px;
+  --passport-w: 380px;
+  --passport-name-size: var(--usp-fs-xl);
+  --passport-line2-size: var(--usp-fs-md);
+  --passport-magic-size: var(--usp-fs-md);
+  --passport-prompt-size: var(--usp-fs-lg);
+}
+
+/* An OPTIONAL dark treatment. Kept elegant + neutral (still NOT space themed —
+ * deep warm charcoal, not a starfield). Teri can delete this block to force light. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --usp-bg: #17161a;
+    --usp-canvas-bg: #1c1b21;
+    --usp-surface: #232128;
+    --usp-surface-2: #26242c;
+    --usp-ink: #f2f0ec;
+    --usp-ink-muted: #b4b1bd;
+    --usp-ink-faint: #86838f;
+    --usp-border: #34313b;
+    --usp-orb-core: #f4f2ff;
+    --usp-orb-tint: #6f68b8;
+    --usp-ring: rgba(246, 244, 239, 0.16);
+    --usp-ring-strong: rgba(246, 244, 239, 0.7);
+    --usp-affinity: #3a3743;
+    --usp-affinity-ink: #a3a0ac;
+    --usp-link-faint: rgba(246, 244, 239, 0.09);
+    --usp-link-share: rgba(160, 150, 240, 0.4);
+    --usp-shadow-panel: 0 12px 44px rgba(0, 0, 0, 0.5);
+  }
+}

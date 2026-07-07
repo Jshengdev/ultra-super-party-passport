@@ -1,0 +1,55 @@
+{
+  "personId": "chloe-ferreira6",
+  "name": "Chloe Ferreira",
+  "line2": "SCI-Arc",
+  "find": [
+    {
+      "personId": "bianca-larsen16",
+      "name": "Bianca Larsen",
+      "why": "You’d really enjoy meeting Bianca, as you both share the incredible experience of hitchhiking from LA to Portland with just a Polaroid and a tent.",
+      "path_receipt": [
+        {
+          "from": "Chloe Ferreira",
+          "rel": "WORKING_ON",
+          "to": "I hitchhiked from LA to Portland with only a Polaroid and a tent"
+        },
+        {
+          "from": "Bianca Larsen",
+          "rel": "WORKING_ON",
+          "to": "I hitchhiked from LA to Portland with only a Polaroid and a tent"
+        }
+      ]
+    },
+    {
+      "personId": "frida-osei14",
+      "name": "Frida Osei",
+      "why": "You should meet Frida Osei because her powerful personal experiences deeply resonate with the impactful work you both value.",
+      "path_receipt": [
+        {
+          "from": "Chloe Ferreira",
+          "rel": "SHARES_VALUE",
+          "to": "Frida Osei"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You seek to transform fear into connection, using your journey as a canvas to explore and celebrate vulnerability's profound beauty.",
+  "gradient": {
+    "seed": 3071907183,
+    "stops": [
+      {
+        "color": "hsl(151 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(351 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

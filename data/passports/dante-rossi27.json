@@ -1,0 +1,55 @@
+{
+  "personId": "dante-rossi27",
+  "name": "Dante Rossi",
+  "line2": "ArtCenter",
+  "find": [
+    {
+      "personId": "sam-haddad31",
+      "name": "Sam Haddad",
+      "why": "You should meet Sam Haddad because you both share a passion for the innovative fashion line made from decommissioned parachutes.",
+      "path_receipt": [
+        {
+          "from": "Dante Rossi",
+          "rel": "WORKING_ON",
+          "to": "a fashion line made from decommissioned parachutes"
+        },
+        {
+          "from": "Sam Haddad",
+          "rel": "WORKING_ON",
+          "to": "a fashion line made from decommissioned parachutes"
+        }
+      ]
+    },
+    {
+      "personId": "lena-haddad3",
+      "name": "Lena Haddad",
+      "why": "You'd enjoy meeting Lena because her innovative approach to creativity will inspire you to explore new ideas and break the norms together.",
+      "path_receipt": [
+        {
+          "from": "Dante Rossi",
+          "rel": "SHARES_VALUE",
+          "to": "Lena Haddad"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform limitations into creativity, finding beauty in the unexpected and redefining what fashion can be.",
+  "gradient": {
+    "seed": 2223293161,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(264 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

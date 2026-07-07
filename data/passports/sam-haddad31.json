@@ -1,0 +1,55 @@
+{
+  "personId": "sam-haddad31",
+  "name": "Sam Haddad",
+  "line2": "ArtCenter",
+  "find": [
+    {
+      "personId": "dante-rossi27",
+      "name": "Dante Rossi",
+      "why": "You should meet Dante Rossi, as he has some fascinating insights about the fashion line made from decommissioned parachutes that you both share.",
+      "path_receipt": [
+        {
+          "from": "Sam Haddad",
+          "rel": "WORKING_ON",
+          "to": "a fashion line made from decommissioned parachutes"
+        },
+        {
+          "from": "Dante Rossi",
+          "rel": "WORKING_ON",
+          "to": "a fashion line made from decommissioned parachutes"
+        }
+      ]
+    },
+    {
+      "personId": "vera-petrov19",
+      "name": "Vera Petrov",
+      "why": "You should meet Vera Petrov because her innovative approach to creativity will inspire you to break norms and explore new ideas together.",
+      "path_receipt": [
+        {
+          "from": "Sam Haddad",
+          "rel": "SHARES_VALUE",
+          "to": "Vera Petrov"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform overlooked materials into innovative creations, revealing beauty and potential where others see waste.",
+  "gradient": {
+    "seed": 2177858561,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(264 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

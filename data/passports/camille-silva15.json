@@ -1,0 +1,60 @@
+{
+  "personId": "camille-silva15",
+  "name": "Camille Silva",
+  "line2": "SCI-Arc",
+  "find": [
+    {
+      "personId": "frida-osei14",
+      "name": "Frida Osei",
+      "why": "You should meet Frida Osei because you both share a unique passion for that album recorded entirely inside a parking garage for the reverb.",
+      "path_receipt": [
+        {
+          "from": "Camille Silva",
+          "rel": "WORKING_ON",
+          "to": "an album recorded entirely inside a parking garage for the reverb"
+        },
+        {
+          "from": "Frida Osei",
+          "rel": "WORKING_ON",
+          "to": "an album recorded entirely inside a parking garage for the reverb"
+        }
+      ]
+    },
+    {
+      "personId": "tariq-mori5",
+      "name": "Tariq Mori",
+      "why": "You should meet Tariq Mori because he shares your passion for Film Production and has some fascinating insights about the industry.",
+      "path_receipt": [
+        {
+          "from": "Camille Silva",
+          "rel": "MAJORS_IN",
+          "to": "Film Production"
+        },
+        {
+          "from": "Tariq Mori",
+          "rel": "MAJORS_IN",
+          "to": "Film Production"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to explore uncharted sonic landscapes, transforming overlooked spaces into realms of creativity and innovation.",
+  "gradient": {
+    "seed": 3152436660,
+    "stops": [
+      {
+        "color": "hsl(151 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(94 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(105 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

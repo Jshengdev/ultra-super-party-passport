@@ -1,0 +1,60 @@
+{
+  "personId": "nikhil-bauer28",
+  "name": "Nikhil Bauer",
+  "line2": "Otis",
+  "find": [
+    {
+      "personId": "odette-bauer8",
+      "name": "Odette Bauer",
+      "why": "You should meet Odette Bauer, as you both share a passion for photography that could lead to some inspiring conversations.",
+      "path_receipt": [
+        {
+          "from": "Nikhil Bauer",
+          "rel": "DOES",
+          "to": "photographer"
+        },
+        {
+          "from": "Odette Bauer",
+          "rel": "DOES",
+          "to": "photographer"
+        }
+      ]
+    },
+    {
+      "personId": "ava-khan13",
+      "name": "Ava Khan",
+      "why": "You would love to meet Ava Khan because her passion for Music Composition aligns perfectly with your own creative journey in the field.",
+      "path_receipt": [
+        {
+          "from": "Nikhil Bauer",
+          "rel": "MAJORS_IN",
+          "to": "Music Composition"
+        },
+        {
+          "from": "Ava Khan",
+          "rel": "MAJORS_IN",
+          "to": "Music Composition"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a relentless pursuit of mastery, transforming each misstep into a stepping stone toward your grand ascent.",
+  "gradient": {
+    "seed": 2872849110,
+    "stops": [
+      {
+        "color": "hsl(114 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(326 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

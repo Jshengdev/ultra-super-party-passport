@@ -1,0 +1,55 @@
+{
+  "personId": "chloe-delgado23",
+  "name": "Chloe Delgado",
+  "line2": "CalArts",
+  "find": [
+    {
+      "personId": "malik-rivera11",
+      "name": "Malik Rivera",
+      "why": "You and Malik both appreciate the artistry of neon signs, and he has some fascinating insights about the documentary you both love.",
+      "path_receipt": [
+        {
+          "from": "Chloe Delgado",
+          "rel": "WORKING_ON",
+          "to": "a documentary about the last neon sign shop in LA"
+        },
+        {
+          "from": "Malik Rivera",
+          "rel": "WORKING_ON",
+          "to": "a documentary about the last neon sign shop in LA"
+        }
+      ]
+    },
+    {
+      "personId": "lena-haddad3",
+      "name": "Lena Haddad",
+      "why": "You’d enjoy meeting Lena Haddad, as her innovative approach to creativity aligns with your passion for breaking norms and exploring the unknown.",
+      "path_receipt": [
+        {
+          "from": "Chloe Delgado",
+          "rel": "SHARES_VALUE",
+          "to": "Lena Haddad"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate the beauty of fading traditions, transforming them into a narrative that sparks change.",
+  "gradient": {
+    "seed": 3901814804,
+    "stops": [
+      {
+        "color": "hsl(197 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(274 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

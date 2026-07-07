@@ -1,0 +1,55 @@
+{
+  "personId": "frida-petrov37",
+  "name": "Frida Petrov",
+  "line2": "CalArts",
+  "find": [
+    {
+      "personId": "odette-bauer8",
+      "name": "Odette Bauer",
+      "why": "You should meet Odette because she shares your passion for the short film about your grandmother's last summer in Manila and has fascinating insights to share.",
+      "path_receipt": [
+        {
+          "from": "Frida Petrov",
+          "rel": "WORKING_ON",
+          "to": "a short film about my grandmother's last summer in Manila"
+        },
+        {
+          "from": "Odette Bauer",
+          "rel": "WORKING_ON",
+          "to": "a short film about my grandmother's last summer in Manila"
+        }
+      ]
+    },
+    {
+      "personId": "omar-cohen1",
+      "name": "Omar Cohen",
+      "why": "You should meet Omar Cohen, as both of you share a passion for creativity that blossoms through collaboration and shared experiences.",
+      "path_receipt": [
+        {
+          "from": "Frida Petrov",
+          "rel": "SHARES_VALUE",
+          "to": "Omar Cohen"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a deep reverence for shared stories, believing that connection and generosity amplify creativity and preserve cherished memories.",
+  "gradient": {
+    "seed": 3970083496,
+    "stops": [
+      {
+        "color": "hsl(197 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(194 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "personId": "yuki-silva30",
+  "name": "Yuki Silva",
+  "line2": "ArtCenter",
+  "find": [
+    {
+      "personId": "bruno-delgado4",
+      "name": "Bruno Delgado",
+      "why": "You should meet Bruno Delgado, as you both share a passion for graphic design and can exchange inspiring ideas and creative insights.",
+      "path_receipt": [
+        {
+          "from": "Yuki Silva",
+          "rel": "DOES",
+          "to": "graphic designer"
+        },
+        {
+          "from": "Bruno Delgado",
+          "rel": "DOES",
+          "to": "graphic designer"
+        }
+      ]
+    },
+    {
+      "personId": "maya-patel2",
+      "name": "Maya Patel",
+      "why": "You should meet Maya Patel because her insights on authenticity and vulnerability in creative expression resonate deeply with your own artistic journey.",
+      "path_receipt": [
+        {
+          "from": "Maya Patel",
+          "rel": "SHARES_VALUE",
+          "to": "Yuki Silva"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to connect through vulnerability, transforming personal experiences into shared moments that resonate deeply with others.",
+  "gradient": {
+    "seed": 3700194840,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(107 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

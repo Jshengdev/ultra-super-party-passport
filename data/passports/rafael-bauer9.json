@@ -1,0 +1,60 @@
+{
+  "personId": "rafael-bauer9",
+  "name": "Rafael Bauer",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "bruno-okafor22",
+      "name": "Bruno Okafor",
+      "why": "You’ll enjoy meeting Bruno Okafor, as you both share a unique connection to a typeface inspired by my dad's handwriting.",
+      "path_receipt": [
+        {
+          "from": "Rafael Bauer",
+          "rel": "WORKING_ON",
+          "to": "a typeface based on my dad's handwriting"
+        },
+        {
+          "from": "Bruno Okafor",
+          "rel": "WORKING_ON",
+          "to": "a typeface based on my dad's handwriting"
+        }
+      ]
+    },
+    {
+      "personId": "omar-cohen1",
+      "name": "Omar Cohen",
+      "why": "You should meet Omar Cohen, as he shares your passion for Fine Art and can offer fresh insights into your favorite artists.",
+      "path_receipt": [
+        {
+          "from": "Rafael Bauer",
+          "rel": "MAJORS_IN",
+          "to": "Fine Art"
+        },
+        {
+          "from": "Omar Cohen",
+          "rel": "MAJORS_IN",
+          "to": "Fine Art"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "Your drive stems from a desire to connect deeply with others, using personal history as a bridge to foster meaningful relationships.",
+  "gradient": {
+    "seed": 1991646465,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(308 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(175 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

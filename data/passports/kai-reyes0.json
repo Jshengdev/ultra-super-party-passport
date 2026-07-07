@@ -1,0 +1,55 @@
+{
+  "personId": "kai-reyes0",
+  "name": "Kai Reyes",
+  "line2": "Otis",
+  "find": [
+    {
+      "personId": "rohan-haddad35",
+      "name": "Rohan Haddad",
+      "why": "You'd really enjoy meeting Rohan, as you both share a passion for creating music with modular synths made from thrifted calculators.",
+      "path_receipt": [
+        {
+          "from": "Kai Reyes",
+          "rel": "WORKING_ON",
+          "to": "a modular synth built from thrifted calculators"
+        },
+        {
+          "from": "Rohan Haddad",
+          "rel": "WORKING_ON",
+          "to": "a modular synth built from thrifted calculators"
+        }
+      ]
+    },
+    {
+      "personId": "odette-bauer8",
+      "name": "Odette Bauer",
+      "why": "You should meet Odette Bauer because her dedication to consistent practice has inspired many in the creative community, just like yours.",
+      "path_receipt": [
+        {
+          "from": "Kai Reyes",
+          "rel": "SHARES_VALUE",
+          "to": "Odette Bauer"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform the ordinary into the extraordinary, finding beauty and innovation in the overlooked.",
+  "gradient": {
+    "seed": 2892827363,
+    "stops": [
+      {
+        "color": "hsl(114 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(331 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

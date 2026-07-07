@@ -1,0 +1,60 @@
+{
+  "personId": "sofia-larsen39",
+  "name": "Sofia Larsen",
+  "line2": "SCI-Arc",
+  "find": [
+    {
+      "personId": "kai-reyes0",
+      "name": "Kai Reyes",
+      "why": "You should meet Kai Reyes because he shares your passion for music and has some incredible stories about his experiences in the industry.",
+      "path_receipt": [
+        {
+          "from": "Sofia Larsen",
+          "rel": "DOES",
+          "to": "musician"
+        },
+        {
+          "from": "Kai Reyes",
+          "rel": "DOES",
+          "to": "musician"
+        }
+      ]
+    },
+    {
+      "personId": "tariq-mori5",
+      "name": "Tariq Mori",
+      "why": "You should meet Tariq Mori, as you both share an insightful connection to SCI-Arc that could lead to inspiring conversations about architecture and design.",
+      "path_receipt": [
+        {
+          "from": "Sofia Larsen",
+          "rel": "STUDIES_AT",
+          "to": "SCI-Arc"
+        },
+        {
+          "from": "Tariq Mori",
+          "rel": "STUDIES_AT",
+          "to": "SCI-Arc"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "You are driven by a desire to reclaim and reinterpret your past, challenging conventional norms through the lens of your formative experiences.",
+  "gradient": {
+    "seed": 1515129479,
+    "stops": [
+      {
+        "color": "hsl(151 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(331 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(209 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "personId": "diego-rossi7",
+  "name": "Diego Rossi",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "rafael-bauer9",
+      "name": "Rafael Bauer",
+      "why": "You should meet Rafael Bauer because he shares your passion for filmmaking and has some fascinating insights on storytelling that you would both appreciate.",
+      "path_receipt": [
+        {
+          "from": "Diego Rossi",
+          "rel": "DOES",
+          "to": "filmmaker"
+        },
+        {
+          "from": "Rafael Bauer",
+          "rel": "DOES",
+          "to": "filmmaker"
+        }
+      ]
+    },
+    {
+      "personId": "lena-haddad3",
+      "name": "Lena Haddad",
+      "why": "You should meet Lena Haddad because her innovative approach to creativity will inspire you to think outside the box and explore new possibilities together.",
+      "path_receipt": [
+        {
+          "from": "Diego Rossi",
+          "rel": "SHARES_VALUE",
+          "to": "Lena Haddad"
+        }
+      ]
+    }
+  ],
+  "hidden_prompt": "Somewhere in this room is the person behind \"I climbed the outside of the Salesforce Tower once (please don't tell OSHA).\" Go find them.",
+  "magic_inference": "Your pursuit of climbing El Capitan reflects a deep desire to embrace the unknown, transforming challenges into a canvas for your creativity.",
+  "gradient": {
+    "seed": 3443920239,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

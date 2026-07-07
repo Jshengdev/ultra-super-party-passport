@@ -1,0 +1,136 @@
+{
+  "project_id": "00000000-0000-4000-8000-partypassport1",
+  "version": 1,
+  "description": "Ultra Super Party Passport — inference pipeline. A webhook receives a JSON job (leg + graph context as text), a single reasoning agent runs the leg (belief-cluster naming OR hidden_prompt + magic_inference generation), and the answer returns as JSON.",
+  "isLocked": false,
+  "snapToGrid": true,
+  "snapGridSize": [
+    10,
+    10
+  ],
+  "docRevision": 1,
+  "components": [
+    {
+      "id": "webhook_1",
+      "provider": "webhook",
+      "name": "Party Webhook",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "webhook",
+        "name": "Party Webhook"
+      },
+      "ui": {
+        "position": {
+          "x": 50,
+          "y": 200
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "question_1",
+      "provider": "question",
+      "name": "Job Normalizer",
+      "config": {
+        "type": "question",
+        "name": "Job Normalizer"
+      },
+      "ui": {
+        "position": {
+          "x": 360,
+          "y": 200
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "text",
+          "from": "webhook_1"
+        }
+      ]
+    },
+    {
+      "id": "agent_passport",
+      "provider": "agent_deepagent",
+      "name": "Passport Inference",
+      "config": {
+        "profile": "default",
+        "default": {
+          "advanced_mode": true,
+          "agent_description": "Passport Inference — runs one inference leg per request for the Ultra Super Party Passport. Reads a JSON job, returns raw JSON. Writes nothing, delegates nothing.",
+          "system_prompt": "You are the Passport Inference engine for Ultra Super Party Passport, a graph-backed app that helps people at a party find who to meet.\n\nYou receive ONE user message: a JSON object with a `leg` field that names the job. You answer directly — you NEVER call the `task` tool, you NEVER delegate, you write no files. Your entire reply is a single raw JSON object with no markdown fences, no commentary, no leading or trailing text.\n\n=== Input contract ===\n\nThe incoming JSON always has `leg`. Two legs exist.\n\n1. leg == \"cluster_name\"\n   Shape: { \"leg\": \"cluster_name\", \"beliefs\": [\"<belief text>\", \"<belief text>\", ...] }\n   These belief statements were grouped (by embedding similarity, upstream) because they express one shared value. Name that value.\n   You MUST reply with exactly: { \"name\": \"<2-4 word value name, Title Case>\", \"basis\": \"<one sentence naming the shared value these beliefs express>\" }\n   The `name` is a human-facing cluster label (e.g. \"Radical Honesty\", \"Build In Public\", \"Slow Craft\"). The `basis` is one plain sentence a person could nod at.\n\n2. leg == \"passport_inference\"\n   Shape: { \"leg\": \"passport_inference\", \"person\": { \"name\": \"...\", \"line2\": \"...\", \"activities\": [\"...\"], \"beliefs\": [\"...\"], \"school\": \"...\", \"major\": \"...\" }, \"match\": { \"name\": \"...\", \"shared\": \"<what the graph says they share>\", \"path_summary\": \"<the real graph path connecting them, e.g. both DOES improv; both BELIEVES in-cluster Radical Honesty>\" } }\n   `person` is the passport holder. `match` is one person the graph already chose for them, with the real connecting path. Do not invent facts beyond what is given — ground every word in `shared` and `path_summary`.\n   You MUST reply with exactly: { \"hidden_prompt\": \"<a warm, specific, first-person opener the holder could say to walk up to match.name, grounded in the shared path; 1-2 sentences; no placeholders>\", \"magic_inference\": \"<one non-obvious, delightful sentence connecting the two people that goes one hop beyond the stated path>\" }\n\n=== Hard rules ===\n\n- Output raw JSON only. First character is `{`, last character is `}`.\n- Use ONLY the fields the leg specifies. No extra keys.\n- If a field you need is missing from the input, still return valid JSON for that leg, degrading gracefully (say the value plainly) rather than erroring or emitting prose.\n- If `leg` is missing or unrecognized, reply: { \"error\": \"unknown_leg\" }\n- Never mention that you are an AI, never describe your reasoning, never wrap the JSON in backticks.",
+          "name": "Passport Inference"
+        },
+        "name": "Passport Inference"
+      },
+      "ui": {
+        "position": {
+          "x": 700,
+          "y": 200
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "question_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_anthropic_passport",
+      "provider": "llm_anthropic",
+      "name": "Anthropic Passport",
+      "config": {
+        "profile": "claude-sonnet-4-6",
+        "claude-sonnet-4-6": {
+          "modelSource": "manual",
+          "apikey": "${ROCKETRIDE_ANTHROPIC_KEY}"
+        },
+        "name": "Anthropic Passport"
+      },
+      "ui": {
+        "position": {
+          "x": 700,
+          "y": 360
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "agent_passport"
+        }
+      ]
+    },
+    {
+      "id": "response_answers_1",
+      "provider": "response_answers",
+      "name": "Return Answers",
+      "config": {
+        "laneName": "answers",
+        "name": "Return Answers"
+      },
+      "ui": {
+        "position": {
+          "x": 1020,
+          "y": 200
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "agent_passport"
+        }
+      ]
+    }
+  ]
+}
