@@ -3,12 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>The Ultra Super Social Passport — deck</title>
+<title>The Ultra Super Social Passport™ — deck</title>
 <style>
   :root {
-    --cloud: #fafaf7; --cream: #f4f4f5; --charcoal: #2a2a28; --stone: #8a8a86;
-    --mist: #e2e2de; --sky: #7fb2e5; --ocean: #37618f; --pink: #e8a8b8;
-    --orange: #e89a5c; --gold: #e8c65c;
+    --cloud: #faf9f6; --charcoal: #2a2a28; --stone: #8a8a86; --mist: #e4e3df;
     --sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
   }
@@ -21,89 +19,93 @@
     transform: translateY(14px); transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
   }
   .slide.on { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .22em; color: var(--stone); text-transform: uppercase; margin-bottom: 3.2vh; }
-  h1 { font-size: clamp(34px, 5.2vw, 68px); line-height: 1.12; font-weight: 600; letter-spacing: -0.015em; max-width: 22ch; }
-  .sub { margin-top: 3.6vh; display: flex; flex-direction: column; gap: 1.4vh; }
-  .sub p { font-size: clamp(16px, 1.55vw, 21px); color: #55554f; max-width: 58ch; }
-  .sub p strong { color: var(--charcoal); font-weight: 600; }
-  .band {
-    position: absolute; inset: auto 0 0 0; height: 26vh; pointer-events: none; z-index: -1;
-    background:
-      radial-gradient(120% 90% at 50% 130%, var(--ocean) 0%, transparent 62%),
-      radial-gradient(120% 80% at 50% 118%, var(--sky) 0%, transparent 60%),
-      radial-gradient(130% 72% at 50% 108%, var(--gold) 0%, transparent 58%),
-      radial-gradient(130% 66% at 50% 102%, var(--orange) 0%, transparent 56%),
-      radial-gradient(140% 60% at 50% 98%, var(--pink) 0%, transparent 54%);
-    filter: blur(26px) saturate(1.12); opacity: .8;
-  }
-  .thin { position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--pink), var(--gold), var(--sky), var(--ocean)); opacity: .6; }
-  .flow { display: flex; flex-direction: column; gap: 2vh; margin-top: 4vh; align-items: stretch; width: min(880px, 86vw); }
-  .step { display: flex; align-items: baseline; gap: 18px; text-align: left;
-    border: 1px solid var(--mist); background: #fff; border-radius: 16px; padding: 16px 22px; }
-  .step .k { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--stone); min-width: 152px; }
-  .step .v { font-size: clamp(14px, 1.35vw, 17.5px); color: #47473f; }
-  .step .v strong { color: var(--charcoal); }
-  .url { font-family: var(--mono); font-size: clamp(15px, 1.8vw, 24px); letter-spacing: .04em;
-    border: 1.5px solid var(--charcoal); border-radius: 999px; padding: 14px 30px; margin-top: 3.4vh;
-    background: #fff; box-shadow: 0 14px 40px rgba(42,42,40,.12); }
-  .beats { margin-top: 3.4vh; display: flex; flex-direction: column; gap: 1.1vh; }
-  .beats p { font-family: var(--mono); font-size: clamp(12.5px, 1.25vw, 15.5px); letter-spacing: .06em; color: #55554f; }
-  .beats p b { color: var(--charcoal); }
-  .foot { position: absolute; bottom: 3.4vh; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .24em; color: var(--stone); text-transform: uppercase; margin-bottom: 3vh; }
+  h1 { font-size: clamp(32px, 4.9vw, 62px); line-height: 1.14; font-weight: 600; letter-spacing: -0.015em; max-width: 21ch; }
+  .turns { margin-top: 4vh; display: flex; flex-direction: column; gap: 1.5vh; }
+  .turns p { font-size: clamp(18px, 2vw, 27px); color: #55554f; }
+  .turns p b { color: var(--charcoal); }
+  .sub { margin-top: 3.4vh; display: flex; flex-direction: column; gap: 1.3vh; }
+  .sub p { font-size: clamp(15px, 1.5vw, 20px); color: #55554f; max-width: 56ch; }
+  .sub p strong { color: var(--charcoal); }
+  .nums { display: flex; gap: 4.5vw; margin-top: 4.5vh; flex-wrap: wrap; justify-content: center; }
+  .num { display: flex; flex-direction: column; gap: .6vh; }
+  .num b { font-size: clamp(26px, 3.4vw, 44px); font-weight: 600; letter-spacing: -0.02em; }
+  .num span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; color: var(--stone); text-transform: uppercase; }
+  .stack { display: flex; flex-direction: column; gap: 1.8vh; margin-top: 4vh; width: min(760px, 84vw); }
+  .stack p { font-family: var(--mono); font-size: clamp(12px, 1.25vw, 15px); letter-spacing: .05em; color: #55554f; text-align: left;
+    border-bottom: 1px solid var(--mist); padding-bottom: 1.6vh; }
+  .stack p b { color: var(--charcoal); }
+  .url { font-family: var(--mono); font-size: clamp(15px, 1.8vw, 23px); letter-spacing: .04em;
+    border: 1.5px solid var(--charcoal); border-radius: 999px; padding: 14px 30px; margin-top: 3.6vh;
+    background: #fff; box-shadow: 0 14px 40px rgba(42,42,40,.10); }
+  .team { margin-top: 4.5vh; font-family: var(--mono); font-size: 13px; letter-spacing: .12em; color: var(--stone); }
+  .foot { position: absolute; bottom: 3.2vh; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; }
   .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mist); transition: background .3s; }
   .dot.on { background: var(--charcoal); }
-  .cover-mini {
-    width: min(200px, 22vw); aspect-ratio: 3/4.1; border-radius: 16px; margin-bottom: 3.4vh;
-    background:
-      radial-gradient(120% 55% at 50% 108%, var(--ocean) 0%, transparent 62%),
-      radial-gradient(120% 52% at 50% 88%, var(--sky) 0%, transparent 60%),
-      radial-gradient(130% 48% at 50% 66%, var(--gold) 0%, transparent 58%),
-      radial-gradient(130% 44% at 50% 48%, var(--orange) 0%, transparent 56%),
-      radial-gradient(140% 40% at 50% 32%, var(--pink) 0%, transparent 54%), #f1f1ee;
-    filter: saturate(1.1); box-shadow: 0 24px 60px rgba(42,42,40,.18);
+  .tm { font-size: .42em; vertical-align: super; letter-spacing: 0; font-weight: 500; opacity: .65; }
+  /* the brand card — the soft ultra-premium blend */
+  .card {
+    width: min(240px, 26vw); aspect-ratio: 3 / 4.1; border-radius: 20px; margin-bottom: 4vh;
+    background: #f2f1ee; overflow: hidden; position: relative;
+    box-shadow: 0 30px 80px rgba(42,42,40,.14);
   }
-  .team { margin-top: 4vh; font-family: var(--mono); font-size: 13px; letter-spacing: .1em; color: var(--stone); }
+  .card::before {
+    content: ""; position: absolute; inset: 6% 0 0 0;
+    background: linear-gradient(180deg,
+      rgba(247,246,243,0) 0%, #f3dfe0 16%, #f1c9a6 34%, #ecd39f 50%,
+      #cdd8b9 66%, #94b0d4 86%, #7f9fc9 100%);
+    filter: blur(14px) saturate(1.06); transform: scale(1.1);
+  }
+  .wordmark { font-family: var(--mono); font-size: clamp(11px, 1.15vw, 14px); letter-spacing: .34em; color: #6f6f6a; margin-top: .6vh; }
 </style>
 </head>
 <body>
-  <div class="thin"></div>
 
   <section class="slide on">
-    <div class="cover-mini"></div>
-    <p class="kicker">The Ultra Super Social Passport</p>
-    <h1>Imagine walking into a room of 193 strangers — and knowing exactly which two you came to meet.</h1>
-    <div class="band"></div>
+    <div class="card"></div>
+    <p class="wordmark">THE ULTRA SUPER SOCIAL PASSPORT<span class="tm">™</span></p>
+    <h1 style="margin-top:3.4vh">Imagine knowing exactly which two strangers you came to meet.</h1>
   </section>
 
   <section class="slide">
-    <p class="kicker">The problem</p>
-    <h1>Every event you've ever been to was curated — you just never got to see it.</h1>
-    <div class="sub">
-      <p>Events sell the lineup, the venue, the ticket — <strong>never the people.</strong></p>
-      <p>A list of 200 guests says “software engineer” <strong>two hundred times.</strong></p>
-      <p>And all the should-I-go-talk-to-them math happens <strong>alone, in your head.</strong></p>
+    <p class="kicker">A review from the party</p>
+    <h1>“I regret getting a passport for this party.”</h1>
+    <div class="turns">
+      <p>Not because it knew my people.</p>
+      <p>Not because it's cute as f•.</p>
+      <p><b>Because I didn't have it for the last five parties.</b></p>
     </div>
   </section>
 
   <section class="slide">
-    <p class="kicker">What we're doing</p>
-    <h1>Sign up to a party.<br/>A passport writes itself.</h1>
+    <p class="kicker">The wave</p>
+    <h1>Curated everything is eating the calendar.</h1>
     <div class="sub">
-      <p>The guest list becomes a <strong>relational graph</strong> — school, craft, and what you believe.</p>
-      <p>An agent walks <strong>your</strong> paths and writes your passport: the two people to find tonight and why, a hidden mission, and one line about you it was never told.</p>
-      <p><strong>Relational, not a knowledge graph.</strong> The AI is invisible — the room just knows you.</p>
+      <p>Supper clubs. Run clubs. Listening bars. Invite-only everything.</p>
+      <p><strong>Events got curated. Guests didn't.</strong></p>
+      <p>We're the guest side of the wave — the room, curated toward each person in it.</p>
     </div>
   </section>
 
   <section class="slide">
-    <p class="kicker">How it works</p>
-    <h1 style="font-size:clamp(28px,3.6vw,46px)">One CSV in. Every claim receipted.</h1>
-    <div class="flow">
-      <div class="step"><span class="k">BUTTERBASE</span><span class="v"><strong>The backend of record</strong> — signups &amp; passports tables, the AI gateway every model call routes through, the live deploy, and the MCP the submission itself travels on.</span></div>
-      <div class="step"><span class="k">NEO4J AURA</span><span class="v"><strong>The ontology</strong> — typed people, schools, crafts, value-clouds; provenance stamped on every write; the agent traverses typed paths, never freeform.</span></div>
-      <div class="step"><span class="k">ROCKETRIDE</span><span class="v"><strong>The deployed pipeline</strong> — the inference path runs as a managed cloud endpoint the app calls.</span></div>
-      <div class="step"><span class="k">THE PASSPORT</span><span class="v"><strong>The audit</strong> — every “why” on every passport resolves to real edges in the live graph. Receipts, or it doesn't ship.</span></div>
+    <p class="kicker">What we built</p>
+    <h1>A passport that writes itself from the guest list.</h1>
+    <div class="nums">
+      <div class="num"><b>193</b><span>guests, one CSV</span></div>
+      <div class="num"><b>6</b><span>value clouds</span></div>
+      <div class="num"><b>3,133</b><span>shared-value ties</span></div>
+      <div class="num"><b>0</b><span>unreceipted claims</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">How it's possible now</p>
+    <h1 style="font-size:clamp(26px,3.4vw,44px)">Three primitives, one audit.</h1>
+    <div class="stack">
+      <p><b>BUTTERBASE</b> — the backend of record: tables, AI gateway, live deploy, and the MCP the submission rides on.</p>
+      <p><b>NEO4J AURA</b> — the ontology the agent walks: typed people, crafts, beliefs; provenance on every write.</p>
+      <p><b>ROCKETRIDE</b> — the inference pipeline, deployed as a managed cloud endpoint the app calls.</p>
+      <p><b>THE AUDIT</b> — every claim on every passport resolves to a live graph edge. Receipts, or it doesn't ship.</p>
     </div>
   </section>
 
@@ -111,23 +113,12 @@
     <p class="kicker">Live demo</p>
     <h1 style="font-size:clamp(28px,3.8vw,50px)">Watch the room learn who you are.</h1>
     <div class="url">ultra-super-party-passport.butterbase.dev</div>
-    <div class="beats">
-      <p>drop the guest list → <b>the analysis plays</b></p>
-      <p>enter the room → <b>193 people, one living mesh</b></p>
-      <p>type your name → <b>I'm going</b> → generate</p>
-      <p>the cover flips → <b>your passport, in your hand</b></p>
+    <div class="sub" style="margin-top:2.6vh">
+      <p>drop the guest list → find your name → <strong>generate</strong> → the cover flips.</p>
+      <p><strong>Curated toward you, not stat-listed.</strong></p>
     </div>
-  </section>
-
-  <section class="slide">
-    <p class="kicker">The close</p>
-    <h1>Curated toward you,<br/>not stat-listed.</h1>
-    <div class="sub">
-      <p><strong>Next:</strong> live at the LA intern party 7/18 · the room re-curates as people check in · scan your passport into your wallet.</p>
-    </div>
-    <p class="team">JOHNNY SHENG — PART-TIME WARRIOR · TERI SHIM — FOUNDING DESIGNER · SARAH FAN — COFOUNDER</p>
-    <p class="team" style="margin-top:1.2vh">built live by an AI lab · human-originated · fully disclosed</p>
-    <div class="band"></div>
+    <p class="team">JOHNNY SHENG — PART-TIME WARRIOR · TERI SHIM — FOUNDING DESIGNER</p>
+    <p class="team" style="margin-top:1vh">built live by an AI lab · fully disclosed · THE ULTRA SUPER SOCIAL PASSPORT<span class="tm">™</span></p>
   </section>
 
   <div class="foot" id="dots"></div>
