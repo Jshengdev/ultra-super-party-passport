@@ -335,29 +335,23 @@ export default function AnalyzePage() {
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
                 onClick={() => fileRef.current?.click()}
                 className="relative w-[min(420px,86vw)] cursor-pointer overflow-hidden rounded-[26px] shadow-[0_30px_80px_rgba(42,42,40,0.16)]"
-                style={{ aspectRatio: "3 / 4.35", background: "#ececea" }}
+                style={{ aspectRatio: "3 / 4.35", background: "#f2f1ee" }}
                 role="img"
                 aria-label="the passport cover — drop a guest list to begin"
               >
                 <p className="absolute top-5 left-0 right-0 z-10 text-center font-mono text-[10.5px] tracking-[0.22em] text-charcoal/60">
-                  THE ULTRA SUPER SOCIAL PASSPORT
+                  THE ULTRA SUPER SOCIAL PASSPORT<sup style={{ fontSize: "0.42em", opacity: 0.65, letterSpacing: 0 }}>™</sup>
                 </p>
                 {/* stepped bloom: three columns, center swell — saturated, lightly blurred so the bands keep their step */}
                 <div
-                  className="absolute inset-x-0 bottom-0 h-[78%]"
+                  className="absolute inset-x-0 bottom-0 h-[94%]"
                   style={{
                     background: `
-                      radial-gradient(46% 34% at 50% 30%, #e935d1 0%, rgba(233,53,209,0) 72%),
-                      radial-gradient(42% 26% at 18% 42%, #e935d1 0%, rgba(233,53,209,0) 70%),
-                      radial-gradient(42% 26% at 82% 42%, #e935d1 0%, rgba(233,53,209,0) 70%),
-                      radial-gradient(52% 30% at 50% 48%, #f4442e 0%, rgba(244,68,46,0) 74%),
-                      radial-gradient(48% 26% at 16% 58%, #f5c944 0%, rgba(245,201,68,0) 72%),
-                      radial-gradient(48% 26% at 84% 58%, #f5c944 0%, rgba(245,201,68,0) 72%),
-                      radial-gradient(56% 30% at 50% 62%, #f5c944 0%, rgba(245,201,68,0) 74%),
-                      radial-gradient(70% 34% at 50% 78%, #7fb2e5 0%, rgba(127,178,229,0) 78%),
-                      linear-gradient(to bottom, rgba(29,78,216,0) 58%, #1d4ed8 86%, #1e2b8f 100%)
+                      linear-gradient(180deg,
+                        rgba(247,246,243,0) 0%, #f3dfe0 16%, #f1c9a6 34%, #ecd39f 50%,
+                        #cdd8b9 66%, #94b0d4 86%, #7f9fc9 100%)
                     `,
-                    filter: "blur(13px) saturate(1.22)",
+                    filter: "blur(14px) saturate(1.06)",
                     transform: "scale(1.06)",
                   }}
                 />

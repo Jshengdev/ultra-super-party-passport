@@ -27,14 +27,14 @@
   /* ▸ TWEAK — the spectrum (value-cluster hues; glass-orb tints) ------------
    * Muted pastels on purpose. Add/remove stops freely; the canvas hashes a
    * cluster id into whatever stops exist (palette.ts reads --usp-spectrum-0..7). */
-  --usp-spectrum-0: #f2a6a0;    /* coral */
-  --usp-spectrum-1: #f4c98a;    /* amber */
-  --usp-spectrum-2: #8ad3c6;    /* teal */
-  --usp-spectrum-3: #b3a6ef;    /* violet */
-  --usp-spectrum-4: #f3a8c8;    /* rose */
-  --usp-spectrum-5: #bcd98f;    /* lime */
-  --usp-spectrum-6: #9cc9ef;    /* sky */
-  --usp-spectrum-7: #a9a0e6;    /* indigo */
+  --usp-spectrum-0: #e3aab2;    /* premium pink (deepened #f3dfe0 family) */
+  --usp-spectrum-1: #e0a877;    /* premium peach (#f1c9a6 family) */
+  --usp-spectrum-2: #d9b96e;    /* premium gold (#ecd39f family) */
+  --usp-spectrum-3: #a8c18e;    /* premium sage (#cdd8b9 family) */
+  --usp-spectrum-4: #94b0d4;    /* premium dusty blue */
+  --usp-spectrum-5: #7f9fc9;    /* premium deep dusty */
+  --usp-spectrum-6: #c9b6d9;    /* premium lilac */
+  --usp-spectrum-7: #9fc4bb;    /* premium eucalyptus */
 
   /* orb rendering (people) ------------------------------------------------- */
   --usp-orb-core: #ffffff;      /* radial-gradient centre (the glass highlight) */

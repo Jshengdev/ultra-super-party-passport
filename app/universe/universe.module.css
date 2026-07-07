@@ -438,10 +438,10 @@
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(50% 120% at 50% 130%, color-mix(in oklab, #e935d1 18%, transparent), transparent 70%),
-    radial-gradient(70% 130% at 30% 135%, color-mix(in oklab, #f5c944 16%, transparent), transparent 72%),
-    radial-gradient(70% 130% at 70% 135%, color-mix(in oklab, #7fb2e5 18%, transparent), transparent 72%),
-    radial-gradient(90% 140% at 50% 150%, color-mix(in oklab, #1d4ed8 14%, transparent), transparent 75%);
+    radial-gradient(50% 120% at 50% 130%, color-mix(in oklab, #f3dfe0 30%, transparent), transparent 70%),
+    radial-gradient(70% 130% at 30% 135%, color-mix(in oklab, #f1c9a6 26%, transparent), transparent 72%),
+    radial-gradient(70% 130% at 70% 135%, color-mix(in oklab, #cdd8b9 26%, transparent), transparent 72%),
+    radial-gradient(90% 140% at 50% 150%, color-mix(in oklab, #94b0d4 24%, transparent), transparent 75%);
   filter: blur(24px) saturate(1.05);
   opacity: 0.55;
 }
