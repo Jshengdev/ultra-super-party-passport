@@ -2,20 +2,29 @@
  * /passport/[id] — renders one person's passport from data/passports/<id>.json.
  *
  * Server component: reads the JSON off disk, validates it against the shared
- * `passportSchema` (passport/schema.ts), and renders the passport window's
- * `PassportCard` (passport/template.tsx). If the file is missing or malformed we
- * show an HONEST failed state — never a fabricated passport (dot / sayhello law).
+ * `passportSchema` (passport/schema.ts), and renders the passport document
+ * (passport/document/, Teri's imported social-passport renderer) via the
+ * adapter seam. If the file is missing or malformed we show an HONEST failed
+ * state — never a fabricated passport (dot / sayhello law).
  *
- * The passport JSON is produced by the passport window (`npm run passports`); this
- * page just presents it. tokens.css themes both the card and this shell.
+ * The passport JSON is produced by the passport window (`npm run passports`);
+ * this page just presents it. usp tokens theme the shell; the document brings
+ * its own token set (passport/document/tokens.css).
  */
 
 import { promises as fs } from 'fs';
 import path from 'path';
+import { EB_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import { passportSchema } from '@/passport/schema';
-import PassportCard from '@/passport/template';
+import { fromUspPassport } from '@/passport/document/adapter';
+import { PassportDocument } from '@/passport/document/PassportDocument';
+import { DownloadButton } from '@/passport/document/DownloadButton';
 import Reveal from './Reveal';
 import '@/passport/tokens.css';
+
+const plexSans = IBM_Plex_Sans({ weight: ['400', '500'], subsets: ['latin'], variable: '--np-plex-sans' });
+const plexMono = IBM_Plex_Mono({ weight: ['400'], subsets: ['latin'], variable: '--np-plex-mono' });
+const garamond = EB_Garamond({ weight: ['400'], subsets: ['latin'], variable: '--np-garamond' });
 
 export const dynamic = 'force-static';
 
@@ -128,14 +137,22 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
     );
   }
 
+  const { data, gradientStops } = fromUspPassport(result.data);
+
   return (
     <Shell>
-      <Reveal
-        name={result.data.name}
-        connections={result.data.find.reduce((n, f) => n + f.path_receipt.length, 0)}
+      <div
+        className={`${plexSans.variable} ${plexMono.variable} ${garamond.variable}`}
+        style={{ width: '100%', maxWidth: 617, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}
       >
-        <PassportCard passport={result.data} side="both" />
-      </Reveal>
+        <Reveal
+          name={result.data.name}
+          connections={result.data.find.reduce((n, f) => n + f.path_receipt.length, 0)}
+        >
+          <PassportDocument data={data} gradientStops={gradientStops} />
+        </Reveal>
+        <DownloadButton personId={result.data.personId} />
+      </div>
     </Shell>
   );
 }
