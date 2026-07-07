@@ -24,6 +24,13 @@ const [, , INPUT = "/Users/johnnysheng/Downloads/IYAWELCOMEBACKPARTY_7-03_guests
   process.argv;
 
 const families: Family[] = JSON.parse(readFileSync("data/archetypes.json", "utf8")).families;
+let realOverrides: Record<string, Partial<Record<string, string>>> = {};
+try { realOverrides = JSON.parse(readFileSync("data/real-overrides.json", "utf8")); } catch { /* optional */ }
+// the unique-voice layer (haiku wave, raw/0019/0022): slug -> {working_on, belief_creative, position}
+let voices: Record<string, { working_on: string; belief_creative: string; position: string }> = {};
+try {
+  for (const v of JSON.parse(readFileSync("data/enriched-voices.json", "utf8"))) voices[v.slug] = v;
+} catch { /* optional — falls back to persona pool */ }
 if (!families?.length) throw new Error("precache: data/archetypes.json missing or empty — run the persona swarm first");
 
 function fnv1a(s: string): number {
@@ -100,18 +107,24 @@ const out = raw.data
     let slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `guest-${h % 1000}`;
     while (seen.has(slug)) slug = `${slug}-${(h % 97).toString(36)}`;
     seen.add(slug);
-    return {
+    const base = {
       name,
       email: `${slug}@guests.usp.party`, // placeholder — the export carries no emails
       school,
-      major: year ? `${major} '${year.slice(2)}` : major,
+      major,
+      grad_year: year,
       what_you_do: persona.what_you_do,
       working_on: persona.working_on,
       instagram: "",
       x_handle: "",
       belief_creative: persona.belief_creative,
+      position: persona.what_you_do.toUpperCase(),
+      company: "",
+      family: fam.family,
       status,
     };
+    const voice = voices[slug];
+    return { ...base, ...(voice ? { working_on: voice.working_on, belief_creative: voice.belief_creative, position: voice.position } : {}), ...(realOverrides[slug] ?? {}) };
   });
 
 writeFileSync(OUTPUT, Papa.unparse(out));
