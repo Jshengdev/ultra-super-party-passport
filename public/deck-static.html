@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Ultra Super Social Passport™ — deck</title>
+<style>
+  :root {
+    --cloud: #faf9f6; --charcoal: #2a2a28; --stone: #8a8a86; --mist: #e4e3df;
+    --sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--cloud); color: var(--charcoal); font-family: var(--sans); overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 7vh 8vw; opacity: 0; pointer-events: none;
+    transform: translateY(14px); transition: opacity .55s ease, transform .55s cubic-bezier(.22,1,.36,1);
+  }
+  .slide.on { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .24em; color: var(--stone); text-transform: uppercase; margin-bottom: 3vh; }
+  h1 { font-size: clamp(32px, 4.9vw, 62px); line-height: 1.14; font-weight: 600; letter-spacing: -0.015em; max-width: 21ch; }
+  .turns { margin-top: 4vh; display: flex; flex-direction: column; gap: 1.5vh; }
+  .turns p { font-size: clamp(18px, 2vw, 27px); color: #55554f; }
+  .turns p b { color: var(--charcoal); }
+  .sub { margin-top: 3.4vh; display: flex; flex-direction: column; gap: 1.3vh; }
+  .sub p { font-size: clamp(15px, 1.5vw, 20px); color: #55554f; max-width: 56ch; }
+  .sub p strong { color: var(--charcoal); }
+  .nums { display: flex; gap: 4.5vw; margin-top: 4.5vh; flex-wrap: wrap; justify-content: center; }
+  .num { display: flex; flex-direction: column; gap: .6vh; }
+  .num b { font-size: clamp(26px, 3.4vw, 44px); font-weight: 600; letter-spacing: -0.02em; }
+  .num span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; color: var(--stone); text-transform: uppercase; }
+  .stack { display: flex; flex-direction: column; gap: 1.8vh; margin-top: 4vh; width: min(760px, 84vw); }
+  .stack p { font-family: var(--mono); font-size: clamp(12px, 1.25vw, 15px); letter-spacing: .05em; color: #55554f; text-align: left;
+    border-bottom: 1px solid var(--mist); padding-bottom: 1.6vh; }
+  .stack p b { color: var(--charcoal); }
+  .url { font-family: var(--mono); font-size: clamp(15px, 1.8vw, 23px); letter-spacing: .04em;
+    border: 1.5px solid var(--charcoal); border-radius: 999px; padding: 14px 30px; margin-top: 3.6vh;
+    background: #fff; box-shadow: 0 14px 40px rgba(42,42,40,.10); }
+  .team { margin-top: 4.5vh; font-family: var(--mono); font-size: 13px; letter-spacing: .12em; color: var(--stone); }
+  .foot { position: absolute; bottom: 3.2vh; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mist); transition: background .3s; }
+  .dot.on { background: var(--charcoal); }
+  .tm { font-size: .42em; vertical-align: super; letter-spacing: 0; font-weight: 500; opacity: .65; }
+  /* the brand card — the soft ultra-premium blend */
+  .card {
+    width: min(240px, 26vw); aspect-ratio: 3 / 4.1; border-radius: 20px; margin-bottom: 4vh;
+    background: #f2f1ee; overflow: hidden; position: relative;
+    box-shadow: 0 30px 80px rgba(42,42,40,.14);
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 6% 0 0 0;
+    background: linear-gradient(180deg,
+      rgba(247,246,243,0) 0%, #f3dfe0 16%, #f1c9a6 34%, #ecd39f 50%,
+      #cdd8b9 66%, #94b0d4 86%, #7f9fc9 100%);
+    filter: blur(14px) saturate(1.06); transform: scale(1.1);
+  }
+  .wordmark { font-family: var(--mono); font-size: clamp(11px, 1.15vw, 14px); letter-spacing: .34em; color: #6f6f6a; margin-top: .6vh; }
+</style>
+</head>
+<body>
+
+  <section class="slide on">
+    <div class="card"></div>
+    <p class="wordmark">THE ULTRA SUPER SOCIAL PASSPORT<span class="tm">™</span></p>
+    <h1 style="margin-top:3.4vh">Imagine knowing exactly which two strangers you came to meet.</h1>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">A review from the party</p>
+    <h1>“I regret getting a passport for this party.”</h1>
+    <div class="turns">
+      <p>Not because it knew my people.</p>
+      <p>Not because it's cute as f•.</p>
+      <p><b>Because I didn't have it for the last five parties.</b></p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">The wave</p>
+    <h1>Curated everything is eating the calendar.</h1>
+    <div class="sub">
+      <p>Supper clubs. Run clubs. Listening bars. Invite-only everything.</p>
+      <p><strong>Events got curated. Guests didn't.</strong></p>
+      <p>We're the guest side of the wave — the room, curated toward each person in it.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">What we built</p>
+    <h1>A passport that writes itself from the guest list.</h1>
+    <div class="nums">
+      <div class="num"><b>193</b><span>guests, one CSV</span></div>
+      <div class="num"><b>6</b><span>value clouds</span></div>
+      <div class="num"><b>3,133</b><span>shared-value ties</span></div>
+      <div class="num"><b>0</b><span>unreceipted claims</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">How it's possible now</p>
+    <h1 style="font-size:clamp(26px,3.4vw,44px)">Three primitives, one audit.</h1>
+    <div class="stack">
+      <p><b>BUTTERBASE</b> — the backend of record: tables, AI gateway, live deploy, and the MCP the submission rides on.</p>
+      <p><b>NEO4J AURA</b> — the ontology the agent walks: typed people, crafts, beliefs; provenance on every write.</p>
+      <p><b>ROCKETRIDE</b> — the inference pipeline, deployed as a managed cloud endpoint the app calls.</p>
+      <p><b>THE AUDIT</b> — every claim on every passport resolves to a live graph edge. Receipts, or it doesn't ship.</p>
+    </div>
+  </section>
+
+  <section class="slide">
+    <p class="kicker">Live demo</p>
+    <h1 style="font-size:clamp(28px,3.8vw,50px)">Watch the room learn who you are.</h1>
+    <div class="url">ultra-super-party-passport.butterbase.dev</div>
+    <div class="sub" style="margin-top:2.6vh">
+      <p>drop the guest list → find your name → <strong>generate</strong> → the cover flips.</p>
+      <p><strong>Curated toward you, not stat-listed.</strong></p>
+    </div>
+    <p class="team">JOHNNY SHENG — PART-TIME WARRIOR · TERI SHIM — FOUNDING DESIGNER</p>
+    <p class="team" style="margin-top:1vh">built live by an AI lab · fully disclosed · THE ULTRA SUPER SOCIAL PASSPORT<span class="tm">™</span></p>
+  </section>
+
+  <div class="foot" id="dots"></div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dots = document.getElementById('dots');
+  slides.forEach((_, i) => { const d = document.createElement('div'); d.className = 'dot' + (i === 0 ? ' on' : ''); dots.appendChild(d); });
+  let i = 0;
+  const go = (n) => {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, j) => s.classList.toggle('on', j === i));
+    [...dots.children].forEach((d, j) => d.classList.toggle('on', j === i));
+  };
+  addEventListener('keydown', (e) => {
+    if (['ArrowRight', ' ', 'Enter', 'PageDown'].includes(e.key)) go(i + 1);
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) go(i - 1);
+  });
+  addEventListener('click', (e) => go(i + (e.clientX > innerWidth / 3 ? 1 : -1)));
+</script>
+</body>
+</html>
