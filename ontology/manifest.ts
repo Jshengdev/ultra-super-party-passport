@@ -77,8 +77,8 @@ export function isAllowedPattern(from: string, rel: string, to: string): boolean
 /* ─────────────────────────────── the party ─────────────────────────────── */
 // The single event these passports are minted for. Shared by ingest + the checkin route.
 export const DEFAULT_PARTY = {
-  id: "la-intern-party-0718",
-  name: "LA Intern Party",
+  id: process.env.PARTY_ID || "la-intern-party-0718",
+  name: process.env.PARTY_NAME || "LA Intern Party",
   date: "2026-07-18",
 } as const;
 

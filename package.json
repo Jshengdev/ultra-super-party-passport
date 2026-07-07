@@ -13,6 +13,8 @@
     "verify:goal": "bash scripts/verify-goal.sh"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "framer-motion": "^12.42.2",
     "neo4j-driver": "^6",
     "next": "^15",
     "openai": "^5",
@@ -20,6 +22,7 @@
     "react": "^19",
     "react-dom": "^19",
     "react-force-graph-2d": "^1",
+    "tailwindcss": "^4.3.2",
     "zod": "^3"
   },
   "devDependencies": {

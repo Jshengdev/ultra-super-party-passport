@@ -14,6 +14,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { passportSchema } from '@/passport/schema';
 import PassportCard from '@/passport/template';
+import Reveal from './Reveal';
 import '@/passport/tokens.css';
 
 export const dynamic = 'force-static';
@@ -129,7 +130,12 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
 
   return (
     <Shell>
-      <PassportCard passport={result.data} side="both" />
+      <Reveal
+        name={result.data.name}
+        connections={result.data.find.reduce((n, f) => n + f.path_receipt.length, 0)}
+      >
+        <PassportCard passport={result.data} side="both" />
+      </Reveal>
     </Shell>
   );
 }

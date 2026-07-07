@@ -1,3 +1,38 @@
-:root { color-scheme: light dark; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+@import "tailwindcss";
+
+/* Design language referenced from pepl (cream/cloud/charcoal + sky/ocean + sunset bands,
+   Jakarta-style humanist sans). All values are Teri's to override — passport/tokens.css
+   custom properties win where present. */
+@theme {
+  --color-cream: #f4f4f5;
+  --color-cloud: #fafaf7;
+  --color-charcoal: #2a2a28;
+  --color-sky: #7fb2e5;
+  --color-ocean: #37618f;
+  --color-sunset-pink: #e8a8b8;
+  --color-sunset-orange: #e89a5c;
+  --color-gold: #e8c65c;
+  --color-mist: #e2e2de;
+  --color-stone: #8a8a86;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+:root {
+  color-scheme: light;
+  /* bridge to the existing --usp-* token surface (Teri's handle) */
+  --usp-bg: var(--color-cloud);
+  --usp-card: #ffffff;
+  --usp-ink: var(--color-charcoal);
+  --usp-muted: var(--color-stone);
+  --usp-line: var(--color-mist);
+  --usp-accent: var(--color-ocean);
+  --usp-font-sans: var(--font-sans);
+  --usp-font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--usp-bg);
+  color: var(--usp-ink);
+  font-family: var(--usp-font-sans);
+}

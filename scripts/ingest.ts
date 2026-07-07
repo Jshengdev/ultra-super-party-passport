@@ -14,7 +14,7 @@ import { runClustering } from "@/lib/cluster";
 import { isConfigured, Neo4jNotConfigured, close } from "@/lib/neo4j";
 import { isGatewayConfigured } from "@/lib/gateway";
 
-const CSV_PATH = "data/test-party.csv";
+const CSV_PATH = process.env.CSV_PATH || "data/test-party.csv";
 
 async function main(): Promise<number> {
   if (!existsSync(CSV_PATH)) {

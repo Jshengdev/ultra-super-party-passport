@@ -1,0 +1,425 @@
+{
+ "families": [
+  {
+   "family": "maker-builders",
+   "belief_theme": "creativity = making real things exist",
+   "personas": [
+    {
+     "what_you_do": "electronics tinkerer",
+     "working_on": "solar-powered modular synth that fits in a suitcase",
+     "belief_creative": "Ideas are cheap. When your hardware boots up and makes sound, that's when you've created something."
+    },
+    {
+     "what_you_do": "indie game dev",
+     "working_on": "roguelike about running your dead parents' failing restaurant",
+     "belief_creative": "Three shipped games teach you more than one perfect design doc. Reality is the best editor."
+    },
+    {
+     "what_you_do": "audio tool builder",
+     "working_on": "app that lets you sample weird found sounds into playable instruments on the fly",
+     "belief_creative": "It's not real creativity till other people use it. Tools are how you scale your weirdness."
+    },
+    {
+     "what_you_do": "physical installation artist",
+     "working_on": "light piece that maps foot traffic into changing patterns across a whole hallway",
+     "belief_creative": "If nobody feels different after they walk through it, it's just expensive decoration. Change is what makes it real."
+    },
+    {
+     "what_you_do": "app builder",
+     "working_on": "chat app where everyone gets one message per conversation per day maximum",
+     "belief_creative": "The worst creative move is no friction. Shipping something weird that actually works is harder than shipping normal."
+    },
+    {
+     "what_you_do": "motion systems engineer",
+     "working_on": "animation system that learns organic motion from video and generates new movement",
+     "belief_creative": "Anyone can render a pretty frame. Creativity is when thousands of frames move like something alive."
+    },
+    {
+     "what_you_do": "product designer",
+     "working_on": "water bottle redesign that makes people actually refill and hydrate consistently",
+     "belief_creative": "Form without function is decoration. Real creativity is something you hold in your hand and use every day."
+    },
+    {
+     "what_you_do": "robotics engineer",
+     "working_on": "robot arm that learns assembly tasks by watching a human demonstrate once",
+     "belief_creative": "You can't fake a robot working. When it grabs something and succeeds, that's the proof creativity existed."
+    },
+    {
+     "what_you_do": "music software builder",
+     "working_on": "plugin that lets you undo mixing choices across an entire multitrack session retroactively",
+     "belief_creative": "Making music people feel is the dream. Making tools that free producers to make that\u2014that's the real craft."
+    },
+    {
+     "what_you_do": "spatial designer",
+     "working_on": "AR layer showing what the neighborhood looked like fifty years ago",
+     "belief_creative": "Creativity is making people see the same place completely differently. If they forget they're wearing a headset, you won."
+    },
+    {
+     "what_you_do": "wearable tech designer",
+     "working_on": "jackets that light up when two friends wearing them are in the same room",
+     "belief_creative": "Clothes are wearable code. Creativity is when someone chooses to wear what you made every day."
+    },
+    {
+     "what_you_do": "infrastructure engineer",
+     "working_on": "deployment pipeline so artists can launch interactive installations without touching Git or DevOps",
+     "belief_creative": "Your code's invisible. But if an artist shipped something impossible before, you actually created that. That counts."
+    }
+   ]
+  },
+  {
+   "family": "storytellers",
+   "belief_theme": "creativity = making people feel something true",
+   "personas": [
+    {
+     "what_you_do": "documentary filmmaker",
+     "working_on": "following working parents through a month to capture what sacrifice actually looks like",
+     "belief_creative": "showing people a mirror they didn't expect. when they see themselves, something shifts."
+    },
+    {
+     "what_you_do": "music producer",
+     "working_on": "engineering a 15-minute drone piece from field recordings of an empty warehouse",
+     "belief_creative": "making someone sit with a feeling they usually run from. the notes disappear; the feeling stays."
+    },
+    {
+     "what_you_do": "interaction designer",
+     "working_on": "designing error messages that tell you the truth instead of hiding behind corporate apology",
+     "belief_creative": "if it's not honest, people sense it. honest design makes them trust you, weirdly."
+    },
+    {
+     "what_you_do": "game writer",
+     "working_on": "writing an NPC character so complex that players actually grieve when they die",
+     "belief_creative": "if a character moves someone, that's not manipulation. that's architecture."
+    },
+    {
+     "what_you_do": "film composer",
+     "working_on": "writing string arrangements that sit under confessional monologues without drowning them out",
+     "belief_creative": "the best creative work gets out of the way. you feel the human, not the technique."
+    },
+    {
+     "what_you_do": "motion designer",
+     "working_on": "animating how uncertainty looks in a character's face\u2014micro-movements that make it real",
+     "belief_creative": "specificity is what makes people feel seen. generic is noise."
+    },
+    {
+     "what_you_do": "podcast producer",
+     "working_on": "cutting a 90-minute rambling conversation into 45 minutes of pure vulnerability",
+     "belief_creative": "editing is listening. you shape sound until the truth can actually breathe."
+    },
+    {
+     "what_you_do": "short film director",
+     "working_on": "shooting a 12-minute story about two people realizing they don't know each other anymore",
+     "belief_creative": "making something people watch in total silence, then sit with for five minutes after."
+    },
+    {
+     "what_you_do": "music videographer",
+     "working_on": "visualizing ambient instrumental\u2014no dialogue, just the emotional architecture of the song made visible",
+     "belief_creative": "if your visual doesn't reveal something new about the song, it's decoration."
+    },
+    {
+     "what_you_do": "animator illustrator",
+     "working_on": "drawing and moving a character so her tiny eye-movement tells you she's terrified",
+     "belief_creative": "the details that take longest to animate are the ones people feel first."
+    },
+    {
+     "what_you_do": "audio dramatist",
+     "working_on": "scripting a sound-only ghost story where the listener's own memory becomes the haunting",
+     "belief_creative": "leaving room for imagination isn't lazy. it's trust. people fill the gaps with their own truth."
+    },
+    {
+     "what_you_do": "fiction screenwriter",
+     "working_on": "rewriting a breakup scene so it feels ugly and real, not cinematically perfect",
+     "belief_creative": "audiences know when you're reaching for a moment. they feel it when you just let it happen."
+    },
+    {
+     "what_you_do": "experimental sound artist",
+     "working_on": "installing a room-sized instrument that teaches your body how to hear silence",
+     "belief_creative": "if it makes someone notice something they've never noticed before, it worked."
+    },
+    {
+     "what_you_do": "video essayist",
+     "working_on": "assembling clips from film history to argue something true about how we see loss",
+     "belief_creative": "creativity is syntax\u2014arranging real pieces until a new meaning snaps into focus."
+    }
+   ]
+  },
+  {
+   "family": "world-changers",
+   "belief_theme": "creativity = changing what's possible for people",
+   "personas": [
+    {
+     "what_you_do": "fintech engineer",
+     "working_on": "building a lending app so gig workers can access credit without being exploited",
+     "belief_creative": "Making it possible for someone to get a loan without a bank account deciding they're too risky."
+    },
+    {
+     "what_you_do": "accessible interaction designer",
+     "working_on": "redesigning a government website so a screen reader user can actually navigate it",
+     "belief_creative": "Removing the invisible wall that said 'this wasn't built for you' before anyone had to say it out loud."
+    },
+    {
+     "what_you_do": "civic data engineer",
+     "working_on": "parsing city budget PDFs to show where your tax dollar actually goes",
+     "belief_creative": "Finding the angle that makes the incomprehensible suddenly obvious to someone who's never coded."
+    },
+    {
+     "what_you_do": "documentary filmmaker",
+     "working_on": "editing a 60-minute film about street musicians fighting city ordinances that criminalize their art",
+     "belief_creative": "Making the invisible visible so people can't ignore it anymore. That's the whole work."
+    },
+    {
+     "what_you_do": "music technologist",
+     "working_on": "designing a composition tool that kids in under-resourced schools can use without owning instruments",
+     "belief_creative": "You've been creative when you've removed a barrier that only existed because nobody thought it was worth removing."
+    },
+    {
+     "what_you_do": "climate risk designer",
+     "working_on": "designing climate models so decision makers understand what sea-level rise means for their city",
+     "belief_creative": "Translating the model only experts understand into the truth that moves someone to actually decide."
+    },
+    {
+     "what_you_do": "education entrepreneur",
+     "working_on": "shipping a math platform where students with dyslexia can learn without fighting the interface",
+     "belief_creative": "You created something when someone suddenly could do what they couldn't yesterday. That's it."
+    },
+    {
+     "what_you_do": "environmental justice organizer",
+     "working_on": "mapping industrial pollution so a community can sue and win, not just complain",
+     "belief_creative": "The moment you reveal what was always true, that people have been trying to name for years."
+    },
+    {
+     "what_you_do": "healthcare product designer",
+     "working_on": "redesigning hospital intake so a scared 12-year-old understands what's happening to them",
+     "belief_creative": "It's when you've made complex systems legible and someone less afraid. That's the actual work."
+    },
+    {
+     "what_you_do": "code artist",
+     "working_on": "building installations where gentrification becomes visible through real estate data and sound",
+     "belief_creative": "Creativity's the moment you've given someone leverage they didn't have to see the system that's moving."
+    },
+    {
+     "what_you_do": "impact investor",
+     "working_on": "finding founders solving real problems in education, health, justice\u2014not just another app",
+     "belief_creative": "You've expanded the set of futures available to someone who didn't have many to choose from."
+    },
+    {
+     "what_you_do": "sustainability operations lead",
+     "working_on": "building a tracker that forces fashion brands to admit their water waste in public",
+     "belief_creative": "Rigging the system so the right choice becomes the easy choice. That's the game."
+    }
+   ]
+  },
+  {
+   "family": "aesthetes",
+   "belief_theme": "creativity = taste, craft, and the courage of a strong point of view",
+   "personas": [
+    {
+     "what_you_do": "visual designer",
+     "working_on": "rebuilding a packaging system where every curve has a structural reason",
+     "belief_creative": "creativity is knowing exactly which line to cut so what remains hits twice as hard"
+    },
+    {
+     "what_you_do": "fashion designer",
+     "working_on": "making workwear for women that's sexier rumpled than fresh off the rack",
+     "belief_creative": "creativity is holding your standard so steady that nobody can talk you into cheaper seams"
+    },
+    {
+     "what_you_do": "brand strategist",
+     "working_on": "finding the weird true thing about a ceramics studio and amplifying it",
+     "belief_creative": "creativity isn't inventing; it's spotting what's already real and having the guts to lead with it"
+    },
+    {
+     "what_you_do": "art director",
+     "working_on": "shooting a short film entirely on film stock, no digital fix in post",
+     "belief_creative": "creativity is making the hard choice look inevitable, so inevitable people forget it was a choice"
+    },
+    {
+     "what_you_do": "spatial designer",
+     "working_on": "designing a gallery in a defunct laundromat, working with broken walls as design",
+     "belief_creative": "creativity is constraints. the more your space fights back, the smarter your idea has to be"
+    },
+    {
+     "what_you_do": "motion designer",
+     "working_on": "animating UI for an app that shows you exactly three things, nothing more",
+     "belief_creative": "creativity is pacing\u2014knowing what to show, when to show it, and how long to make you wait"
+    },
+    {
+     "what_you_do": "product designer",
+     "working_on": "designing cutlery that teaches kids how to grip a fork without you saying it",
+     "belief_creative": "creativity is solving the invisible problem so well people thank you without knowing what you fixed"
+    },
+    {
+     "what_you_do": "type designer",
+     "working_on": "hand-lettering all social copy for a bakery, making text look hand-carved by their ovens",
+     "belief_creative": "creativity is being willfully unfashionable until the world catches up to your perspective"
+    },
+    {
+     "what_you_do": "industrial designer",
+     "working_on": "redesigning the desk lamp so eight-hour work doesn't feel like an interrogation",
+     "belief_creative": "creativity means building respect into every surface because someone will live eight hours a day with it"
+    },
+    {
+     "what_you_do": "interaction designer",
+     "working_on": "designing an interface where cursor movement teaches you the system's logic",
+     "belief_creative": "creativity is removal\u2014stripping features until what's left is so clear it feels obvious in hindsight"
+    },
+    {
+     "what_you_do": "experimental photographer",
+     "working_on": "documenting light in brutalist buildings before gentrification sands them smooth",
+     "belief_creative": "creativity is a lens so particular that people start seeing through your eyes instead of their own"
+    },
+    {
+     "what_you_do": "brand director",
+     "working_on": "building visual systems for nonprofits where color budgets force real choices",
+     "belief_creative": "creativity is treating constraints like a brief from someone you respect enough to not shortchange"
+    }
+   ]
+  },
+  {
+   "family": "systems-minds",
+   "belief_theme": "creativity = connecting things nobody thought to connect",
+   "personas": [
+    {
+     "what_you_do": "ml engineer, live performance",
+     "working_on": "generating stage lighting that evolves with music using diffusion models, no presets",
+     "belief_creative": "It's finding the point where two domains\u2014sound and light\u2014realize they speak the same language."
+    },
+    {
+     "what_you_do": "creator economy strategist",
+     "working_on": "mapping how micro-communities could fund art themselves instead of waiting for external capital",
+     "belief_creative": "You borrow a pattern from nature\u2014how ants organize\u2014and suddenly you see your industry differently."
+    },
+    {
+     "what_you_do": "data visualization designer",
+     "working_on": "charting how people feel about their time spent versus where it actually goes",
+     "belief_creative": "Most people see inputs, outputs. Creativity is noticing the circuit between them and what else lives there."
+    },
+    {
+     "what_you_do": "full-stack engineer, music",
+     "working_on": "building tools that let musicians compose by sampling everyday sounds like doors or glass",
+     "belief_creative": "You steal a metaphor from systems design\u2014pipes, nodes\u2014and suddenly a musician rethinks their entire workflow."
+    },
+    {
+     "what_you_do": "product strategist, voice",
+     "working_on": "building software that learns voice patterns and lets you change emotional tone while keeping meaning intact",
+     "belief_creative": "Creativity isn't a new idea; it's noticing when two old systems suddenly want to talk."
+    },
+    {
+     "what_you_do": "neuroscientist, creative technologist",
+     "working_on": "testing whether rhythm patterns from architecture improve how people learn and retain melody",
+     "belief_creative": "You find the handshake between two locked disciplines\u2014then you build tools on top of the discovery."
+    },
+    {
+     "what_you_do": "infrastructure engineer, civic",
+     "working_on": "building tools for creative communities to share resources without needing a central platform",
+     "belief_creative": "It's connecting nodes that the current system left unconnected. The system stays the same; the graph grows."
+    },
+    {
+     "what_you_do": "economist, game designer",
+     "working_on": "using token mechanics from DeFi to fund collaborative art projects without traditional gatekeepers",
+     "belief_creative": "If you know how incentives flow in one world, you see where they're broken in another. There's the gap."
+    },
+    {
+     "what_you_do": "software engineer, documentarian",
+     "working_on": "building interactive archives where people search film by mood instead of keywords or metadata",
+     "belief_creative": "You speak the algorithm's language to describe human feeling, then you write the code that bridges them."
+    },
+    {
+     "what_you_do": "behavioral researcher, designer",
+     "working_on": "studying how code constraints shift how people approach visual composition and spatial thinking",
+     "belief_creative": "Creativity is pattern-matching across domains; understand how one structure works, and you can remix ten others."
+    },
+    {
+     "what_you_do": "audio engineer, ml researcher",
+     "working_on": "training models on field recordings to generate visuals that visualize ambient sound",
+     "belief_creative": "You take input from one sense and ask: what happens if a different medium understands it?"
+    },
+    {
+     "what_you_do": "economist, arts policy",
+     "working_on": "mapping how open-source funding models could sustain independent music labels without eroding creator economics",
+     "belief_creative": "Creativity appears at the junction where incentive structures collide. Most people don't see the collision happening."
+    },
+    {
+     "what_you_do": "systems architect, generative art",
+     "working_on": "building a feedback loop where AI-generated visuals train on how humans respond to them",
+     "belief_creative": "It's the mesh-point where creation and curation become the same step, not sequential. That's where things unlock."
+    },
+    {
+     "what_you_do": "network researcher, music tech",
+     "working_on": "studying how musicians collaborate when all constraints shift\u2014zero latency, infinite participants, full anonymity",
+     "belief_creative": "You remove a boundary and watch what emerges. Creativity isn't the output; it's what fills the gap."
+    }
+   ]
+  },
+  {
+   "family": "community-weavers",
+   "belief_theme": "creativity = bringing the right people into the same room",
+   "personas": [
+    {
+     "what_you_do": "event architect",
+     "working_on": "remapped 200+ IYA alums into mentorship matches; nobody lost anymore",
+     "belief_creative": "Creativity's the moment between people when you realize they *need* each other. I just make those moments happen."
+    },
+    {
+     "what_you_do": "full stack engineer",
+     "working_on": "building platform where student creative work actually gets commissioned",
+     "belief_creative": "Creativity dies in friction. I kill the boring technical stuff so an idea can actually breathe."
+    },
+    {
+     "what_you_do": "digital artist",
+     "working_on": "making pieces that respond to biometric data; seeing fear and joy as light",
+     "belief_creative": "Making someone stop, actually *look*, and feel something they couldn't name before. That's the whole thing."
+    },
+    {
+     "what_you_do": "director",
+     "working_on": "shooting documentary about student founders who quit midway; the harder choice",
+     "belief_creative": "Creative is seeing the hidden truth and finding the frame that makes others see it too, suddenly."
+    },
+    {
+     "what_you_do": "music producer",
+     "working_on": "designing soundscapes for virtual spaces where people actually want to stay",
+     "belief_creative": "Sound is invisible. Creativity is using that to make someone feel held without them knowing why."
+    },
+    {
+     "what_you_do": "interaction designer",
+     "working_on": "redesigning how creators talk to audiences; killing the corporate engagement lie",
+     "belief_creative": "Creativity's asking what someone actually needs when they're too tired to ask, then building for *that* person."
+    },
+    {
+     "what_you_do": "startup strategist",
+     "working_on": "finding the wedge angle nobody sees yet; that's where real gold lives",
+     "belief_creative": "Creative is seeing the unmet need hiding in plain sight while everyone copies last year's playbook."
+    },
+    {
+     "what_you_do": "hardware engineer",
+     "working_on": "prototyping tangible interfaces for spatial audio; hands and ears working together",
+     "belief_creative": "Creativity's when you touch real material and it tells you what it wants to be. That conversation."
+    },
+    {
+     "what_you_do": "writer",
+     "working_on": "naming the actual shift in how Gen-Z talks about creativity versus hustle",
+     "belief_creative": "Creativity is finding the word that's always fit but nobody said. Then everyone nods: that's exactly it."
+    },
+    {
+     "what_you_do": "program curator",
+     "working_on": "building a series where weird disciplines collide by design; watching what grows",
+     "belief_creative": "Creativity's the constraint you set so the right people hit each other at exactly the right moment."
+    },
+    {
+     "what_you_do": "artist-coder",
+     "working_on": "making tools for other artists but still figuring out what I actually want to build",
+     "belief_creative": "I think creative is when you stop trying to be 'creative' and just follow what actually pulls you."
+    },
+    {
+     "what_you_do": "investor",
+     "working_on": "backing six students who haven't launched yet; betting on their taste before proof",
+     "belief_creative": "Creative is taste and a bet. I back people who see different, then get out of their way."
+    },
+    {
+     "what_you_do": "education designer",
+     "working_on": "fellowship where artists teach engineers how to see; mutual strange-making across disciplines",
+     "belief_creative": "Creativity's the friction between different ways of thinking. Education is just setting up better friction."
+    }
+   ]
+  }
+ ]
+}

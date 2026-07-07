@@ -11,7 +11,7 @@ import { allPeople, closeDriver } from "@/lib/traverse";
 import { buildPassport } from "@/lib/passport";
 
 const OUT_DIR = path.resolve(process.cwd(), "data/passports");
-const CONCURRENCY = 4;
+const CONCURRENCY = Number(process.env.PASSPORT_CONCURRENCY || 4);
 
 async function main(): Promise<void> {
   try {
@@ -22,7 +22,14 @@ async function main(): Promise<void> {
 
   await mkdir(OUT_DIR, { recursive: true });
 
-  const people = await allPeople();
+  let people = await allPeople();
+  if (process.env.GOING_ONLY === '1') {
+    const { run } = await import('@/lib/neo4j');
+    const { records } = await run("MATCH (p:Person)-[su:SIGNED_UP]->(:Party) WHERE su.checked_in = true RETURN p.id AS id");
+    const going = new Set(records.map((r) => String(r.get('id'))));
+    people = people.filter((p) => going.has(p.id));
+    console.log(`[generate-passports] GOING_ONLY: ${people.length} checked-in guests get passports`);
+  }
   if (people.length === 0) {
     console.error("[generate-passports] No Person nodes in the graph — run ingest first (fail-loud).");
     process.exitCode = 1;
