@@ -395,16 +395,28 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
         ctx.fillText(text, 0, padY);
         ctx.restore();
       } else if ((showLabel || matched) && node.label) {
-        const fontPx = (node.type === 'Person' ? 10 : 8) / scale;
-        ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 600 : 420} ${fontPx}px ${fontFamily}`;
+        // the found-you moment reads from across the room (raw/0038): matched names render
+        // ~2.2x, wave deeper, and the dot wears a breathing ring.
+        const fontPx = (matched ? 22 : node.type === 'Person' ? 10 : 8) / scale;
+        ctx.font = `${node.type === 'ValueCluster' ? 600 : matched ? 700 : 420} ${fontPx}px ${fontFamily}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const labelY = y + r + 1.5 / scale;
         // halo: a soft canvas-bg stroke keeps ink legible over the colored web
         ctx.lineJoin = 'round';
-        ctx.lineWidth = 3 / scale;
-        ctx.strokeStyle = withAlpha(palette.canvasBg, selected || matched ? 0.9 : 0.7);
+        ctx.lineWidth = (matched ? 5 : 3) / scale;
+        ctx.strokeStyle = withAlpha(palette.canvasBg, selected || matched ? 0.95 : 0.7);
         if (matched) {
+          // breathing ring on the matched dot
+          const tp = performance.now();
+          const pulse = 1 + Math.sin(tp / 300) * 0.25;
+          ctx.beginPath();
+          ctx.arc(x, y, (r + 4 * pulse) , 0, Math.PI * 2);
+          ctx.strokeStyle = withAlpha(palette.spectrum[3] ?? palette.ink, 0.65);
+          ctx.lineWidth = 1.6 / scale;
+          ctx.stroke();
+          ctx.strokeStyle = withAlpha(palette.canvasBg, 0.95);
+          ctx.lineWidth = 5 / scale;
           // the match signal (raw/0030): each letter rides a slow wave, the spectrum
           // blended across the whole name. Painted per-letter in graph coords.
           const t = performance.now();
@@ -418,7 +430,7 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           ctx.textAlign = 'left';
           let cx0 = x - total / 2;
           letters.forEach((ch, li) => {
-            const dy = Math.sin(t / 260 + li * 0.6) * (1.6 / scale);
+            const dy = Math.sin(t / 260 + li * 0.6) * (3.4 / scale);
             ctx.strokeText(ch, cx0, labelY + dy);
             ctx.fillStyle = grad;
             ctx.fillText(ch, cx0, labelY + dy);
