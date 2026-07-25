@@ -1,6 +1,10 @@
 /**
  * scripts/ingest-guests.ts — the real-party ingest leg: guest CSV → the ontology gate.
  *
+ * Beyond the v2 place/inspiration edges it also lands the v1 SHAPE the original product reads —
+ * Belief+BELIEVES (→ clustering → SHARES_VALUE) and Activity+DOES/WORKING_ON (→ same-work
+ * passport paths) — see v1Shape() below for the field mapping.
+ *
  * Every write goes through `dispatch("ingest_guest_v2", …)` (CLAUDE.md law a) — there is
  * zero raw write-Cypher here; the only direct `run()` is the read-only Person count at the
  * end. Provenance {src:"csv:la-intern-party", actor:"pipeline"} rides every dispatch (law d).
@@ -59,6 +63,24 @@ function place(hometown: string | null): { name: string; lat: number; lng: numbe
   return { name: head.slice(0, 40).trim(), lat: 0, lng: 0 };
 }
 
+/**
+ * The v1 graph shape the ORIGINAL surfaces read, mapped out of the v2 guest answers:
+ *   belief     → what drew them to the industry (falls back to their goal) — the text
+ *                lib/cluster.ts embeds into ValueClusters, so SHARES_VALUE/passport
+ *                values-paths exist for these guests too.
+ *   does       → job title, LOWERCASED (ingest_person's normActivity convention) so two
+ *                guests who both wrote "Director" MERGE onto one Activity node.
+ *   workingOn  → their stated goal, case preserved (ingest_person's convention).
+ * Empty answers map to null / [] — never a Belief{text:""} or an Activity{name:""}.
+ */
+function v1Shape(g: Guest): { belief: string | null; does: string[]; workingOn: string[] } {
+  return {
+    belief: g.answers.drew || g.answers.goal || null,
+    does: g.title ? [g.title.toLowerCase()] : [],
+    workingOn: g.answers.goal ? [g.answers.goal] : [],
+  };
+}
+
 /** The exact params object handed to the gate — shared by the live path and DRY_RUN. */
 function paramsFor(g: Guest) {
   return {
@@ -67,6 +89,7 @@ function paramsFor(g: Guest) {
     company: g.company,
     place: place(g.hometown),
     inspiration: g.answers.inspiration ? g.answers.inspiration.slice(0, 80) : null,
+    ...v1Shape(g),
     party: DEFAULT_PARTY,
   };
 }

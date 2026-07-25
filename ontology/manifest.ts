@@ -225,7 +225,12 @@ SET su.checked_in = $checkedIn,
 RETURN collect(p.id) AS writtenIds
 `.trim();
 
-/* ---- ingest_guest_v2: one guest + place/inspiration edges, one idempotent transaction ---- */
+/* ---- ingest_guest_v2: one guest + place/inspiration edges, one idempotent transaction ----
+ * The belief/does/workingOn triple is the v1 SHAPE the original product reads: lib/cluster.ts
+ * clusters Belief nodes (MERGEd on personId, exactly as ingest_person does, so
+ * write_value_cluster's `MATCH (bel:Belief {personId})` resolves), and lib/traverse.ts walks
+ * DOES/WORKING_ON→Activity for same-work finds. Conventions are copied from ingest_person
+ * verbatim — `does` arrives lowercased from the caller, `workingOn` keeps its case. */
 export const IngestGuestV2Params = z.object({
   person: z.object({
     id: z.string().min(1),
@@ -236,6 +241,11 @@ export const IngestGuestV2Params = z.object({
   company: z.string().nullable(),
   place: OBJECT_SCHEMAS.Place.nullable(),
   inspiration: z.string().nullable(),
+  /** what-you-do Activity names, lowercased by the caller (ingest_person convention) */
+  does: z.array(z.string().min(1)),
+  /** working-on Activity names, case preserved (ingest_person convention) */
+  workingOn: z.array(z.string().min(1)),
+  belief: z.string().nullable(),
   party: OBJECT_SCHEMAS.Party,
 });
 export type IngestGuestV2Params = z.infer<typeof IngestGuestV2Params>;
@@ -271,6 +281,21 @@ FOREACH (ins IN CASE WHEN $inspiration IS NULL THEN [] ELSE [$inspiration] END |
   SET insp._src = $_src, insp._ts = $_ts, insp._actor = $_actor
   MERGE (p)-[r:INSPIRED_BY]->(insp)
   SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (a IN $does |
+  MERGE (act:Activity {name: a})
+  SET act._src = $_src, act._ts = $_ts, act._actor = $_actor
+  MERGE (p)-[r:DOES]->(act)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (a IN $workingOn |
+  MERGE (act:Activity {name: a})
+  SET act._src = $_src, act._ts = $_ts, act._actor = $_actor
+  MERGE (p)-[r:WORKING_ON]->(act)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (b IN CASE WHEN $belief IS NULL THEN [] ELSE [$belief] END |
+  MERGE (bel:Belief {personId: $person.id})
+  SET bel.text = b, bel._src = $_src, bel._ts = $_ts, bel._actor = $_actor
+  MERGE (p)-[r:BELIEVES]->(bel)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
 RETURN [$person.id] AS writtenIds
 `.trim();
 
@@ -290,6 +315,29 @@ MERGE (a)-[s:SEEKS]->(b)
 SET s.score = $score, s.mutual = $mutual, s.via = $via,
     s._src = $_src, s._ts = $_ts, s._actor = $_actor
 RETURN [$from] AS writtenIds
+`.trim();
+
+/* ---- reset_graph: the DESTRUCTIVE dev action — wipes every node and relationship ----
+ *
+ * Deliberately hard to fire: the only param is the literal string "RESET-EVERYTHING", so an
+ * empty/typo'd/defaulted call is rejected by zod at the gate before any Cypher runs, and the
+ * Cypher re-checks the same literal (a leading WITH…WHERE) so a mis-wired caller deletes
+ * nothing rather than something. It is never invoked by any script in this repo — a human runs
+ * it explicitly. Scope is global, so it declares the WHOLE ontology as its write surface;
+ * that is the honest declaration, not a loophole (the gate still asserts every entry is
+ * on-ontology).
+ */
+export const ResetGraphParams = z.object({
+  confirm: z.literal("RESET-EVERYTHING"),
+});
+export type ResetGraphParams = z.infer<typeof ResetGraphParams>;
+
+const RESET_GRAPH_CYPHER = `
+WITH $confirm AS confirm
+WHERE confirm = 'RESET-EVERYTHING'
+MATCH (n)
+DETACH DELETE n
+RETURN [toString(count(*))] AS writtenIds
 `.trim();
 
 export const ACTIONS = {
@@ -343,17 +391,39 @@ export const ACTIONS = {
   ingest_guest_v2: {
     name: "ingest_guest_v2",
     params: IngestGuestV2Params,
-    writesLabels: ["Person", "Party", "School", "Company", "Place", "Inspiration"],
+    writesLabels: [
+      "Person",
+      "Party",
+      "School",
+      "Company",
+      "Place",
+      "Inspiration",
+      "Activity",
+      "Belief",
+    ],
     writesPatterns: [
       ["Person", "SIGNED_UP", "Party"],
       ["Person", "STUDIES_AT", "School"],
       ["Person", "WORKS_AT", "Company"],
       ["Person", "FROM", "Place"],
       ["Person", "INSPIRED_BY", "Inspiration"],
+      ["Person", "DOES", "Activity"],
+      ["Person", "WORKING_ON", "Activity"],
+      ["Person", "BELIEVES", "Belief"],
     ],
     cypher: INGEST_GUEST_V2_CYPHER,
     defaultSrc: "csv:party-guest-v2",
     defaultActor: "pipeline",
+  },
+  reset_graph: {
+    name: "reset_graph",
+    params: ResetGraphParams,
+    // global scope: everything the ontology can hold is in the blast radius, declared in full.
+    writesLabels: OBJECT_TYPES,
+    writesPatterns: LINKS.map((l) => [l.from, l.rel, l.to] as [string, string, string]),
+    cypher: RESET_GRAPH_CYPHER,
+    defaultSrc: "action:reset_graph",
+    defaultActor: "human",
   },
   write_seek_edge: {
     name: "write_seek_edge",
