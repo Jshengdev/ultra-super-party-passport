@@ -52,6 +52,27 @@ Vision: Johnny. Design: Teri. Distribution + DNA-gradient: Sarah. Built live by 
 Pinned shapes: `gx/goals/usp-v1.md` (v1 contract) + the as-built departure report at the end of
 `docs/superpowers/specs/2026-07-25-party-graph-design.md` (where v2 deviates, and why).
 
+## Docs (routing only — each exists to save search time; the code is the understanding)
+
+`README.md` story + architecture · `docs/SUBMISSION.md` hackathon entry (ship-gate required) ·
+`docs/DEMO-SCRIPT.md` 60-second demo runbook (v1-era; refresh with the real-party numbers) ·
+`docs/POSITIONING.md` shareable hand-off copy · `docs/BUTTERBASE.md` hosting/gateway operator
+runbook · `docs/ROCKETRIDE.md` pipe deploy runbook · the spec above = v2 as-built record.
+Nothing else; new knowledge goes into code comments or a line here.
+
+## The dataset schema + optimization loop (the node-tuning workflow)
+
+- **Graph nodes/edges**: `ontology/manifest.ts` is the schema — labels, links, and every write's
+  Cypher live there; nothing off-manifest can exist.
+- **The sheet**: `data/graph-enriched.csv` — one row per person, every computed field visible
+  (identity · conviction tags + verbatim quotes · hubs/groups · top-5 matches · doppelgänger).
+  Column contract + override rules are documented where they execute: the header comment in
+  `scripts/emit-graph.ts`.
+- **The loop**: edit `data/graph-overrides.csv` (sparse: person_id + any of motive/mission/impact/
+  aspiration/pinned_match/hide/host_notes) → re-run emit + gates (commands above) → refresh the
+  room. Off-vocabulary tags fail loud; quotes are never overridable; overridden fields carry
+  `_overridden` provenance. A real `hide` must update `EXPECTED_PEOPLE` in the same commit.
+
 ## Working here with an agent
 
 1. Read this file; the laws above bind every change. Rationale lives in constraint comments at the
