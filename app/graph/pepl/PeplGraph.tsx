@@ -1976,7 +1976,9 @@ export default function PeplGraph() {
             top: 68,
             right: tuneVisible ? 92 : 20,
             width: 196,
-            maxHeight: "calc(100vh - 96px)",
+            /* ~80px of visible list (+ the card's padding), like the
+               threads widget — a peek that scrolls, not a page */
+            maxHeight: 104,
             overflowY: "auto",
             padding: "12px 14px",
             /* the dropdown is square; only the button that opens it is a pill */
