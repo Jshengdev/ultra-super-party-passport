@@ -300,64 +300,9 @@ export function stripQuoteFrom(record: PersonRecord | null | undefined): string 
   return record?.answers?.goal ?? record?.answers?.drew ?? null;
 }
 
-/* --------------------------------------------- Step 0: CSV verification */
+/* --------------------------------------------- Step 0: CSV verification (pure logic in ./verify) */
 
-type CsvVerdict =
-  | { ok: true; rows: number; ids: number; matched: number; ratio: number }
-  | { ok: false; code: string; message: string };
-
-function pickIdField(fields: string[]): string | null {
-  const norm = (f: string) => f.trim().toLowerCase().replace(/[\s-]+/g, "_");
-  return (
-    fields.find((f) => /^guest_?id$/.test(norm(f))) ??
-    fields.find((f) => /^(api_?id|luma_?id|ticket_?id|person_?id)$/.test(norm(f))) ??
-    fields.find((f) => /(^|_)id$/.test(norm(f))) ??
-    null
-  );
-}
-
-function verifyGuestList(rows: Record<string, unknown>[], fields: string[], guestIds: string[]): CsvVerdict {
-  if (rows.length === 0) {
-    return { ok: false, code: "EMPTY_CSV", message: "no data rows — that file has a header and nothing under it." };
-  }
-  if (guestIds.length === 0) {
-    return {
-      ok: false,
-      code: "GUEST_IDS_UNAVAILABLE",
-      message: "graph.json carries no meta.guestIds, so this file cannot be verified against the party list.",
-    };
-  }
-  const idField = pickIdField(fields);
-  if (!idField) {
-    return {
-      ok: false,
-      code: "GUEST_ID_COLUMN_MISSING",
-      message: "no guest_id column in that CSV. The party export has one — this file is something else.",
-    };
-  }
-  const known = new Set(guestIds.map((g) => String(g).trim()));
-  let ids = 0;
-  let matched = 0;
-  for (const r of rows) {
-    const raw = r[idField];
-    const v = typeof raw === "string" ? raw.trim() : raw == null ? "" : String(raw).trim();
-    if (!v) continue;
-    ids += 1;
-    if (known.has(v)) matched += 1;
-  }
-  if (ids === 0) {
-    return { ok: false, code: "GUEST_ID_COLUMN_EMPTY", message: `every "${idField}" cell in that file is blank.` };
-  }
-  const ratio = matched / ids;
-  if (ratio < 0.9) {
-    return {
-      ok: false,
-      code: "GUEST_LIST_MISMATCH",
-      message: `${matched} of ${ids} ids match this party's list (${Math.round(ratio * 100)}% — needs 90%). This is a real guest list, but it isn't ours.`,
-    };
-  }
-  return { ok: true, rows: rows.length, ids, matched, ratio };
-}
+import { verifyGuestList, type CsvVerdict } from "./verify";
 
 interface Beat {
   label: string;
