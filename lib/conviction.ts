@@ -76,8 +76,24 @@ export const CONVICTIONS_PATH = "data/graph-private/convictions.json";
 /** Batch size — the house pattern (`scripts/extract-interests.ts`). */
 export const BATCH = 20;
 
-/** A receipt longer than this isn't a quote, it's the whole answer. */
-export const MAX_QUOTE_WORDS = 15;
+/**
+ * The chat model for this pass. `CONVICTION_MODEL` overrides `DEFAULT_CHAT_MODEL` so the model
+ * can be bumped from the command line without a code change. Read at CALL time, not import time.
+ */
+export function convictionModel(): string {
+  return process.env.CONVICTION_MODEL?.trim() || DEFAULT_CHAT_MODEL;
+}
+
+/**
+ * A receipt longer than this isn't a quote, it's the whole answer.
+ *
+ * CALIBRATED CONSTANT (golden run 2026-07-25): started at the brief's 15 and the live golden
+ * threw away 4/10 guests on this cap alone — gpt-4o-mini returns 17-40-word spans and the retry
+ * made them longer, not shorter. Raised to 25 as the hard backstop; the PROMPT still asks for
+ * <=12 words, so the cap only catches the model overshooting its instruction, not obeying it.
+ * The verbatim-substring check is untouched — that one never bends.
+ */
+export const MAX_QUOTE_WORDS = 25;
 
 // ---------------------------------------------------------------------------
 // Shapes.
@@ -234,20 +250,39 @@ const SYSTEM = [
   ASPIRATIONS.join(", "),
   "",
   "RULES:",
-  "1. Use null for any of the four when the guest's own words do not evidence it. Do NOT guess,",
-  "   do NOT infer a mission or impact from a bare job title. Most guests state a motive and an",
-  "   aspiration; far fewer state a mission or an impact. null is the correct, common answer.",
-  "2. `quotes` maps an answer field name (goal | drew | seeking | inspiration) to a span COPIED",
-  "   CHARACTER-FOR-CHARACTER from that field for that guest, at most 15 words. Provide the span",
-  "   that evidences your tags. If you cannot copy exactly, omit the quote — never paraphrase,",
-  "   never merge two fields, never quote a field you were not shown. Fabricated quotes are",
-  "   rejected by a verbatim substring check and the guest is discarded.",
-  "3. `openSeeker` = true when the `seeking` answer is generic and undifferentiated (\"anyone\",",
+  "1. DEPTH vs GUESSING — they are not the same thing.",
+  "   `motive` is expected for MOST guests: the `drew` answer nearly always says why they came",
+  "   (a parent in the business, a childhood spent inside movies, a fandom that turned into making,",
+  "   never seeing themselves on screen, an obsession with the craft itself, a pivot they fell into).",
+  "   Whenever `drew` says anything substantive, pick the closest motive tag. Reserve null for",
+  "   genuinely blank, one-word, or evasive answers.",
+  "   `mission` and `impact` stay CONSERVATIVE: tag them only when the guest actually names the",
+  "   change they want to make or the effect they want on an audience. Never infer either from a",
+  "   job title. null is the common, correct answer for these two.",
+  "2. `quotes` maps an answer field name (goal | drew | seeking | inspiration) to a SHORT VERBATIM",
+  "   FRAGMENT copied CHARACTER-FOR-CHARACTER out of that field for that guest. 12 WORDS MAX.",
+  "   - Copy a contiguous fragment. NEVER quote a whole sentence, never the whole answer.",
+  "   - NEVER add, remove, or change any punctuation or capitalization — not even a trailing period.",
+  "     Do not wrap it in quotation marks. Begin and end mid-sentence if that is where the evidence is.",
+  "   - Never paraphrase, never merge two fields, never quote a field you were not shown.",
+  "   - If you cannot copy exactly, omit that quote. An edited or invented quote is rejected by a",
+  "     verbatim substring check and the guest is thrown away.",
+  "   WORKED EXAMPLE — given this field text:",
+  "     drew: I grew up on my mom's set watching her cut trailers, and by the time I was twelve I",
+  "     knew I wanted to be the one deciding what an audience feels.",
+  '   GOOD (8 words): "grew up on my mom\'s set watching her"',
+  '   BAD: "I grew up on my mom\'s set watching her cut trailers." (whole sentence + added period)',
+  '   BAD: "She grew up watching her mom cut trailers" (paraphrase, re-capitalized)',
+  "3. `aspiration` = the MOST SPECIFIC tag that `title` + `goal` LITERALLY name. Do not climb to a",
+  "   broader tag when a precise one exists in the list: a Casting Director / casting associate ->",
+  "   casting (NOT represent-agency, NOT produce); a cinematographer or DP -> cinematography (NOT",
+  "   direct); an agent or manager signing clients at an agency -> represent-agency.",
+  "4. `openSeeker` = true when the `seeking` answer is generic and undifferentiated (\"anyone\",",
   "   \"everyone\", \"all kinds of people\", \"open to anything\", \"like-minded people\") with no",
   "   specific role, craft, or industry noun. false when they name a kind of person.",
   // Deliberately generic examples: the golden acceptance cases are NOT spelled out here —
   // teaching to the test would make the assertion tautological.
-  "4. When a guest names several crafts, tag the one they LEAD WITH (the one they state first /",
+  "5. When a guest names several crafts, tag the one they LEAD WITH (the one they state first /",
   '   build the sentence around): "a director who also edits" -> direct; "writer-turned-producer"',
   "   -> produce. Do not average two crafts into a third.",
   "",
@@ -265,7 +300,7 @@ async function askBatch(guests: Guest[], nudge: string | null): Promise<Convicti
         `Guests (${guests.length}):\n\n${guests.map(renderGuest).join("\n\n")}`,
     },
   ];
-  const out = await chat(DEFAULT_CHAT_MODEL, messages, BatchSchema);
+  const out = await chat(convictionModel(), messages, BatchSchema);
   // `.default({})` fills `quotes` at parse time; the `?? {}` is the type-level twin of that
   // (zod's inferred INPUT type still marks a defaulted field optional).
   return out.items.map((it) => ({ ...it, quotes: it.quotes ?? {} }));
@@ -316,9 +351,12 @@ export async function extractConvictions(guests: Guest[]): Promise<Map<string, C
           ask,
           attempt === 1
             ? null
-            : "Your previous answer was REJECTED by a verbatim-quote check for these guests. " +
-              "Redo them. Copy every quote character-for-character out of the named field, " +
-              "or return an empty quotes object {}. Do not paraphrase.",
+            : "Your previous answer was REJECTED by a verbatim-quote check for these guests. Redo them. " +
+              "SHORTEN every quote to a contiguous fragment of 12 words or fewer, copied " +
+              "character-for-character out of the named field — do not lengthen it, do not add a " +
+              "trailing period, do not re-capitalize, do not paraphrase. If you cannot copy a fragment " +
+              "exactly, return an empty quotes object {} for that guest: an omitted quote is fine, an " +
+              "edited one throws the guest away. Keep the tags.",
         );
       } catch (err) {
         if (err instanceof GatewayNotConfigured) throw err; // DEGRADED — never swallow

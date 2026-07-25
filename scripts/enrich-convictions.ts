@@ -6,6 +6,7 @@
 //
 //   node --env-file=.env --import tsx scripts/enrich-convictions.ts
 //   GUESTS_CSV=… GUESTS_FILTER=gst-a,gst-b  node --env-file=.env --import tsx scripts/enrich-convictions.ts
+//   CONVICTION_MODEL=anthropic/claude-haiku-4.5  node --env-file=.env --import tsx scripts/…
 //
 // Exit codes: 2 = DEGRADED (no gateway creds / no GUESTS_CSV) · 1 = the pass failed
 // loud (nothing extracted, or a named gateway error) · 0 = wrote the file.
@@ -13,8 +14,11 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { loadGuests } from "../lib/guests";
-import { isGatewayConfigured, GatewayNotConfigured, DEFAULT_CHAT_MODEL } from "../lib/gateway";
-import { extractConvictions, CONVICTIONS_PATH, GUARD_FAILED_FLAG, type Conviction } from "../lib/conviction";
+import { isGatewayConfigured, GatewayNotConfigured } from "../lib/gateway";
+import {
+  extractConvictions, convictionModel, CONVICTIONS_PATH, GUARD_FAILED_FLAG, MAX_QUOTE_WORDS,
+  type Conviction,
+} from "../lib/conviction";
 
 function pct(n: number, total: number): string {
   return total ? `${((n / total) * 100).toFixed(1)}%` : "—";
@@ -46,7 +50,11 @@ async function main(): Promise<void> {
     console.error("NoGuestsSelected: the CSV (after GUESTS_FILTER) yielded 0 guests");
     process.exit(1);
   }
-  console.log(`conviction pass: ${guests.length} guest(s) · model ${DEFAULT_CHAT_MODEL}`);
+  console.log(
+    `conviction pass: ${guests.length} guest(s) · model ${convictionModel()}` +
+      `${process.env.CONVICTION_MODEL?.trim() ? " (CONVICTION_MODEL override)" : ""}` +
+      ` · quote cap ${MAX_QUOTE_WORDS}w`,
+  );
 
   const conv = await extractConvictions(guests);
 
