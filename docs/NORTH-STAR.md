@@ -149,3 +149,15 @@ veil's open question (b): a sharp window YES, tracked by the bubble, not the dot
 pass across the scene: every rendered text item as crisp as achievable (DPR-aware canvas/WebGL label
 rendering, contrast/alpha, grain-veil interaction) — clarity outranks subtlety where they conflict.
 — CONFIRMED BY QUOTE.
+
+## Addendum 4 (2026-07-25, verbatim)
+
+> so basically for more clairty on the bubble. when we are in a zoomed out view. eveyrhting should
+> be crystal clear and the buble just does the edge effect. but when you select on one individual
+> whatever is in the buble will recieve the full calirty
+
+Interpretation — the two-state clarity model: (1) AT REST (no selection, zoomed out): the entire
+room is crystal clear; the bubble contributes ONLY its refractive edge effect — nothing inside or
+outside it is blurred/distorted by the bubble. (2) ON SELECTING AN INDIVIDUAL: the focus veil
+softens the room, and whatever sits inside the bubble receives full clarity (the lens cutout) —
+the bubble becomes the reading glass for the softened room. — CONFIRMED BY QUOTE.
