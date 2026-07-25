@@ -172,9 +172,15 @@ const ANSWER_LABEL: Record<string, string> = {
   company: "COMPANY",
   title: "WHAT THEY DO",
   hometown: "HOMETOWN",
+  conviction: "CONVICTION TAG",
+  craft: "CRAFT",
 };
 const ANSWER_ORDER = ["goal", "drew", "seeking", "inspiration", "favorite"];
-const fieldQ = (f: string) => `Q · ${ANSWER_LABEL[f] ?? f.replace(/[_-]+/g, " ").toUpperCase()}`;
+const labelOf = (f: string) => ANSWER_LABEL[f] ?? f.replace(/[_-]+/g, " ").toUpperCase();
+/** a verbatim answer-sheet quote is introduced by its question… */
+const fieldQ = (f: string) => `Q · ${labelOf(f)}`;
+/** …a profile cell read off the graph is introduced as a FIELD, never as a quote. */
+const fieldF = (f: string) => `FIELD · ${labelOf(f)}`;
 
 const TYPE_BADGE: Record<EdgeType, string> = {
   school: styles.bSchool,
@@ -214,6 +220,73 @@ function highlightParts(text: string, via?: string): { t: string; on: boolean }[
   }
   if (last < text.length) out.push({ t: text.slice(last), on: false });
   return out;
+}
+
+/* ------------------------------------------------- receipt provenance
+ * Four honestly-different states. The copy must name the one that actually
+ * happened — claiming "the record did not load" when it loaded fine (a
+ * school/company edge simply carries no answer-sheet quote) is a lie about
+ * provenance, and provenance is the whole product.
+ */
+
+type RecordState = "idle" | "loading" | "ok" | "missing";
+type ReceiptSource = "verbatim" | "fields" | "record-loading" | "record-missing";
+
+export function receiptSource(hasYours: boolean, hasTheirs: boolean, recordState: RecordState): ReceiptSource {
+  if (hasYours && hasTheirs) return "verbatim";
+  if (recordState === "missing") return "record-missing";
+  if (recordState === "ok") return "fields";
+  return "record-loading";
+}
+
+const MATCH_NOTE: Record<EdgeType, string> = {
+  why: "SHARED CONVICTION TAG (LLM-EXTRACTED, QUOTE-GROUNDED)",
+  seek: "SEEKING ↔ WHAT THEY DO (GUARDED MATCH)",
+  school: "EXACT FIELD MATCH AFTER CANONICALIZATION",
+  company: "EXACT FIELD MATCH AFTER CANONICALIZATION",
+};
+
+export function provenanceFor(source: ReceiptSource, type: EdgeType, personId: string): string {
+  const match = MATCH_NOTE[type];
+  switch (source) {
+    case "verbatim":
+      return `SRC · SIGNUP SHEET (VERBATIM) · MATCH · ${match} · RECEIPT RESOLVED ✓`;
+    case "fields":
+      return `SRC · THE GRAPH EDGE + BOTH PROFILE FIELDS · MATCH · ${match} · NO ANSWER-SHEET QUOTE ON THIS EDGE — THE FIELDS ABOVE ARE THE RECEIPT`;
+    case "record-loading":
+      return `READING /graph/people/${personId}.json — SHOWING THE EDGE'S FIELD VALUES UNTIL THE VERBATIM QUOTES ARRIVE.`;
+    case "record-missing":
+      return `/graph/people/${personId}.json DID NOT LOAD — VERBATIM QUOTES ARE WITHHELD, NOT GUESSED. THE EDGE AND FIELDS ABOVE ARE THE GRAPH'S OWN.`;
+  }
+}
+
+/** The cell a node can show for an edge type when no answer-sheet quote exists. */
+export function fieldFallback(n: GNode, type: EdgeType): { field: string; quote: string } | null {
+  if (type === "school") return n.school ? { field: "school", quote: n.school } : null;
+  if (type === "company") {
+    if (n.company) return { field: "company", quote: n.company };
+    return n.free ? { field: "company", quote: "independent" } : null;
+  }
+  if (type === "why") {
+    const tag = n.mission ?? n.impact;
+    return tag ? { field: "conviction", quote: pretty(tag) } : null;
+  }
+  const craft = [n.title, n.asp ? pretty(n.asp) : null].filter(Boolean).join(" · ");
+  return craft ? { field: "craft", quote: craft } : null;
+}
+
+/* ------------------------------------------------- the caption strip
+ * The strip must never wait on an unrelated re-render to fill in: these two
+ * helpers are what the component uses to decide "fetch this record now" and
+ * "what does the strip say with what I have".
+ */
+
+export function needsRecordFetch(lens: Lens, id: string | null, cached: (id: string) => boolean): boolean {
+  return lens === "why" && Boolean(id) && !cached(id as string);
+}
+
+export function stripQuoteFrom(record: PersonRecord | null | undefined): string | null {
+  return record?.answers?.goal ?? record?.answers?.drew ?? null;
 }
 
 /* --------------------------------------------- Step 0: CSV verification */
@@ -337,13 +410,22 @@ const ENTER_MS = 1100;
 
 type Phase = "entry" | "beats" | "live";
 
+interface ReceiptSideView {
+  name: string;
+  hue: string;
+  /** already-resolved label: "Q · …" for a verbatim answer, "FIELD · …" for a profile cell */
+  label: string;
+  quote: string;
+}
+
 interface ReceiptView {
   type: EdgeType;
   via: string;
   mutual: boolean;
   inbound: boolean;
-  left: { name: string; hue: string; field: string; quote: string } | null;
-  right: { name: string; hue: string; field: string; quote: string } | null;
+  source: ReceiptSource;
+  left: ReceiptSideView | null;
+  right: ReceiptSideView | null;
   prov: string;
 }
 
@@ -385,6 +467,8 @@ export default function GraphLab() {
   const [record, setRecord] = useState<PersonRecord | null>(null);
   const [recordState, setRecordState] = useState<"idle" | "loading" | "ok" | "missing">("idle");
   const [receipt, setReceipt] = useState<ReceiptView | null>(null);
+  /** bumped whenever a person record lands in the cache (the cache is a ref) */
+  const [recordTick, setRecordTick] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -406,6 +490,7 @@ export default function GraphLab() {
   const stampsRef = useRef<{ label: string; n: number; x: number; y: number }[]>([]);
   const userMovedRef = useRef(false);
   const recordCache = useRef<Map<string, PersonRecord | null>>(new Map());
+  const inFlightRef = useRef<Set<string>>(new Set());
   const hoverFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phaseRef = useRef<Phase | null>(null);
 
@@ -648,6 +733,8 @@ export default function GraphLab() {
       }
       return;
     }
+    if (inFlightRef.current.has(id)) return; // hover-dwell and the strip can both ask
+    inFlightRef.current.add(id);
     if (selRef.current === id) setRecordState("loading");
     try {
       const res = await fetch(`/graph/people/${encodeURIComponent(id)}.json`, { cache: "no-store" });
@@ -664,6 +751,11 @@ export default function GraphLab() {
         setRecord(null);
         setRecordState("missing");
       }
+    } finally {
+      inFlightRef.current.delete(id);
+      // the cache is a ref: tick so anything reading it (the caption strip)
+      // re-renders the moment a record lands, not on the next unrelated render
+      setRecordTick((t) => t + 1);
     }
   }, []);
 
@@ -1208,32 +1300,29 @@ export default function GraphLab() {
       const self = selId ? byId.get(selId) ?? null : null;
       const other = byId.get(row.otherId) ?? null;
       if (!self || !other) return;
-      const yours = row.receipt?.yours;
-      const theirs = row.receipt?.theirs;
-      const resolved = Boolean(yours?.quote && theirs?.quote);
-      const matchNote =
-        row.type === "why"
-          ? "SHARED CONVICTION TAG (LLM-EXTRACTED, QUOTE-GROUNDED)"
-          : row.type === "seek"
-            ? "SEEKING ↔ WHAT THEY DO (GUARDED MATCH)"
-            : "EXACT FIELD MATCH AFTER CANONICALIZATION";
+      const yours = row.receipt?.yours?.quote ? row.receipt.yours : undefined;
+      const theirs = row.receipt?.theirs?.quote ? row.receipt.theirs : undefined;
+      const source = receiptSource(Boolean(yours), Boolean(theirs), recordState);
+      // each column names its OWN provenance: a verbatim answer or a profile cell
+      const sideOf = (node: GNode, quoted: ReceiptSide | undefined): ReceiptSideView | null => {
+        if (quoted) {
+          return { name: node.name, hue: hueOf(node), label: fieldQ(quoted.field), quote: quoted.quote };
+        }
+        const cell = fieldFallback(node, row.type);
+        return cell ? { name: node.name, hue: hueOf(node), label: fieldF(cell.field), quote: cell.quote } : null;
+      };
       setReceipt({
         type: row.type,
         via: row.via,
         mutual: row.mutual,
         inbound: row.inbound,
-        left: yours
-          ? { name: self.name, hue: hueOf(self), field: yours.field, quote: yours.quote }
-          : null,
-        right: theirs
-          ? { name: other.name, hue: hueOf(other), field: theirs.field, quote: theirs.quote }
-          : null,
-        prov: resolved
-          ? `SRC · SIGNUP SHEET (VERBATIM) · MATCH · ${matchNote} · RECEIPT RESOLVED ✓`
-          : `RECEIPT NOT AVAILABLE — /graph/people/${selId}.json DID NOT LOAD. THE EDGE BELOW IS THE GRAPH'S, THE QUOTES ARE NOT SHOWN RATHER THAN GUESSED.`,
+        source,
+        left: sideOf(self, yours),
+        right: sideOf(other, theirs),
+        prov: provenanceFor(source, row.type, selId ?? "—"),
       });
     },
-    [byId, hueOf, selId],
+    [byId, hueOf, recordState, selId],
   );
 
   /* ------------------------------------------------------ facts (fallback) */
@@ -1253,13 +1342,21 @@ export default function GraphLab() {
   /* ---------------------------------------------------------------- view */
 
   const stripPerson = hoverNode ?? selNode;
-  const stripQuote =
-    stripPerson && recordCache.current.get(stripPerson.id)?.answers
-      ? recordCache.current.get(stripPerson.id)?.answers?.goal ??
-        recordCache.current.get(stripPerson.id)?.answers?.drew ??
-        null
-      : null;
+  // The strip reads a ref-held cache, so it re-reads on every recordTick — the
+  // quote fills in the moment the record lands (name/school line shows at once).
+  const stripQuote = useMemo(() => {
+    void recordTick;
+    return stripPerson ? stripQuoteFrom(recordCache.current.get(stripPerson.id)) : null;
+  }, [stripPerson, recordTick]);
   const showStrip = phase === "live" && lens === "why" && Boolean(stripPerson);
+
+  // Currents: hovering or selecting someone kicks their record immediately (no
+  // dwell) so the strip's verbatim quote arrives on its own, not by luck.
+  const stripPersonId = stripPerson?.id ?? null;
+  useEffect(() => {
+    if (!needsRecordFetch(lens, stripPersonId, (id) => recordCache.current.has(id))) return;
+    void loadRecord(stripPersonId as string);
+  }, [lens, stripPersonId, loadRecord]);
   const subLine = LENSES.find((l) => l.key === lens)?.sub ?? "";
   const beatProgress = entering ? 1 : (beatIdx + 1) / BEAT_MS.length;
 
@@ -1647,7 +1744,7 @@ export default function GraphLab() {
                 side ? (
                   <div key={i}>
                     <div className={styles.rname}>{side.name}</div>
-                    <div className={styles.rq}>{fieldQ(side.field)}</div>
+                    <div className={styles.rq}>{side.label}</div>
                     <div className={styles.rtxt} style={{ borderColor: side.hue }}>
                       {highlightParts(side.quote, receipt.via).map((p, j) =>
                         p.on ? <mark key={j}>{p.t}</mark> : <span key={j}>{p.t}</span>,
