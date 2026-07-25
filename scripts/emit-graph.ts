@@ -929,6 +929,25 @@ async function main(): Promise<number> {
     }
     return undefined;
   };
+  /**
+   * Fallback why-receipt for a side with no surviving extraction quote — an
+   * overridden tag's quote is dropped by the override law, and a why-edge whose
+   * sides BOTH lost their quote would ship unprovable (audit I2). The fallback
+   * is a verbatim PREFIX of the answer field the shared tag is read from
+   * (motive ← drew, everything else ← goal): the same "the field is the
+   * receipt" convention the route's fieldFallback renders for school/company.
+   * clip() never adds an ellipsis, so this stays a byte-literal span (audit I1).
+   * Nothing is invented; when both fields are blank the side stays quoteless.
+   */
+  const tagFieldLine = (id: string, tag: string): Receipt | undefined => {
+    const a = answersOf(id);
+    if (!a) return undefined;
+    const primary = (MOTIVES as readonly string[]).includes(tag) ? "drew" : "goal";
+    for (const field of [primary, primary === "drew" ? "goal" : "drew"] as const) {
+      if (a[field].trim() !== "") return { field, quote: clip(a[field], 180) };
+    }
+    return undefined;
+  };
   const cellReceipt = (id: string, col: "school" | "company"): Receipt | undefined => {
     const g = byGuestId.get(id);
     if (!g) return undefined;
@@ -996,7 +1015,10 @@ async function main(): Promise<number> {
             type: "why",
             via: pretty(tag),
             strength: e.score,
-            ...withReceipt(convictionQuote(me.id), convictionQuote(other)),
+            ...withReceipt(
+              convictionQuote(me.id) ?? tagFieldLine(me.id, tag),
+              convictionQuote(other) ?? tagFieldLine(other, tag),
+            ),
           },
           w: WEIGHT.why,
           strength: e.score ?? 0,
