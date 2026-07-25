@@ -11,7 +11,13 @@
  *   GUESTS_CSV=… GUESTS_FILTER=gst-a,gst-b node --env-file=.env --import tsx scripts/enrich-matches.ts
  *   DRY_RUN=1 GUESTS_CSV=… npx tsx scripts/enrich-matches.ts     # cache-only, no driver, no gateway
  *
+ * PROVIDER. `EMBED_PROVIDER=gateway` (default) uses Butterbase embeddings. `EMBED_PROVIDER=tfidf`
+ * uses the named local TF-IDF fallback — no gateway creds needed, no cache read or written — and
+ * every edge it produces is stamped `_src = "match:tfidf-v1"` instead of `"gateway:seek-match"`,
+ * so the graph itself records which vector space matched these people. The banner says it out loud.
+ *
  * Env:
+ *   EMBED_PROVIDER          (optional) gateway (default) | tfidf
  *   GUESTS_CSV              (required) path to the Luma guest export
  *   GUESTS_FILTER           (optional) comma-separated guest_ids — the golden-sample run
  *   CONVICTIONS_JSON        (optional) override data/graph-private/convictions.json
@@ -40,12 +46,20 @@ import { isConfigured as isNeo4jConfigured, close, Neo4jNotConfigured } from "..
 import { dispatch } from "../lib/ontology-gate";
 import { WriteSeekEdgeParams } from "../ontology/manifest";
 import {
-  computeMatches, cosine, adaptiveThreshold, isOutboundSeeker, seekDoc,
-  EmbeddingsCacheMiss, MATCHES_PATH, SEEK_PERCENTILE, SEEK_TOP_K,
-  type Matches, type SeekEdge,
+  computeMatches, cosine, adaptiveThreshold, isOutboundSeeker, seekDoc, vectorProvider,
+  EmbeddingsCacheMiss, UnknownVectorProvider, MATCHES_PATH, SEEK_PERCENTILE, SEEK_TOP_K,
+  type Matches, type SeekEdge, type VectorProvider,
 } from "../lib/matches";
 
-const PROV = { src: "gateway:seek-match", actor: "agent" } as const;
+/**
+ * Provenance is per-provider (law d): the graph must record WHICH vector space decided that these
+ * two people should find each other. `gateway:seek-match` = Butterbase embeddings;
+ * `match:tfidf-v1` = the named local fallback. Never one label pretending to be the other.
+ */
+const PROV: Record<VectorProvider, { src: string; actor: "agent" }> = {
+  gateway: { src: "gateway:seek-match", actor: "agent" },
+  tfidf: { src: "match:tfidf-v1", actor: "agent" },
+};
 
 function num(env: string | undefined, dflt: number): number {
   const v = Number(env);
@@ -126,8 +140,26 @@ async function main(): Promise<number> {
   const percentile = Number(process.env.SEEK_PERCENTILE) || SEEK_PERCENTILE;
   const topK = num(process.env.SEEK_TOP_K, SEEK_TOP_K);
 
+  // The provider decides whether the gateway is needed at all. An unparseable EMBED_PROVIDER
+  // throws UnknownVectorProvider here rather than silently defaulting to a different vector space.
+  let provider: VectorProvider;
+  try {
+    provider = vectorProvider();
+  } catch (e) {
+    if (e instanceof UnknownVectorProvider) {
+      console.error(e.message);
+      return 2;
+    }
+    throw e;
+  }
+  say(
+    provider === "tfidf"
+      ? "provider tfidf — gateway embeddings unavailable (named fallback); SEEKS provenance _src=match:tfidf-v1"
+      : "provider gateway — Butterbase embeddings; SEEKS provenance _src=gateway:seek-match",
+  );
+
   // ---- DEGRADED gates, cheapest first: no creds means a NAMED error and exit 2, never a fake pass.
-  if (!dryRun && !isGatewayConfigured()) {
+  if (provider === "gateway" && !dryRun && !isGatewayConfigured()) {
     console.error(
       "GatewayNotConfigured: BUTTERBASE_GATEWAY_URL / BUTTERBASE_API_KEY missing — " +
         "DEGRADED mode, the seek matrix needs embeddings. (DRY_RUN=1 runs off the embedding cache.)",
@@ -205,6 +237,7 @@ async function main(): Promise<number> {
   let matches: Matches;
   try {
     matches = await computeMatches(guests, conv, {
+      provider,
       percentile,
       topK,
       cacheOnly: dryRun,
@@ -296,7 +329,7 @@ async function main(): Promise<number> {
   let ok = 0;
   await pool(seeks, num(process.env.SEEK_WRITE_CONCURRENCY, 6), async (e: SeekEdge) => {
     try {
-      const written = await dispatch("write_seek_edge", e, PROV);
+      const written = await dispatch("write_seek_edge", e, PROV[provider]);
       // The action MATCHes both Persons; an empty result means one of them is not in the graph.
       if (written.length === 0) unresolved.push(`${e.from}→${e.to}`);
       ok++;

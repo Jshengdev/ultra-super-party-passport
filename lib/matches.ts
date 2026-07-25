@@ -35,9 +35,20 @@
  * (reciprocal pairs stored once), saved to matches.json only — doppels are NOT written to Neo4j
  * (there is no manifest action for them, and law (a) means no action ⇒ unrepresentable).
  *
- * EMBEDDING CACHE — `data/graph-private/embeddings.json`, keyed by sha256(personId + text), so a
- * re-run re-spends nothing. The cache records the embedding model; a model change invalidates the
- * whole file rather than silently mixing vector spaces.
+ * TWO VECTOR PROVIDERS (`EMBED_PROVIDER`, default `gateway`).
+ *   `gateway` — Butterbase embeddings, cached at `data/graph-private/embeddings.json` keyed by
+ *     sha256(personId + text), so a re-run re-spends nothing. The cache records the embedding
+ *     model; a model change invalidates the whole file rather than mixing two vector spaces.
+ *   `tfidf` — THE NAMED FALLBACK (2026-07-25). The gateway serves no embedding model any more:
+ *     its /models catalog lists 397 ids with zero embedders and every /embeddings probe answers
+ *     MODEL_NOT_FOUND. Rather than fake a matrix or ship an empty one, this mode computes
+ *     deterministic L2-normalized TF-IDF vectors over the room's own corpus (all offer docs + all
+ *     seek docs) — pure code, no network, no cache needed. It is honestly labelled everywhere it
+ *     touches: the SEEKS writes carry `_src = "match:tfidf-v1"` (law d), and the run banner says
+ *     so out loud (law b: never a silent fallback). Restore the platform's embeddings and
+ *     `EMBED_PROVIDER=gateway` returns to the semantic matrix with no other change.
+ * Everything downstream of the vectors — thresholds, caps, mutuality, doppelgängers, diagnostics —
+ * is provider-agnostic and byte-for-byte identical in both modes.
  *
  * LAWS: (b) DEGRADED is never faked — `GatewayNotConfigured` propagates untouched, cacheOnly mode
  * throws the named {@link EmbeddingsCacheMiss} instead of inventing vectors, and every embedding
@@ -47,7 +58,10 @@
  *
  * DEPARTURES (law e):
  *   [neutral] the brief's "goal-embedding" for doppelgängers IS the offer doc (title + goal +
- *     aspiration) — no third embedding pass, half the spend, same signal.
+ *     affiliation + aspiration) — no third embedding pass, half the spend, same signal.
+ *   [good] the offer doc also carries the guest's company and school display names: under a
+ *     lexical provider that is exactly the signal the seek answers ask for ("talent agency",
+ *     "someone at a studio"), and under the gateway provider it is honest extra context.
  *   [neutral] a guest with a BLANK `seeking` answer is treated like an openSeeker (no outbound):
  *     the brief only names openSeeker, but there is no document to embed.
  *   [neutral] the brief's doppelgänger "different signup-burst" rule is skipped per its own v1 note.
@@ -83,6 +97,56 @@ export const OFFER_FALLBACK = "creative";
  * exactly the failure the fail-loud law exists to prevent.
  */
 export const MIN_EMBED_DIM = 16;
+/** Tokens shorter than this carry no lexical signal. */
+export const MIN_TOKEN_LEN = 2;
+/**
+ * Small English function-word list for the TF-IDF provider. Deliberately FUNCTION WORDS ONLY —
+ * no "people", no "anyone", no craft nouns: those are the signal, not the noise.
+ */
+export const STOPWORDS: ReadonlySet<string> = new Set([
+  // articles / prepositions / conjunctions
+  "the", "and", "for", "with", "that", "this", "these", "those", "from", "into", "onto", "out",
+  "off", "over", "under", "than", "then", "there", "here", "about", "of", "in", "to", "as", "at",
+  "on", "by", "or", "if", "an", "so", "up", "but", "because", "while", "after", "before", "during",
+  "between", "through", "within", "without", "against", "across", "toward", "towards", "upon",
+  // pronouns / determiners
+  "you", "your", "yours", "our", "ours", "their", "them", "they", "she", "her", "hers", "his",
+  "him", "its", "it", "we", "us", "me", "my", "mine", "he", "who", "whom", "whose", "which",
+  "what", "when", "where", "why", "how", "all", "any", "some", "each", "other", "others", "both",
+  "few", "own", "such", "same",
+  // auxiliaries / modals / light verbs
+  "is", "am", "are", "was", "were", "been", "being", "be", "have", "has", "had", "having", "do",
+  "does", "did", "done", "not", "no", "can", "will", "would", "could", "should", "may", "might",
+  "must", "get", "got",
+  // degree / discourse filler
+  "just", "also", "very", "much", "more", "most", "too", "even", "still", "only", "again", "once",
+  "really", "maybe", "perhaps", "lot", "lots", "one", "two", "etc",
+  // apostrophe fragments (apostrophes are split points: "don't" → "don" + "t")
+  "ve", "ll", "re", "im", "don", "doesn", "didn", "isn", "aren", "wasn", "weren", "couldn",
+  "shouldn", "wouldn", "hasn", "haven", "hadn",
+]);
+/** The vector sources. `gateway` = Butterbase embeddings; `tfidf` = the named local fallback. */
+export const VECTOR_PROVIDERS = ["gateway", "tfidf"] as const;
+export type VectorProvider = (typeof VECTOR_PROVIDERS)[number];
+
+/** `EMBED_PROVIDER` was set to something that is not a provider — fail loud, never guess. */
+export class UnknownVectorProvider extends Error {
+  constructor(raw: string) {
+    super(
+      `UnknownVectorProvider: EMBED_PROVIDER="${raw}" is not one of ${VECTOR_PROVIDERS.join(" | ")}. ` +
+        `Refusing to guess which vector space to build the room out of.`,
+    );
+    this.name = "UnknownVectorProvider";
+  }
+}
+
+/** Read the provider at CALL time (never import time), so a run can switch without a code change. */
+export function vectorProvider(raw: string | undefined = process.env.EMBED_PROVIDER): VectorProvider {
+  const v = (raw ?? "").trim().toLowerCase();
+  if (v === "") return "gateway";
+  if ((VECTOR_PROVIDERS as readonly string[]).includes(v)) return v as VectorProvider;
+  throw new UnknownVectorProvider(raw ?? "");
+}
 
 // ---------------------------------------------------------------------------
 // Shapes.
@@ -114,6 +178,8 @@ export interface DoppelMeta {
 }
 
 export interface MatchOptions {
+  /** Vector source. Default: {@link vectorProvider} (the `EMBED_PROVIDER` env, else `gateway`). */
+  provider?: VectorProvider;
   /** Per-row percentile floor. Default {@link SEEK_PERCENTILE}. */
   percentile?: number;
   /** Outbound cap per seeker. Default {@link SEEK_TOP_K}. */
@@ -159,28 +225,118 @@ export class EmbeddingsDegenerate extends Error {
 }
 
 /**
- * The deterministic guard on the embedding call (law b): a returned batch must be rectangular,
- * wide enough to be a real embedding, finite, and non-zero. Anything else fails LOUD instead of
- * quietly producing a room where every cosine is 0 and every match is arbitrary.
+ * The deterministic guard on the vector set (law b): rectangular, wide enough, finite, non-zero.
+ * Anything else fails LOUD instead of quietly producing a room where every cosine is 0 and every
+ * match is arbitrary.
+ *
+ * Run over the FULL ASSEMBLED SET before any matrix math — not just over freshly-embedded batches.
+ * A cache file written by an older run (different model, truncated entry, hand-edited) is exactly
+ * as dangerous as a bad gateway response, and DRY_RUN reads nothing BUT the cache.
+ *
+ * `opts.allowZero` is for the TF-IDF provider, where a document whose every token is a stopword
+ * legitimately yields a zero vector; the caller handles those by name instead of dying on them.
+ * `opts.minDim` likewise: a TF-IDF dimension is the corpus vocabulary, not a model property.
  */
-export function assertUsableVectors(vs: ReadonlyArray<number[]>, model: string = DEFAULT_EMBED_MODEL): void {
+export function assertUsableVectors(
+  vs: ReadonlyArray<number[]>,
+  model: string = DEFAULT_EMBED_MODEL,
+  opts: { minDim?: number; allowZero?: boolean } = {},
+): void {
   if (vs.length === 0) return;
+  const minDim = opts.minDim ?? MIN_EMBED_DIM;
   const dim = vs[0].length;
-  if (dim < MIN_EMBED_DIM) {
-    throw new EmbeddingsDegenerate(`vectors are ${dim}-dimensional, expected >= ${MIN_EMBED_DIM}`, model);
+  if (dim < minDim) {
+    throw new EmbeddingsDegenerate(`vectors are ${dim}-dimensional, expected >= ${minDim}`, model);
   }
   for (let i = 0; i < vs.length; i++) {
     const v = vs[i];
+    if (!Array.isArray(v)) throw new EmbeddingsDegenerate(`entry ${i} is not a vector (${typeof v})`, model);
     if (v.length !== dim) {
-      throw new EmbeddingsDegenerate(`ragged batch — vector ${i} is ${v.length}d, vector 0 is ${dim}d`, model);
+      throw new EmbeddingsDegenerate(`ragged set — vector ${i} is ${v.length}d, vector 0 is ${dim}d`, model);
     }
     let n = 0;
     for (const x of v) {
       if (!Number.isFinite(x)) throw new EmbeddingsDegenerate(`vector ${i} contains a non-finite value`, model);
       n += x * x;
     }
-    if (n === 0) throw new EmbeddingsDegenerate(`vector ${i} is all zeros`, model);
+    if (n === 0 && !opts.allowZero) throw new EmbeddingsDegenerate(`vector ${i} is all zeros`, model);
   }
+}
+
+// ---------------------------------------------------------------------------
+// TF-IDF provider (pure, deterministic, offline — the named fallback).
+// ---------------------------------------------------------------------------
+
+/**
+ * Fold the English plural onto its singular so a lexical space can see that "future directors" and
+ * "casting director" are about the same job. Deterministic, uniform, and applied to every document
+ * — never a special case for a particular pair.
+ *
+ * MEASURED on the full 312-guest room (tfidf), not assumed: folding takes 910 → 962 seek edges and
+ * drops "sought by nobody" 78 → 70. It is also what gives the acceptance pair any shared term at
+ * all — TJ Jalloh seeks "future directors", Michael Vainshtein offers "casting director" ×3, which
+ * is zero overlap unfolded and 0.0253 folded (still rank 63/311, i.e. nowhere near the top-5 cap:
+ * see the task report — a lexical space cannot see that those two sentences mean the same thing).
+ */
+export function foldPlural(t: string): string {
+  if (t.length >= 5 && t.endsWith("ies")) return `${t.slice(0, -3)}y`; // stories → story
+  if (t.length >= 5 && /(?:ss|sh|ch|x|z)es$/.test(t)) return t.slice(0, -2); // classes → class
+  if (t.length >= 4 && t.endsWith("s") && !t.endsWith("ss") && !t.endsWith("us") && !t.endsWith("is")) {
+    return t.slice(0, -1); // directors → director  (business/analysis left alone)
+  }
+  return t;
+}
+
+/**
+ * lowercase → strip diacritics → split on non-alphanumerics → drop short tokens + stopwords →
+ * fold plurals. Stopwords are checked BEFORE folding (the list is written in surface form) and
+ * again after, so "others" → "other" cannot sneak back in.
+ */
+export function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t.length >= MIN_TOKEN_LEN && !STOPWORDS.has(t))
+    .map(foldPlural)
+    .filter((t) => t.length >= MIN_TOKEN_LEN && !STOPWORDS.has(t));
+}
+
+/**
+ * L2-normalized TF-IDF vectors over the corpus's own shared vocabulary.
+ * `idf = ln(1 + N/df)`; `tf` = raw in-document count. Vocabulary order is sorted, so the vector
+ * space — and therefore every downstream score — is a pure function of the input texts.
+ *
+ * A document with no surviving tokens yields the zero vector: honest ("nothing to match on"),
+ * and handled by name in {@link computeMatches} rather than papered over.
+ */
+export function tfidfVectors(texts: ReadonlyArray<string>): number[][] {
+  const docs = texts.map(tokenize);
+  const df = new Map<string, number>();
+  for (const d of docs) for (const t of new Set(d)) df.set(t, (df.get(t) ?? 0) + 1);
+
+  const vocab = [...df.keys()].sort(); // deterministic dimension order
+  const at = new Map(vocab.map((t, i) => [t, i]));
+  const n = docs.length;
+  const idf = vocab.map((t) => Math.log(1 + n / (df.get(t) as number)));
+
+  return docs.map((d) => {
+    const v = new Array<number>(vocab.length).fill(0);
+    for (const t of d) v[at.get(t) as number] += 1;
+    let norm = 0;
+    for (let i = 0; i < v.length; i++) {
+      if (v[i] !== 0) {
+        v[i] *= idf[i];
+        norm += v[i] * v[i];
+      }
+    }
+    if (norm > 0) {
+      const inv = 1 / Math.sqrt(norm);
+      for (let i = 0; i < v.length; i++) if (v[i] !== 0) v[i] *= inv;
+    }
+    return v;
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -196,13 +352,21 @@ export function seekDoc(g: Guest): string {
   return oneLine(g.answers.seeking ?? "");
 }
 
-/** What this person IS: title, goal, and the aspiration tag spelled out ("represent-agency" → "represent agency"). */
+/**
+ * What this person IS: title, goal, where they actually are (company / school display names), and
+ * the aspiration tag spelled out ("represent-agency" → "represent agency").
+ *
+ * The affiliation names earn their place: half the room's `seeking` answers ask for a KIND OF
+ * PLACE ("people at agencies", "students at USC"), which no amount of title text answers.
+ */
 export function offerDoc(g: Guest, c?: Conviction | null): string {
   const parts: string[] = [];
   const title = oneLine(g.title ?? "");
   const goal = oneLine(g.answers.goal ?? "");
+  const where = oneLine(`${g.company ?? ""} ${g.school ?? ""}`);
   if (title) parts.push(title);
   if (goal) parts.push(goal);
+  if (where) parts.push(where);
   if (c?.aspiration) parts.push(`Aspiration: ${c.aspiration.replace(/-/g, " ")}`);
   return oneLine(parts.join(". ")) || OFFER_FALLBACK;
 }
@@ -235,11 +399,27 @@ export function round4(x: number): number {
   return Math.round(x * 1e4) / 1e4;
 }
 
+/**
+ * Two vectors from different spaces reached the same cosine. Truncating to the shorter one would
+ * answer with a number instead of a fault — and a wrong number here is an arbitrary edge with a
+ * receipt on it. Fail loud instead.
+ */
+export class VectorDimensionMismatch extends Error {
+  constructor(a: number, b: number) {
+    super(
+      `VectorDimensionMismatch: cosine over a ${a}d and a ${b}d vector. These are not the same ` +
+        `vector space — refusing to truncate and return a meaningless similarity.`,
+    );
+    this.name = "VectorDimensionMismatch";
+  }
+}
+
 export function cosine(a: number[], b: number[]): number {
+  if (a.length !== b.length) throw new VectorDimensionMismatch(a.length, b.length);
   let dot = 0;
   let na = 0;
   let nb = 0;
-  const n = Math.min(a.length, b.length);
+  const n = a.length;
   for (let i = 0; i < n; i++) {
     dot += a[i] * b[i];
     na += a[i] * a[i];
@@ -306,8 +486,9 @@ export function markMutual(edges: ReadonlyArray<SeekEdge>): SeekEdge[] {
  * @param via        deterministic edge label, given the TARGET's personId.
  *
  * Per seeker: score every other person (self is the only exclusion), keep those at or above the
- * row's adaptive threshold, take the best `topK` (ties broken by personId, so the output is a
- * deterministic function of the inputs), then flag the pairs that survived both ways.
+ * row's adaptive threshold AND above zero (an edge needs some evidence), take the best `topK`
+ * (ties broken by personId, so the output is a deterministic function of the inputs), then flag
+ * the pairs that survived both ways.
  */
 export function buildSeekEdges(
   ids: ReadonlyArray<string>,
@@ -343,7 +524,12 @@ export function buildSeekEdges(
 
     const thr = adaptiveThreshold(cand.map((c) => c.score), p);
     const kept = cand
-      .filter((c) => c.score >= thr)
+      // `score > 0` is the law-(c) floor under it all: a zero similarity means the two documents
+      // have NOTHING in common, so the edge would be a "why" with no evidence behind it. Under a
+      // dense embedding space this never fires (cosines are never exactly 0); under TF-IDF a
+      // sparse row can be 90%+ zeros, and without this the percentile floor sits at 0.0 and the
+      // top-K cap hands out five evidence-free edges by tie-break alone.
+      .filter((c) => c.score >= thr && c.score > 0)
       .sort((a, b) => b.score - a.score || (ids[a.j] < ids[b.j] ? -1 : ids[a.j] > ids[b.j] ? 1 : 0))
       .slice(0, topK);
 
@@ -522,8 +708,12 @@ export async function embedWithCache(
 /**
  * Guests + convictions → the seek matrix and the doppelgänger list.
  *
- * Order is a deterministic function of `guests` (the caller's CSV order), so two runs over the
- * same cache produce byte-identical output.
+ * Order is a deterministic function of `guests` (the caller's CSV order); under `tfidf` the whole
+ * result is a pure function of the inputs, and under `gateway` of the inputs plus the cache — two
+ * runs produce byte-identical output either way.
+ *
+ * Whatever the provider, the assembled vector set passes {@link assertUsableVectors} BEFORE any
+ * matrix math: cached vectors get exactly the same scrutiny as fresh ones.
  */
 export async function computeMatches(
   guests: Guest[],
@@ -547,18 +737,51 @@ export async function computeMatches(
       `${guests.length - seekers.length} inbound-only (openSeeker / blank seeking)`,
   );
 
-  const { vectors, hits, embedded } = await embedWithCache([...offers, ...seekers], {
-    cacheOnly: opts.cacheOnly,
-    path: opts.embedPath,
-    log,
-  });
-  log(`embed: ${hits} cache hit(s), ${embedded} newly embedded`);
+  const provider = opts.provider ?? vectorProvider();
+  const docs = [...offers, ...seekers];
+  let vectors: number[][];
+
+  if (provider === "tfidf") {
+    vectors = tfidfVectors(docs.map((d) => d.text));
+    const vocab = vectors[0]?.length ?? 0;
+    const empty = vectors.filter((v) => v.every((x) => x === 0)).length;
+    log(
+      `vectors: tfidf over ${docs.length} document(s) · ${vocab}-term vocabulary · no gateway, no cache` +
+        (empty ? ` · ${empty} document(s) tokenized to nothing` : ""),
+    );
+    // vocabulary size is a corpus property, and an all-stopword doc is legitimately zero here
+    assertUsableVectors(vectors, "tfidf-v1", { minDim: 1, allowZero: true });
+  } else {
+    const got = await embedWithCache(docs, { cacheOnly: opts.cacheOnly, path: opts.embedPath, log });
+    vectors = got.vectors;
+    log(`embed: ${got.hits} cache hit(s), ${got.embedded} newly embedded`);
+    // The FULL set, cached entries included — DRY_RUN reads nothing but the cache.
+    assertUsableVectors(vectors);
+  }
 
   const offerVecs = vectors.slice(0, offers.length);
   const seekVecList = vectors.slice(offers.length);
   const seekVecs: Array<number[] | null> = [];
   let s = 0;
-  for (let i = 0; i < guests.length; i++) seekVecs.push(outbound[i] ? seekVecList[s++] : null);
+  let muted = 0;
+  for (let i = 0; i < guests.length; i++) {
+    if (!outbound[i]) {
+      seekVecs.push(null);
+      continue;
+    }
+    const v = seekVecList[s++];
+    // A seek doc with no usable tokens (tfidf) cannot rank anyone: it would hand out five edges by
+    // tie-break alone. That is an invented match, so they become inbound-only — named, not hidden.
+    if (v.every((x) => x === 0)) {
+      muted++;
+      seekVecs.push(null);
+    } else {
+      seekVecs.push(v);
+    }
+  }
+  if (muted) {
+    log(`matches: ${muted} seeker(s) muted — their seeking answer has no usable tokens (inbound-only)`);
+  }
 
   opts.onVectors?.({ ids, seekVecs, offerVecs });
 
