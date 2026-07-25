@@ -16,6 +16,12 @@ const ROWS: { type: RoomEdgeType; label: string; hue: string }[] = [
   { type: "company", label: "Same company", hue: "var(--film-gold)" },
 ];
 
+/* How many threads of each type the room holds — fixed for the session, since
+   PartyScene seeds ROOM_EDGES before it imports the scene. One pass here, not
+   four filters over every edge on every render. */
+const COUNT: Partial<Record<RoomEdgeType, number>> = {};
+for (const e of ROOM_EDGES) COUNT[e.type] = (COUNT[e.type] ?? 0) + 1;
+
 export default function ConnectionsLegend({
   edgeOn,
   onToggle,
@@ -57,7 +63,6 @@ export default function ConnectionsLegend({
       </div>
       {ROWS.map((row) => {
         const on = edgeOn[row.type];
-        const n = ROOM_EDGES.filter((e) => e.type === row.type).length;
         return (
           <button
             key={row.type}
@@ -92,7 +97,9 @@ export default function ConnectionsLegend({
               }}
             />
             <span style={{ flex: 1, whiteSpace: "nowrap" }}>{row.label}</span>
-            <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>{n}</span>
+            <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>
+              {COUNT[row.type] ?? 0}
+            </span>
           </button>
         );
       })}

@@ -12,7 +12,8 @@ import {
   SCHOOL_COMPANY_PAIRS,
 } from "./adapter";
 
-const HEIGHT = 100;
+/** How much of the bottom the ticker docks — the scene anchors above it. */
+export const TICKER_HEIGHT = 100;
 const ROW_TOP_Y = 14; // school row top
 const ROW_BOT_Y = 58; // company row top
 const ROW_H = 30;
@@ -63,7 +64,7 @@ export default function TagTicker() {
       const vw = root.clientWidth;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.max(2, Math.floor(vw * dpr));
-      canvas.height = Math.floor(HEIGHT * dpr);
+      canvas.height = Math.floor(TICKER_HEIGHT * dpr);
       canvas.getContext("2d")!.setTransform(dpr, 0, 0, dpr, 0, 0);
       mTop = measure(topTrack, TICKER_SCHOOLS.length);
       mBot = measure(botTrack, TICKER_COMPANIES.length);
@@ -100,7 +101,7 @@ export default function TagTicker() {
       botTrack.style.transform = `translateX(${(offBot - mBot.total).toFixed(2)}px)`;
 
       const ctx = canvas.getContext("2d")!;
-      ctx.clearRect(0, 0, vw, HEIGHT);
+      ctx.clearRect(0, 0, vw, TICKER_HEIGHT);
       ctx.lineWidth = 1;
       for (const p of SCHOOL_COMPANY_PAIRS) {
         const si = schoolIdx.get(p.school);
@@ -187,7 +188,7 @@ export default function TagTicker() {
         left: 0,
         right: 0,
         bottom: 0,
-        height: HEIGHT,
+        height: TICKER_HEIGHT,
         overflow: "hidden",
         pointerEvents: "none",
         background:
@@ -198,7 +199,7 @@ export default function TagTicker() {
     >
       <canvas
         ref={canvasRef}
-        style={{ position: "absolute", inset: 0, width: "100%", height: HEIGHT }}
+        style={{ position: "absolute", inset: 0, width: "100%", height: TICKER_HEIGHT }}
       />
       <div ref={topTrackRef} style={{ ...rowStyle, top: ROW_TOP_Y }}>
         {[0, 1].flatMap((copy) =>

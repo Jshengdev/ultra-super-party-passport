@@ -5,7 +5,7 @@ import { defaultAdapter, ROOM_EDGES, type RoomEdgeType } from "./adapter";
 import { GUEST_DETAILS } from "./adapter";
 import StampBurst, { type StampData } from "./Stamps";
 import HometownMap from "./HometownMap";
-import TagTicker from "./TagTicker";
+import TagTicker, { TICKER_HEIGHT } from "./TagTicker";
 import ConnectionsLegend from "./ConnectionsLegend";
 import { GraphSheet } from "./sheet";
 import { BoardState } from "./boards";
@@ -1472,10 +1472,10 @@ export default function PeplGraph() {
     color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.52)",
     cursor: "pointer",
   });
-  /* the ticker docks the bottom 100px, so everything bottom-anchored rides
-     above it when it is up and drops to the floor when it is not; the
-     legend clears the pill row it shares the left edge with */
-  const floor = widgets.ticker ? 128 : 20;
+  /* the ticker docks the bottom of the room, so everything bottom-anchored
+     rides its height + 28 of clearance when it is up and drops to the 20px
+     margin when it is not; the legend clears the pill row below it */
+  const floor = widgets.ticker ? TICKER_HEIGHT + 28 : 20;
   const legendBottom = floor + 44;
   /* slider readouts update live — format to the step's precision and
      keep the digits tabular so nothing jitters */
@@ -1634,6 +1634,8 @@ export default function PeplGraph() {
       {/* the widget pills — the clean field is the default; this row is how
           each overlay comes back */}
       <div
+        role="group"
+        aria-label="overlays"
         style={{
           position: "absolute",
           left: 20,
