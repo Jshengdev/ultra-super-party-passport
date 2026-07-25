@@ -27,12 +27,18 @@ const GLOW_PAD = 26; // board-space px of bleed around the glow blit
    design (it has to read as glass on the cream), so mixing it in raw would lift
    the label off the ground and cost contrast that 8.5px type cannot spare.
 
-   Measured on the cream at full label alpha: plain ink reads 3.83:1, a tinted
-   label 3.10–3.26:1 — the cost of leaning charcoal toward a pastel, and the
-   budget these two numbers are tuned against. Raising either one starts to
-   read as coloured text; lowering them loses the grouping at a glance. */
+   Measured on the cream at full label alpha (LABEL_A below): plain ink reads
+   4.78:1, a tinted label 3.71–3.94:1 — the gap between them is the cost of
+   leaning charcoal toward a pastel, and the budget these two knobs are tuned
+   against. Raising either one starts to read as coloured text; lowering them
+   loses the grouping at a glance. */
 const TINT_DEEPEN = 0.55; // the pastel token, taken down to its deep end
 const TINT_MIX = 0.3; // how far the label ink leans off charcoal toward it
+/* The top of the label's brightness ramp — every state (rest, under the lens,
+   neighbour, focus) is a fraction of it, so this scales the whole ramp without
+   touching the relationships between them. Clarity outranks subtlety: 8.5px
+   type on cream needs the ink, and 0.55 was leaving it at 3.83:1. */
+const LABEL_A = 0.62;
 
 /* ---- group guidelines ----------------------------------------------------
    The dashed border is a RADIAL fit around the cluster's own centre, sampled
@@ -226,10 +232,20 @@ export class GraphSheet {
       this.labelTints = [];
       return;
     }
-    /* walk the film ring in thirds: clusters sit on a ring in index order, so
-       neighbours must not land on neighbouring hues. (A palette divisible by 3
-       would cycle after two steps — walk it one at a time instead.) */
-    const stride = pal.length % 3 === 0 ? 1 : 3;
+    /* Walk the film ring in thirds: clusters sit on a ring in index order, so
+       neighbours must not land on neighbouring hues. A palette divisible by 3
+       would cycle after two steps — step in TWOS there, never in ones, which
+       is the adjacency this walk exists to avoid. (Dead against the eight real
+       tokens; live the moment a partial resolve leaves 3 or 6 of them.)
+
+       The one seam a stride cannot close is the ring's own: the walk returns
+       to cluster 0 having stepped (n−1)·stride, so with 11 clusters over 8
+       hues the last-to-first gap is 2 where every other is 3. Nothing better
+       exists — the closure is −2·stride mod 8, and every stride that visits
+       all 8 hues is odd, so ±2 is the ceiling. Accepted: two hues apart still
+       reads as two hues, and the alternative (repeating a hue outright, or
+       leaving the palette half-unused) is louder than the seam. */
+    const stride = pal.length % 3 === 0 ? 2 : 3;
     this.labelTints = L.clusters.map((_, ci) => {
       const hue = pal[(ci * stride) % pal.length];
       const ch = (k: number) =>
@@ -510,7 +526,7 @@ export class GraphSheet {
       if (la > 0.01) {
         ctx.textAlign = d.labelSide === 1 ? "left" : "right";
         const tint = this.labelTints[d.clusterIndex] ?? INK;
-        ctx.fillStyle = `rgba(${tint},${(0.55 * la).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${tint},${(LABEL_A * la).toFixed(3)})`;
         const lx =
           d.labelSide === 1 ? x + d.baseR * s * 1.8 + 5 : x - d.baseR * s * 1.8 - 5;
         ctx.fillText(d.person.name, lx, y + d.labelDy + 0.5);
