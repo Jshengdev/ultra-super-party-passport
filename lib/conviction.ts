@@ -138,11 +138,22 @@ const DOUBLE_QUOTES = /[“”″]/;
 const DASHES = /[‐-―−]/;
 const COMBINING = /\p{M}/u;
 
-/** One folded char + the [start, end) slice of the ORIGINAL string that produced it. */
+/**
+ * One folded UTF-16 code unit + the [start, end) slice of the ORIGINAL string that produced it.
+ * `start.length === end.length === folded.length` is an invariant, asserted where it is built.
+ */
 interface FoldMap {
   folded: string;
   start: number[];
   end: number[];
+}
+
+/** The index map broke its own invariant — a bug in `foldWithMap`, never a bad model output. */
+export class FoldMapInvariantError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "FoldMapInvariantError";
+  }
 }
 
 /** NFKC + typographic quote/dash fold for one grapheme-ish unit (base char + combining marks). */
@@ -193,12 +204,25 @@ function foldWithMap(s: string): FoldMap {
       unit += next;
       len += next.length;
     }
-    for (const c of foldUnit(unit)) { out.push(c); start.push(i); end.push(i + len); }
+    // ONE SLOT PER UTF-16 CODE UNIT — not per code point. `folded` is indexed by `String.indexOf`,
+    // which counts UTF-16 units, so an astral char (emoji: 1 code point, 2 units) must occupy TWO
+    // slots or every index after it is off by one per astral char, and the snap slices the wrong
+    // span (silently — the wrong span is still *a* substring). Hence the char-by-char loop.
+    const repl = foldUnit(unit);
+    for (let k = 0; k < repl.length; k++) { out.push(repl[k]!); start.push(i); end.push(i + len); }
     i += len;
   }
   while (out.length && out[out.length - 1] === " ") { out.pop(); start.pop(); end.pop(); } // trailing trim
 
-  return { folded: out.join(""), start, end };
+  const folded = out.join("");
+  // Hard invariant: folded index space === map index space. If this ever trips, every snapped span
+  // downstream is suspect, so fail loud rather than hand back a plausible-looking wrong receipt.
+  if (folded.length !== start.length || start.length !== end.length) {
+    throw new FoldMapInvariantError(
+      `foldWithMap index map desync: folded=${folded.length} units, start=${start.length}, end=${end.length}`,
+    );
+  }
+  return { folded, start, end };
 }
 
 /**
