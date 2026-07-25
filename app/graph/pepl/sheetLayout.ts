@@ -134,7 +134,9 @@ export function computeLayout(
     const bw = cols * (cellW + gap) + gap;
     const bh = cellH + gap * 2;
     const bx = Math.min(Math.max(pos[i].x - bw / 2, mn * 0.02), w - bw - mn * 0.02);
-    const by = pos[i].y + radii[i] + mn * 0.042;
+    /* the inscription sits RIGHT under its cloud (just past the dashed
+       border) so name and group read as one thing */
+    const by = pos[i].y + radii[i] + mn * 0.016;
     return {
       group: g,
       index: i,
@@ -145,38 +147,78 @@ export function computeLayout(
     };
   });
 
-  /* dots: jittered phyllotaxis inside each cluster — even, organic */
+  /* dots: jittered phyllotaxis — NESTED. Each cluster splits into its
+     craft subsections (the people's own baked `asp` tags): every tag
+     with ≥ 2 members becomes its own mini-cloud on a ring inside the
+     cluster; singleton tags and the untagged pool at the centre. The
+     structure is SPATIAL only — sub-labels were tried and retired, the
+     clumping itself tells the story. */
   const dots: DotLayout[] = [];
   const GOLDEN = 2.399963229728653;
+  const pushDot = (p: Person, ci: number, k: number, cnt: number, ox: number, oy: number, rad: number) => {
+    const rr = rad * (0.16 + 0.8 * Math.sqrt((k + 0.5) / cnt));
+    const th = k * GOLDEN + rng() * 0.55;
+    /* shape combo hashed from the person's id — stable across
+       layouts and datasets */
+    let hsh = 0;
+    for (let q = 0; q < p.id.length; q++) hsh = (hsh * 31 + p.id.charCodeAt(q)) >>> 0;
+    dots.push({
+      person: p,
+      clusterIndex: ci,
+      x: ox + Math.cos(th) * rr * (1 + (rng() - 0.5) * 0.16),
+      y: oy + Math.sin(th) * rr * (1 + (rng() - 0.5) * 0.16),
+      baseR: (2.1 + rng() * 1.6) * dotScale,
+      phase: rng() * TAU,
+      speed: 0.4 + rng() * 0.5,
+      labelSide: 1,
+      labelDy: 0,
+      labelVis: true,
+      shape: {
+        rect: hsh % 4,
+        round: (hsh >>> 2) % 3,
+        uniq: (hsh >>> 4) % 4,
+        rot: (((hsh >>> 6) % 100) / 100 - 0.5) * 0.9,
+      },
+    });
+  };
   clusters.forEach((cl, ci) => {
     const members = byGroup.get(cl.group.id)!;
     const n = members.length;
-    members.forEach((p, k) => {
-      const rr = cl.radius * (0.16 + 0.8 * Math.sqrt((k + 0.5) / n));
-      const th = k * GOLDEN + rng() * 0.55;
-      /* shape combo hashed from the person's id — stable across
-         layouts and datasets */
-      let hsh = 0;
-      for (let q = 0; q < p.id.length; q++) hsh = (hsh * 31 + p.id.charCodeAt(q)) >>> 0;
-      dots.push({
-        person: p,
-        clusterIndex: ci,
-        x: cl.cx + Math.cos(th) * rr * (1 + (rng() - 0.5) * 0.16),
-        y: cl.cy + Math.sin(th) * rr * (1 + (rng() - 0.5) * 0.16),
-        baseR: (2.1 + rng() * 1.6) * dotScale,
-        phase: rng() * TAU,
-        speed: 0.4 + rng() * 0.5,
-        labelSide: 1,
-        labelDy: 0,
-        labelVis: true,
-        shape: {
-          rect: hsh % 4,
-          round: (hsh >>> 2) % 3,
-          uniq: (hsh >>> 4) % 4,
-          rot: (((hsh >>> 6) % 100) / 100 - 0.5) * 0.9,
-        },
-      });
+
+    const bySub = new Map<string, Person[]>();
+    const rest: Person[] = [];
+    for (const p of members) {
+      if (p.subId) {
+        const arr = bySub.get(p.subId);
+        if (arr) arr.push(p);
+        else bySub.set(p.subId, [p]);
+      } else rest.push(p);
+    }
+    const labeled = [...bySub.entries()]
+      .filter(([, m]) => m.length >= 2)
+      .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+    for (const [, m] of bySub) if (m.length < 2) rest.push(...m);
+
+    if (labeled.length < 2) {
+      /* one or zero real subsections — no story to tell, keep the
+         single organic cloud */
+      members.forEach((p, k) => pushDot(p, ci, k, n, cl.cx, cl.cy, cl.radius));
+      return;
+    }
+
+    const S = labeled.length;
+    labeled.forEach(([, m], si) => {
+      const ang = (si / S) * TAU + rng() * 0.4 - 2.1;
+      const ringR = cl.radius * 0.54;
+      const sx = cl.cx + Math.cos(ang) * ringR;
+      const sy = cl.cy + Math.sin(ang) * ringR * 0.88;
+      const subR = Math.max(mn * 0.018, cl.radius * 0.9 * Math.sqrt(m.length / n));
+      m.forEach((p, k) => pushDot(p, ci, k, m.length, sx, sy, subR));
     });
+    if (rest.length) {
+      const restR = Math.max(mn * 0.018, cl.radius * 0.55 * Math.sqrt(rest.length / n));
+      rest.forEach((p, k) => pushDot(p, ci, k, rest.length, cl.cx, cl.cy, restR));
+    }
   });
 
   /* every dot carries a name at rest — place labels greedily so they

@@ -68,6 +68,38 @@ const SCENE_ZOOM_PERSON = 2.2;
 /* after the first click pops the bubble it returns at this ABSOLUTE radius
    (mn units) — a toy, no longer the room's container. 0.135 is Teri's call. */
 const POPPED_RADIUS = 0.135;
+/* movement (shader units) past which a press is a PAN, not a click/pop */
+const PAN_START = 0.02;
+
+/** A baked person record (public/graph/people/<id>.json) — fetched on focus
+    for the relationships widget and the stamps' real hometown/favorite. */
+type PersonRecord = {
+  personId: string;
+  name: string;
+  answers?: Record<string, string>;
+  edges?: {
+    targetId: string;
+    type: string;
+    direction?: "mutual" | "inbound" | "outbound";
+    strength?: number;
+    via: string;
+    receipt?: {
+      yours?: { field: string; quote: string };
+      theirs?: { field: string; quote: string };
+    };
+  }[];
+  highlights?: { kind: string; text: string; targets?: string[] }[];
+};
+
+/** widget row sections, in speaking order */
+const REL_SECTIONS: { key: string; title: string; match: (e: NonNullable<PersonRecord["edges"]>[number]) => boolean }[] = [
+  { key: "mutual", title: "You are looking for each other", match: (e) => e.direction === "mutual" },
+  { key: "inbound", title: "They are looking for you", match: (e) => e.direction === "inbound" },
+  { key: "outbound", title: "You are looking for them", match: (e) => e.direction === "outbound" },
+  { key: "why", title: "Shared conviction", match: (e) => e.type === "why" },
+  { key: "school", title: "Same school", match: (e) => e.type === "school" },
+  { key: "company", title: "Same company", match: (e) => e.type === "company" },
+];
 
 /* ---- tune panel definition (Bubble.jsx style) ---- */
 const PANEL_GROUPS: {
@@ -247,6 +279,61 @@ export default function PeplGraph() {
   /* the tune panel is a design tool, not a party surface — hidden unless
      the URL opts in with ?tune=1 */
   const [tuneVisible, setTuneVisible] = useState(false);
+
+  /* the focused person's baked record — their ranked relationships with
+     receipts, their real hometown + favourite for the stamps */
+  const [profile, setProfile] = useState<PersonRecord | null>(null);
+  const [receiptOpen, setReceiptOpen] = useState<number | null>(null);
+  const profileCache = useRef(new Map<string, PersonRecord>());
+  const focusKey = stamps?.on ? stamps.personKey : null;
+  useEffect(() => {
+    setReceiptOpen(null);
+    if (!focusKey) {
+      setProfile(null);
+      return;
+    }
+    const cached = profileCache.current.get(focusKey);
+    if (cached) {
+      setProfile(cached);
+      return;
+    }
+    setProfile(null);
+    let gone = false;
+    fetch(`/graph/people/${focusKey}.json`)
+      .then((r) => (r.ok ? (r.json() as Promise<PersonRecord>) : null))
+      .then((rec) => {
+        if (gone || !rec) return;
+        profileCache.current.set(focusKey, rec);
+        setProfile(rec);
+      })
+      .catch(() => {}); // widget just stays empty — the room owes no error UI
+    return () => {
+      gone = true;
+    };
+  }, [focusKey]);
+
+  /* the record knows what graph.json does not: real hometown (from the
+     kind-keyed highlight) and the favourite answer — feed the stamps */
+  useEffect(() => {
+    if (!profile) return;
+    const hl = profile.highlights?.find((x) => x.kind === "hometown");
+    const hometown =
+      hl && hl.text.startsWith("Came from ") ? hl.text.slice(10).replace(/\.$/, "") : "";
+    const movie = profile.answers?.favorite ?? "";
+    if (!hometown && !movie) return;
+    setStamps((s) =>
+      s && s.personKey === profile.personId
+        ? {
+            ...s,
+            details: {
+              ...s.details,
+              ...(hometown ? { hometown } : {}),
+              ...(movie ? { movie } : {}),
+            },
+          }
+        : s,
+    );
+  }, [profile]);
   const [params, setParams] = useState<Params>(INITIAL);
   const [query, setQuery] = useState("");
   const [searchIdx, setSearchIdx] = useState(0);
@@ -392,6 +479,17 @@ export default function PeplGraph() {
     };
 
     const sheet = new GraphSheet(defaultAdapter, ROOM_EDGES);
+    /* who touches whom, over every thread type — the focused person's
+       whole web lights up: dots swell and their names surface */
+    const neighborsByPerson = new Map<string, Set<string>>();
+    for (const e of ROOM_EDGES) {
+      let sa = neighborsByPerson.get(e.s);
+      if (!sa) neighborsByPerson.set(e.s, (sa = new Set()));
+      sa.add(e.t);
+      let sb = neighborsByPerson.get(e.t);
+      if (!sb) neighborsByPerson.set(e.t, (sb = new Set()));
+      sb.add(e.s);
+    }
     let boards: BoardState[] = [];
     let choreo = new Choreography(defaultAdapter.groups().length);
     const breatheAt: number[] = [];
@@ -425,7 +523,11 @@ export default function PeplGraph() {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
 
     /* ---------- bubble body ---------- */
-    const ptr = { x: 0, y: 0, down: false, grabbed: false, id: -1, ox: 0, oy: 0, downT: 0, dx0: 0, dy0: 0 };
+    const ptr = {
+      x: 0, y: 0, down: false, grabbed: false, id: -1, ox: 0, oy: 0, downT: 0, dx0: 0, dy0: 0,
+      /* camera pan: engaged once a non-bubble press travels past PAN_START */
+      panning: false, panCamX: 0, panCamY: 0, panPX: 0, panPY: 0,
+    };
     const body = { x: 0, y: 0.06, vx: 0, vy: 0, dx: 0, dy: 0, dvx: 0, dvy: 0 };
     let focused: FocusedPerson | null = null;
     let selectedGroup: number | null = null;
@@ -729,6 +831,26 @@ export default function PeplGraph() {
       ptr.x = q.x;
       ptr.y = q.y;
       ptrIn = true;
+
+      /* click-drag on the sheet PANS the camera — 1:1 under the pointer,
+         so both the target and the eased position snap while it lasts */
+      if (ptr.down && !ptr.grabbed) {
+        if (!ptr.panning && Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0) > PAN_START) {
+          ptr.panning = true;
+          ptr.panCamX = cam.x;
+          ptr.panCamY = cam.y;
+          ptr.panPX = q.x;
+          ptr.panPY = q.y;
+          wrap.style.cursor = "grabbing";
+        }
+        if (ptr.panning) {
+          const { mn } = dims();
+          cam.tx = ptr.panCamX - ((q.x - ptr.panPX) * mn) / cam.s;
+          cam.ty = ptr.panCamY + ((q.y - ptr.panPY) * mn) / cam.s;
+          cam.x = cam.tx;
+          cam.y = cam.ty;
+        }
+      }
     };
 
     const onLeave = () => {
@@ -760,9 +882,16 @@ export default function PeplGraph() {
       if (ptr.down && e.pointerId !== ptr.id) return;
       const wasDown = ptr.down;
       const wasGrabbed = ptr.grabbed;
+      const wasPanning = ptr.panning;
       ptr.down = false;
       ptr.grabbed = false;
+      ptr.panning = false;
       ptr.id = -1;
+      if (wasPanning) {
+        /* a pan is not a click — the release changes nothing */
+        wrap.style.cursor = "default";
+        return;
+      }
       /* releases that began on UI chrome (search, panel, pills) never
          reach onDown, so they must not select or clear anything */
       if (!wasDown) return;
@@ -779,7 +908,7 @@ export default function PeplGraph() {
          whole room lives inside the lens pre-pop, so there is nothing else a
          first click could mean. The room releases to full size and the
          bubble returns as a small toy. A deliberate drag still moves it. */
-      if (!poppedRef.current && elapsed < 450 && moved < 0.03) {
+      if (!poppedRef.current && elapsed < 450 && moved < PAN_START) {
         popBubble();
         camHome(); // re-fit: popped home is the full-size room
         return;
@@ -917,7 +1046,7 @@ export default function PeplGraph() {
       /* --- hover, re-derived per frame: the world moves under a
              stationary pointer while the camera eases and the bubble
              wanders --- */
-      if (ptrIn && !ptr.grabbed) {
+      if (ptrIn && !ptr.grabbed && !ptr.panning) {
         const q = { x: ptr.x, y: ptr.y };
         const hd = dotAt(q);
         hover.id = hd ? hd.person.id : null;
@@ -1053,9 +1182,11 @@ export default function PeplGraph() {
         const s = worldToScreen(d.x, d.y);
         return Math.hypot(s.x - bubbleSheet.x, s.y - bubbleSheet.y);
       };
+      const nbrs = focused ? neighborsByPerson.get(focused.id) ?? null : null;
       const dotEmphasis = (i: number) => {
         const d = L.dots[i];
         if (focused && d.person.id === focused.id) return 1.45;
+        if (nbrs?.has(d.person.id)) return 1.28;
         return dotScreenDist(i) < lensPx ? 1.22 : 1;
       };
       /* every dot carries its name: a quiet rest label everywhere,
@@ -1066,9 +1197,12 @@ export default function PeplGraph() {
            own hover/focus moment */
         if (!d.labelVis) {
           const mine =
-            hover.id === d.person.id || (focused && focused.id === d.person.id);
+            hover.id === d.person.id ||
+            (focused && focused.id === d.person.id) ||
+            (nbrs?.has(d.person.id) ?? false);
           return mine ? 1 : 0;
         }
+        if (nbrs?.has(d.person.id)) return 0.92;
         const rest = 0.38;
         const underLens = dotScreenDist(i) < lensPx ? 0.62 : 0;
         const ca = labelAlpha[d.clusterIndex];
@@ -1292,6 +1426,14 @@ export default function PeplGraph() {
   const fmt = (v: number, step: number) =>
     step >= 1 ? String(Math.round(v)) : v.toFixed(step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3);
 
+  /* ---- relationships widget: rows from the fetched person record ---- */
+  const relEdges = profile?.edges ?? [];
+  const sectionOf = (e: NonNullable<PersonRecord["edges"]>[number]) =>
+    REL_SECTIONS.find((s) => s.match(e))?.key ?? "other";
+  const personName = (id: string) =>
+    defaultAdapter.people().find((p) => p.id === id)?.name ??
+    id.replace(/-[0-9a-f]{4}$/, "").replace(/-/g, " ");
+
   /* ---- search: people + groups, flown to on pick ---- */
   type SearchResult =
     | { kind: "person"; id: string; label: string; sub: string }
@@ -1480,6 +1622,197 @@ export default function PeplGraph() {
           );
         })}
       </div>
+
+      {/* relationships — who the focused person is threaded to. Rows open
+          the receipts: their own words on both sides of the tie. */}
+      {focusKey && !indexOpen && profile && relEdges.length > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: 68,
+            right: 20,
+            width: 238,
+            padding: "12px 14px",
+            borderRadius: 0,
+            background: "rgba(255,253,251,0.82)",
+            backdropFilter: "blur(14px)",
+            boxShadow: shadow,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-hedvig), Georgia, serif",
+              fontSize: 15,
+              letterSpacing: "0.01em",
+              color: "rgba(38,36,44,0.6)",
+              marginBottom: 4,
+            }}
+          >
+            their threads
+          </div>
+          {/* the list keeps to ~80px and scrolls — the widget is a peek,
+              not a page */}
+          <div style={{ maxHeight: 84, overflowY: "auto" }}>
+          {REL_SECTIONS.map((sec) => {
+            const rows = relEdges
+              .map((e, i) => ({ e, i }))
+              .filter(({ e }) => sectionOf(e) === sec.key);
+            if (rows.length === 0) return null;
+            return (
+              <div key={sec.key} style={{ marginTop: 8 }}>
+                <div
+                  style={{
+                    ...ui,
+                    textTransform: "none",
+                    fontSize: 9,
+                    letterSpacing: "0.05em",
+                    color: "rgba(26,25,24,0.36)",
+                    paddingBottom: 3,
+                    borderBottom: "1px solid rgba(38,36,44,0.05)",
+                    marginBottom: 3,
+                  }}
+                >
+                  {sec.title}
+                </div>
+                {rows.map(({ e, i }) => (
+                  <button
+                    key={i}
+                    className="pepl-item"
+                    onClick={() => setReceiptOpen(i)}
+                    style={{
+                      ...ui,
+                      textTransform: "none",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                      gap: 8,
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "4px 5px",
+                      border: "none",
+                      borderRadius: 0,
+                      background: "transparent",
+                      color: "rgba(26,25,24,0.68)",
+                      fontSize: 11,
+                      letterSpacing: "0.015em",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span style={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
+                      {personName(e.targetId).toLowerCase()}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 8.5,
+                        color: "rgba(26,25,24,0.34)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {e.via}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+          </div>
+        </div>
+      )}
+
+      {/* the receipt dialog: both sides of one thread, verbatim */}
+      {receiptOpen !== null && relEdges[receiptOpen] && (
+        <div
+          onClick={() => setReceiptOpen(null)}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(38,36,44,0.16)",
+          }}
+        >
+          <div
+            onClick={(ev) => ev.stopPropagation()}
+            style={{
+              width: 360,
+              maxWidth: "calc(100vw - 48px)",
+              maxHeight: "calc(100vh - 96px)",
+              overflowY: "auto",
+              padding: "18px 20px 16px",
+              borderRadius: 0,
+              background: "rgba(255,253,251,0.97)",
+              boxShadow:
+                "0 18px 50px rgba(38,36,44,0.18), inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-hedvig), Georgia, serif",
+                fontSize: 19,
+                color: "rgba(26,25,24,0.82)",
+                textTransform: "capitalize",
+              }}
+            >
+              {personName(relEdges[receiptOpen].targetId).toLowerCase()}
+            </div>
+            <div style={{ ...ui, textTransform: "none", fontSize: 9.5, color: "rgba(26,25,24,0.4)", marginTop: 3 }}>
+              {REL_SECTIONS.find((s) => s.key === sectionOf(relEdges[receiptOpen]))?.title.toLowerCase()} ·{" "}
+              {relEdges[receiptOpen].via}
+            </div>
+            {([
+              ["you", relEdges[receiptOpen].receipt?.yours],
+              ["them", relEdges[receiptOpen].receipt?.theirs],
+            ] as const).map(([who, r]) =>
+              r ? (
+                <div key={who} style={{ marginTop: 12 }}>
+                  <div style={{ ...ui, textTransform: "none", fontSize: 9, color: "rgba(26,25,24,0.35)" }}>
+                    {who} · {r.field}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-hedvig), Georgia, serif",
+                      fontSize: 13.5,
+                      lineHeight: 1.45,
+                      color: "rgba(26,25,24,0.74)",
+                      marginTop: 3,
+                    }}
+                  >
+                    “{r.quote}”
+                  </div>
+                </div>
+              ) : null,
+            )}
+            {!relEdges[receiptOpen].receipt && (
+              <div style={{ ...ui, textTransform: "none", fontSize: 10, color: "rgba(26,25,24,0.42)", marginTop: 12 }}>
+                no quoted answer behind this thread — the tie itself is the receipt
+              </div>
+            )}
+            <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+              <button
+                className="pepl-item"
+                onClick={() => {
+                  const target = relEdges[receiptOpen].targetId;
+                  setReceiptOpen(null);
+                  selectRef.current(target);
+                }}
+                style={{ ...ui, flex: 1, padding: "7px 0", border: "none", borderRadius: 0, background: "rgba(145,180,249,0.22)", color: "rgba(26,25,24,0.72)", cursor: "pointer" }}
+              >
+                find them in the room
+              </button>
+              <button
+                className="pepl-item"
+                onClick={() => setReceiptOpen(null)}
+                style={{ ...ui, padding: "7px 12px", border: "none", borderRadius: 0, background: "rgba(26,25,24,0.05)", color: "rgba(26,25,24,0.52)", cursor: "pointer" }}
+              >
+                close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* reduced-motion teleport fade */}
       <div

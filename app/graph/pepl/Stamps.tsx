@@ -24,9 +24,9 @@ export type StampData = {
    deliberately TIGHT — the burst should crowd the person's name, not orbit
    it. (PeplGraph's on-screen clamps mirror these extents; change both.) */
 const SLOTS = [
-  { left: -218, top: -118, width: 172, aspect: "274 / 147", rot: -8, fromX: 200, fromY: 120 },
-  { left: -70, top: -158, width: 166, aspect: "266 / 164", rot: 3, fromX: 0, fromY: 170 },
-  { left: 64, top: -146, width: 150, aspect: "250 / 151", rot: 10, fromX: -180, fromY: 150 },
+  { left: -218, top: -118, width: 172, aspect: "274 / 147", rot: -8, fromX: 200, fromY: 120, oval: false },
+  { left: -70, top: -158, width: 166, aspect: "266 / 164", rot: 3, fromX: 0, fromY: 170, oval: false },
+  { left: 64, top: -146, width: 150, aspect: "250 / 151", rot: 10, fromX: -180, fromY: 150, oval: true },
 ];
 
 const firstWord = (s: string) => (s.split(/\s+/)[0] ?? "").toLowerCase();
@@ -46,7 +46,11 @@ export default function StampBurst({ data, on }: { data: StampData; on: boolean 
     const title = d.title || "creative";
     const hometown = d.hometown || "planet earth";
     const instagram = d.instagram || "@offline";
-    const movie = d.movie || "no comment";
+    /* the square stamp carries their conviction now: group in the middle,
+       craft in the corner. Fallbacks never invent — a folded person with
+       no craft keeps the old title-word + "no comment". */
+    const small = d.group && d.craft ? d.craft : firstWord(title);
+    const middle = d.group || d.craft || d.movie || "no comment";
     try {
       return [
         injectSvg(NAMETAG_SVG, {
@@ -55,8 +59,8 @@ export default function StampBurst({ data, on }: { data: StampData; on: boolean 
           name: company,
         }),
         injectSvg(BELIEF_STAMP_SVG, {
-          small: firstWord(title),
-          belief: movie.length > 48 ? movie.slice(0, 46) + "…" : movie,
+          small,
+          belief: middle.length > 48 ? middle.slice(0, 46) + "…" : middle,
           name: data.name.toLowerCase(),
         }),
         injectSvg(ROUND_STAMP_SVG, {
@@ -135,6 +139,9 @@ export default function StampBurst({ data, on }: { data: StampData; on: boolean 
               width: slot.width,
               aspectRatio: slot.aspect,
               transformOrigin: "30% 100%",
+              /* cream backing: the room must not read THROUGH a stamp */
+              background: "var(--cream)",
+              borderRadius: slot.oval ? "50%" : 6,
               "--i": i,
               "--rot": `${slot.rot}deg`,
               "--fromX": `${slot.fromX}px`,

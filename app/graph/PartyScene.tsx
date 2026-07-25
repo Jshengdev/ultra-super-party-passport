@@ -27,6 +27,7 @@ interface BakedNode {
   company?: string | null;
   motive?: string | null;
   mission?: string | null;
+  asp?: string | null;
   hometown?: string | null;
   instagram?: string | null;
   favorite?: string | null;

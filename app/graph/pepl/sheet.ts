@@ -274,6 +274,19 @@ export class GraphSheet {
       }
     });
 
+    /* ---- dashed group borders — the cloud's edge made legible ---- */
+    ctx.save();
+    ctx.setLineDash([7, 6]);
+    ctx.lineWidth = 1 / cs;
+    for (let ci = 0; ci < L.clusters.length; ci++) {
+      const cl = L.clusters[ci];
+      ctx.strokeStyle = `rgba(${INK},${(0.16 + 0.1 * f.nameAlpha[ci]).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(cl.cx, cl.cy, cl.radius + 6, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
     /* ---- threads — under the dots, over the boards ---- */
     if (this.links.length) this.drawLinks(ctx, f, cs);
 

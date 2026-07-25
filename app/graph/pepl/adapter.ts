@@ -12,7 +12,16 @@
  * shallower cut of the same people.
  */
 
-export type Person = { id: string; name: string; groupId: string; tags?: string[] };
+export type Person = {
+  id: string;
+  name: string;
+  groupId: string;
+  /** craft subsection inside the group — the baked `asp` tag, or absent.
+      A LABELLED sub-cluster is a claim ("these people write"), so only a
+      person's own tag may place them under a label; no folding here. */
+  subId?: string;
+  tags?: string[];
+};
 export type Group = { id: string; name: string; weight: number };
 
 export interface GraphAdapter {
@@ -20,7 +29,8 @@ export interface GraphAdapter {
   people(): Person[];
 }
 
-/** Details the stamps read. Mirrors pepl's GuestDetails so Stamps.tsx is untouched. */
+/** Details the stamps read. pepl's GuestDetails plus our two conviction
+    fields — the square stamp carries the person's group and craft now. */
 export type GuestDetails = {
   school: string;
   company: string;
@@ -28,6 +38,11 @@ export type GuestDetails = {
   hometown: string;
   instagram: string;
   movie: string;
+  /** their motive group, prettied — "" when they never answered (folded
+      people are a LAYOUT placement; the stamp must not claim a motive) */
+  group: string;
+  /** their craft (asp), prettied */
+  craft: string;
 };
 
 /** Person↔person threads as the v2 emitter bakes them — same vocabulary as
@@ -52,6 +67,7 @@ export interface RoomNode {
   company?: string | null;
   motive?: string | null;
   mission?: string | null;
+  asp?: string | null;
   hometown?: string | null;
   instagram?: string | null;
   favorite?: string | null;
@@ -122,7 +138,8 @@ export class RoomAdapter implements GraphAdapter {
         weight: Math.max(0.35, (members.length / total) * 4),
       });
       for (const n of members) {
-        this._people.push({ id: n.id, name: n.name, groupId: id });
+        const sub = (n.asp ?? "").trim();
+        this._people.push({ id: n.id, name: n.name, groupId: id, ...(sub ? { subId: sub } : {}) });
         this._details[n.id] = {
           school: n.school ?? "",
           company: n.company ?? "",
@@ -130,6 +147,9 @@ export class RoomAdapter implements GraphAdapter {
           hometown: n.hometown ?? "",
           instagram: n.instagram ?? "",
           movie: n.favorite ?? "",
+          // n.motive, NOT the group they were folded into — no false claims
+          group: (n.motive ?? "").trim().replace(/[_-]+/g, " "),
+          craft: (n.asp ?? "").trim().replace(/[_-]+/g, " "),
         };
       }
     }
@@ -734,6 +754,12 @@ export const UNPLACED_HOMETOWNS = 82;
 
 /** Seed the scene from the baked room. Call once, before mounting PeplGraph. */
 export function seedScene(nodes: RoomNode[], edges: RoomEdge[] = []): GraphAdapter {
+  /* Fast Refresh survival: these module-scope tables die whenever this file
+     is re-evaluated mid-session, and only PartyScene's one-shot effect calls
+     seedScene — so a dev edit used to blank the ticker and the room until a
+     hard reload. The inputs are stashed on globalThis and replayed at the
+     bottom of this module on re-evaluation. Invisible in production. */
+  (globalThis as { __uspSeed?: { nodes: RoomNode[]; edges: RoomEdge[] } }).__uspSeed = { nodes, edges };
   const a = new RoomAdapter(nodes);
   defaultAdapter = a;
   /* threads only between people who actually stand in the room */
@@ -763,4 +789,10 @@ export function seedScene(nodes: RoomNode[], edges: RoomEdge[] = []): GraphAdapt
     SCHOOL_COMPANY_PAIRS.push({ school, company, n: 1 });
   }
   return a;
+}
+
+/* replay the stashed seed after a Fast Refresh re-evaluation (see above) */
+{
+  const stash = (globalThis as { __uspSeed?: { nodes: RoomNode[]; edges: RoomEdge[] } }).__uspSeed;
+  if (stash) seedScene(stash.nodes, stash.edges);
 }
