@@ -2,8 +2,9 @@
  * app/api/graph/route.ts — GET the whole party graph, shaped for the Universe.
  *
  * Response (200):  { nodes: [{id,label,type,cluster?}], links: [{source,target,type}], meta }
- * Demo (200):      ?demo=1 → a static fixture (SHAPES-derived) so the UI is buildable
- *                  + demoable BEFORE Aura creds land.
+ * Demo (200):      GRAPH_DEMO=1 in the env → a static fixture (SHAPES-derived) so the UI is
+ *                  buildable + demoable BEFORE Aura creds land. NOT a query param: this route
+ *                  is force-static, and query strings do not exist in a static export.
  * Degraded (503):  no Neo4j creds → { error: 'Neo4jNotConfigured', message }.
  * Failed (500):    creds present but the read/shape blew up → { error: 'GraphQueryFailed' }.
  *                  (Fail loud — sayhello law. No silent fallback to demo when creds exist.)
@@ -197,7 +198,8 @@ export async function GET(): Promise<Response> {
         error: 'Neo4jNotConfigured',
         message:
           'Neo4j Aura is not configured (missing NEO4J_URI / NEO4J_USERNAME / NEO4J_PASSWORD). ' +
-          'Running in DEGRADED mode — call /api/graph?demo=1 for the static fixture.',
+          'Running in DEGRADED mode — restart the dev server with GRAPH_DEMO=1 to serve the ' +
+          'static fixture instead. (/graph needs no creds at all; it reads public/graph/*.)',
       },
       503,
     );

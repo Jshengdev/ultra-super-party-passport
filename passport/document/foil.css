@@ -68,7 +68,7 @@
   position: absolute;
   left: calc(263 / 617 * 100%);
   top: calc(723 / 774 * 100%);
-  font-family: var(--font-document);
+  font-family: var(--font-mrz);
   font-weight: 500;
   font-size: calc(14 / 617 * 100cqw);
   line-height: 1;

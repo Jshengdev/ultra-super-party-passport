@@ -6,7 +6,11 @@
 import { PAGE } from './figmaGeometry'
 import { generateRose, HOLO_SEAL, ROSE_DEFAULTS } from './holoSeal'
 
-const FAMILY_MATCH = /plex sans|plex mono|garamond/i
+// Families to inline into the exported SVG. "jakarta" is the app typeface (body
+// + official faces); "plex mono" is still needed for the MRZ band and the belief
+// stamp. Plex Sans and Garamond are gone from the document but stay matched so an
+// export of an older cached page still embeds its fonts instead of falling back.
+const FAMILY_MATCH = /jakarta|plex sans|plex mono|garamond/i
 
 const RESOLVED_PROPS = [
   'fill',
@@ -120,10 +124,12 @@ function drawFoil(ctx: CanvasRenderingContext2D, scale: number, texts: { mrz: st
   ctx.globalAlpha = 0.9
   ctx.fillStyle = textGradient
   ctx.textBaseline = 'top'
+  // MRZ stays on IBM Plex Sans to match .foil-mrz / --font-mrz; the title
+  // follows the document body onto Plus Jakarta Sans.
   ctx.font = `500 ${14 * scale}px 'IBM Plex Sans'`
   ctx.fillText(texts.mrz, 263 * scale, 723 * scale, 345 * scale)
   ctx.textAlign = 'right'
-  ctx.font = `500 ${12 * scale}px 'IBM Plex Sans'`
+  ctx.font = `500 ${12 * scale}px 'Plus Jakarta Sans'`
   ctx.fillText(texts.title, 603 * scale, 399 * scale)
   ctx.restore()
 }

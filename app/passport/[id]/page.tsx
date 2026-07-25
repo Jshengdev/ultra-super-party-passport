@@ -14,7 +14,7 @@
 
 import { promises as fs } from 'fs';
 import path from 'path';
-import { EB_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import { passportSchema } from '@/passport/schema';
 import { fromUspPassport } from '@/passport/document/adapter';
 import { PassportDocument } from '@/passport/document/PassportDocument';
@@ -23,9 +23,13 @@ import Reveal from './Reveal';
 import QRCode from 'qrcode';
 import '@/passport/tokens.css';
 
+/* The document body and headings are Plus Jakarta Sans (loaded once in
+ * app/layout.tsx). These two faces survive only for the artifacts that were
+ * deliberately left alone: Plex Sans for the MRZ band (--font-mrz), Plex Mono
+ * for the belief stamp (--font-typewriter). EB Garamond is gone — nothing
+ * renders in it now that --font-official points at Jakarta. */
 const plexSans = IBM_Plex_Sans({ weight: ['400', '500'], subsets: ['latin'], variable: '--np-plex-sans' });
 const plexMono = IBM_Plex_Mono({ weight: ['400'], subsets: ['latin'], variable: '--np-plex-mono' });
-const garamond = EB_Garamond({ weight: ['400'], subsets: ['latin'], variable: '--np-garamond' });
 
 export const dynamic = 'force-static';
 
@@ -66,9 +70,7 @@ function Failed({ id, reason }: { id: string; reason: string }) {
       <div style={{ textAlign: 'center', maxWidth: 460 }}>
         <div
           style={{
-            fontSize: 'var(--usp-fs-xs)',
-            textTransform: 'uppercase',
-            letterSpacing: 'var(--usp-tracking-wide)',
+            fontSize: 'var(--usp-fs-sm)',
             color: 'var(--usp-ink-faint)',
             marginBottom: 10,
           }}
@@ -78,8 +80,9 @@ function Failed({ id, reason }: { id: string; reason: string }) {
         <h1
           style={{
             fontSize: 'var(--usp-fs-xl)',
-            fontWeight: 'var(--usp-weight-bold)',
-            letterSpacing: 'var(--usp-tracking-tight)',
+            fontWeight: 'var(--usp-weight-semibold)',
+            letterSpacing: 'var(--usp-tracking-display)',
+            lineHeight: 'var(--usp-leading-heading)',
             margin: '0 0 12px',
           }}
         >
@@ -147,7 +150,7 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
   return (
     <Shell>
       <div
-        className={`${plexSans.variable} ${plexMono.variable} ${garamond.variable}`}
+        className={`${plexSans.variable} ${plexMono.variable}`}
         style={{ width: '100%', maxWidth: 617, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}
       >
         <Reveal
@@ -160,7 +163,7 @@ export default async function PassportPage({ params }: { params: Promise<{ id: s
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginTop: 18 }}>
           {/* server-baked at export: scan → this passport, living, on your phone */}
           <img src={qrDataUrl} alt="scan to open this passport on your phone" width={96} height={96} style={{ borderRadius: 8, opacity: 0.9 }} />
-          <span style={{ fontFamily: 'var(--np-plex-mono, monospace)', fontSize: 9, letterSpacing: '0.16em', color: 'var(--usp-muted, #8a8a86)', textTransform: 'uppercase' }}>scan → your passport on your phone</span>
+          <span style={{ fontSize: 'var(--usp-fs-xs)', color: 'var(--usp-ink-faint, #8a8a86)' }}>Scan → your passport on your phone</span>
         </div>
       </div>
     </Shell>

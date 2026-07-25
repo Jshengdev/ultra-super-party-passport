@@ -198,14 +198,12 @@ export function SketchLayer({ sketchId }: { sketchId: string }) {
             alignItems: 'center',
             justifyContent: 'center',
             pointerEvents: 'none',
-            fontFamily: 'var(--np-plex-mono, ui-monospace, monospace)',
-            fontSize: 8.5,
-            letterSpacing: '0.18em',
+            fontFamily: 'var(--font-document)',
+            fontSize: 10,
             color: 'oklch(45% 0.03 285 / 0.55)',
-            textTransform: 'uppercase',
           }}
         >
-          sketch yourself
+          Sketch yourself
         </span>
       )}
       <div
@@ -217,17 +215,15 @@ export function SketchLayer({ sketchId }: { sketchId: string }) {
           display: 'flex',
           justifyContent: 'center',
           gap: 12,
-          fontFamily: 'var(--np-plex-mono, ui-monospace, monospace)',
-          fontSize: 8,
-          letterSpacing: '0.16em',
-          textTransform: 'uppercase',
+          fontFamily: 'var(--font-document)',
+          fontSize: 9.5,
         }}
       >
         <button
           onClick={clear}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(45% 0.03 285 / 0.7)', font: 'inherit', letterSpacing: 'inherit' }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'oklch(45% 0.03 285 / 0.7)', font: 'inherit' }}
         >
-          clear
+          Clear
         </button>
         <button
           onClick={save}
@@ -238,10 +234,9 @@ export function SketchLayer({ sketchId }: { sketchId: string }) {
             cursor: hasInk ? 'pointer' : 'default',
             color: saved ? 'oklch(55% 0.09 150 / 0.9)' : 'oklch(36% 0.045 285 / 0.85)',
             font: 'inherit',
-            letterSpacing: 'inherit',
           }}
         >
-          {saved ? 'saved ✓' : 'save'}
+          {saved ? 'Saved ✓' : 'Save'}
         </button>
       </div>
     </div>

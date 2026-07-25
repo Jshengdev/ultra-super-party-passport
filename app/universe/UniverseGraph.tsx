@@ -23,6 +23,13 @@ import type {
 } from 'react-force-graph-2d';
 import type { GraphLink, GraphNode, GraphPayload, LinkType } from './lib/graph';
 import { clusterColor, readPalette, withAlpha, type Palette } from './lib/palette';
+import { drawBubble } from './lib/bubble';
+
+/** "build-to-change" -> "Build to change". Cluster ids are slugs, not prose. */
+function clusterLabel(label: string): string {
+  const words = label.trim().replace(/[-_]+/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1).toLowerCase();
+}
 
 type FGNode = NodeObject<GraphNode>;
 type FGLink = LinkObject<GraphNode, GraphLink>;
@@ -308,44 +315,25 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
       const dimmed = egoSet ? !egoSet.has(String(node.id)) : false;
       ctx.globalAlpha = dimmed ? 0.12 : 1;
 
+      // Every node is a soap bubble on a bright canvas (see lib/bubble.ts).
+      // Colour still IS the relationship mapping (raw/0036) — the value-cloud
+      // hue anchors each bubble — but it now arrives as thin-film iridescence
+      // gathered at the rim rather than as a flat disc with a dark outline.
+      // There are no ink strokes here any more: a bubble has a bright edge, not
+      // a border.
       if (node.type === 'Person') {
-        // color IS the relationship mapping (raw/0036): a person wears their
-        // value-cloud hue as a flat, confident fill — no glow, just ink-ringed color.
         const hue = hueFor(node.cluster) ?? palette.personTint;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(hue, selected ? 1 : 0.88);
-        ctx.fill();
-        ctx.lineWidth = selected ? 1.4 : 0.6;
-        ctx.strokeStyle = selected ? palette.ringStrong : withAlpha(palette.ink, 0.35);
-        ctx.stroke();
+        drawBubble(ctx, x, y, r, hue, selected ? 1 : 0.85);
       } else if (node.type === 'ValueCluster') {
+        // the cloud itself: a larger, softer bubble the people float inside
         const hue = hueFor(node.cluster) ?? palette.personTint;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(hue, 0.8);
-        ctx.fill();
-        ctx.lineWidth = 0.6;
-        ctx.strokeStyle = withAlpha(palette.ink, 0.3);
-        ctx.stroke();
+        drawBubble(ctx, x, y, r, hue, 0.7);
       } else if (node.type === 'Interest') {
-        // shared ground: warm amber embers
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(palette.spectrum[1] ?? '#f4c98a', 0.85);
-        ctx.fill();
-        ctx.lineWidth = 0.5;
-        ctx.strokeStyle = withAlpha(palette.ink, 0.25);
-        ctx.stroke();
+        // shared ground: warm amber embers, same glass treatment
+        drawBubble(ctx, x, y, r, palette.spectrum[1] ?? '#f4c98a', 0.8);
       } else {
-        // affinity hubs (school / work / craft): quiet neutral anchors
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = withAlpha(palette.affinity, 0.9);
-        ctx.fill();
-        ctx.lineWidth = 0.4;
-        ctx.strokeStyle = withAlpha(palette.affinityInk, 0.4);
-        ctx.stroke();
+        // affinity hubs (school / work / craft): quiet, nearly clear glass
+        drawBubble(ctx, x, y, r, palette.affinity, 0.55);
       }
       const matched =
         (matchedIds?.has(String(node.id)) ?? false) ||
@@ -373,13 +361,14 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
         (node.type === 'Interest' && (interestDegree.get(String(node.id)) ?? 0) >= 2) || // shared interests ARE the instant layer
         (node.type !== 'Person' && node.type !== 'ValueCluster' && node.type !== 'Interest' && scale > 1.7);
       if ((showLabel || matched) && node.label && node.type === 'ValueCluster') {
-        // the stamp: small-caps mono in a thin rounded outline, gently tilted
+        // the stamp: semibold sentence case in a thin rounded outline, gently tilted
         const fontPx = 10 / scale;
         ctx.save();
         ctx.translate(x, y + r + 4 / scale);
         ctx.rotate(-0.052);
-        ctx.font = `600 ${fontPx}px ${getComputedStyle(document.documentElement).getPropertyValue('--usp-font-mono') || 'monospace'}`;
-        const text = node.label.toUpperCase();
+        ctx.font = `600 ${fontPx}px ${getComputedStyle(document.documentElement).getPropertyValue('--usp-font-sans') || 'sans-serif'}`;
+        // cluster ids arrive kebab-cased ("build-to-change") — read them as prose
+        const text = clusterLabel(node.label);
         const w = ctx.measureText(text).width;
         const padX = 6 / scale;
         const padY = 4 / scale;
@@ -530,7 +519,9 @@ export default function UniverseGraph({ payload, selectedId, onSelect, matchedId
           ref={fgRef}
           width={size.w}
           height={size.h}
-          backgroundColor={palette.canvasBg}
+          /* transparent so the chromatic field painted by .canvasHost shows
+             through — the bubbles are translucent and need the wash behind them */
+          backgroundColor="rgba(0,0,0,0)"
           graphData={graphData}
           nodeRelSize={5}
           nodeLabel={(n) => n.label}

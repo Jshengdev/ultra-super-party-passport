@@ -435,8 +435,8 @@ export default function AnalyzePage() {
 
               {/* the card: soft grey field, vivid stepped bands blooming from the bottom */}
               <HeroCard onOpen={() => fileRef.current?.click()}>
-                <p className="absolute top-5 left-0 right-0 z-10 text-center font-mono text-[10.5px] tracking-[0.22em] text-charcoal/60">
-                  THE ULTRA SUPER SOCIAL PASSPORT<sup style={{ fontSize: "0.42em", opacity: 0.65, letterSpacing: 0 }}>™</sup>
+                <p className="absolute top-5 left-0 right-0 z-10 text-center text-[13px] font-medium text-charcoal/60">
+                  The Ultra Super Social Passport<sup style={{ fontSize: "0.42em", opacity: 0.65 }}>™</sup>
                 </p>
                 <div
                   className="absolute inset-x-0 bottom-0 h-[94%]"
@@ -470,8 +470,8 @@ export default function AnalyzePage() {
               animate={{ opacity: 1 }}
               className="w-full flex flex-col items-center gap-6"
             >
-              <p className="max-w-full truncate font-mono text-[11px] tracking-[0.2em] text-stone">
-                {fileName?.toUpperCase()}
+              <p className="max-w-full truncate text-[13px] text-stone">
+                {fileName}
               </p>
 
               <RoomSketch beat={phase === "entering" ? 99 : beatIdx} entering={phase === "entering"} />
@@ -494,11 +494,11 @@ export default function AnalyzePage() {
                     className="w-full flex flex-col items-center gap-5"
                   >
                     {stats && stats.total > 0 && (
-                      <div className="flex items-baseline gap-2 font-mono tracking-[0.14em] text-stone">
-                        <span className="text-[16px] tracking-normal text-charcoal tabular-nums">
+                      <div className="flex items-baseline gap-2 text-stone">
+                        <span className="text-[18px] font-medium text-charcoal tabular-nums">
                           {countStr}
                         </span>
-                        <span className="text-[11px]">GUESTS</span>
+                        <span className="text-[13px]">guests</span>
                       </div>
                     )}
 
@@ -521,7 +521,7 @@ export default function AnalyzePage() {
                             transition={{ duration: 0.5, ease: "easeOut" }}
                             className="flex flex-col gap-0.5"
                           >
-                            <span className="font-mono text-[13px] tracking-[0.05em]">
+                            <span className="text-[14px] font-medium tabular-nums">
                               {i < beatIdx ? "✓" : "·"} {b.label}
                             </span>
                             <motion.span

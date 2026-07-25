@@ -1,0 +1,1600 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { defaultAdapter } from "./adapter";
+import { GUEST_DETAILS } from "./adapter";
+import StampBurst, { type StampData } from "./Stamps";
+import HometownMap from "./HometownMap";
+import TagTicker from "./TagTicker";
+import { GraphSheet } from "./sheet";
+import { BoardState } from "./boards";
+import { Choreography, FocusedPerson } from "./choreo";
+import { BUBBLE_FRAG, BUBBLE_UNIFORMS } from "./shaders";
+import {
+  KUWAHARA_FRAG,
+  TENSOR_FRAG,
+  ANISO_KUWAHARA_FRAG,
+  GRADE_FRAG,
+  FINISH_FRAG,
+} from "./monet";
+import {
+  compileProgram,
+  uniformMap,
+  makeTexture,
+  makeTarget,
+  destroyTarget,
+  bindFullscreenTriangle,
+  QUAD_VERT,
+  RenderTarget,
+} from "./webgl";
+import { mulberry32 } from "./prng";
+import type { FieldName } from "./segments";
+
+/* The full stack: graph sheet → bubble lens → Monet chain.
+   Passes: scene (lens) → Kuwahara (half res) → composite+grade →
+   impasto+weave+grain. Layering order is fixed. */
+
+export const DEFAULTS = {
+  // lens — warp low: the rim should barely smear
+  zoom: 2.0, warp: 0.12,
+  // film
+  thick: 380, drain: 0.55, chroma: 1.0, edge: 0.62, turb: 0.3, flow: 0.35, back: 0.45,
+  // form
+  radius: 0.26, wobble: 0.018, surface: 0.016,
+  // motion — the bubble sits in the middle; wander is off by default
+  gravity: 0.0, drag: 3.4, wander: 0,
+  jiggle: 1.6, settle: 1.0, squish: -1.2, bounce: 0.30, grip: 0.25,
+  // morph timing — the feel of the whole piece
+  morphDur: 900, morphHold: 300, hopDur: 350, hopHold: 140,
+  // monet
+  kuwahara: 0.85, kuwaKernel: 2.4, grade: 0.65, impasto: 0.4, weave: 0.6, grain: 0.16,
+};
+
+export type Params = typeof DEFAULTS & {
+  field: FieldName;
+  exportQuality: boolean;
+};
+
+const INITIAL: Params = { ...DEFAULTS, field: "weather", exportQuality: false };
+
+const MAX_DEFORM = 0.3;
+/* the scene camera is the zoom; the bubble is a draggable lens toy
+   that lives in the middle and never flies to targets */
+const SCENE_ZOOM_PERSON = 2.2;
+
+/* ---- tune panel definition (Bubble.jsx style) ---- */
+const PANEL_GROUPS: {
+  name: string;
+  items: { key: keyof typeof DEFAULTS; label: string; min: number; max: number; step: number; unit?: string }[];
+}[] = [
+  { name: "lens", items: [
+    { key: "zoom", label: "magnify", min: 1, max: 3.5, step: 0.05 },
+    { key: "warp", label: "fisheye", min: 0, max: 1.2, step: 0.01 },
+    { key: "radius", label: "radius", min: 0.12, max: 0.46, step: 0.005 },
+  ]},
+  { name: "morph", items: [
+    { key: "morphDur", label: "duration", min: 200, max: 2400, step: 20, unit: "ms" },
+    { key: "morphHold", label: "field hold", min: 0, max: 1200, step: 20, unit: "ms" },
+    { key: "hopDur", label: "hop", min: 120, max: 900, step: 10, unit: "ms" },
+    { key: "hopHold", label: "hop hold", min: 0, max: 500, step: 10, unit: "ms" },
+  ]},
+  { name: "monet", items: [
+    { key: "kuwahara", label: "kuwahara", min: 0, max: 1, step: 0.01 },
+    { key: "kuwaKernel", label: "kernel", min: 1, max: 3, step: 0.05 },
+    { key: "grade", label: "grade", min: 0, max: 1, step: 0.01 },
+    { key: "impasto", label: "impasto", min: 0, max: 1, step: 0.01 },
+    { key: "weave", label: "weave", min: 0, max: 1, step: 0.01 },
+    { key: "grain", label: "grain", min: 0, max: 0.5, step: 0.005 },
+  ]},
+  { name: "film", items: [
+    { key: "thick", label: "thickness", min: 120, max: 900, step: 1, unit: "nm" },
+    { key: "drain", label: "drain", min: 0, max: 0.95, step: 0.01 },
+    { key: "chroma", label: "chroma", min: 0, max: 1.8, step: 0.01 },
+    { key: "edge", label: "colour edge", min: 0, max: 0.97, step: 0.01 },
+    { key: "turb", label: "turbulence", min: 0, max: 1.5, step: 0.005 },
+    { key: "flow", label: "flow", min: 0, max: 3, step: 0.01 },
+    { key: "back", label: "far wall", min: 0, max: 1, step: 0.01 },
+  ]},
+  { name: "form", items: [
+    { key: "wobble", label: "silhouette", min: 0, max: 0.16, step: 0.001 },
+    { key: "surface", label: "undulation", min: 0, max: 0.16, step: 0.001 },
+  ]},
+  { name: "motion", items: [
+    { key: "gravity", label: "gravity", min: 0, max: 1.2, step: 0.01 },
+    { key: "drag", label: "viscosity", min: 0.2, max: 8, step: 0.05 },
+    { key: "wander", label: "wander", min: 0, max: 3, step: 0.02 },
+    { key: "grip", label: "grip", min: 0.05, max: 2, step: 0.01 },
+    { key: "jiggle", label: "response hz", min: 0.4, max: 7, step: 0.05 },
+    { key: "settle", label: "settle", min: 0.05, max: 1.4, step: 0.01 },
+    { key: "squish", label: "squish", min: -6, max: 6, step: 0.05 },
+    { key: "bounce", label: "bounce", min: 0, max: 0.9, step: 0.01 },
+  ]},
+];
+
+export default function PeplGraph() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const echoRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [echo, setEcho] = useState<{ name: string; on: boolean }>({ name: "", on: false });
+  /** Popped = the lens is gone and the room is released to full size. */
+  const poppedRef = useRef(false);
+  const [popped, setPopped] = useState(false);
+  const [stamps, setStamps] = useState<(StampData & { on: boolean }) | null>(null);
+  const stampsRef = useRef<HTMLDivElement>(null);
+  /* the whole stamp layer is masked by the bubble's disc — stamps
+     pass BEHIND the bubble, which owns the top of the paint order */
+  const stampLayerRef = useRef<HTMLDivElement>(null);
+  const stampsLiveRef = useRef<(StampData & { on: boolean }) | null>(null);
+  /* a second, frozen-in-place burst that peels while the next pops */
+  const [peeling, setPeeling] = useState<
+    (StampData & { at: { x: number; y: number; k: number } }) | null
+  >(null);
+  const peelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (peelTimerRef.current) clearTimeout(peelTimerRef.current);
+    },
+    []
+  );
+
+  /* peeled-off stamps unmount after their exit animation */
+  useEffect(() => {
+    if (stamps && !stamps.on) {
+      const timer = setTimeout(() => setStamps(null), 700);
+      return () => clearTimeout(timer);
+    }
+  }, [stamps]);
+  const [indexOpen, setIndexOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [params, setParams] = useState<Params>(INITIAL);
+  const [query, setQuery] = useState("");
+  const [searchIdx, setSearchIdx] = useState(0);
+
+  const paramsRef = useRef<Params>(INITIAL);
+  useEffect(() => {
+    paramsRef.current = params;
+  }, [params]);
+
+  /* URL overrides, e.g. ?kuwahara=0.4&grain=0 or ?perf=lite —
+     handy for weak GPUs and shareable tunings */
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if ([...q.keys()].length === 0) return;
+    setParams((pr) => {
+      const next = { ...pr };
+      if (q.get("perf") === "lite") {
+        next.kuwahara = 0.4;
+        next.kuwaKernel = 1.4;
+        next.impasto = 0.25;
+        next.grain = 0.08;
+      }
+      const limits = Object.fromEntries(
+        PANEL_GROUPS.flatMap((g) => g.items.map((i) => [i.key, i]))
+      );
+      for (const [k, v] of q.entries()) {
+        if (k === "field" && (v === "weather" || v === "cartography" || v === "stars")) {
+          next.field = v;
+        } else if (k in DEFAULTS && !Number.isNaN(parseFloat(v))) {
+          const n = parseFloat(v);
+          const lim = limits[k];
+          /* clamp to the slider range — raw floats reach shader uniforms */
+          (next as Record<string, unknown>)[k] = lim
+            ? Math.min(lim.max, Math.max(lim.min, n))
+            : n;
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const selectRef = useRef<(personId: string) => void>(() => {});
+  const selectGroupRef = useRef<(clusterIndex: number) => void>(() => {});
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
+
+    const gl = canvas.getContext("webgl", {
+      antialias: false,
+      alpha: false,
+      premultipliedAlpha: false,
+      powerPreference: "high-performance",
+    });
+    if (!gl) {
+      setErr("WebGL is not available in this context.");
+      return;
+    }
+
+    let bubbleProg: WebGLProgram, kuwaProg: WebGLProgram, gradeProg: WebGLProgram, finishProg: WebGLProgram;
+    let tensorProg: WebGLProgram, anisoProg: WebGLProgram;
+    try {
+      bubbleProg = compileProgram(gl, QUAD_VERT, BUBBLE_FRAG);
+      kuwaProg = compileProgram(gl, QUAD_VERT, KUWAHARA_FRAG);
+      tensorProg = compileProgram(gl, QUAD_VERT, TENSOR_FRAG);
+      anisoProg = compileProgram(gl, QUAD_VERT, ANISO_KUWAHARA_FRAG);
+      gradeProg = compileProgram(gl, QUAD_VERT, GRADE_FRAG);
+      finishProg = compileProgram(gl, QUAD_VERT, FINISH_FRAG);
+    } catch (e) {
+      console.error("[pepl] shader:", e);
+      setErr(String((e as Error).message || e));
+      return;
+    }
+
+    const UB = uniformMap(gl, bubbleProg, BUBBLE_UNIFORMS);
+    const UK = uniformMap(gl, kuwaProg, ["uTex", "uRes", "uKernel"]);
+    const UT = uniformMap(gl, tensorProg, ["uTex", "uRes"]);
+    const UA = uniformMap(gl, anisoProg, ["uTex", "uTensor", "uRes", "uKernel"]);
+    const UG = uniformMap(gl, gradeProg, ["uScene", "uKuwa", "uRes", "uKuwaAmt", "uGradeAmt", "uCenter", "uRadius"]);
+    const UF = uniformMap(gl, finishProg, ["uTex", "uRes", "uTime", "uImpasto", "uWeaveAmt", "uGrainAmt"]);
+
+    const buf = bindFullscreenTriangle(gl, [bubbleProg, kuwaProg, tensorProg, anisoProg, gradeProg, finishProg]);
+
+    const sheetTex = makeTexture(gl);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+    gl.useProgram(bubbleProg);
+    gl.uniform1i(UB.uTex as WebGLUniformLocation, 0);
+    gl.uniform1f(UB.uGrain as WebGLUniformLocation, 0.0); // grain moved to the last pass
+    gl.useProgram(kuwaProg);
+    gl.uniform1i(UK.uTex as WebGLUniformLocation, 0);
+    gl.useProgram(tensorProg);
+    gl.uniform1i(UT.uTex as WebGLUniformLocation, 0);
+    gl.useProgram(anisoProg);
+    gl.uniform1i(UA.uTex as WebGLUniformLocation, 0);
+    gl.uniform1i(UA.uTensor as WebGLUniformLocation, 1);
+    gl.useProgram(gradeProg);
+    gl.uniform1i(UG.uScene as WebGLUniformLocation, 0);
+    gl.uniform1i(UG.uKuwa as WebGLUniformLocation, 1);
+    gl.useProgram(finishProg);
+    gl.uniform1i(UF.uTex as WebGLUniformLocation, 0);
+
+    gl.clearColor(0.968, 0.964, 0.957, 1.0);
+
+    /* render targets */
+    let rtScene: RenderTarget | null = null;
+    let rtK: RenderTarget | null = null;
+    let rtB: RenderTarget | null = null;
+    let rtT: RenderTarget | null = null; // structure tensor, exportQuality only
+    /* 0.5 = live default; 0.25 = perf fallback; 1.0 = exportQuality stills */
+    let kuwaScale = 0.5;
+    let exportQ = false;
+
+    const recreateTargets = () => {
+      destroyTarget(gl, rtScene);
+      destroyTarget(gl, rtK);
+      destroyTarget(gl, rtB);
+      destroyTarget(gl, rtT);
+      rtT = null;
+      const w = canvas.width, h = canvas.height;
+      rtScene = makeTarget(gl, w, h);
+      rtB = makeTarget(gl, w, h);
+      const ks = exportQ ? 1.0 : kuwaScale;
+      rtK = makeTarget(gl, Math.max(2, Math.floor(w * ks)), Math.max(2, Math.floor(h * ks)));
+      if (exportQ) rtT = makeTarget(gl, w, h);
+    };
+
+    const sheet = new GraphSheet(defaultAdapter);
+    let boards: BoardState[] = [];
+    let choreo = new Choreography(defaultAdapter.groups().length);
+    const breatheAt: number[] = [];
+    const breatheRng = mulberry32(77);
+    let labelAlpha: number[] = [];
+    let nameAlpha: number[] = [];
+    const t0 = performance.now();
+
+    const resolveFont = () => {
+      const css = getComputedStyle(document.documentElement);
+      const fam = css.getPropertyValue("--font-jakarta").trim();
+      const serif = css.getPropertyValue("--font-hedvig").trim();
+      if (fam) sheet.fontFamily = fam;
+      if (serif) sheet.serifFamily = `${serif}, Georgia, serif`;
+    };
+    resolveFont();
+    document.fonts?.ready?.then(() => {
+      resolveFont();
+      sheet.bakeNames(); // rebake serif names with the real Hedvig
+    });
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+
+    /* ---------- bubble body ---------- */
+    const ptr = { x: 0, y: 0, down: false, grabbed: false, id: -1, ox: 0, oy: 0, downT: 0, dx0: 0, dy0: 0 };
+    const body = { x: 0, y: 0.06, vx: 0, vy: 0, dx: 0, dy: 0, dvx: 0, dvy: 0 };
+    let focused: FocusedPerson | null = null;
+    let selectedGroup: number | null = null;
+    let zoomAnim = paramsRef.current.zoom;
+    /* scene camera: world point at view centre + scale, eased each frame */
+    const cam = { s: 1, x: 0, y: 0, ts: 1, tx: 0, ty: 0 };
+
+    /* ---------- space conversions ---------- */
+    const dims = () => {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      return { w, h, mn: Math.min(w, h) || 1 };
+    };
+    const toShader = (px: number, py: number) => {
+      const { w, h, mn } = dims();
+      return { x: (px - w / 2) / mn, y: -(py - h / 2) / mn };
+    };
+    const toSheet = (sx: number, sy: number) => {
+      const { w, h, mn } = dims();
+      return { x: sx * mn + w / 2, y: -sy * mn + h / 2 };
+    };
+    /* scene camera transforms: layout world px ↔ rendered screen px */
+    const worldToScreen = (wx: number, wy: number) => {
+      const { w, h } = dims();
+      return { x: (wx - cam.x) * cam.s + w / 2, y: (wy - cam.y) * cam.s + h / 2 };
+    };
+    const screenToWorld = (sx: number, sy: number) => {
+      const { w, h } = dims();
+      return { x: (sx - w / 2) / cam.s + cam.x, y: (sy - h / 2) / cam.s + cam.y };
+    };
+    /**
+     * Home is not 1:1 — it is "the whole room, small enough to sit inside the
+     * bubble". The sheet's own extent decides the scale, so the fit holds at any
+     * viewport size and for any guest count. Popping the bubble releases it to
+     * full size (see `popped`).
+     */
+    const camHome = () => {
+      const { w, h } = dims();
+      const L = sheet.layout;
+      let s = 1;
+      if (L && !poppedRef.current) {
+        let ext = 0;
+        for (const cl of L.clusters) {
+          ext = Math.max(ext, Math.hypot(cl.cx - w / 2, cl.cy - h / 2) + cl.radius);
+        }
+        // fit the whole room inside the lens, with a little air
+        const fitR = paramsRef.current.radius * Math.min(w, h) * 0.92;
+        if (ext > 0) s = Math.max(0.12, Math.min(1, fitR / ext));
+      }
+      cam.ts = s;
+      cam.tx = w / 2;
+      cam.ty = h / 2;
+    };
+    /* mirror the shader's forward sampling map (zoom + rim fisheye):
+       hit-testing asks "which sheet point is displayed at p", so apply
+       the same q = center + pc/zoom − N.xy·warp·(1−cosI)^1.5·0.55 */
+    const unproject = (p: { x: number; y: number }) => {
+      const P = paramsRef.current;
+      const dx = p.x - body.x, dy = p.y - body.y;
+      const d = Math.hypot(dx, dy);
+      if (d < P.radius) {
+        const z = Math.max(zoomAnim, 1);
+        const dn = Math.min(d / P.radius, 1);
+        const cosI = Math.sqrt(Math.max(0, 1 - dn * dn));
+        const w = P.warp * Math.pow(1 - cosI, 1.5) * 0.55;
+        return {
+          x: body.x + dx / z - (dx / P.radius) * w,
+          y: body.y + dy / z - (dy / P.radius) * w,
+        };
+      }
+      return p;
+    };
+    /* pointer (shader space) → through the lens → through the camera →
+       world-space dot lookup */
+    const dotAt = (p: { x: number; y: number }, tolPx = 9) => {
+      const L = sheet.layout;
+      if (!L) return null;
+      const g = unproject(p);
+      const s = toSheet(g.x, g.y);
+      const wpt = screenToWorld(s.x, s.y);
+      let best = null as (typeof L.dots)[number] | null;
+      let bestD = tolPx;
+      for (const d of L.dots) {
+        const dist = Math.hypot(d.x - wpt.x, d.y - wpt.y);
+        if (dist < bestD) {
+          bestD = dist;
+          best = d;
+        }
+      }
+      return best;
+    };
+    /* pointer → world → serif group-name hit. Only names that are
+       actually visible are clickable — a faded-out name over an awake
+       board must not swallow taps or show a phantom cursor. */
+    const groupNameAt = (p: { x: number; y: number }) => {
+      const g = unproject(p);
+      const s = toSheet(g.x, g.y);
+      const wpt = screenToWorld(s.x, s.y);
+      const rects = sheet.nameRects();
+      for (let ci = 0; ci < rects.length; ci++) {
+        /* only visible inscriptions are clickable */
+        if (choreo.phases[ci] === "focused" || nameAlpha[ci] < 0.2) continue;
+        const r = rects[ci];
+        if (
+          wpt.x >= r.x - 6 && wpt.x <= r.x + r.w + 6 &&
+          wpt.y >= r.y - 6 && wpt.y <= r.y + r.h + 6
+        ) {
+          return ci;
+        }
+      }
+      return null;
+    };
+
+    const rebuildBoards = () => {
+      const L = sheet.layout!;
+      boards = L.clusters.map((cl) => {
+        const b = new BoardState(cl.board.cols);
+        b.setText(""); // at rest the board is blank — the serif name speaks
+        return b;
+      });
+      choreo = new Choreography(L.clusters.length);
+      labelAlpha = L.clusters.map(() => 0);
+      nameAlpha = L.clusters.map(() => 0); // fades in from blank
+      breatheAt.length = 0;
+      /* offsets from now, not from mount — a rebuild late in the
+         session must not fire every board's breathe at once */
+      const tNow = (performance.now() - t0) / 1000;
+      L.clusters.forEach(() => breatheAt.push(tNow + 8 + breatheRng() * 16));
+      focused = null;
+      selectedGroup = null;
+      /* camera home, snapped — the layout underneath just changed */
+      camHome();
+      cam.s = cam.ts;
+      cam.x = cam.tx;
+      cam.y = cam.ty;
+    };
+
+    const resize = () => {
+      const { w, h } = dims();
+      const pw = Math.max(1, Math.floor(w * dpr));
+      const ph = Math.max(1, Math.floor(h * dpr));
+      const sizeChanged = canvas.width !== pw || canvas.height !== ph;
+      if (sizeChanged) {
+        canvas.width = pw;
+        canvas.height = ph;
+      }
+      /* Recreate on a size change OR whenever a target is missing.
+       *
+       * Upstream only recreated on a size change, which silently dies on a
+       * REMOUNT: the effect's cleanup destroys the targets and the new run
+       * starts with rt* = null, but the canvas ELEMENT survives with its
+       * width/height already set — so the size check is false, the targets are
+       * never built, and every frame returns at the `!rtScene` guard. The scene
+       * then renders one stale frame and freezes, with no error anywhere.
+       * React's double-invoked effects and Fast Refresh both hit this. */
+      if (sizeChanged || !rtScene || !rtK || !rtB) recreateTargets();
+      if (sheet.resize(w, h, dpr)) rebuildBoards();
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(wrap);
+
+    /* Pause the loop only when the TAB is hidden.
+     *
+     * Upstream gated this on an IntersectionObserver over the canvas. Here the
+     * canvas is a full-bleed child of a route shell that lays out after the
+     * observer is attached, so the first callback lands while the box is still
+     * empty, latches visible=false, and never re-fires — the loop then schedules
+     * forever and returns before drawing, leaving exactly one frame painted and
+     * every interaction dead. document.hidden expresses the real intent (don't
+     * burn GPU in a background tab) and cannot latch. */
+    let visible = typeof document === "undefined" ? true : !document.hidden;
+    const onVis = () => {
+      visible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    /* ---------- selection ---------- */
+    const flashFade = () => {
+      const f = fadeRef.current;
+      if (!f) return;
+      f.style.transition = "none";
+      f.style.opacity = "1";
+      requestAnimationFrame(() => {
+        f.style.transition = "opacity 200ms ease-out";
+        f.style.opacity = "0";
+      });
+    };
+
+    const select = (personId: string) => {
+      const L = sheet.layout;
+      if (!L) return;
+      const d = L.dots.find((x) => x.person.id === personId);
+      if (!d) return;
+      selectedGroup = null;
+      focused = { id: personId, name: d.person.name, clusterIndex: d.clusterIndex };
+      /* the camera does the travel: the person lands left-of-centre so
+         the stamps and echo have room — and always OUTSIDE the resident
+         bubble's footprint, or the dot ends up in the lens dead zone */
+      const { w, h, mn } = dims();
+      const s = SCENE_ZOOM_PERSON;
+      let ox = -0.17 * w, oy = -0.07 * h; // dot's screen offset from centre
+      const bx = 0, by = -0.02 * mn; // bubble home, screen px from centre
+      const dPx = Math.hypot(ox - bx, oy - by);
+      const clear = paramsRef.current.radius * mn * 1.15;
+      if (dPx < clear) {
+        const k = clear / Math.max(dPx, 1e-3);
+        ox = bx + (ox - bx) * k;
+        oy = by + (oy - by) * k;
+      }
+      cam.ts = s;
+      cam.tx = d.x - ox / s;
+      cam.ty = d.y - oy / s;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+        flashFade();
+      }
+    };
+    selectRef.current = select;
+
+    /* choose a whole group: zoom in until its serif inscription reads
+       large; the board wakes into the field underneath */
+    const selectGroup = (ci: number) => {
+      const L = sheet.layout;
+      if (!L || !L.clusters[ci]) return;
+      const cl = L.clusters[ci];
+      const { w, h, mn } = dims();
+      focused = null;
+      selectedGroup = ci;
+      cam.ts = Math.min(2.6, Math.max(1.9, (0.4 * mn) / cl.radius));
+      /* the inscription lands clear of the resident bubble — measured
+         as the title's full screen rect, not just its centre point */
+      const nx = cl.board.x + cl.board.w / 2;
+      const ny = cl.board.y + cl.board.h / 2;
+      let ox = -0.16 * w, oy = 0.1 * h;
+      const bx = 0, by = -0.02 * mn;
+      const clear = paramsRef.current.radius * mn * 1.15;
+      const nr = sheet.nameRects()[ci];
+      const hw2 = nr ? (nr.w / 2) * cam.ts : 0;
+      const hh2 = nr ? (nr.h / 2) * cam.ts : 0;
+      const dxn = Math.max(0, Math.abs(ox - bx) - hw2);
+      const dyn = Math.max(0, Math.abs(oy - by) - hh2);
+      if (Math.hypot(dxn, dyn) < clear) {
+        /* push the title straight down until its top edge clears */
+        oy = by + hh2 + Math.sqrt(Math.max(clear * clear - dxn * dxn, 0)) + 10;
+      }
+      cam.tx = nx - ox / cam.ts;
+      cam.ty = ny - oy / cam.ts;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+        flashFade();
+      }
+    };
+    selectGroupRef.current = selectGroup;
+
+    const clearFocus = () => {
+      if (reduced && (focused || selectedGroup != null)) flashFade();
+      focused = null;
+      selectedGroup = null;
+      camHome();
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      }
+    };
+
+    /* ---------- pointer ---------- */
+    const toLocal = (e: PointerEvent) => {
+      const r = wrap.getBoundingClientRect();
+      const mn = Math.min(r.width, r.height) || 1;
+      return {
+        x: (e.clientX - r.left - r.width / 2) / mn,
+        y: -(e.clientY - r.top - r.height / 2) / mn,
+      };
+    };
+
+    const hover = { id: null as string | null, group: null as number | null };
+
+    /* hover itself is re-derived every frame (the camera and bubble
+       move under a stationary pointer); onMove just records position */
+    const onMove = (e: PointerEvent) => {
+      if (ptr.down && e.pointerId !== ptr.id) return; // one pointer drives
+      const q = toLocal(e);
+      ptr.x = q.x;
+      ptr.y = q.y;
+      ptrIn = true;
+    };
+
+    const onLeave = () => {
+      ptrIn = false;
+      hover.id = null;
+      hover.group = null;
+      if (!ptr.grabbed) wrap.style.cursor = "default";
+    };
+
+    const onDown = (e: PointerEvent) => {
+      if (ptr.down) return; // a second finger never steals the gesture
+      const q = toLocal(e);
+      ptr.id = e.pointerId;
+      ptr.x = q.x; ptr.y = q.y; ptr.down = true;
+      ptr.downT = performance.now();
+      ptr.dx0 = q.x; ptr.dy0 = q.y;
+      if (Math.hypot(q.x - body.x, q.y - body.y) < paramsRef.current.radius * 1.15) {
+        ptr.grabbed = true;
+        ptr.ox = body.x - q.x;
+        ptr.oy = body.y - q.y;
+        wrap.style.cursor = "grabbing";
+        try {
+          wrap.setPointerCapture(e.pointerId);
+        } catch {}
+      }
+    };
+
+    const onUp = (e: PointerEvent) => {
+      if (ptr.down && e.pointerId !== ptr.id) return;
+      const wasDown = ptr.down;
+      const wasGrabbed = ptr.grabbed;
+      ptr.down = false;
+      ptr.grabbed = false;
+      ptr.id = -1;
+      /* releases that began on UI chrome (search, panel, pills) never
+         reach onDown, so they must not select or clear anything */
+      if (!wasDown) return;
+      wrap.style.cursor = "default";
+      /* an aborted gesture (system took the touch) must not select */
+      if (e.type === "pointercancel") return;
+
+      const q = "clientX" in e ? toLocal(e) : { x: ptr.x, y: ptr.y };
+      const elapsed = performance.now() - ptr.downT;
+      const moved = Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0);
+
+      if (elapsed < 300 && moved < 0.012) {
+        const d = dotAt(q);
+        if (d) {
+          select(d.person.id);
+          return;
+        }
+        const gi = groupNameAt(q);
+        if (gi != null) selectGroup(gi);
+        else clearFocus();
+        return;
+      }
+
+      /* a drag-release just lets the bubble go — it springs back home
+         on its own; selection is clicks, titles, and search only */
+      void wasGrabbed;
+    };
+
+    wrap.addEventListener("pointermove", onMove);
+    wrap.addEventListener("pointerdown", onDown);
+    wrap.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+
+    /* ---------- loop ---------- */
+    let raf = 0;
+    let last = t0;
+    let lx = 0, ly = 0;
+    let echoShown = false;
+    let echoName = "";
+    let echoId = "";
+    let ptrIn = false;
+    let emaMs = 16;
+    let lastGateCheck = 0;
+    let kernelCap = 3;
+
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const now = performance.now();
+      const frameMs = now - last;
+      const dt = Math.min(0.032, Math.max(0.0005, frameMs / 1000));
+      last = now;
+      if (!visible) return;
+
+      /* perf gate: under ~45fps, drop Kuwahara to quarter res before
+         degrading anything else; if that isn't enough, cap the kernel */
+      emaMs = emaMs + (Math.min(frameMs, 100) - emaMs) * 0.04;
+      if (now - lastGateCheck > 1500) {
+        lastGateCheck = now;
+        if (!exportQ && emaMs > 22) {
+          if (kuwaScale > 0.3) {
+            kuwaScale = 0.25;
+            recreateTargets();
+          } else if (kernelCap > 1.6) {
+            kernelCap = 1.6;
+          }
+        }
+      }
+      if (paramsRef.current.exportQuality !== exportQ) {
+        exportQ = paramsRef.current.exportQuality;
+        recreateTargets();
+      }
+
+      const t = reduced ? 12.0 : (now - t0) / 1000;
+      const P = paramsRef.current;
+      const b = body;
+      const L = sheet.layout;
+      if (!L || !rtScene || !rtK || !rtB) return;
+      const { w, h, mn } = dims();
+
+      if (!Number.isFinite(b.x + b.y + b.vx + b.vy + b.dx + b.dy + b.dvx + b.dvy)) {
+        b.x = 0; b.y = 0.06;
+        b.vx = b.vy = b.dx = b.dy = b.dvx = b.dvy = 0;
+      }
+
+      /* --- scene camera easing (snapped when reduced) --- */
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      } else {
+        const ck = 1 - Math.exp(-dt * 2.4);
+        cam.s += (cam.ts - cam.s) * ck;
+        cam.x += (cam.tx - cam.x) * ck;
+        cam.y += (cam.ty - cam.y) * ck;
+      }
+
+      /* --- hover, re-derived per frame: the world moves under a
+             stationary pointer while the camera eases and the bubble
+             wanders --- */
+      if (ptrIn && !ptr.grabbed) {
+        const q = { x: ptr.x, y: ptr.y };
+        const hd = dotAt(q);
+        hover.id = hd ? hd.person.id : null;
+        hover.group = hd ? null : groupNameAt(q);
+        const overBubble =
+          Math.hypot(q.x - body.x, q.y - body.y) < P.radius * 1.15;
+        wrap.style.cursor =
+          hd || hover.group != null ? "pointer" : overBubble ? "grab" : "default";
+      }
+
+      /* --- forces --- */
+      let ax = 0, ay = 0;
+      const halfW = w / mn / 2;
+      const halfH = h / mn / 2;
+
+      if (ptr.grabbed) {
+        const k = 150 * P.grip;
+        const c = 2 * Math.sqrt(k) * 1.15;
+        ax += (ptr.x + ptr.ox - b.x) * k - b.vx * c;
+        ay += (ptr.y + ptr.oy - b.y) * k - b.vy * c;
+      } else {
+        /* The bubble is NOT pinned to the middle.
+         *
+         * At rest it sits centre-stage holding the whole room inside itself.
+         * The moment the camera pushes in on someone it gets out of the way,
+         * easing to the top-left corner so the sheet — and the stamps — own the
+         * frame. Same spring either way, only the target moves. */
+        const zoomedIn = cam.s > 1.25;
+        const R = P.radius;
+        const hx = zoomedIn ? -(0.5 * (dims().w / mn)) + R + 0.03 : 0;
+        const hy = zoomedIn ? 0.5 * (dims().h / mn) - R - 0.03 : 0.02;
+        ax += (hx - b.x) * 6.0;
+        ay += (hy - b.y) * 6.0;
+        if (!reduced) {
+          ay -= P.gravity;
+          ax += (Math.sin(t * 0.31) + 0.6 * Math.sin(t * 0.17 + 2.1)) * 0.038 * P.wander;
+          ay += (Math.sin(t * 0.23 + 1.3) + 0.5 * Math.sin(t * 0.41 + 4.2)) * 0.032 * P.wander;
+        }
+      }
+
+      ax -= b.vx * P.drag;
+      ay -= b.vy * P.drag;
+
+      b.vx += ax * dt; b.vy += ay * dt;
+      b.x += b.vx * dt; b.y += b.vy * dt;
+
+      const R = P.radius;
+      const KICK = 1.2;
+      if (b.x < -halfW + R) { b.x = -halfW + R; const s = Math.abs(b.vx); b.vx = s * P.bounce; b.dvy += s * KICK; }
+      if (b.x > halfW - R) { b.x = halfW - R; const s = Math.abs(b.vx); b.vx = -s * P.bounce; b.dvy += s * KICK; }
+      if (b.y < -halfH + R) { b.y = -halfH + R; const s = Math.abs(b.vy); b.vy = s * P.bounce; b.dvx += s * KICK; }
+      if (b.y > halfH - R) { b.y = halfH - R; const s = Math.abs(b.vy); b.vy = -s * P.bounce; b.dvx += s * KICK; }
+
+      /* --- squish spring --- */
+      const wfreq = 2 * Math.PI * P.jiggle;
+      const zeta = P.settle;
+      const sp = Math.hypot(b.vx, b.vy);
+      let tx = 0, ty = 0;
+      if (sp > 1e-5 && P.squish !== 0) {
+        const mag = MAX_DEFORM * (1 - Math.exp(-sp * Math.abs(P.squish)));
+        const ux = b.vx / sp, uy = b.vy / sp;
+        if (P.squish >= 0) { tx = -uy * mag; ty = ux * mag; }
+        else { tx = ux * mag; ty = uy * mag; }
+      }
+      b.dvx += (-(b.dx - tx) * wfreq * wfreq - b.dvx * 2 * zeta * wfreq) * dt;
+      b.dvy += (-(b.dy - ty) * wfreq * wfreq - b.dvy * 2 * zeta * wfreq) * dt;
+      b.dx += b.dvx * dt;
+      b.dy += b.dvy * dt;
+      const dvm = Math.hypot(b.dvx, b.dvy);
+      if (dvm > 8) { b.dvx *= 8 / dvm; b.dvy *= 8 / dvm; }
+
+      void sp;
+
+      /* --- lens zoom: constant toy magnification, eased for the slider --- */
+      if (reduced) zoomAnim = P.zoom;
+      else zoomAnim += (P.zoom - zoomAnim) * (1 - Math.exp(-dt * 3.2));
+
+      /* --- active cluster: the chosen person's, or the chosen group --- */
+      const active: number | null = focused ? focused.clusterIndex : selectedGroup;
+
+      /* --- choreography + boards --- */
+      choreo.update(now, active, focused, boards, L, {
+        morphDur: P.morphDur,
+        morphHold: P.morphHold,
+        hopDur: P.hopDur,
+        hopHold: P.hopHold,
+        field: P.field,
+      }, reduced);
+
+      const boardsDirty = boards.map((bd, ci) => {
+        if (
+          !reduced &&
+          choreo.phases[ci] === "rest" &&
+          !bd.isMorphing &&
+          t > breatheAt[ci]
+        ) {
+          breatheAt[ci] = t + 16 + breatheRng() * 12;
+          /* resting breathe: the blank board flashes weather and settles */
+          bd.morphToText("", now, { duration: 2600, fieldHold: 1100 }, reduced);
+        }
+        bd.fieldName = bd.isMorphing ? bd.fieldName : P.field;
+        /* hover bloom: the group title's glyphs surface lightly and
+           blobbily while the pointer rests on the inscription */
+        const gainTarget =
+          hover.group === ci && choreo.phases[ci] === "rest" && !bd.isMorphing ? 0.8 : 0;
+        bd.hoverGain += (gainTarget - bd.hoverGain) * (reduced ? 1 : 1 - Math.exp(-dt * 6));
+        return bd.update(now, t, reduced);
+      });
+
+      /* --- label + serif-name fades, dot emphasis --- */
+      const easeL = reduced ? 1 : 1 - Math.exp(-dt * 5);
+      labelAlpha = labelAlpha.map((v, ci) => v + (choreo.labelTarget(ci) - v) * easeL);
+      const easeN = reduced ? 1 : 1 - Math.exp(-dt * 2.6);
+      nameAlpha = nameAlpha.map((v, ci) => {
+        /* the inscription stays up while its group is framed — you
+           zoom in *until the group text is large*; it only yields
+           when a person inside is focused */
+        const target = choreo.phases[ci] === "focused" ? 0 : 1;
+        return v + (target - v) * easeN;
+      });
+      const bubbleSheet = toSheet(b.x, b.y);
+      const lensPx = P.radius * mn;
+      /* the focused dot anchors the label bloom; the bubble anchors
+         only the genuine lens-proximity effects */
+      const focusDot = focused
+        ? L.dots.find((x) => x.person.id === focused!.id) ?? null
+        : null;
+      const focusAnchor = focusDot
+        ? worldToScreen(focusDot.x, focusDot.y)
+        : bubbleSheet;
+      /* distances measured on screen — the camera moves the world */
+      const dotScreenDist = (i: number) => {
+        const d = L.dots[i];
+        const s = worldToScreen(d.x, d.y);
+        return Math.hypot(s.x - bubbleSheet.x, s.y - bubbleSheet.y);
+      };
+      const dotEmphasis = (i: number) => {
+        const d = L.dots[i];
+        if (focused && d.person.id === focused.id) return 1.45;
+        return dotScreenDist(i) < lensPx ? 1.22 : 1;
+      };
+      /* every dot carries its name: a quiet rest label everywhere,
+         brighter under the lens, brightest around the focus */
+      const labelFor = (i: number) => {
+        const d = L.dots[i];
+        /* labels culled by the placement pass only surface for their
+           own hover/focus moment */
+        if (!d.labelVis) {
+          const mine =
+            hover.id === d.person.id || (focused && focused.id === d.person.id);
+          return mine ? 1 : 0;
+        }
+        const rest = 0.38;
+        const underLens = dotScreenDist(i) < lensPx ? 0.62 : 0;
+        const ca = labelAlpha[d.clusterIndex];
+        const s2 = worldToScreen(d.x, d.y);
+        const fd = Math.hypot(s2.x - focusAnchor.x, s2.y - focusAnchor.y);
+        const fall =
+          1 - Math.min(1, Math.max(0, (fd - lensPx * 0.55) / (lensPx * 0.45)));
+        return Math.max(rest, underLens, ca * fall);
+      };
+
+      /* --- serif echo + stamp burst, anchored to the focused dot.
+             Identity is the id — two guests can share a name. --- */
+      const wantEcho = !!focused;
+      if (wantEcho !== echoShown || (focused && focused.id !== echoId)) {
+        echoShown = wantEcho;
+        echoId = focused ? focused.id : echoId;
+        echoName = focused ? focused.name : echoName;
+        setEcho({ name: echoName, on: wantEcho });
+        if (focused) {
+          const prev = stampsLiveRef.current;
+          if (prev && prev.on && prev.personKey !== focused.id && stampsRef.current) {
+            /* person-to-person refocus: keep the outgoing burst
+               mounted in place so it peels instead of jump-cutting */
+            const m = /translate\((-?[\d.]+)px, (-?[\d.]+)px\)(?: scale\((-?[\d.]+)\))?/.exec(
+              stampsRef.current.style.transform || ""
+            );
+            setPeeling({
+              ...prev,
+              at: m
+                ? { x: parseFloat(m[1]), y: parseFloat(m[2]), k: m[3] ? parseFloat(m[3]) : 1 }
+                : { x: 0, y: 0, k: 1 },
+            });
+            if (peelTimerRef.current) clearTimeout(peelTimerRef.current);
+            peelTimerRef.current = setTimeout(() => setPeeling(null), 700);
+          }
+          const next = {
+            personKey: focused.id,
+            name: focused.name,
+            details: GUEST_DETAILS[focused.id] ?? {},
+            on: true,
+          };
+          stampsLiveRef.current = next;
+          setStamps(next);
+        } else {
+          stampsLiveRef.current = stampsLiveRef.current
+            ? { ...stampsLiveRef.current, on: false }
+            : null;
+          setStamps((s) => (s && s.on ? { ...s, on: false } : s));
+        }
+      }
+      /* the bubble's disc cuts a hole in the stamp layer — the bubble
+         reads as the top layer without leaving the GL pipeline */
+      if (stampLayerRef.current) {
+        const Rm = P.radius * mn * 1.02;
+        const cssMask = `radial-gradient(circle at ${bubbleSheet.x.toFixed(1)}px ${bubbleSheet.y.toFixed(1)}px, transparent ${(Rm - 1).toFixed(1)}px, black ${(Rm + 1).toFixed(1)}px)`;
+        const st = stampLayerRef.current.style as CSSStyleDeclaration & {
+          webkitMaskImage: string;
+        };
+        st.maskImage = cssMask;
+        st.webkitMaskImage = cssMask;
+      }
+
+      if (focusDot) {
+        const ds = worldToScreen(focusDot.x, focusDot.y);
+        if (echoRef.current) {
+          /* Math.max last: margins win on narrow viewports */
+          const ex = Math.max(24, Math.min(ds.x - 110, w - 330));
+          const ey = Math.max(96, Math.min(ds.y + 44, h - 92));
+          echoRef.current.style.transform = `translate(${ex.toFixed(1)}px, ${ey.toFixed(1)}px)`;
+        }
+        if (stampsRef.current) {
+          /* scale the burst down on small viewports; bounds derived
+             from the scaled extents so the clamps can never invert */
+          const k = Math.min(1, (w - 32) / 548, (h - 62) / 320);
+          const ax2 = Math.min(Math.max(ds.x, 286 * k + 14), w - 262 * k - 18);
+          const ay2 = Math.min(Math.max(ds.y, 212 * k + 18), h - 44);
+          stampsRef.current.style.transform = `translate(${ax2.toFixed(1)}px, ${ay2.toFixed(1)}px) scale(${k.toFixed(3)})`;
+        }
+      }
+
+      /* --- draw the sheet, upload as texture --- */
+      sheet.draw({
+        t,
+        dt,
+        reduced,
+        cam: { s: cam.s, x: cam.x, y: cam.y },
+        hoveredId: hover.id,
+        focusedId: focused ? focused.id : null,
+        boards,
+        boardsDirty,
+        nameAlpha,
+        labelFor,
+        dotEmphasis,
+      });
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sheetTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sheet.canvas);
+
+      lx += (ptr.x - lx) * 0.05;
+      ly += (ptr.y - ly) * 0.05;
+
+      /* ---- pass 1: bubble lens → rtScene ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtScene.fbo);
+      gl.viewport(0, 0, rtScene.w, rtScene.h);
+      gl.useProgram(bubbleProg);
+      const ub = UB as Record<string, WebGLUniformLocation>;
+      gl.uniform2f(ub.uRes, rtScene.w, rtScene.h);
+      gl.uniform1f(ub.uTime, t);
+      gl.uniform2f(ub.uMouse, lx * 2, ly * 2);
+      gl.uniform2f(ub.uCenter, b.x, b.y);
+      gl.uniform2f(ub.uDeform, b.dx, b.dy);
+      gl.uniform2f(ub.uVel, b.vx, b.vy);
+      gl.uniform1f(ub.uThick, P.thick);
+      gl.uniform1f(ub.uDrain, P.drain);
+      gl.uniform1f(ub.uWobble, P.wobble);
+      gl.uniform1f(ub.uSurface, P.surface);
+      gl.uniform1f(ub.uFlow, reduced ? 0 : P.flow);
+      gl.uniform1f(ub.uTurb, P.turb);
+      gl.uniform1f(ub.uChroma, P.chroma);
+      gl.uniform1f(ub.uEdge, P.edge);
+      gl.uniform1f(ub.uZoom, zoomAnim);
+      gl.uniform1f(ub.uWarp, P.warp);
+      gl.uniform1f(ub.uRadius, P.radius);
+      gl.uniform1f(ub.uBack, P.back);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* ---- pass 2: Kuwahara ----
+         live: generalized 8-sector at reduced res.
+         exportQuality: structure tensor → anisotropic oriented kernel
+         at full res (stills only). */
+      if (exportQ && rtT) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtT.fbo);
+        gl.viewport(0, 0, rtT.w, rtT.h);
+        gl.useProgram(tensorProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.uniform2f(UT.uRes as WebGLUniformLocation, rtT.w, rtT.h);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtK.fbo);
+        gl.viewport(0, 0, rtK.w, rtK.h);
+        gl.useProgram(anisoProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, rtT.tex);
+        gl.uniform2f(UA.uRes as WebGLUniformLocation, rtK.w, rtK.h);
+        gl.uniform1f(UA.uKernel as WebGLUniformLocation, P.kuwaKernel * 2);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtK.fbo);
+        gl.viewport(0, 0, rtK.w, rtK.h);
+        gl.useProgram(kuwaProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.uniform2f(UK.uRes as WebGLUniformLocation, rtK.w, rtK.h);
+        gl.uniform1f(UK.uKernel as WebGLUniformLocation, Math.min(P.kuwaKernel, kernelCap));
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      /* ---- pass 3: composite + grade → rtB ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtB.fbo);
+      gl.viewport(0, 0, rtB.w, rtB.h);
+      gl.useProgram(gradeProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, rtK.tex);
+      gl.uniform2f(UG.uRes as WebGLUniformLocation, rtB.w, rtB.h);
+      gl.uniform1f(UG.uKuwaAmt as WebGLUniformLocation, P.kuwahara);
+      gl.uniform1f(UG.uGradeAmt as WebGLUniformLocation, P.grade);
+      gl.uniform2f(UG.uCenter as WebGLUniformLocation, b.x, b.y);
+      gl.uniform1f(UG.uRadius as WebGLUniformLocation, P.radius);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* ---- pass 4: impasto + weave + grain → screen ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.useProgram(finishProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtB.tex);
+      gl.uniform2f(UF.uRes as WebGLUniformLocation, canvas.width, canvas.height);
+      gl.uniform1f(UF.uTime as WebGLUniformLocation, t);
+      gl.uniform1f(UF.uImpasto as WebGLUniformLocation, P.impasto);
+      gl.uniform1f(UF.uWeaveAmt as WebGLUniformLocation, P.weave);
+      gl.uniform1f(UF.uGrainAmt as WebGLUniformLocation, P.grain);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+    frame();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      document.removeEventListener("visibilitychange", onVis);
+      wrap.removeEventListener("pointermove", onMove);
+      wrap.removeEventListener("pointerdown", onDown);
+      wrap.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      destroyTarget(gl, rtScene);
+      destroyTarget(gl, rtK);
+      destroyTarget(gl, rtB);
+      destroyTarget(gl, rtT);
+      gl.deleteTexture(sheetTex);
+      [bubbleProg, kuwaProg, tensorProg, anisoProg, gradeProg, finishProg].forEach((p) =>
+        gl.deleteProgram(p)
+      );
+      gl.deleteBuffer(buf);
+    };
+  }, []);
+
+  const ui: React.CSSProperties = {
+    fontFamily: "var(--font-jakarta), system-ui, sans-serif",
+    fontSize: 10,
+    letterSpacing: "0.08em",
+    textTransform: "lowercase",
+  };
+  const shadow =
+    "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)";
+  /* active surfaces pick up the film-blue token; hovers warm with gold */
+  const pill = (on: boolean): React.CSSProperties => ({
+    ...ui,
+    padding: "8px 13px",
+    border: "none",
+    borderRadius: 999,
+    background: on ? "rgba(145,180,249,0.22)" : "rgba(255,253,251,0.72)",
+    backdropFilter: "blur(8px)",
+    boxShadow: shadow,
+    color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.52)",
+    cursor: "pointer",
+  });
+  /* slider readouts update live — format to the step's precision and
+     keep the digits tabular so nothing jitters */
+  const fmt = (v: number, step: number) =>
+    step >= 1 ? String(Math.round(v)) : v.toFixed(step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3);
+
+  /* ---- search: people + groups, flown to on pick ---- */
+  type SearchResult =
+    | { kind: "person"; id: string; label: string; sub: string }
+    | { kind: "group"; gi: number; label: string; sub: string };
+  const qn = query.trim().toLowerCase();
+  const searchResults: SearchResult[] = qn
+    ? [
+        ...defaultAdapter
+          .groups()
+          .map((g, gi) => ({ kind: "group" as const, gi, label: g.name, sub: "group" }))
+          .filter((r) => r.label.toLowerCase().includes(qn)),
+        ...defaultAdapter
+          .people()
+          .map((p) => ({
+            kind: "person" as const,
+            id: p.id,
+            label: p.name,
+            sub:
+              defaultAdapter.groups().find((g) => g.id === p.groupId)?.name.toLowerCase() ?? "",
+          }))
+          .filter((r) => r.label.toLowerCase().includes(qn)),
+      ].slice(0, 10)
+    : [];
+  const searchSel = Math.max(0, Math.min(searchIdx, searchResults.length - 1));
+  const pickResult = (r: SearchResult) => {
+    if (r.kind === "person") selectRef.current(r.id);
+    else selectGroupRef.current(r.gi);
+    setQuery("");
+    setSearchIdx(0);
+  };
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100vh",
+        background: "var(--cream)",
+        overflow: "hidden",
+        color: "var(--ink)",
+        touchAction: "none",
+      }}
+    >
+      <style>{`
+        .pepl-pill { transition: transform 120ms ease, background-color 150ms ease; }
+        .pepl-pill:active { transform: scale(0.96); }
+        .pepl-pill:focus-visible { outline: 2px solid rgba(145,180,249,0.8); outline-offset: 2px; }
+        .pepl-item { transition: transform 120ms ease, background-color 150ms ease; }
+        .pepl-item:hover { background-color: rgba(254,224,174,0.38); }
+        .pepl-item:active { transform: scale(0.96); }
+        .pepl-item:focus-visible { outline: 2px solid rgba(145,180,249,0.8); outline-offset: -1px; }
+        .pepl-group { animation: peplRise 260ms ease-out backwards; }
+        @keyframes peplRise {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pepl-group { animation: none; }
+          .pepl-pill:active, .pepl-item:active { transform: none; }
+        }
+        .pepl-search { transition: box-shadow 150ms ease; }
+        .pepl-search:focus {
+          outline: 2px solid rgba(145,180,249,0.8);
+          outline-offset: 1px;
+        }
+        .pepl-search::placeholder { color: rgba(26,25,24,0.30); }
+      `}</style>
+      <div ref={wrapRef} style={{ position: "absolute", inset: 0, touchAction: "none" }}>
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          style={{ width: "100%", height: "100%", display: "block" }}
+        />
+      </div>
+
+      {/* serif echo — the human voice; the board is the machine voice */}
+      <div
+        ref={echoRef}
+        style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", willChange: "transform" }}
+      >
+        <style>{`@keyframes echoIn { from { opacity: 0.1 } to { opacity: 0.7 } }`}</style>
+        <div
+          key={echo.name}
+          style={{
+            fontFamily: "var(--font-hedvig), Georgia, serif",
+            fontSize: "clamp(28px, 4.5vmin, 52px)",
+            letterSpacing: "0.01em",
+            color: "var(--ink)",
+            opacity: echo.on ? 0.7 : 0,
+            transition: "opacity 400ms ease-out",
+            animation: echo.on ? "echoIn 400ms ease-out" : "none",
+            whiteSpace: "nowrap",
+            textTransform: "capitalize",
+          }}
+        >
+          {echo.name.toLowerCase()}
+        </div>
+      </div>
+
+      {/* RSVP stamp burst around the focused dot — the layer is masked
+          by the bubble's disc so stamps sit behind the bubble */}
+      <div
+        ref={stampLayerRef}
+        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+      >
+        <div
+          ref={stampsRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+            willChange: "transform",
+            transformOrigin: "0 0",
+          }}
+        >
+          {stamps && <StampBurst data={stamps} on={stamps.on} />}
+        </div>
+        {peeling && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+              transform: `translate(${peeling.at.x}px, ${peeling.at.y}px) scale(${peeling.at.k})`,
+              transformOrigin: "0 0",
+            }}
+          >
+            <StampBurst data={peeling} on={false} />
+          </div>
+        )}
+      </div>
+
+      {/* widgets — on top of everything */}
+      <TagTicker />
+      <HometownMap />
+
+      {/* reduced-motion teleport fade */}
+      <div
+        ref={fadeRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "var(--cream)",
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      />
+
+      {err && (
+        <pre
+          style={{
+            ...ui,
+            position: "absolute",
+            top: 20,
+            left: 20,
+            right: 20,
+            whiteSpace: "pre-wrap",
+            textTransform: "none",
+            lineHeight: 1.6,
+            color: "#8a3b3b",
+            background: "rgba(255,253,251,0.9)",
+            padding: "12px 14px",
+            borderRadius: 10,
+            boxShadow: shadow,
+            margin: 0,
+          }}
+        >
+          {err}
+        </pre>
+      )}
+
+      {/* search — flies the bubble to a person or frames a group */}
+      <div style={{ position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)", width: 264 }}>
+        <input
+          className="pepl-search"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setSearchIdx(0);
+          }}
+          onKeyDown={(e) => {
+            /* IME composition commit must not pick a result
+               (keyCode 229 covers Safari's post-compositionend Enter) */
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setSearchIdx((i) => Math.min(i + 1, searchResults.length - 1));
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setSearchIdx((i) => Math.max(i - 1, 0));
+            } else if (e.key === "Enter" && searchResults.length > 0) {
+              pickResult(searchResults[searchSel]);
+              (e.target as HTMLInputElement).blur();
+            } else if (e.key === "Escape") {
+              setQuery("");
+            }
+          }}
+          placeholder="search people + groups"
+          aria-label="search people and groups"
+          style={{
+            ...ui,
+            textTransform: "none",
+            width: "100%",
+            padding: "9px 15px",
+            border: "none",
+            borderRadius: 999,
+            background: "rgba(255,253,251,0.72)",
+            backdropFilter: "blur(8px)",
+            boxShadow: shadow,
+            color: "rgba(26,25,24,0.78)",
+            fontSize: 11.5,
+            letterSpacing: "0.03em",
+          }}
+        />
+        {searchResults.length > 0 && (
+          <div
+            className="pepl-group"
+            style={{
+              marginTop: 6,
+              borderRadius: 12,
+              background: "rgba(255,253,251,0.86)",
+              backdropFilter: "blur(14px)",
+              boxShadow:
+                "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+              padding: 6,
+              maxHeight: 296,
+              overflowY: "auto",
+            }}
+          >
+            {searchResults.map((r, i) => (
+              <button
+                key={r.kind === "person" ? r.id : `g-${r.gi}`}
+                className="pepl-item"
+                onMouseDown={(e) => {
+                  if (e.button !== 0) return; // right/middle click stays native
+                  e.preventDefault(); // keep the input's blur from eating the click
+                  pickResult(r);
+                }}
+                style={{
+                  ...ui,
+                  textTransform: "capitalize",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "6px 9px",
+                  border: "none",
+                  borderRadius: 7,
+                  background: i === searchSel ? "rgba(254,224,174,0.38)" : "transparent",
+                  color: "rgba(26,25,24,0.72)",
+                  fontSize: 11.5,
+                  letterSpacing: "0.015em",
+                  cursor: "pointer",
+                }}
+              >
+                <span>{r.label.toLowerCase()}</span>
+                <span style={{ fontSize: 9, color: "rgba(26,25,24,0.35)", letterSpacing: "0.08em" }}>
+                  {r.sub}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* the mark, top-left */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo.svg"
+        alt="pepl"
+        width={46}
+        height={46}
+        style={{
+          position: "absolute",
+          top: 14,
+          left: 18,
+          opacity: 0.88,
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
+      />
+
+      <button className="pepl-pill" onClick={() => setIndexOpen((v) => !v)} style={{ ...pill(indexOpen), position: "absolute", top: 20, right: 92 }}>
+        index
+      </button>
+
+      {indexOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: 68,
+            right: 92,
+            width: 196,
+            maxHeight: "calc(100vh - 96px)",
+            overflowY: "auto",
+            padding: "12px 14px",
+            /* the dropdown is square; only the button that opens it is a pill */
+            borderRadius: 0,
+            background: "rgba(255,253,251,0.78)",
+            backdropFilter: "blur(14px)",
+            boxShadow:
+              "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+          }}
+        >
+          {defaultAdapter.groups().map((g, gi) => (
+            <div key={g.id} className="pepl-group" style={{ marginBottom: 12, animationDelay: `${gi * 50}ms` }}>
+              <div
+                style={{
+                  ...ui,
+                  fontSize: 9,
+                  letterSpacing: "0.14em",
+                  color: "rgba(26,25,24,0.34)",
+                  paddingBottom: 5,
+                  marginBottom: 4,
+                  borderBottom: "1px solid rgba(38,36,44,0.05)",
+                }}
+              >
+                {g.name.toLowerCase()}
+              </div>
+              {defaultAdapter.people().filter((p) => p.groupId === g.id).map((p) => (
+                <button
+                  key={p.id}
+                  className="pepl-item"
+                  onClick={() => selectRef.current(p.id)}
+                  style={{
+                    ...ui,
+                    textTransform: "capitalize",
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "4px 6px",
+                    border: "none",
+                    borderRadius: 6,
+                    background: "transparent",
+                    color: "rgba(26,25,24,0.62)",
+                    fontSize: 11.5,
+                    letterSpacing: "0.015em",
+                    cursor: "pointer",
+                  }}
+                >
+                  {p.name.toLowerCase()}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button className="pepl-pill" onClick={() => setPanelOpen((v) => !v)} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
+        {panelOpen ? "hide" : "tune"}
+      </button>
+
+      {panelOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: 56,
+            right: 20,
+            width: 218,
+            maxHeight: "calc(100vh - 96px)",
+            overflowY: "auto",
+            padding: "14px 16px",
+            borderRadius: 12,
+            background: "rgba(255,253,251,0.70)",
+            backdropFilter: "blur(14px)",
+            boxShadow:
+              "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+          }}
+        >
+          {/* board field choice */}
+          <div style={{ ...ui, color: "rgba(26,25,24,0.28)", marginBottom: 8 }}>board field</div>
+          <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+            {(["weather", "cartography", "stars"] as const).map((f) => (
+              <button
+                key={f}
+                className="pepl-item"
+                onClick={() => setParams((pr) => ({ ...pr, field: f }))}
+                style={{
+                  ...ui,
+                  flex: 1,
+                  padding: "6px 0",
+                  border: "none",
+                  borderRadius: 7,
+                  background: params.field === f ? "rgba(145,180,249,0.25)" : "rgba(26,25,24,0.03)",
+                  color: params.field === f ? "rgba(26,25,24,0.8)" : "rgba(26,25,24,0.45)",
+                  cursor: "pointer",
+                  fontSize: 9,
+                  textAlign: "center",
+                }}
+              >
+                {f === "cartography" ? "carto" : f}
+              </button>
+            ))}
+          </div>
+
+          {PANEL_GROUPS.map((g, gi) => (
+            <div key={g.name} className="pepl-group" style={{ marginTop: gi ? 16 : 0, animationDelay: `${gi * 45}ms` }}>
+              <div
+                style={{
+                  ...ui,
+                  fontSize: 9,
+                  letterSpacing: "0.14em",
+                  color: "rgba(26,25,24,0.34)",
+                  marginBottom: 9,
+                  paddingBottom: 6,
+                  borderBottom: "1px solid rgba(38,36,44,0.05)",
+                }}
+              >
+                {g.name}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {g.items.map((c) => (
+                  <label key={c.key} style={{ display: "block" }}>
+                    <div
+                      style={{
+                        ...ui,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: "rgba(26,25,24,0.42)",
+                        marginBottom: 4,
+                      }}
+                    >
+                      <span>{c.label}</span>
+                      <span style={{ color: "rgba(26,25,24,0.72)", fontVariantNumeric: "tabular-nums" }}>
+                        {fmt(params[c.key], c.step)}
+                        {c.unit || ""}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={c.min}
+                      max={c.max}
+                      step={c.step}
+                      value={params[c.key]}
+                      onChange={(e) =>
+                        setParams((pr) => ({ ...pr, [c.key]: parseFloat(e.target.value) }))
+                      }
+                      style={{ width: "100%", accentColor: "#1a1918", height: 14, cursor: "pointer" }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <button
+            className="pepl-item"
+            onClick={() => setParams((pr) => ({ ...pr, exportQuality: !pr.exportQuality }))}
+            style={{
+              ...ui,
+              width: "100%",
+              marginTop: 14,
+              padding: "6px 0",
+              border: "none",
+              borderRadius: 7,
+              background: params.exportQuality ? "rgba(26,25,24,0.09)" : "rgba(26,25,24,0.04)",
+              color: "rgba(26,25,24,0.52)",
+              cursor: "pointer",
+            }}
+          >
+            export quality {params.exportQuality ? "on" : "off"}
+          </button>
+
+          <button
+            className="pepl-item"
+            onClick={() => setParams({ ...INITIAL })}
+            style={{
+              ...ui,
+              width: "100%",
+              marginTop: 8,
+              padding: "6px 0",
+              border: "none",
+              borderRadius: 7,
+              background: "rgba(26,25,24,0.05)",
+              color: "rgba(26,25,24,0.52)",
+              cursor: "pointer",
+            }}
+          >
+            reset
+          </button>
+        </div>
+      )}
+
+    </div>
+  );
+}

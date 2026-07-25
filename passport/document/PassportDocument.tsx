@@ -33,6 +33,7 @@ import {
 } from './figmaGeometry'
 import { placeConnections } from './placeConnections'
 import { generateMrz } from './mrz'
+import { sentenceCase } from '../textCase'
 import './tokens.css'
 import './passport.css'
 import './foil.css'
@@ -116,13 +117,15 @@ export function PassportDocument({
   const answerLines = wrapLines(data.holder.prompt.answer, PROMPT_QA.width, answerSize, 'document')
 
   const { holder } = data
+  // sentenceCase only reshapes fully-uppercase values, so the LLM-written
+  // "INTERFACE CURATOR" settles down while "USC" and "IDBT" stay acronyms.
   const identityFields = [
-    { label: 'Full name', value: holder.fullName, x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[0] },
-    { label: 'Company', value: holder.company, x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[1] },
-    { label: 'Position', value: holder.position, x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[2] },
+    { label: 'Full name', value: sentenceCase(holder.fullName), x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[0] },
+    { label: 'Company', value: sentenceCase(holder.company), x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[1] },
+    { label: 'Position', value: sentenceCase(holder.position), x: IDENTITY_GRID.col1x, y: IDENTITY_GRID.rowsY[2] },
     { label: 'Grad year', value: holder.gradYear, x: IDENTITY_GRID.col2x, y: IDENTITY_GRID.rowsY[0] },
-    { label: 'School', value: holder.school, x: IDENTITY_GRID.col2x, y: IDENTITY_GRID.rowsY[1] },
-    { label: 'Major', value: holder.major, x: IDENTITY_GRID.col2x, y: IDENTITY_GRID.rowsY[2] },
+    { label: 'School', value: sentenceCase(holder.school), x: IDENTITY_GRID.col2x, y: IDENTITY_GRID.rowsY[1] },
+    { label: 'Major', value: sentenceCase(holder.major), x: IDENTITY_GRID.col2x, y: IDENTITY_GRID.rowsY[2] },
   ]
 
   /* the document renders twice: the full page under the cover, and the

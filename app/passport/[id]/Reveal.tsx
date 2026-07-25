@@ -59,9 +59,9 @@ export default function Reveal({
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="font-mono text-[13px] tracking-[0.14em] text-stone"
+                  className="text-[15px] text-stone"
                 >
-                  PROCESSING {name.toUpperCase()} AS A NODE…
+                  Processing {name} as a node…
                 </motion.p>
               )}
               {stage === "edges" && (
@@ -70,9 +70,9 @@ export default function Reveal({
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="font-mono text-[13px] tracking-[0.14em] text-stone"
+                  className="text-[15px] text-stone"
                 >
-                  DRAWING {connections} REAL CONNECTIONS…
+                  Drawing {connections} real connections…
                 </motion.p>
               )}
             </AnimatePresence>

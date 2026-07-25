@@ -307,9 +307,9 @@
 
 /* the subtle personal line — small italic, quieter than every id field */
 .personal-note {
-  font-family: var(--np-garamond, serif);
+  font-family: var(--font-official);
   font-style: italic;
-  font-size: 10.5px;
+  font-size: 11px;
   fill: oklch(36% 0.045 285 / 0.62);
   letter-spacing: 0.01em;
 }
