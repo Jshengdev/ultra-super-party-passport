@@ -71,6 +71,11 @@ const SCENE_ZOOM_PERSON = 2.2;
 const POPPED_RADIUS = 0.135;
 /* movement (shader units) past which a press is a PAN, not a click/pop */
 const PAN_START = 0.02;
+/* the wobble a press is allowed before it stops being a click. Below it a
+   release still selects; above it, a press that started on a dot is CARRYING
+   that dot. Deliberately under PAN_START, so a press on a dot always becomes
+   a dot drag before it could ever have become a camera pan. */
+const CLICK_SLOP = 0.012;
 
 /* ---- the focus veil (Johnny's pinned treatment) --------------------------
    "when we click on it, it should smoothly blur out the background so we can
@@ -616,6 +621,9 @@ export default function PeplGraph() {
       x: 0, y: 0, down: false, grabbed: false, id: -1, ox: 0, oy: 0, downT: 0, dx0: 0, dy0: 0,
       /* camera pan: engaged once a non-bubble press travels past PAN_START */
       panning: false, panCamX: 0, panCamY: 0, panPX: 0, panPY: 0,
+      /* the dot this press landed on (-1 none) and the world-space offset from
+         the pointer to its centre, so a picked-up dot never jumps */
+      dot: -1, dragging: false, dotOX: 0, dotOY: 0,
     };
     const body = { x: 0, y: 0.06, vx: 0, vy: 0, dx: 0, dy: 0, dvx: 0, dvy: 0 };
     let focused: FocusedPerson | null = null;
@@ -694,21 +702,27 @@ export default function PeplGraph() {
       }
       return p;
     };
-    /* pointer (shader space) → through the lens → through the camera →
-       world-space dot lookup */
-    const dotAt = (p: { x: number; y: number }, tolPx = 9) => {
-      const L = sheet.layout;
-      if (!L) return null;
+    /* pointer (shader space) → through the lens → through the camera → the
+       layout's own world px. Every hit test and the dot drag share it. */
+    const pointerWorld = (p: { x: number; y: number }) => {
       const g = unproject(p);
       const s = toSheet(g.x, g.y);
-      const wpt = screenToWorld(s.x, s.y);
-      let best = null as (typeof L.dots)[number] | null;
+      return screenToWorld(s.x, s.y);
+    };
+    /* the dot under the pointer, as a layout INDEX (-1 = none) — the index is
+       what the drag carries and what the sheet needs to hold it still */
+    const dotAt = (p: { x: number; y: number }, tolPx = 9) => {
+      const L = sheet.layout;
+      if (!L) return -1;
+      const wpt = pointerWorld(p);
+      let best = -1;
       let bestD = tolPx;
-      for (const d of L.dots) {
+      for (let i = 0; i < L.dots.length; i++) {
+        const d = L.dots[i];
         const dist = Math.hypot(d.x - wpt.x, d.y - wpt.y);
         if (dist < bestD) {
           bestD = dist;
-          best = d;
+          best = i;
         }
       }
       return best;
@@ -717,9 +731,7 @@ export default function PeplGraph() {
        actually visible are clickable — a faded-out name over an awake
        board must not swallow taps or show a phantom cursor. */
     const groupNameAt = (p: { x: number; y: number }) => {
-      const g = unproject(p);
-      const s = toSheet(g.x, g.y);
-      const wpt = screenToWorld(s.x, s.y);
+      const wpt = pointerWorld(p);
       const rects = sheet.nameRects();
       for (let ci = 0; ci < rects.length; ci++) {
         /* only visible inscriptions are clickable */
@@ -921,6 +933,34 @@ export default function PeplGraph() {
       ptr.y = q.y;
       ptrIn = true;
 
+      /* a press that landed on a dot CARRIES it: past the click slop the dot
+         goes 1:1 under the pointer and stays wherever it is let go. Its
+         cluster keeps it — tint, threads and the group's guideline all follow
+         it out. This runs before the pan so a carried dot never drags the
+         camera as well (the slop is under PAN_START, so the return always
+         wins the race). */
+      if (ptr.down && ptr.dot >= 0 && !ptr.grabbed) {
+        const L = sheet.layout;
+        if (!ptr.dragging && Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0) > CLICK_SLOP) {
+          ptr.dragging = true;
+          wrap.style.cursor = "grabbing";
+          /* hover IS the "this one is in hand" channel: it swells the dot and
+             surfaces its name, including labels the placement pass culled */
+          if (L) hover.id = L.dots[ptr.dot].person.id;
+          hover.group = null;
+          try {
+            wrap.setPointerCapture(e.pointerId);
+          } catch {}
+        }
+        if (ptr.dragging && L) {
+          const wpt = pointerWorld(q);
+          const d = L.dots[ptr.dot];
+          d.x = wpt.x + ptr.dotOX;
+          d.y = wpt.y + ptr.dotOY;
+          return;
+        }
+      }
+
       /* click-drag on the sheet PANS the camera — 1:1 under the pointer,
          so both the target and the eased position snap while it lasts */
       if (ptr.down && !ptr.grabbed) {
@@ -944,6 +984,7 @@ export default function PeplGraph() {
 
     const onLeave = () => {
       ptrIn = false;
+      if (ptr.dragging) return; // a carried dot follows the pointer off-canvas
       hover.id = null;
       hover.group = null;
       if (!ptr.grabbed) wrap.style.cursor = "default";
@@ -956,6 +997,7 @@ export default function PeplGraph() {
       ptr.x = q.x; ptr.y = q.y; ptr.down = true;
       ptr.downT = performance.now();
       ptr.dx0 = q.x; ptr.dy0 = q.y;
+      ptr.dot = -1;
       if (Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15) {
         ptr.grabbed = true;
         ptr.ox = body.x - q.x;
@@ -964,6 +1006,17 @@ export default function PeplGraph() {
         try {
           wrap.setPointerCapture(e.pointerId);
         } catch {}
+        return;
+      }
+      /* remember what the press landed on; whether it is a click or a carry
+         is only decided once the pointer moves (see onMove) */
+      const L = sheet.layout;
+      const di = L ? dotAt(q) : -1;
+      if (L && di >= 0) {
+        ptr.dot = di;
+        const wpt = pointerWorld(q);
+        ptr.dotOX = L.dots[di].x - wpt.x;
+        ptr.dotOY = L.dots[di].y - wpt.y;
       }
     };
 
@@ -972,12 +1025,17 @@ export default function PeplGraph() {
       const wasDown = ptr.down;
       const wasGrabbed = ptr.grabbed;
       const wasPanning = ptr.panning;
+      const wasCarrying = ptr.dragging;
       ptr.down = false;
       ptr.grabbed = false;
       ptr.panning = false;
+      ptr.dragging = false;
+      ptr.dot = -1;
       ptr.id = -1;
-      if (wasPanning) {
-        /* a pan is not a click — the release changes nothing */
+      if (wasPanning || wasCarrying) {
+        /* neither a pan nor a carry is a click. A dropped dot stays exactly
+           where it was let go — the room's positions are live, and its group
+           has already flowed out around it. */
         wrap.style.cursor = "default";
         return;
       }
@@ -1003,10 +1061,11 @@ export default function PeplGraph() {
         return;
       }
 
-      if (elapsed < 300 && moved < 0.012) {
-        const d = dotAt(q);
-        if (d) {
-          select(d.person.id);
+      if (elapsed < 300 && moved < CLICK_SLOP) {
+        const di = dotAt(q);
+        const L = sheet.layout;
+        if (L && di >= 0) {
+          select(L.dots[di].person.id);
           return;
         }
         const gi = groupNameAt(q);
@@ -1135,15 +1194,15 @@ export default function PeplGraph() {
       /* --- hover, re-derived per frame: the world moves under a
              stationary pointer while the camera eases and the bubble
              wanders --- */
-      if (ptrIn && !ptr.grabbed && !ptr.panning) {
+      if (ptrIn && !ptr.grabbed && !ptr.panning && !ptr.dragging) {
         const q = { x: ptr.x, y: ptr.y };
         const hd = dotAt(q);
-        hover.id = hd ? hd.person.id : null;
-        hover.group = hd ? null : groupNameAt(q);
+        hover.id = hd >= 0 ? L.dots[hd].person.id : null;
+        hover.group = hd >= 0 ? null : groupNameAt(q);
         const overBubble =
           Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15;
         wrap.style.cursor =
-          hd || hover.group != null ? "pointer" : overBubble ? "grab" : "default";
+          hd >= 0 || hover.group != null ? "pointer" : overBubble ? "grab" : "default";
       }
 
       /* --- forces --- */
@@ -1382,6 +1441,7 @@ export default function PeplGraph() {
         nameAlpha,
         labelFor,
         dotEmphasis,
+        dragIndex: ptr.dragging ? ptr.dot : null,
         edgeOn: edgeOnRef.current,
       });
 

@@ -4,6 +4,7 @@
 
 import { computeLayout, GraphLayout } from "./sheetLayout";
 import { CELL_SHAPES, CELL_W, CELL_GAP } from "./segments";
+import { TAU } from "./prng";
 import type { BoardState } from "./boards";
 import type { GraphAdapter, RoomEdge, RoomEdgeType } from "./adapter";
 
@@ -32,6 +33,21 @@ const GLOW_PAD = 26; // board-space px of bleed around the glow blit
    read as coloured text; lowering them loses the grouping at a glance. */
 const TINT_DEEPEN = 0.55; // the pastel token, taken down to its deep end
 const TINT_MIX = 0.3; // how far the label ink leans off charcoal toward it
+
+/* ---- group guidelines ----------------------------------------------------
+   The dashed border is a RADIAL fit around the cluster's own centre, sampled
+   at OUT_BINS angles. Its floor is exactly the circle this used to draw, so a
+   room where nobody has been moved looks unchanged; a member dragged outside
+   that circle raises one smooth lobe at its angle, and the guideline flows out
+   to keep enclosing its person. The lobe is as wide as the TANGENT CONE from
+   the resting circle to the strayed dot (`acos(base/reach)`) — that is the
+   shape a hull of the two would take, so the ear reads as one continuous
+   thing rather than a spike, at any distance, with no tuned constants. */
+const OUT_BINS = 64;
+const OUT_PAD = 6; // the breathing room the old circle carried
+const OUT_ANG = Array.from({ length: OUT_BINS }, (_, k) => -Math.PI + ((k + 0.5) / OUT_BINS) * TAU);
+const OUT_COS = OUT_ANG.map(Math.cos);
+const OUT_SIN = OUT_ANG.map(Math.sin);
 
 /** #rgb / #rrggbb / rgb() / rgba() → channels; null when it is not a colour we
     can read, so the caller keeps pure ink instead of guessing one. */
@@ -64,6 +80,9 @@ export type SheetFrame = {
   nameAlpha: number[]; // per cluster — serif group-name fade, 1 at rest
   labelFor: (dotIndex: number) => number; // microlabel alpha, 0..1
   dotEmphasis: (dotIndex: number) => number; // scale target, 1 = rest
+  /** the dot currently under the pointer's grip — its drift is suspended so it
+      sits still under the finger, and its group's guideline re-fits live */
+  dragIndex: number | null;
   /** legend toggles: draw this thread type across the WHOLE room at rest.
       A focused/hovered person's own threads always draw, toggled or not. */
   edgeOn: Record<RoomEdgeType, boolean>;
@@ -97,6 +116,13 @@ export class GraphSheet {
   labelSpectrum: string[] = [];
   /** per-cluster "r,g,b" label ink, baked with the layout — see bakeLabelTints */
   private labelTints: string[] = [];
+  /* group guidelines: member dot indices per cluster, and the fitted radius
+     ring per cluster — `outT` is where the fit wants to be, `outR` is where
+     the stroke actually is, eased toward it so the shape flows */
+  private clusterDots: number[][] = [];
+  private outT = new Float32Array(0);
+  private outR = new Float32Array(0);
+  private liveCluster = -1;
 
   constructor(private adapter: GraphAdapter, private edges: RoomEdge[] = []) {
     this.canvas = document.createElement("canvas");
@@ -153,6 +179,13 @@ export class GraphSheet {
       return c;
     });
     this.repaint = this.layout.clusters.map(() => true);
+    this.clusterDots = this.layout.clusters.map(() => []);
+    this.layout.dots.forEach((d, i) => this.clusterDots[d.clusterIndex].push(i));
+    this.outT = new Float32Array(this.layout.clusters.length * OUT_BINS);
+    this.outR = new Float32Array(this.outT.length);
+    for (let ci = 0; ci < this.layout.clusters.length; ci++) this.refitOutline(ci);
+    this.outR.set(this.outT); // a fresh layout starts settled, never flowing out
+    this.liveCluster = -1;
     this.spriteK = this.dpr * 1.7; // headroom for emphasis upscale
     this.dotSprites = this.layout.dots.map((d) => {
       const half = d.baseR * 3.2;
@@ -203,6 +236,41 @@ export class GraphSheet {
         Math.round(INK_RGB[k] * (1 - TINT_MIX) + hue[k] * TINT_DEEPEN * TINT_MIX);
       return `${ch(0)},${ch(1)},${ch(2)}`;
     });
+  }
+
+  /* Re-fit one group's guideline to where its members actually are.
+     Members still inside the resting circle cost a single distance test, so a
+     room at rest fits in O(dots) and only a strayed dot pays for its lobe. */
+  private refitOutline(ci: number) {
+    const L = this.layout!;
+    const cl = L.clusters[ci];
+    const o = ci * OUT_BINS;
+    const base = cl.radius + OUT_PAD;
+    this.outT.fill(base, o, o + OUT_BINS);
+    for (const i of this.clusterDots[ci]) {
+      const d = L.dots[i];
+      const dx = d.x - cl.cx;
+      const dy = d.y - cl.cy;
+      /* far edge of the person's glyph, at the scale a held dot swells to —
+         at rest that is still inside the floor, so a room nobody has touched
+         fits to exactly the circle this used to draw */
+      const reach = Math.hypot(dx, dy) + d.baseR * 3;
+      if (reach <= base) continue;
+      const half = Math.acos(base / reach); // the tangent cone's half-angle
+      const th = Math.atan2(dy, dx);
+      const c0 = Math.round(((th + Math.PI) / TAU) * OUT_BINS - 0.5);
+      const span = Math.ceil((half / TAU) * OUT_BINS);
+      for (let j = -span; j <= span; j++) {
+        const k = (((c0 + j) % OUT_BINS) + OUT_BINS) % OUT_BINS;
+        let dth = OUT_ANG[k] - th;
+        if (dth > Math.PI) dth -= TAU;
+        else if (dth < -Math.PI) dth += TAU;
+        dth = Math.abs(dth);
+        if (dth >= half) continue;
+        const r = base + (reach - base) * 0.5 * (1 + Math.cos((Math.PI * dth) / half));
+        if (r > this.outT[o + k]) this.outT[o + k] = r;
+      }
+    }
   }
 
   /* click targets for the serif group names, in sheet px */
@@ -351,15 +419,47 @@ export class GraphSheet {
       }
     });
 
-    /* ---- dashed group borders — the cloud's edge made legible ---- */
+    /* ---- dashed group guidelines — the cloud's edge made legible ---- */
+    /* only the group with a hand on it re-fits; the release frame gets one
+       last fit, because the final pointer move can land after the last frame
+       that saw the drag */
+    const live = f.dragIndex == null ? -1 : L.dots[f.dragIndex].clusterIndex;
+    if (live !== this.liveCluster) {
+      if (this.liveCluster >= 0) this.refitOutline(this.liveCluster);
+      this.liveCluster = live;
+    }
+    if (live >= 0) this.refitOutline(live);
+
+    const outEase = f.reduced ? 1 : 1 - Math.exp(-f.dt * 7);
     ctx.save();
     ctx.setLineDash([7, 6]);
     ctx.lineWidth = 1 / cs;
     for (let ci = 0; ci < L.clusters.length; ci++) {
       const cl = L.clusters[ci];
+      const o = ci * OUT_BINS;
+      for (let k = o; k < o + OUT_BINS; k++) {
+        this.outR[k] += (this.outT[k] - this.outR[k]) * outEase;
+      }
       ctx.strokeStyle = `rgba(${INK},${(0.16 + 0.1 * f.nameAlpha[ci]).toFixed(3)})`;
       ctx.beginPath();
-      ctx.arc(cl.cx, cl.cy, cl.radius + 6, 0, Math.PI * 2);
+      /* quadratics through the chord midpoints: one smooth closed curve over
+         the ring, no control points to allocate */
+      let x1 = cl.cx + this.outR[o] * OUT_COS[0];
+      let y1 = cl.cy + this.outR[o] * OUT_SIN[0];
+      const last = OUT_BINS - 1;
+      ctx.moveTo(
+        (x1 + cl.cx + this.outR[o + last] * OUT_COS[last]) / 2,
+        (y1 + cl.cy + this.outR[o + last] * OUT_SIN[last]) / 2
+      );
+      for (let k = 0; k < OUT_BINS; k++) {
+        const n = k === last ? 0 : k + 1;
+        const x2 = cl.cx + this.outR[o + n] * OUT_COS[n];
+        const y2 = cl.cy + this.outR[o + n] * OUT_SIN[n];
+        ctx.quadraticCurveTo(x1, y1, (x1 + x2) / 2, (y1 + y2) / 2);
+        x1 = x2;
+        y1 = y2;
+      }
+      ctx.closePath();
       ctx.stroke();
     }
     ctx.restore();
@@ -383,7 +483,8 @@ export class GraphSheet {
       const s = this.scales[i];
       if (d.x < vMinX || d.x > vMaxX || d.y < vMinY || d.y > vMaxY) return;
 
-      const wob = f.reduced ? 0 : 1;
+      /* a held dot sits exactly under the finger — the drift would fight it */
+      const wob = f.reduced || i === f.dragIndex ? 0 : 1;
       const x = d.x + Math.sin(f.t * d.speed * 0.9 + d.phase) * 0.55 * wob;
       const y = d.y + Math.cos(f.t * d.speed * 0.7 + d.phase * 1.31) * 0.55 * wob;
 
