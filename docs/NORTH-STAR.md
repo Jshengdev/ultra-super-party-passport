@@ -193,3 +193,48 @@ chosen to make "how everyone is connected" legible; leads think hard about the b
 open glass question: do NOT neutralize the shader). The requirement is that text seen THROUGH the
 glass is not blurry and stays readable, especially across different scales (magnification + the
 Addendum-5 scale controls) — refraction may bend, it must not smear. — CONFIRMED BY QUOTE.
+
+## Addendum 7 (2026-07-25) — the source-of-truth map (Section C's deliverable)
+
+> SO what is really importatn in theis section is knowing how we can split up everything so that
+> its well established how we would update the scehmea and where the source of truth doc for what
+> we computed for each peroson to update at.
+
+The answer to that quote is the table below: every fact the room renders when you select someone →
+the stage that computes it → the artifact it lives in → **where a human changes it**. Verified
+against master on 2026-07-25; symbols are named instead of line numbers so the map ages honestly.
+
+**The loop (the one station, pinned in `scripts/emit-graph.ts`):** edit `data/graph-overrides.csv`
+→ re-run `emit-graph` → `check-graph-emit` + `audit-graph` → refresh the room. Quotes are never
+overridable; an off-vocabulary tag fails loud (named error, exit 1); a `hide` must update
+`EXPECTED_PEOPLE` in the same commit. Never hand-edit `public/graph/*` or `data/graph-enriched.csv`.
+
+**Three registers, all receipted:** *their answer* (verbatim CSV cell or quote — corrected only at
+the source, never in a spreadsheet) · *profile* (a computed tag over a closed vocabulary —
+overridable, stamped `_overridden`) · *room-derived counts* (re-derived from the surviving
+population every bake — changed only by changing the population or the tags).
+
+| Fact on screen (on selection) | Render site | Computed by (stage) | Source artifact | Human edit station |
+|---|---|---|---|---|
+| Dot, name label tint, cluster placement | `pepl/sheet.ts` + `sheetLayout.ts`, seeded by `adapter.seedScene` | layout is client-side and seeded; identity fields from `emit-graph` §7. Grouping field = `GROUP_BY` (motive) in adapter's GROUPING SEAM | `graph.json nodes[]` (`name`, `motive`) — the baked `pos` is **unread by both rooms** | overrides `hide` (drops them everywhere) or `motive` (moves their cloud) → the loop; the layout itself is code, not data |
+| Stamp 1 · nametag "THE DAY JOB" (company → freelance → school → title) | `Stamps.tsx compose()` ← `GUEST_DETAILS` (`adapter.details()`) | `lib/guests.ts` canonicalization → `ingest-guests.ts` → `emit-graph` §7 | `graph.json nodes[].{company,free,school,title}` | *their answer* — the Luma CSV cell (+ `lib/guests.ts` canonicalization). **No override column exists** |
+| Stamp 2 · belief card (motive → craft → mission → impact, signed) | `Stamps.tsx compose()` ← `GUEST_DETAILS` | `enrich-convictions.ts` (gateway LLM, zod-guarded, retry once) → `emit-graph` §1c/§7 | `graph.json nodes[].{motive,asp,mission,impact}` | overrides `motive` / `mission` / `impact` / `aspiration` (closed vocab) → the loop |
+| Stamp 3 · round (hometown centre, title else craft; ring = the party) | `Stamps.tsx compose()` ← `GUEST_DETAILS` | CSV-side facts (the ontology has no Place node) → `emit-graph` §7 | `graph.json nodes[].{hometown,title}` | *their answer* — the Luma CSV cell; the ring string is pinned in `Stamps.tsx` |
+| Focus veil (5% ink · 2.2px blur · 480ms), clarity-lens hole, stamp anchor + scale | `PeplGraph`: `VEIL_DIM`, `VEIL_BLUR_PX`, `VEIL_MS`, `LENS_FEATHER_PX`, `LENS_MASK`, frame-loop writes | presentation — nothing computes it | the constants themselves (grep "focus veil" = the only hit) | that constant block, or live via the hidden 0-key menu (`cardScale` / `bubbleScale`); hues via `passport/tokens.css` (design's handle) |
+| connections box — room mode: threads per type | `ConnectionsLegend` (`COUNT` over `ROOM_EDGES`) | `emit-graph` §3 school/company · §4 seek · §5 why | `graph.json edges[]` | overrides `hide` + the tag columns (a tag change re-cuts why-edges) → the loop |
+| connections box — person mode: their per-type counts + "N ties" | `ConnectionsLegend countTies()` over `ROOM_EDGES` filtered to them | same bake — the COMPLETE tie set, never the record (which is ranked and capped: 8 inbound + 12 other) | `graph.json edges[]` | same as above |
+| connections box — "Strongest ties" (3 rows: name · via) | `ConnectionsLegend`, `focusEdges.slice(0,3)`, never re-ranked | `enrich-matches.ts` → `emit-graph` §8 ranking, with `pinned_match` pulled to rank 1 | `people/<id>.json edges[]` | overrides `pinned_match` (reorders only; a pin with no existing edge is a WARNING, never fabricated) → the loop |
+| "their threads" — "Their answer · who they're looking for" (verbatim, clamped to 3 lines, absent when blank) | `PeplGraph` threads widget ← `profile.answers.seeking` | `emit-graph` §8 copies the Luma answer byte-verbatim (it is also what the seek matching ran against) | `people/<id>.json answers.seeking` | *their answer* — **not overridable**; fix it in the Luma export and re-ingest |
+| "their threads" — sections + rows (name · via) | `PeplGraph` `REL_SECTIONS` + threads widget | `enrich-matches.ts` (direction / strength / via) + `emit-graph` §5 why, §8 rank + cap | `people/<id>.json edges[]` | `pinned_match` only — nothing else reorders, and nothing adds a tie |
+| Receipt dialog — "you · field" / "them · field" verbatim, else "the tie itself is the receipt" | `PeplGraph` receipt dialog | `emit-graph` §8 copies the raw cell / answer byte-verbatim and OMITS a side that has no quote | `people/<id>.json edges[].receipt` | **not editable** (law c) — fix the answer in the Luma export and re-ingest |
+| Highlights ("One of 41 who…", sought-by, doppelgänger, one-of-n) | **no render site on master** — typed in `PeplGraph`'s `PersonRecord`, rendered only by legacy `GraphLab` | `emit-graph` §8, capped at 6, counts re-derived from the surviving population | `people/<id>.json highlights[]` | indirect: tag columns + `hide` recompute every count → the loop |
+| The whole computed row for one person (never rendered) | — | `emit-graph` §8b, written every run | `data/graph-enriched.csv` — the READ-ONLY proof sheet, never an input | THE station: `data/graph-overrides.csv` → the loop |
+
+**Pending — queued work, NOT the current state:**
+- `people/<id>.json` gains a `conviction` block (post-override tags + the surviving verbatim
+  quotes) on `px/c-conviction-in-records` — in flight, not on master. It is what the C4 identity
+  cards will read, so the belief-card row's source moves from the `graph.json` node tags to that
+  block once it lands. Today the stamps read `graph.json` only.
+- The connections box is rescoped to EGO-STATS under C6 (Addendum 6): the "Strongest ties" row
+  leaves the box for the threads widget, and the two count rows become trait-share stats. Those
+  rows describe master today, not the target.
