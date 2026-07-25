@@ -38,6 +38,7 @@ import { z } from "zod";
 import { loadGuests, type Guest } from "../lib/guests";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { webLayout, ringLayout, type Vec2 } from "../lib/layout";
+import { vectorProvider } from "../lib/matches";
 
 /* ────────────────────────────── inputs + shapes ────────────────────────────── */
 
@@ -818,6 +819,11 @@ async function main(): Promise<number> {
       people: nodes.length,
       built: new Date().toISOString(),
       source: src.label,
+      // which vector provider produced the SEEKS matches this bake reads — mirrors the
+      // SEEKS rels' `_src="match:<provider>-v1"` (law d) so the artifact is self-describing
+      // without a DB round trip. Same resolution lib/matches.ts uses for the actual matching
+      // run: EMBED_PROVIDER at call time, default "gateway".
+      matchProvider: vectorProvider(),
       counts,
       stages: {
         rows: rowCount,

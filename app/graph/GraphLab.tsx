@@ -246,13 +246,24 @@ const MATCH_NOTE: Record<EdgeType, string> = {
   company: "EXACT FIELD MATCH AFTER CANONICALIZATION",
 };
 
-export function provenanceFor(source: ReceiptSource, type: EdgeType, personId: string): string {
+/**
+ * `oneSided` disambiguates the "fields" state: it's true when exactly one
+ * column above is a verbatim answer-sheet quote (rendered under `Q ·`) and
+ * the other is a profile field (`FIELD ·`) — as opposed to neither column
+ * having a quote at all. Both are honestly "fields" (not both-verbatim), but
+ * they are NOT the same claim: 60 shipped receipts are one-sided, and saying
+ * "NO ANSWER-SHEET QUOTE ON THIS EDGE" while a `Q ·` label sits right above
+ * it is a lie about provenance.
+ */
+export function provenanceFor(source: ReceiptSource, type: EdgeType, personId: string, oneSided = false): string {
   const match = MATCH_NOTE[type];
   switch (source) {
     case "verbatim":
       return `SRC · SIGNUP SHEET (VERBATIM) · MATCH · ${match} · RECEIPT RESOLVED ✓`;
     case "fields":
-      return `SRC · THE GRAPH EDGE + BOTH PROFILE FIELDS · MATCH · ${match} · NO ANSWER-SHEET QUOTE ON THIS EDGE — THE FIELDS ABOVE ARE THE RECEIPT`;
+      return oneSided
+        ? `SRC · SIGNUP SHEET (VERBATIM, ONE SIDE) + THE GRAPH EDGE · MATCH · ${match} · ONE SIDE QUOTES THE SHEET — THE OTHER COLUMN IS ITS FIELD VALUE`
+        : `SRC · THE GRAPH EDGE + BOTH PROFILE FIELDS · MATCH · ${match} · NO ANSWER-SHEET QUOTE ON THIS EDGE — THE FIELDS ABOVE ARE THE RECEIPT`;
     case "record-loading":
       return `READING /graph/people/${personId}.json — SHOWING THE EDGE'S FIELD VALUES UNTIL THE VERBATIM QUOTES ARRIVE.`;
     case "record-missing":
@@ -1319,7 +1330,7 @@ export default function GraphLab() {
         source,
         left: sideOf(self, yours),
         right: sideOf(other, theirs),
-        prov: provenanceFor(source, row.type, selId ?? "—"),
+        prov: provenanceFor(source, row.type, selId ?? "—", Boolean(yours) !== Boolean(theirs)),
       });
     },
     [byId, hueOf, recordState, selId],

@@ -17,6 +17,8 @@
  *   · a `direction` outside the contract enum, an edge pointing at nobody, a
  *     zero-count fact rendered as text, or an internal `flags` value leaking into copy
  *   · meta.stages / meta.guestIds missing (the entry drop-zone reads both)
+ *   · meta.matchProvider missing or outside {gateway, tfidf} (the artifact must name which
+ *     vector provider produced the SEEKS matches, not just the DB's per-rel `_src`)
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 
@@ -59,6 +61,7 @@ interface Graph {
     counts: Record<string, number>;
     stages: Record<string, number>;
     guestIds: string[];
+    matchProvider?: string;
   };
 }
 interface PersonEdge {
@@ -158,6 +161,13 @@ if (g.meta.guestIds.length !== g.nodes.length) {
 }
 if (new Set(g.meta.guestIds).size !== g.meta.guestIds.length) fail("meta.guestIds contains duplicates");
 if (g.meta.stages.unique !== g.nodes.length) fail(`meta.stages.unique ${g.meta.stages.unique} !== nodes ${g.nodes.length}`);
+
+// the artifact must name which vector provider produced the SEEKS matches (law d: the
+// committed artifact is self-describing, not just the DB's `_src` on the SEEKS rels)
+const MATCH_PROVIDERS = new Set(["gateway", "tfidf"]);
+if (!MATCH_PROVIDERS.has(g.meta?.matchProvider ?? "")) {
+  fail(`meta.matchProvider "${g.meta?.matchProvider}" is missing or outside {gateway, tfidf}`);
+}
 
 /* ---- the person records ---- */
 const files = readdirSync(PEOPLE_DIR).filter((f) => f.endsWith(".json"));
