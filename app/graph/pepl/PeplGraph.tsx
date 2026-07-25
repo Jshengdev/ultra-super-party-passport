@@ -6,6 +6,7 @@ import { GUEST_DETAILS } from "./adapter";
 import StampBurst, { type StampData } from "./Stamps";
 import HometownMap from "./HometownMap";
 import TagTicker from "./TagTicker";
+import ConnectionsLegend from "./ConnectionsLegend";
 import { GraphSheet } from "./sheet";
 import { BoardState } from "./boards";
 import { Choreography, FocusedPerson } from "./choreo";
@@ -357,6 +358,16 @@ export default function PeplGraph() {
   useEffect(() => {
     edgeOnRef.current = edgeOn;
   }, [edgeOn]);
+
+  /* the DOM overlays are opt-in: the room spawns as the bubble and nothing
+     else. One flat record, one pill each — no persistence, no provider; a
+     toggle is only a toggle. Hiding `connections` hides the box, never the
+     threads it switched on. */
+  const [widgets, setWidgets] = useState({
+    connections: false,
+    hometowns: false,
+    ticker: false,
+  });
 
   /* URL overrides, e.g. ?kuwahara=0.4&grain=0 or ?perf=lite —
      handy for weak GPUs and shareable tunings */
@@ -1421,6 +1432,11 @@ export default function PeplGraph() {
     color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.52)",
     cursor: "pointer",
   });
+  /* the ticker docks the bottom 100px, so everything bottom-anchored rides
+     above it when it is up and drops to the floor when it is not; the
+     legend clears the pill row it shares the left edge with */
+  const floor = widgets.ticker ? 128 : 20;
+  const legendBottom = floor + 44;
   /* slider readouts update live — format to the step's precision and
      keep the digits tabular so nothing jitters */
   const fmt = (v: number, step: number) =>
@@ -1541,86 +1557,40 @@ export default function PeplGraph() {
         )}
       </div>
 
-      {/* widgets — on top of everything */}
-      <TagTicker />
-      <HometownMap />
+      {/* widgets — on top of everything, each one mounted only by its pill */}
+      {widgets.ticker && <TagTicker />}
+      {widgets.hometowns && <HometownMap bottom={floor} />}
+      {widgets.connections && (
+        <ConnectionsLegend
+          edgeOn={edgeOn}
+          onToggle={(type) => setEdgeOn((s) => ({ ...s, [type]: !s[type] }))}
+          bottom={legendBottom}
+          ui={ui}
+        />
+      )}
 
-      {/* thread legend — square corners, sentence case, film hues. Each row
-          toggles that connection type across the whole room; a focused
-          person's own threads draw regardless. */}
+      {/* the widget pills — the clean field is the default; this row is how
+          each overlay comes back */}
       <div
         style={{
           position: "absolute",
           left: 20,
-          bottom: 128,
-          width: 184,
-          padding: "10px 14px 12px",
-          borderRadius: 0,
-          background: "rgba(255,253,251,0.78)",
-          backdropFilter: "blur(12px)",
-          boxShadow:
-            "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+          bottom: floor,
+          display: "flex",
+          gap: 8,
         }}
       >
-        <div
-          style={{
-            fontFamily: "var(--font-hedvig), Georgia, serif",
-            fontSize: 15,
-            letterSpacing: "0.01em",
-            color: "rgba(38,36,44,0.6)",
-            marginBottom: 7,
-          }}
-        >
-          connections
-        </div>
-        {(
-          [
-            { type: "why", label: "Shared conviction", hue: "var(--film-violet)" },
-            { type: "seek", label: "Seeking match", hue: "var(--film-magenta)" },
-            { type: "school", label: "Same school", hue: "var(--film-blue)" },
-            { type: "company", label: "Same company", hue: "var(--film-gold)" },
-          ] as { type: RoomEdgeType; label: string; hue: string }[]
-        ).map((row) => {
-          const on = edgeOn[row.type];
-          const n = ROOM_EDGES.filter((e) => e.type === row.type).length;
-          return (
-            <button
-              key={row.type}
-              className="pepl-item"
-              onClick={() => setEdgeOn((s) => ({ ...s, [row.type]: !s[row.type] }))}
-              aria-pressed={on}
-              style={{
-                ...ui,
-                textTransform: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                width: "100%",
-                textAlign: "left",
-                padding: "4px 4px",
-                border: "none",
-                borderRadius: 0,
-                background: "transparent",
-                color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.34)",
-                fontSize: 10.5,
-                letterSpacing: "0.02em",
-                cursor: "pointer",
-              }}
-            >
-              <span
-                style={{
-                  width: 16,
-                  height: 2,
-                  background: row.hue,
-                  opacity: on ? 0.95 : 0.3,
-                  flex: "none",
-                }}
-              />
-              <span style={{ flex: 1, whiteSpace: "nowrap" }}>{row.label}</span>
-              <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>{n}</span>
-            </button>
-          );
-        })}
+        {(["connections", "hometowns", "ticker"] as const).map((k) => (
+          <button
+            key={k}
+            className="pepl-pill"
+            onClick={() => setWidgets((s) => ({ ...s, [k]: !s[k] }))}
+            aria-pressed={widgets[k]}
+            style={pill(widgets[k])}
+          >
+            {k}
+          </button>
+        ))}
       </div>
 
       {/* relationships — who the focused person is threaded to. Rows open
