@@ -37,12 +37,13 @@ import type { FieldName } from "./segments";
 export const DEFAULTS = {
   // lens — warp low: the rim should barely smear. The radius is the
   // UNPOPPED bubble (holding the whole room); after the first click pops
-  // it, it returns at POPPED_SCALE of this.
-  zoom: 2.0, warp: 0.12,
+  // it, it returns at POPPED_SCALE of this. Values are Teri's tuning
+  // (2026-07-25 panel screenshot): max-size lens, gentle magnify.
+  zoom: 1.35, warp: 0.1,
   // film
   thick: 380, drain: 0.55, chroma: 1.0, edge: 0.62, turb: 0.3, flow: 0.35, back: 0.45,
   // form
-  radius: 0.34, wobble: 0.018, surface: 0.016,
+  radius: 0.46, wobble: 0.018, surface: 0.016,
   // motion — the bubble sits in the middle; wander is off by default
   gravity: 0.0, drag: 3.4, wander: 0,
   jiggle: 1.6, settle: 1.0, squish: -1.2, bounce: 0.30, grip: 0.25,
@@ -64,9 +65,9 @@ const MAX_DEFORM = 0.3;
 /* the scene camera is the zoom; the bubble is a draggable lens toy
    that lives in the middle and never flies to targets */
 const SCENE_ZOOM_PERSON = 2.2;
-/* after the first click pops the bubble it returns at this fraction of
-   params.radius — a toy, no longer the room's container */
-const POPPED_SCALE = 0.42;
+/* after the first click pops the bubble it returns at this ABSOLUTE radius
+   (mn units) — a toy, no longer the room's container. 0.135 is Teri's call. */
+const POPPED_RADIUS = 0.135;
 
 /* ---- tune panel definition (Bubble.jsx style) ---- */
 const PANEL_GROUPS: {
@@ -214,18 +215,13 @@ function GrainVeil({ paramsRef }: { paramsRef: React.MutableRefObject<Params> })
 export default function PeplGraph() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const echoRef = useRef<HTMLDivElement>(null);
   const fadeRef = useRef<HTMLDivElement>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [echo, setEcho] = useState<{ name: string; on: boolean }>({ name: "", on: false });
   /** Popped = the lens is gone and the room is released to full size. */
   const poppedRef = useRef(false);
   const [popped, setPopped] = useState(false);
   const [stamps, setStamps] = useState<(StampData & { on: boolean }) | null>(null);
   const stampsRef = useRef<HTMLDivElement>(null);
-  /* the whole stamp layer is masked by the bubble's disc — stamps
-     pass BEHIND the bubble, which owns the top of the paint order */
-  const stampLayerRef = useRef<HTMLDivElement>(null);
   const stampsLiveRef = useRef<(StampData & { on: boolean }) | null>(null);
   /* a second, frozen-in-place burst that peels while the next pops */
   const [peeling, setPeeling] = useState<
@@ -248,6 +244,9 @@ export default function PeplGraph() {
   }, [stamps]);
   const [indexOpen, setIndexOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+  /* the tune panel is a design tool, not a party surface — hidden unless
+     the URL opts in with ?tune=1 */
+  const [tuneVisible, setTuneVisible] = useState(false);
   const [params, setParams] = useState<Params>(INITIAL);
   const [query, setQuery] = useState("");
   const [searchIdx, setSearchIdx] = useState(0);
@@ -277,6 +276,7 @@ export default function PeplGraph() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     if ([...q.keys()].length === 0) return;
+    if (q.get("tune") === "1") setTuneVisible(true);
     setParams((pr) => {
       const next = { ...pr };
       if (q.get("perf") === "lite") {
@@ -643,7 +643,9 @@ export default function PeplGraph() {
       const { w, h, mn } = dims();
       const s = SCENE_ZOOM_PERSON;
       let ox = -0.17 * w, oy = -0.07 * h; // dot's screen offset from centre
-      const bx = 0, by = -0.02 * mn; // bubble home, screen px from centre
+      /* clear of the bubble WHERE IT ACTUALLY IS — the popped toy is free-
+         floating, so its current position is the only truthful footprint */
+      const bx = body.x * mn, by = -body.y * mn;
       const dPx = Math.hypot(ox - bx, oy - by);
       const clear = lensR * mn * 1.15;
       if (dPx < clear) {
@@ -677,7 +679,7 @@ export default function PeplGraph() {
       const nx = cl.board.x + cl.board.w / 2;
       const ny = cl.board.y + cl.board.h / 2;
       let ox = -0.16 * w, oy = 0.1 * h;
-      const bx = 0, by = -0.02 * mn;
+      const bx = body.x * mn, by = -body.y * mn;
       const clear = lensR * mn * 1.15;
       const nr = sheet.nameRects()[ci];
       const hw2 = nr ? (nr.w / 2) * cam.ts : 0;
@@ -772,16 +774,18 @@ export default function PeplGraph() {
       const elapsed = performance.now() - ptr.downT;
       const moved = Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0);
 
+      /* the FIRST click pops the bubble — ANYWHERE on the scene, and with a
+         forgiving press (a few px of wobble must not read as a drag): the
+         whole room lives inside the lens pre-pop, so there is nothing else a
+         first click could mean. The room releases to full size and the
+         bubble returns as a small toy. A deliberate drag still moves it. */
+      if (!poppedRef.current && elapsed < 450 && moved < 0.03) {
+        popBubble();
+        camHome(); // re-fit: popped home is the full-size room
+        return;
+      }
+
       if (elapsed < 300 && moved < 0.012) {
-        /* the FIRST click on the unpopped bubble pops it: the room releases
-           to full size and the bubble returns as a small toy. Pre-pop, the
-           whole room lives inside the lens, so this must win over dot
-           selection or every first tap lands on somebody. */
-        if (!poppedRef.current && Math.hypot(q.x - body.x, q.y - body.y) < lensR) {
-          popBubble();
-          camHome(); // re-fit: popped home is the full-size room
-          return;
-        }
         const d = dotAt(q);
         if (d) {
           select(d.person.id);
@@ -832,9 +836,8 @@ export default function PeplGraph() {
     let raf = 0;
     let last = t0;
     let lx = 0, ly = 0;
-    let echoShown = false;
-    let echoName = "";
-    let echoId = "";
+    let burstShown = false;
+    let burstId = "";
     let ptrIn = false;
     let emaMs = 16;
     let lastGateCheck = 0;
@@ -880,7 +883,7 @@ export default function PeplGraph() {
       }
 
       /* --- lens radius: pop burst, then ease to the state's size --- */
-      const targetR = poppedRef.current ? P.radius * POPPED_SCALE : P.radius;
+      const targetR = poppedRef.current ? POPPED_RADIUS : P.radius;
       if (reduced) {
         popAt = -1;
         radiusCur = targetR;
@@ -935,24 +938,23 @@ export default function PeplGraph() {
         const c = 2 * Math.sqrt(k) * 1.15;
         ax += (ptr.x + ptr.ox - b.x) * k - b.vx * c;
         ay += (ptr.y + ptr.oy - b.y) * k - b.vy * c;
-      } else {
-        /* The bubble is NOT pinned to the middle.
-         *
-         * At rest it sits centre-stage holding the whole room inside itself.
-         * The moment the camera pushes in on someone it gets out of the way,
-         * easing to the top-left corner so the sheet — and the stamps — own the
-         * frame. Same spring either way, only the target moves. */
-        const zoomedIn = cam.s > 1.25;
-        const R = lensR;
-        const hx = zoomedIn ? -(0.5 * (dims().w / mn)) + R + 0.03 : 0;
-        const hy = zoomedIn ? 0.5 * (dims().h / mn) - R - 0.03 : 0.02;
-        ax += (hx - b.x) * 6.0;
-        ay += (hy - b.y) * 6.0;
+      } else if (!poppedRef.current) {
+        /* UNPOPPED, the bubble is the room's container: a spring holds it
+           centre-stage with the whole party inside. */
+        ax += (0 - b.x) * 6.0;
+        ay += (0.02 - b.y) * 6.0;
         if (!reduced) {
           ay -= P.gravity;
           ax += (Math.sin(t * 0.31) + 0.6 * Math.sin(t * 0.17 + 2.1)) * 0.038 * P.wander;
           ay += (Math.sin(t * 0.23 + 1.3) + 0.5 * Math.sin(t * 0.41 + 4.2)) * 0.032 * P.wander;
         }
+      } else if (!reduced) {
+        /* POPPED, it is a free toy: no home spring — drag it into a corner
+           and it STAYS there (viscosity below brings it to rest; the walls
+           still bounce). Only gravity/wander act, both 0 by default. */
+        ay -= P.gravity;
+        ax += (Math.sin(t * 0.31) + 0.6 * Math.sin(t * 0.17 + 2.1)) * 0.038 * P.wander;
+        ay += (Math.sin(t * 0.23 + 1.3) + 0.5 * Math.sin(t * 0.41 + 4.2)) * 0.032 * P.wander;
       }
 
       ax -= b.vx * P.drag;
@@ -1077,14 +1079,14 @@ export default function PeplGraph() {
         return Math.max(rest, underLens, ca * fall);
       };
 
-      /* --- serif echo + stamp burst, anchored to the focused dot.
-             Identity is the id — two guests can share a name. --- */
-      const wantEcho = !!focused;
-      if (wantEcho !== echoShown || (focused && focused.id !== echoId)) {
-        echoShown = wantEcho;
-        echoId = focused ? focused.id : echoId;
-        echoName = focused ? focused.name : echoName;
-        setEcho({ name: echoName, on: wantEcho });
+      /* --- stamp burst, anchored to the focused dot. (The big serif name
+             echo that used to ride along is gone by decree — the stamps
+             already carry the name.) Identity is the id — two guests can
+             share a name. --- */
+      const wantBurst = !!focused;
+      if (wantBurst !== burstShown || (focused && focused.id !== burstId)) {
+        burstShown = wantBurst;
+        burstId = focused ? focused.id : burstId;
         if (focused) {
           const prev = stampsLiveRef.current;
           if (prev && prev.on && prev.personKey !== focused.id && stampsRef.current) {
@@ -1117,32 +1119,19 @@ export default function PeplGraph() {
           setStamps((s) => (s && s.on ? { ...s, on: false } : s));
         }
       }
-      /* the bubble's disc cuts a hole in the stamp layer — the bubble
-         reads as the top layer without leaving the GL pipeline */
-      if (stampLayerRef.current) {
-        const Rm = lensR * mn * 1.02;
-        const cssMask = `radial-gradient(circle at ${bubbleSheet.x.toFixed(1)}px ${bubbleSheet.y.toFixed(1)}px, transparent ${(Rm - 1).toFixed(1)}px, black ${(Rm + 1).toFixed(1)}px)`;
-        const st = stampLayerRef.current.style as CSSStyleDeclaration & {
-          webkitMaskImage: string;
-        };
-        st.maskImage = cssMask;
-        st.webkitMaskImage = cssMask;
-      }
+      /* stamps draw OVER the bubble now — the old disc mask that tucked
+         them behind the lens hid half a burst whenever the toy drifted
+         near the focused dot */
 
       if (focusDot) {
         const ds = worldToScreen(focusDot.x, focusDot.y);
-        if (echoRef.current) {
-          /* Math.max last: margins win on narrow viewports */
-          const ex = Math.max(24, Math.min(ds.x - 110, w - 330));
-          const ey = Math.max(96, Math.min(ds.y + 44, h - 92));
-          echoRef.current.style.transform = `translate(${ex.toFixed(1)}px, ${ey.toFixed(1)}px)`;
-        }
         if (stampsRef.current) {
           /* scale the burst down on small viewports; bounds derived
              from the scaled extents so the clamps can never invert */
-          const k = Math.min(1, (w - 32) / 548, (h - 62) / 320);
-          const ax2 = Math.min(Math.max(ds.x, 286 * k + 14), w - 262 * k - 18);
-          const ay2 = Math.min(Math.max(ds.y, 212 * k + 18), h - 44);
+          /* extents mirror Stamps.tsx SLOTS (tightened 2026-07-25) */
+          const k = Math.min(1, (w - 32) / 444, (h - 62) / 240);
+          const ax2 = Math.min(Math.max(ds.x, 218 * k + 14), w - 226 * k - 18);
+          const ay2 = Math.min(Math.max(ds.y, 158 * k + 18), h - 44);
           stampsRef.current.style.transform = `translate(${ax2.toFixed(1)}px, ${ay2.toFixed(1)}px) scale(${k.toFixed(3)})`;
         }
       }
@@ -1378,36 +1367,9 @@ export default function PeplGraph() {
         />
       </div>
 
-      {/* serif echo — the human voice; the board is the machine voice */}
-      <div
-        ref={echoRef}
-        style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", willChange: "transform" }}
-      >
-        <style>{`@keyframes echoIn { from { opacity: 0.1 } to { opacity: 0.7 } }`}</style>
-        <div
-          key={echo.name}
-          style={{
-            fontFamily: "var(--font-hedvig), Georgia, serif",
-            fontSize: "clamp(28px, 4.5vmin, 52px)",
-            letterSpacing: "0.01em",
-            color: "var(--ink)",
-            opacity: echo.on ? 0.7 : 0,
-            transition: "opacity 400ms ease-out",
-            animation: echo.on ? "echoIn 400ms ease-out" : "none",
-            whiteSpace: "nowrap",
-            textTransform: "capitalize",
-          }}
-        >
-          {echo.name.toLowerCase()}
-        </div>
-      </div>
-
-      {/* RSVP stamp burst around the focused dot — the layer is masked
-          by the bubble's disc so stamps sit behind the bubble */}
-      <div
-        ref={stampLayerRef}
-        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
-      >
+      {/* RSVP stamp burst around the focused dot — above the bubble, so a
+          burst is never half-eaten by the lens */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
         <div
           ref={stampsRef}
           style={{
@@ -1449,7 +1411,7 @@ export default function PeplGraph() {
           position: "absolute",
           left: 20,
           bottom: 128,
-          width: 172,
+          width: 184,
           padding: "10px 14px 12px",
           borderRadius: 0,
           background: "rgba(255,253,251,0.78)",
@@ -1512,23 +1474,11 @@ export default function PeplGraph() {
                   flex: "none",
                 }}
               />
-              <span style={{ flex: 1 }}>{row.label}</span>
+              <span style={{ flex: 1, whiteSpace: "nowrap" }}>{row.label}</span>
               <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>{n}</span>
             </button>
           );
         })}
-        <div
-          style={{
-            ...ui,
-            textTransform: "none",
-            fontSize: 8.5,
-            letterSpacing: "0.04em",
-            color: "rgba(26,25,24,0.30)",
-            marginTop: 6,
-          }}
-        >
-          click a person to trace theirs
-        </div>
       </div>
 
       {/* reduced-motion teleport fade */}
@@ -1678,7 +1628,11 @@ export default function PeplGraph() {
         }}
       />
 
-      <button className="pepl-pill" onClick={() => setIndexOpen((v) => !v)} style={{ ...pill(indexOpen), position: "absolute", top: 20, right: 92 }}>
+      <button
+        className="pepl-pill"
+        onClick={() => setIndexOpen((v) => !v)}
+        style={{ ...pill(indexOpen), position: "absolute", top: 20, right: tuneVisible ? 92 : 20 }}
+      >
         index
       </button>
 
@@ -1687,7 +1641,7 @@ export default function PeplGraph() {
           style={{
             position: "absolute",
             top: 68,
-            right: 92,
+            right: tuneVisible ? 92 : 20,
             width: 196,
             maxHeight: "calc(100vh - 96px)",
             overflowY: "auto",
@@ -1744,11 +1698,13 @@ export default function PeplGraph() {
         </div>
       )}
 
-      <button className="pepl-pill" onClick={() => setPanelOpen((v) => !v)} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
-        {panelOpen ? "hide" : "tune"}
-      </button>
+      {tuneVisible && (
+        <button className="pepl-pill" onClick={() => setPanelOpen((v) => !v)} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
+          {panelOpen ? "hide" : "tune"}
+        </button>
+      )}
 
-      {panelOpen && (
+      {tuneVisible && panelOpen && (
         <div
           style={{
             position: "absolute",

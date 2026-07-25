@@ -57,16 +57,12 @@ export interface RoomNode {
   favorite?: string | null;
 }
 
-/** Group names ride an 18-column segment board — pepl caps them at 16 chars. */
-const MAX_GROUP_NAME = 16;
-
+/* Group names ship FULL — no character cap. The sheet wraps an inscription
+   onto whole-word lines (GraphSheet.bakeNames), and the boards only ever
+   render the focused PERSON's name, so nothing needs the old 16-char clamp. */
 function pretty(s: string): string {
   const t = s.replace(/[_-]+/g, " ").trim();
   return t.charAt(0).toUpperCase() + t.slice(1);
-}
-
-function clampName(s: string): string {
-  return s.length <= MAX_GROUP_NAME ? s : `${s.slice(0, MAX_GROUP_NAME - 1)}…`;
 }
 
 export class RoomAdapter implements GraphAdapter {
@@ -121,7 +117,7 @@ export class RoomAdapter implements GraphAdapter {
       const id = key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "unplaced";
       this._groups.push({
         id,
-        name: clampName(pretty(key)),
+        name: pretty(key),
         // weight drives cluster radius: share of the room, same as pepl
         weight: Math.max(0.35, (members.length / total) * 4),
       });
@@ -161,13 +157,15 @@ export const emptyAdapter: GraphAdapter = new RoomAdapter([]);
  * list to keep in sync.
  * ------------------------------------------------------------------------ */
 
-export type TickerSchool = { name: string; n: number };
+export type TickerSchool = { name: string; n: number; domain?: string; slug?: string };
 export type TickerCompany = { name: string; n: number; domain?: string; slug?: string };
 export type SchoolCompanyPair = { school: string; company: string; n: number };
 export type HometownPin = { name: string; lat: number; lng: number; n: number; people: string[] };
 
 /** Company logos shipped in public/logos — the ticker only shows a mark it has. */
 const LOGO_SLUGS = new Set<string>(["amc-networks","caa","capitol-records","disney","dreamworks","e-l-f-beauty","espn","focus-features","fox-entertainment","fremantle","lionsgate","live-nation","nbcuniversal","neon","netflix","nfl","obb-media","paramount","snap-inc","sony-music","sony-pictures","television-academy","tiktok","universal-music-group","uta","warner-bros-discovery"]);
+/** School marks shipped in public/logos/schools — same file-existence gate. */
+const SCHOOL_LOGO_SLUGS = new Set<string>(["usc","ucla","chapman","ucsd","uc-berkeley","ut-austin","lmu","emerson","csun","northwestern","uc-irvine","artcenter","vanderbilt","uf","stanford","emory","csulb","pepperdine","cal-poly","nyu","syracuse","university-of-michigan","boston-university","ucd","howard-university","ucsb","berklee","temple-university","columbia"]);
 
 function tally(values: (string | null | undefined)[]): { name: string; n: number }[] {
   const m = new Map<string, number>();
@@ -742,7 +740,11 @@ export function seedScene(nodes: RoomNode[], edges: RoomEdge[] = []): GraphAdapt
   const present = new Set(nodes.map((n) => n.id));
   ROOM_EDGES = edges.filter((e) => present.has(e.s) && present.has(e.t));
   GUEST_DETAILS = a.details();
-  TICKER_SCHOOLS = tally(nodes.map((n) => n.school));
+  TICKER_SCHOOLS = tally(nodes.map((n) => n.school)).map((s) => {
+    const slug = s.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    // `domain` gates the <img>, exactly like the company row below
+    return SCHOOL_LOGO_SLUGS.has(slug) ? { ...s, slug, domain: slug } : { ...s, slug };
+  });
   TICKER_COMPANIES = tally(nodes.map((n) => n.company)).map((c) => {
     const slug = c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     // `domain` gates the <img> in TagTicker — only set it when the file

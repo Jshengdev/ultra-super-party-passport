@@ -7,6 +7,7 @@
    so they go through the SAME projection as the pins — a pin can never drift
    off its continent, whatever the widget is sized to. */
 
+import { useState } from "react";
 import { HOMETOWN_PINS } from "./adapter";
 
 const W = 244;
@@ -45,6 +46,9 @@ const toPath = (ring: [number, number][]) =>
   ring.map(([lng, lat], i) => `${i ? "L" : "M"}${px(lng).toFixed(1)} ${py(lat).toFixed(1)}`).join(" ") + " Z";
 
 export default function HometownMap() {
+  /* hover label — the native <title> tooltip is a second-long wait; this
+     answers instantly. Holds the hovered pin's name, count and position. */
+  const [hover, setHover] = useState<{ name: string; n: number; x: number; y: number } | null>(null);
   return (
     <div
       style={{
@@ -90,10 +94,14 @@ export default function HometownMap() {
           const h = Math.min(11, 6 + Math.sqrt(p.n) * 1.1); // taller with headcount
           const r = h * 0.29;
           const cy = y - h + r;
-          const tip = `${p.name} — ${p.n}`;
           return (
-            <g key={`${p.lat},${p.lng}`}>
-              <title>{tip}</title>
+            <g
+              key={`${p.lat},${p.lng}`}
+              onMouseEnter={() => setHover({ name: p.name, n: p.n, x, y })}
+              onMouseLeave={() => setHover((cur) => (cur?.name === p.name ? null : cur))}
+            >
+              {/* generous invisible hit disc — an 8px pin is no hover target */}
+              <circle cx={x} cy={cy} r={7} fill="transparent" style={{ pointerEvents: "all" }} />
               {/* the stem: head down to the exact point */}
               <path
                 d={`M${x} ${y} L${(x - r * 0.72).toFixed(2)} ${(cy + r * 0.62).toFixed(2)} A${r} ${r} 0 1 1 ${(x + r * 0.72).toFixed(2)} ${(cy + r * 0.62).toFixed(2)} Z`}
@@ -107,6 +115,28 @@ export default function HometownMap() {
           );
         })}
       </svg>
+      {hover && (
+        <div
+          style={{
+            position: "absolute",
+            /* svg x/y + the card's own padding; clamped inside the card */
+            left: Math.max(4, Math.min(hover.x + 14 - 40, W - 60)),
+            top: Math.max(2, hover.y + 34 - 26),
+            padding: "3px 7px",
+            borderRadius: 0,
+            background: "rgba(38,36,44,0.86)",
+            color: "rgba(255,253,251,0.94)",
+            fontFamily: "var(--font-jakarta), sans-serif",
+            fontSize: 9.5,
+            letterSpacing: "0.04em",
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+          }}
+        >
+          {hover.name.toLowerCase()}
+          <span style={{ opacity: 0.55, marginLeft: 5 }}>{hover.n}</span>
+        </div>
+      )}
     </div>
   );
 }

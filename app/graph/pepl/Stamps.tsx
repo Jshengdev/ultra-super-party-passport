@@ -20,13 +20,13 @@ export type StampData = {
 };
 
 /* layout around the anchor (the dot), in px: top left · middle · right.
-   aspect keeps each wrapper at its SVG's natural proportions. */
+   aspect keeps each wrapper at its SVG's natural proportions. Offsets are
+   deliberately TIGHT — the burst should crowd the person's name, not orbit
+   it. (PeplGraph's on-screen clamps mirror these extents; change both.) */
 const SLOTS = [
-  { left: -286, top: -158, width: 172, aspect: "274 / 147", rot: -8, fromX: 200, fromY: 120 },
-  { left: -86, top: -212, width: 166, aspect: "266 / 164", rot: 3, fromX: 0, fromY: 170 },
-  /* the right stamp rides higher so its far corner clears the pinned
-     bubble's mask hole at every viewport */
-  { left: 84, top: -196, width: 150, aspect: "250 / 151", rot: 10, fromX: -180, fromY: 150 },
+  { left: -218, top: -118, width: 172, aspect: "274 / 147", rot: -8, fromX: 200, fromY: 120 },
+  { left: -70, top: -158, width: 166, aspect: "266 / 164", rot: 3, fromX: 0, fromY: 170 },
+  { left: 64, top: -146, width: 150, aspect: "250 / 151", rot: 10, fromX: -180, fromY: 150 },
 ];
 
 const firstWord = (s: string) => (s.split(/\s+/)[0] ?? "").toLowerCase();

@@ -209,10 +209,26 @@ export default function TagTicker() {
                 ...label,
                 fontSize: 11.5,
                 color: "rgba(26,25,24,0.66)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
+              {s.domain && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`/logos/schools/${s.slug}.png`}
+                  alt=""
+                  width={15}
+                  height={15}
+                  style={{ borderRadius: 4, objectFit: "contain" }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              )}
               {s.name.toLowerCase()}
-              <span style={{ color: "rgba(26,25,24,0.30)", fontSize: 9, marginLeft: 5 }}>
+              <span style={{ color: "rgba(26,25,24,0.30)", fontSize: 9, marginLeft: -1 }}>
                 {s.n}
               </span>
             </span>

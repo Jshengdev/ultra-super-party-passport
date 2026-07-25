@@ -143,7 +143,8 @@ export class GraphSheet {
 
   /* Serif group names: baked once — Hedvig text with a super-slight
      fisheye bulge (vertical slice warp) and a soft horizontal motion
-     blur (offset taps). Per frame it's a single faded drawImage. */
+     blur (offset taps). Per frame it's a single faded drawImage.
+     Names are never truncated: they wrap onto WHOLE-word lines. */
   bakeNames() {
     const L = this.layout;
     if (!L) return;
@@ -151,18 +152,43 @@ export class GraphSheet {
     this.names = L.clusters.map((cl) => {
       const b = cl.board;
       const w = Math.ceil(b.w + 48);
-      const h = Math.ceil(Math.max(b.h * 2.4, 44));
+      const base = Math.ceil(Math.max(b.h * 2.4, 44));
+      /* slightly smaller than the old single-line cap (26): the full name
+         earns its room back by wrapping instead of ellipsis-truncating */
+      const fs = Math.min(base * 0.46, 22);
+      const lineH = fs * 1.16;
+
+      /* greedy fill, measured — a word is never split in half; a single
+         word wider than the box keeps its own line and just runs wide */
+      const meas = document.createElement("canvas").getContext("2d")!;
+      meas.font = `400 ${fs}px ${this.serifFamily}`;
+      const words = cl.group.name.toLowerCase().split(/\s+/).filter(Boolean);
+      const maxW = w - 16;
+      const lines: string[] = [];
+      let line = "";
+      for (const word of words) {
+        const cand = line ? `${line} ${word}` : word;
+        if (line && meas.measureText(cand).width > maxW) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = cand;
+        }
+      }
+      if (line) lines.push(line);
+
+      const h = Math.ceil(Math.max(base, lines.length * lineH + fs * 0.9));
       const raw = document.createElement("canvas");
       raw.width = w * SS;
       raw.height = h * SS;
       const rc = raw.getContext("2d")!;
       rc.scale(SS, SS);
-      const fs = Math.min(h * 0.52, 26);
       rc.font = `400 ${fs}px ${this.serifFamily}`;
       rc.textAlign = "center";
       rc.textBaseline = "middle";
       rc.fillStyle = `rgba(${INK},0.8)`;
-      rc.fillText(cl.group.name.toLowerCase(), w / 2, h / 2);
+      const y0 = h / 2 - ((lines.length - 1) * lineH) / 2;
+      lines.forEach((ln, i) => rc.fillText(ln, w / 2, y0 + i * lineH));
 
       const fx = document.createElement("canvas");
       fx.width = raw.width;
