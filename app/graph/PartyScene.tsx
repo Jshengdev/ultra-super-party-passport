@@ -18,19 +18,21 @@ import { useEffect, useState } from "react";
 import { seedScene, type RoomEdge, type RoomNode } from "./pepl/adapter";
 import styles from "./graph.module.css";
 
-/** Nodes as the v2 emitter bakes them. Display-safe fields only. */
+/** Nodes as the v2 emitter bakes them. Display-safe fields only — this list is
+    the emitter's, not a wish list: no handle and no favourite film is baked, so
+    nothing downstream may reach for one. */
 interface BakedNode {
   id: string;
   name: string;
   title?: string;
   school?: string | null;
   company?: string | null;
+  free?: boolean;
   motive?: string | null;
   mission?: string | null;
+  impact?: string | null;
   asp?: string | null;
   hometown?: string | null;
-  instagram?: string | null;
-  favorite?: string | null;
   kind?: string;
 }
 

@@ -71,8 +71,9 @@ const POPPED_RADIUS = 0.135;
 /* movement (shader units) past which a press is a PAN, not a click/pop */
 const PAN_START = 0.02;
 
-/** A baked person record (public/graph/people/<id>.json) — fetched on focus
-    for the relationships widget and the stamps' real hometown/favorite. */
+/** A baked person record (public/graph/people/<id>.json) — fetched on focus for
+    the relationships widget. The stamps do not read it: they are composed from
+    graph.json at pop time so nothing on a stamp arrives late or changes. */
 type PersonRecord = {
   personId: string;
   name: string;
@@ -281,7 +282,7 @@ export default function PeplGraph() {
   const [tuneVisible, setTuneVisible] = useState(false);
 
   /* the focused person's baked record — their ranked relationships with
-     receipts, their real hometown + favourite for the stamps */
+     receipts, for the threads widget */
   const [profile, setProfile] = useState<PersonRecord | null>(null);
   const [receiptOpen, setReceiptOpen] = useState<number | null>(null);
   const profileCache = useRef(new Map<string, PersonRecord>());
@@ -312,28 +313,13 @@ export default function PeplGraph() {
     };
   }, [focusKey]);
 
-  /* the record knows what graph.json does not: real hometown (from the
-     kind-keyed highlight) and the favourite answer — feed the stamps */
-  useEffect(() => {
-    if (!profile) return;
-    const hl = profile.highlights?.find((x) => x.kind === "hometown");
-    const hometown =
-      hl && hl.text.startsWith("Came from ") ? hl.text.slice(10).replace(/\.$/, "") : "";
-    const movie = profile.answers?.favorite ?? "";
-    if (!hometown && !movie) return;
-    setStamps((s) =>
-      s && s.personKey === profile.personId
-        ? {
-            ...s,
-            details: {
-              ...s.details,
-              ...(hometown ? { hometown } : {}),
-              ...(movie ? { movie } : {}),
-            },
-          }
-        : s,
-    );
-  }, [profile]);
+  /* The stamps used to be patched from this record once it landed — hometown out
+     of the kind-keyed highlight, plus the favourite film. Both are gone: the
+     hometown is a baked node field now (it reads at pop time, for all 311 who
+     answered, instead of the 195 whose record kept the highlight after the
+     6-highlight cap), and a stamp that pops before its own text arrives is a
+     stamp that visibly changes its mind. The burst is composed from graph.json
+     only; this record is the threads widget's. */
   const [params, setParams] = useState<Params>(INITIAL);
   const [query, setQuery] = useState("");
   const [searchIdx, setSearchIdx] = useState(0);

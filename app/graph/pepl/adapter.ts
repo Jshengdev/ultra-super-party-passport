@@ -29,20 +29,31 @@ export interface GraphAdapter {
   people(): Person[];
 }
 
-/** Details the stamps read. pepl's GuestDetails plus our two conviction
-    fields — the square stamp carries the person's group and craft now. */
+/** Details the stamps read — EVERY field is a baked graph.json node field, and
+    "" means the guest did not answer. The stamps print what is here or print
+    nothing; there is no filler anywhere downstream of this table (law c/d).
+
+    Two of pepl's original fields are deliberately gone: `instagram` (no handle
+    is in any emitted artifact — graph.json fails its own gate on a bare "@")
+    and `movie` (a favourite film lives in the person record, which arrives on a
+    fetch; a stamp that pops before its own text is a stamp that changes its
+    mind). */
 export type GuestDetails = {
   school: string;
   company: string;
   title: string;
+  /** they answered the company question with the form's freelance word
+      ("creative" / "freelance") — the node's `free` flag, not an absence */
+  free: boolean;
   hometown: string;
-  instagram: string;
-  movie: string;
   /** their motive group, prettied — "" when they never answered (folded
       people are a LAYOUT placement; the stamp must not claim a motive) */
   group: string;
   /** their craft (asp), prettied */
   craft: string;
+  /** the two deeper conviction tags, prettied — the tail of the belief ladder */
+  mission: string;
+  impact: string;
 };
 
 /** Person↔person threads as the v2 emitter bakes them — same vocabulary as
@@ -65,12 +76,13 @@ export interface RoomNode {
   title?: string;
   school?: string | null;
   company?: string | null;
+  /** answered the company question with the form's freelance word */
+  free?: boolean;
   motive?: string | null;
   mission?: string | null;
+  impact?: string | null;
   asp?: string | null;
   hometown?: string | null;
-  instagram?: string | null;
-  favorite?: string | null;
 }
 
 /* Group names ship FULL — no character cap. The sheet wraps an inscription
@@ -80,6 +92,11 @@ function pretty(s: string): string {
   const t = s.replace(/[_-]+/g, " ").trim();
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
+
+/** a baked conviction tag as words: "fandom-turned-maker" → "fandom turned maker".
+    Null/absent stays "" — the tag vocabulary is never guessed at. */
+const detag = (s: string | null | undefined): string =>
+  (s ?? "").trim().replace(/[_-]+/g, " ");
 
 export class RoomAdapter implements GraphAdapter {
   private _groups: Group[] = [];
@@ -144,12 +161,13 @@ export class RoomAdapter implements GraphAdapter {
           school: n.school ?? "",
           company: n.company ?? "",
           title: n.title ?? "",
+          free: n.free === true,
           hometown: n.hometown ?? "",
-          instagram: n.instagram ?? "",
-          movie: n.favorite ?? "",
           // n.motive, NOT the group they were folded into — no false claims
-          group: (n.motive ?? "").trim().replace(/[_-]+/g, " "),
-          craft: (n.asp ?? "").trim().replace(/[_-]+/g, " "),
+          group: detag(n.motive),
+          craft: detag(n.asp),
+          mission: detag(n.mission),
+          impact: detag(n.impact),
         };
       }
     }

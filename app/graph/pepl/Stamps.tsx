@@ -1,12 +1,22 @@
 "use client";
 
-/* The RSVP detail burst: three passport stamps pop out around a
+/* The RSVP detail burst: up to three passport stamps pop out around a
    person's dot (top left · middle · right), each carrying their
    details, then peel off when the person is released.
 
-   nametag (blue)  — school small, company large
-   belief (card)   — one-word title, favorite movie, signed name
-   round (oval)    — hometown centre, instagram ring, full title    */
+   nametag (blue)  — where the day goes: school small, company large
+   belief (card)   — craft word, conviction, signed name
+   round (oval)    — hometown centre, the party around the ring, title below
+
+   A STAMP MAY ONLY SAY WHAT THE GUEST SAID. Every value below comes off the
+   baked graph.json node (audited byte-for-byte against the CSV by
+   scripts/audit-graph.ts); a field the guest left blank leaves its slot blank,
+   and a stamp with no true fact left in it is not rendered at all. Three
+   stamps is the maximum, never the quota — the old
+   "somewhere / freelance / creative / planet earth / @offline / no comment"
+   fillers printed invented copy on the one surface in this product whose whole
+   job is to be a verified fact (CLAUDE.md laws c + d, audit-graph obligation 3:
+   absence renders as absence). */
 
 import { useMemo } from "react";
 import { NAMETAG_SVG, BELIEF_STAMP_SVG, ROUND_STAMP_SVG } from "./stamps/assets";
@@ -31,51 +41,140 @@ const SLOTS = [
 
 const firstWord = (s: string) => (s.split(/\s+/)[0] ?? "").toLowerCase();
 
-function ringText(handle: string) {
-  const h = handle || "@somewhere";
-  let s = h;
-  while (s.length < 42) s += "   ·   " + h;
+/** Tile a phrase around the oval's ring path — her 42–64 character band. */
+function ringText(phrase: string) {
+  let s = phrase;
+  while (s.length < 42) s += "   ·   " + phrase;
   return s.slice(0, 64);
 }
 
+/* The ring is the ISSUER, not the person: the one line in the burst that is a
+   fact about the night rather than a claim about the guest — exactly what the
+   country ring on a real passport stamp is. It replaces the handle ring, which
+   printed "@offline" on all 312 people: no Instagram handle exists in any
+   emitted artifact, and none can, because graph.json fails its own PII gate on
+   a bare "@" (scripts/check-graph-emit.ts). */
+const RING = ringText("LA INTERN PARTY");
+
+/** Real answers run long — an 80-character company cell squeezed into the
+    nametag's 230px slot is compressed past reading. Cut with an ellipsis, which
+    says "there is more of this" instead of quietly rewriting it. */
+const clamp = (v: string, max: number) => (v.length > max ? v.slice(0, max - 1).trimEnd() + "…" : v);
+
+/** A hometown as a place, not as a paragraph. Guests answered that box with
+    "Hanoi, Vietnam (Rochester, NY)" and "Riverside, CA / Las Vegas, NV", and the
+    oval's centre line is 190px wide — so the FIRST place they named is what
+    goes on the stamp. Still their own word, nothing added; if even that will not
+    fit, the hometown is dropped rather than squeezed into an unreadable line. */
+function place(raw: string) {
+  const first = (raw.split(/[,/(]/)[0] ?? "").trim();
+  return first.length > 0 && first.length <= 24 ? first : "";
+}
+
+/** Their name as they wrote it. pepl lowercased the signature, which reads as
+    style right up until it hits "BJ" or "MacIlvaine" — so interior capitals are
+    kept verbatim, and only a name that arrives uniformly cased (all lower, or
+    SHOUTING) is re-cased to Title Case. A lone short token is initials, not a
+    shout, and is left alone: the same acronym guard passport/textCase.ts uses,
+    kept local because that helper sentence-cases positions, not names. */
+function personName(raw: string): string {
+  const n = raw.trim();
+  if (!n) return "";
+  const uniform = n === n.toLowerCase() || n === n.toUpperCase();
+  if (!uniform) return n; // "Aidan MacIlvaine", "BJ Smith"
+  if (!/\s/.test(n) && n.length <= 3) return n; // "BJ"
+  return n.replace(/[\p{L}\p{M}']+/gu, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+/** One stamp's injected values, or null when the person gave us nothing that
+    stamp could truthfully carry. Index = its slot in SLOTS. */
+type StampFill = Record<string, string> | null;
+
+/**
+ * What the three stamps are allowed to say, in the order each slot prefers.
+ *
+ * THE LADDERS (every rung is a real graph.json field; the stamp is dropped when
+ * the ladder runs out):
+ *   nametag  company → freelance flag → school → title      (small line: school, else title)
+ *   belief   motive → craft → mission → impact              (always signed with their name)
+ *   round    hometown centre, title (else craft) below       (ring: the party)
+ *
+ * Nothing is printed twice in one burst: the first stamp to claim a value owns
+ * it, and later slots fall to their next real rung instead of echoing it.
+ */
+export function compose(data: StampData): [StampFill, StampFill, StampFill] {
+  const d = data.details;
+  const t = (v: string | undefined) => (v ?? "").trim();
+  const school = t(d.school);
+  const company = t(d.company);
+  const title = t(d.title);
+  const group = t(d.group);
+  const craft = t(d.craft);
+  const mission = t(d.mission);
+  const impact = t(d.impact);
+  const hometown = place(t(d.hometown));
+
+  const used = new Set<string>();
+  const claim = (v: string) => {
+    const k = v.toLowerCase();
+    if (!v || used.has(k)) return "";
+    used.add(k);
+    return v;
+  };
+
+  /* 1 · the nametag — where the day actually goes. "Freelance" is the `free`
+     flag, a fact the guest stated by answering the company question with the
+     form's own freelance word; it is never inferred from an empty cell. */
+  let nametag: StampFill = null;
+  // the small line is the school and only the school: their role belongs on the round
+  // stamp, and a role stacked over an employer it may have nothing to do with is a
+  // claim we cannot make. Lazy, so the school is not claimed by a branch that never runs.
+  const org = () => clamp(claim(school), 40);
+  if (company) nametag = { headerLabel: "THE DAY JOB", org: org(), name: clamp(claim(company), 36) };
+  else if (d.free) nametag = { headerLabel: "THE DAY JOB", org: org(), name: "Freelance" };
+  // no employer at all: the header follows the fact it is standing over
+  else if (school) nametag = { headerLabel: "THE SCHOOL", org: "", name: clamp(claim(school), 36) };
+  else if (title) nametag = { headerLabel: "THE DAY JOB", org: "", name: clamp(claim(title), 36) };
+
+  /* 2 · the belief card — their conviction, signed. The card survives an empty
+     conviction because the signature on it is real; what dies is the old
+     "no comment", which put words in the mouth of someone who never spoke. */
+  const belief = claim(group) || claim(craft) || claim(mission) || claim(impact);
+  const small = group && craft ? claim(craft) : firstWord(title);
+  const signature = personName(data.name);
+  const card: StampFill =
+    signature || belief || small
+      ? { small, belief: belief.length > 48 ? belief.slice(0, 46) + "…" : belief, name: signature }
+      : null;
+
+  /* 3 · the round stamp — where they came from, over what they do. */
+  const relation = claim(hometown);
+  const roundName = claim(title) || claim(craft);
+  const round: StampFill =
+    relation || roundName
+      ? { relation, ringText: RING, name: clamp(roundName.toLowerCase(), 36) }
+      : null;
+
+  return [nametag, card, round];
+}
+
 export default function StampBurst({ data, on }: { data: StampData; on: boolean }) {
-  const svgs = useMemo(() => {
-    const d = data.details;
-    const school = d.school || "somewhere";
-    const company = d.company || "freelance";
-    const title = d.title || "creative";
-    const hometown = d.hometown || "planet earth";
-    const instagram = d.instagram || "@offline";
-    /* the square stamp carries their conviction now: group in the middle,
-       craft in the corner. Fallbacks never invent — a folded person with
-       no craft keeps the old title-word + "no comment". */
-    const small = d.group && d.craft ? d.craft : firstWord(title);
-    const middle = d.group || d.craft || d.movie || "no comment";
+  const stamps = useMemo(() => {
+    const [nametag, card, round] = compose(data);
+    const art = [NAMETAG_SVG, BELIEF_STAMP_SVG, ROUND_STAMP_SVG];
     try {
-      return [
-        injectSvg(NAMETAG_SVG, {
-          headerLabel: "THE DAY JOB",
-          org: school,
-          name: company,
-        }),
-        injectSvg(BELIEF_STAMP_SVG, {
-          small,
-          belief: middle.length > 48 ? middle.slice(0, 46) + "…" : middle,
-          name: data.name.toLowerCase(),
-        }),
-        injectSvg(ROUND_STAMP_SVG, {
-          relation: hometown,
-          ringText: ringText(instagram),
-          name: title.toLowerCase(),
-        }),
-      ].map((svg) => withRootAttrs(svg, { width: "100%", height: "100%" }));
+      return [nametag, card, round].flatMap((values, slot) =>
+        values
+          ? [{ slot, svg: withRootAttrs(injectSvg(art[slot], values), { width: "100%", height: "100%" }) }]
+          : [],
+      );
     } catch (e) {
       console.error("[stamps]", e);
       return null;
     }
   }, [data]);
 
-  if (!svgs) return null;
+  if (!stamps || stamps.length === 0) return null;
 
   return (
     <div aria-hidden style={{ position: "absolute", top: 0, left: 0 }}>
@@ -128,29 +227,35 @@ export default function StampBurst({ data, on }: { data: StampData; on: boolean 
           .pepl-stamp.out { opacity: 0; }
         }
       `}</style>
-      {SLOTS.map((slot, i) => (
-        <div
-          key={`${data.personKey}-${i}`}
-          className={`pepl-stamp ${on ? "in" : "out"}`}
-          style={
-            {
-              left: slot.left,
-              top: slot.top,
-              width: slot.width,
-              aspectRatio: slot.aspect,
-              transformOrigin: "30% 100%",
-              /* cream backing: the room must not read THROUGH a stamp */
-              background: "var(--cream)",
-              borderRadius: slot.oval ? "50%" : 6,
-              "--i": i,
-              "--rot": `${slot.rot}deg`,
-              "--fromX": `${slot.fromX}px`,
-              "--fromY": `${slot.fromY}px`,
-            } as React.CSSProperties
-          }
-          dangerouslySetInnerHTML={{ __html: svgs[i] }}
-        />
-      ))}
+      {/* a dropped stamp leaves its slot empty — the surviving stamps keep their
+          own geometry, tilt and stagger, so a two-stamp burst is her burst with
+          one fewer card in it, not a re-flowed one */}
+      {stamps.map(({ slot: i, svg }) => {
+        const slot = SLOTS[i];
+        return (
+          <div
+            key={`${data.personKey}-${i}`}
+            className={`pepl-stamp ${on ? "in" : "out"}`}
+            style={
+              {
+                left: slot.left,
+                top: slot.top,
+                width: slot.width,
+                aspectRatio: slot.aspect,
+                transformOrigin: "30% 100%",
+                /* cream backing: the room must not read THROUGH a stamp */
+                background: "var(--cream)",
+                borderRadius: slot.oval ? "50%" : 6,
+                "--i": i,
+                "--rot": `${slot.rot}deg`,
+                "--fromX": `${slot.fromX}px`,
+                "--fromY": `${slot.fromY}px`,
+              } as React.CSSProperties
+            }
+            dangerouslySetInnerHTML={{ __html: svg }}
+          />
+        );
+      })}
     </div>
   );
 }
