@@ -72,6 +72,36 @@ const POPPED_RADIUS = 0.135;
 /* movement (shader units) past which a press is a PAN, not a click/pop */
 const PAN_START = 0.02;
 
+/* ---- the focus veil (Johnny's pinned treatment) --------------------------
+   "when we click on it, it should smoothly blur out the background so we can
+   focus on the things that popped up… extremely subtle with a slight 5%
+   dimming." One pointer-events:none sheet laid over the WebGL room. Three
+   things about it are load-bearing:
+
+   (a) THE NUMBERS LIVE HERE and nowhere else — an ink wash at 5%
+       (rgba(38,36,44,·), the pepl ink family) over a 2.2px backdrop blur,
+       cross-faded across VEIL_MS. Grep "focus veil" and this is the only hit
+       that decides how dim "5% dimming" is.
+   (b) THE VEIL SOFTENS THE ROOM AND NOTHING ELSE: it is a DOM sibling placed
+       directly AFTER the canvas wrap, so everything that pops — the stamp
+       burst, ticker, hometown map, connections legend, their-threads widget,
+       receipts, search, index, logo, and the GrainVeil (still last) — must
+       stay a sibling after it in source order, i.e. painted above it, i.e.
+       sharp. Adding a widget before the veil silently blurs it.
+   (c) Boolean(focusKey) — the same stamps.on signal the burst rides — is the
+       SINGLE input. Select and deselect therefore cross-fade together, and no
+       other state may reach in and toggle the veil.
+
+   Uniform by choice: the focused dot and its neighbours are painted IN the
+   canvas and so soften with the room. At 2.2px that is imperceptible on a
+   dot, and a sharp window tracking the focus anchor would mean a per-frame
+   mask write fighting the render loop for no visible gain. Idle cost is zero:
+   a full-viewport backdrop-filter over a 60fps canvas is paid every frame, so
+   the blur is only attached while the veil is alive (see `veilMounted`). */
+const VEIL_DIM = 0.05;
+const VEIL_BLUR_PX = 2.2;
+const VEIL_MS = 480;
+
 /** A baked person record (public/graph/people/<id>.json) — fetched on focus for
     the relationships widget. The stamps do not read it: they are composed from
     graph.json at pop time so nothing on a stamp arrives late or changes. */
@@ -288,6 +318,19 @@ export default function PeplGraph() {
   const [receiptOpen, setReceiptOpen] = useState<number | null>(null);
   const profileCache = useRef(new Map<string, PersonRecord>());
   const focusKey = stamps?.on ? stamps.personKey : null;
+  /* the focus veil's only input, and its mount life (constraint note at
+     VEIL_DIM): on the instant a person is focused, off only once the fade-out
+     has finished — the blur must never stay attached to an idle canvas */
+  const veilOn = Boolean(focusKey);
+  const [veilMounted, setVeilMounted] = useState(false);
+  useEffect(() => {
+    if (veilOn) {
+      setVeilMounted(true);
+      return;
+    }
+    const t = setTimeout(() => setVeilMounted(false), VEIL_MS + 80);
+    return () => clearTimeout(t);
+  }, [veilOn]);
   useEffect(() => {
     setReceiptOpen(null);
     if (!focusKey) {
@@ -1492,9 +1535,14 @@ export default function PeplGraph() {
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: none; }
         }
+        /* the focus veil's cross-fade — opacity only, so the compositor owns
+           it and the blur radius never animates over a live canvas */
+        .pepl-veil { transition: opacity ${VEIL_MS}ms cubic-bezier(0.4, 0, 0.2, 1); }
         @media (prefers-reduced-motion: reduce) {
           .pepl-group { animation: none; }
           .pepl-pill:active, .pepl-item:active { transform: none; }
+          /* same end state, no travel — the scene's own reduced path snaps too */
+          .pepl-veil { transition: none; }
         }
         .pepl-search { transition: box-shadow 150ms ease; }
         .pepl-search:focus {
@@ -1510,6 +1558,23 @@ export default function PeplGraph() {
           style={{ width: "100%", height: "100%", display: "block" }}
         />
       </div>
+
+      {/* the focus veil — the room softens and dims ~5% on selection so the
+          popped elements carry the attention. THE NUMBERS AND THE
+          sibling-order law live at VEIL_DIM up top; every widget below this
+          line is above it in paint order, and must stay there to stay sharp. */}
+      <div
+        className="pepl-veil"
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: veilOn ? 1 : 0,
+          background: `rgba(38,36,44,${VEIL_DIM})`,
+          backdropFilter: veilMounted ? `blur(${VEIL_BLUR_PX}px)` : "none",
+        }}
+      />
 
       {/* RSVP stamp burst around the focused dot — above the bubble, so a
           burst is never half-eaten by the lens */}
