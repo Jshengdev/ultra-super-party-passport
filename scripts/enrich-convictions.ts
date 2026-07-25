@@ -11,7 +11,7 @@
 // Exit codes: 2 = DEGRADED (no gateway creds / no GUESTS_CSV) · 1 = the pass failed
 // loud (nothing extracted, or a named gateway error) · 0 = wrote the file.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { loadGuests } from "../lib/guests";
 import { isGatewayConfigured, GatewayNotConfigured } from "../lib/gateway";
@@ -43,8 +43,13 @@ async function main(): Promise<void> {
   const filter = process.env.GUESTS_FILTER?.split(",").map((s) => s.trim()).filter(Boolean);
   if (filter?.length) {
     guests = guests.filter((g) => filter.includes(g.guestId));
-    const missing = filter.filter((id) => !guests.some((g) => g.guestId === id));
-    if (missing.length) console.error(`GUESTS_FILTER: ${missing.length} id(s) not in the CSV — ${missing.join(", ")}`);
+    const found = new Set(guests.map((g) => g.guestId));
+    const unmatched = filter.filter((id) => !found.has(id));
+    if (unmatched.length) {
+      // fail loud, same as the sibling ingest: a golden run silently enriching 9/10 is the bug.
+      console.error(`GuestsFilterUnmatched: ${unmatched.length} guest_id(s) not in the CSV — ${unmatched.join(", ")}`);
+      process.exit(1);
+    }
   }
   if (!guests.length) {
     console.error("NoGuestsSelected: the CSV (after GUESTS_FILTER) yielded 0 guests");
@@ -58,16 +63,12 @@ async function main(): Promise<void> {
 
   const conv = await extractConvictions(guests);
 
-  // ---- write the artifact (flat: { [personId]: Conviction }) ----
+  // ---- tally BEFORE anything touches disk ----
   const record: Record<string, Conviction> = {};
   for (const g of guests) {
     const c = conv.get(g.personId);
     if (c) record[g.personId] = c;
   }
-  mkdirSync(dirname(CONVICTIONS_PATH), { recursive: true });
-  writeFileSync(CONVICTIONS_PATH, `${JSON.stringify(record, null, 2)}\n`, "utf8");
-
-  // ---- coverage table ----
   const all = Object.values(record);
   const total = all.length;
   const nn = (k: "motive" | "mission" | "impact" | "aspiration") => all.filter((c) => c[k] !== null).length;
@@ -75,23 +76,40 @@ async function main(): Promise<void> {
   const quoted = all.filter((c) => Object.keys(c.quotes).length > 0).length;
   const openSeekers = all.filter((c) => c.openSeeker).length;
 
-  console.log(`\nwrote ${CONVICTIONS_PATH} — ${total} record(s)\ncoverage:`);
-  for (const k of ["motive", "mission", "impact", "aspiration"] as const) {
-    console.log(`  ${k.padEnd(11)} ${String(nn(k)).padStart(4)}/${total}  ${pct(nn(k), total)}`);
-  }
-  console.log(`  ${"with quotes".padEnd(11)} ${String(quoted).padStart(4)}/${total}  ${pct(quoted, total)}`);
-  console.log(`  ${"openSeeker".padEnd(11)} ${String(openSeekers).padStart(4)}/${total}  ${pct(openSeekers, total)}`);
-
   if (guardFailed.length) {
     console.error(
       `\n${GUARD_FAILED_FLAG.toUpperCase()} (${guardFailed.length}/${total}): ` +
         guardFailed.map((g) => g.personId).join(", "),
     );
   }
+
+  // ---- total-outage tripwire, BEFORE the write ----
+  // An all-null cache on disk is worse than no cache at all: downstream tasks read this file
+  // instead of re-spending gateway calls, so a dead-gateway run must leave NOTHING behind —
+  // not the poisoned run, and not a stale file that would be mistaken for it.
   if (total > 0 && guardFailed.length === total) {
-    console.error("FAIL: every guest failed the guard — nothing was extracted.");
+    console.error(
+      `FAIL: every guest (${total}/${total}) failed the guard — nothing was extracted. ` +
+        `NOT writing ${CONVICTIONS_PATH}.`,
+    );
+    if (existsSync(CONVICTIONS_PATH)) {
+      rmSync(CONVICTIONS_PATH, { force: true });
+      console.error(`removed the stale ${CONVICTIONS_PATH} — no cache is better than a poisoned one.`);
+    }
     process.exit(1);
   }
+
+  // ---- write the artifact (flat: { [personId]: Conviction }) ----
+  mkdirSync(dirname(CONVICTIONS_PATH), { recursive: true });
+  writeFileSync(CONVICTIONS_PATH, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+
+  // ---- coverage table ----
+  console.log(`\nwrote ${CONVICTIONS_PATH} — ${total} record(s)\ncoverage:`);
+  for (const k of ["motive", "mission", "impact", "aspiration"] as const) {
+    console.log(`  ${k.padEnd(11)} ${String(nn(k)).padStart(4)}/${total}  ${pct(nn(k), total)}`);
+  }
+  console.log(`  ${"with quotes".padEnd(11)} ${String(quoted).padStart(4)}/${total}  ${pct(quoted, total)}`);
+  console.log(`  ${"openSeeker".padEnd(11)} ${String(openSeekers).padStart(4)}/${total}  ${pct(openSeekers, total)}`);
 }
 
 main()
