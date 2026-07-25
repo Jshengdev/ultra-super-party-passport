@@ -1628,6 +1628,12 @@ export default function PeplGraph() {
           onToggle={(type) => setEdgeOn((s) => ({ ...s, [type]: !s[type] }))}
           bottom={legendBottom}
           ui={ui}
+          /* selection speaks through the same signal the rest of the scene
+             reads; the legend never fetches — it is handed what is already
+             here, and an empty list means "the record has not landed" */
+          focusKey={focusKey}
+          focusEdges={relEdges}
+          nameOf={personName}
         />
       )}
 
