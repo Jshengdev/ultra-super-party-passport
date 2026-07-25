@@ -371,7 +371,11 @@ Caches embeddings at `data/graph-private/embeddings.json` keyed by sha256(person
     motive: string | null; mission: string | null; impact: string | null; asp: string | null; deg: number;
     pos: { web: [number, number]; why: [number, number]; seek: [number, number] } }>,
   edges: Array<{ s: string; t: string; type: "school" | "company" | "why" | "seek"; via: string; m?: boolean; score?: number }>,
-  meta: { people: number; built: string; counts: Record<string, number> } }
+  meta: { people: number; built: string; counts: Record<string, number>;
+    stages: { rows: number; approved: number; unique: number; schools: number; companies: number;
+              convictions: number; seekEdges: number; mutuals: number; whyEdges: number },
+    guestIds: string[] } }   // guestIds = the 312 raw guest_id values (Luma ids, non-PII) — the entry
+                             // drop-zone verifies a dragged CSV against them before playing the beats
 // public/graph/people/<personId>.json — adds answers (goal/drew/seeking/inspiration/favorite),
 // ranked edges with receipts {yours:{field,quote}, theirs:{field,quote}}, highlights[]
 ```
@@ -436,6 +440,7 @@ console.log(`emit OK: 312 nodes, ${g.edges.length} edges, ${people.length} perso
 - Consumes: `public/graph/graph.json` + `public/graph/people/<id>.json` via client `fetch("/graph/graph.json")` (relative — works in dev and static export). No API routes, no query params; deep link via `location.hash` = personId.
 - Port source: the prototype at the scratchpad path in Reference material — `draw`, `pick`, camera/pointer/pinch handlers, `select`/`rankEdges`, `openReceipt`, tab tween — translated into one `"use client"` component with `useRef`/`useEffect` (no per-frame React state; the canvas loop is imperative exactly like `app/universe/UniverseGraph.tsx`).
 
+- [ ] **Step 0: The entry — drag the CSV, watch it process.** Mirror the existing landing page's pattern (`app/page.tsx`: papaparse client-side + timed "beats" → router.push). First visit to `/graph` with no `location.hash` shows a full-bleed drop zone (same visual language as `app/page.tsx`'s drop state): drag the guest CSV in → parse client-side with papaparse → verify it IS the party list (compare parsed `guest_id`s against `meta.guestIds` from the already-fetched graph.json; ≥90% overlap = verified, else show a named mismatch error, never a fake success) → play ~6 timed beats using the REAL numbers from `meta.stages` ("364 rows → 325 approved → 312 people", "70 canonicalized schools · 98 companies", "convictions extracted for N", "N seeking matches · N mutual") → the beats end and the graph fades in. A mono "skip →" link bypasses the theater; `location.hash` deep links and return visits (sessionStorage flag `usp-graph-seen`) skip straight to the graph. The dragged file NEVER leaves the browser (no upload — parsing is local, same as the landing page).
 - [ ] **Step 1: `page.tsx`** — mirror `app/universe/page.tsx`'s structure: imports `@/passport/tokens.css` and `./graph.module.css`, `dynamic(() => import("./GraphLab"), { ssr: false })`, header with the three mono tab buttons + search + legend as DOM (module CSS reusing token vars), `export const dynamic_ = undefined` — no route handlers; ensure `output: export` compatibility (no `searchParams`).
 - [ ] **Step 2: `GraphLab.tsx`** — port the prototype's script section function-for-function; replace the embedded `DATA` with `useEffect` fetch of `/graph/graph.json`; person-file fetch on select (`/graph/people/${id}.json`); positions come from `node.pos[lens]` (NO client sim — the emit script baked them; keep only the tween). Colors via `getComputedStyle(document.documentElement).getPropertyValue("--usp-spectrum-N")` per `app/universe/lib/palette.ts` convention. On mount: `if (location.hash.length > 1) select(location.hash.slice(1))`.
 - [ ] **Step 3: Build gates** — `npx tsc --noEmit` clean; `npm run dev` → open `http://localhost:3000/graph`; `STATIC_EXPORT=1 npx next build` succeeds and `out/graph.html` + `out/graph/graph.json` exist.
