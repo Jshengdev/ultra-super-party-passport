@@ -40,6 +40,8 @@ export const OBJECT_SCHEMAS = {
   }),
   Party: z.object({ id: z.string().min(1), name: z.string().min(1), date: z.string().min(1) }),
   Interest: z.object({ name: z.string().min(1) }), // canonical lowercase 1-3 word semantic tag
+  Place: z.object({ name: z.string().min(1), lat: z.number(), lng: z.number() }),
+  Inspiration: z.object({ name: z.string().min(1) }),
 } as const;
 
 export type ObjectLabel = keyof typeof OBJECT_SCHEMAS;
@@ -65,6 +67,9 @@ export const LINKS: readonly LinkPattern[] = [
   { from: "Person", rel: "SHARES_VALUE", to: "Person", props: ["cluster", "basis"] },
   { from: "Person", rel: "SIGNED_UP", to: "Party", props: ["checked_in", "checked_in_at"] },
   { from: "Person", rel: "INTERESTED_IN", to: "Interest" },
+  { from: "Person", rel: "FROM", to: "Place" },
+  { from: "Person", rel: "INSPIRED_BY", to: "Inspiration" },
+  { from: "Person", rel: "SEEKS", to: "Person", props: ["score", "mutual", "via"] },
 ] as const;
 
 export const REL_TYPES = Array.from(new Set(LINKS.map((l) => l.rel)));
@@ -220,6 +225,73 @@ SET su.checked_in = $checkedIn,
 RETURN collect(p.id) AS writtenIds
 `.trim();
 
+/* ---- ingest_guest_v2: one guest + place/inspiration edges, one idempotent transaction ---- */
+export const IngestGuestV2Params = z.object({
+  person: z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    position: z.string().default(""),
+  }),
+  school: z.string().nullable(),
+  company: z.string().nullable(),
+  place: OBJECT_SCHEMAS.Place.nullable(),
+  inspiration: z.string().nullable(),
+  party: OBJECT_SCHEMAS.Party,
+});
+export type IngestGuestV2Params = z.infer<typeof IngestGuestV2Params>;
+
+const INGEST_GUEST_V2_CYPHER = `
+MERGE (p:Person {id: $person.id})
+SET p.name = $person.name, p.position = $person.position,
+    p._src = $_src, p._ts = $_ts, p._actor = $_actor
+MERGE (party:Party {id: $party.id})
+SET party.name = $party.name, party.date = $party.date,
+    party._src = $_src, party._ts = $_ts, party._actor = $_actor
+MERGE (p)-[su:SIGNED_UP]->(party)
+  ON CREATE SET su.checked_in = false, su.checked_in_at = null
+SET su._src = $_src, su._ts = $_ts, su._actor = $_actor
+FOREACH (s IN CASE WHEN $school IS NULL THEN [] ELSE [$school] END |
+  MERGE (sch:School {name: s})
+  SET sch._src = $_src, sch._ts = $_ts, sch._actor = $_actor
+  MERGE (p)-[r:STUDIES_AT]->(sch)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (c IN CASE WHEN $company IS NULL THEN [] ELSE [$company] END |
+  MERGE (co:Company {name: c})
+  SET co._src = $_src, co._ts = $_ts, co._actor = $_actor
+  MERGE (p)-[r:WORKS_AT]->(co)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (pl IN CASE WHEN $place IS NULL THEN [] ELSE [$place] END |
+  MERGE (plc:Place {name: pl.name})
+  SET plc.lat = pl.lat, plc.lng = pl.lng,
+      plc._src = $_src, plc._ts = $_ts, plc._actor = $_actor
+  MERGE (p)-[r:FROM]->(plc)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (ins IN CASE WHEN $inspiration IS NULL THEN [] ELSE [$inspiration] END |
+  MERGE (insp:Inspiration {name: ins})
+  SET insp._src = $_src, insp._ts = $_ts, insp._actor = $_actor
+  MERGE (p)-[r:INSPIRED_BY]->(insp)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+RETURN [$person.id] AS writtenIds
+`.trim();
+
+/* ---- write_seek_edge: SEEKS scavenger-hunt target between two people ---- */
+export const WriteSeekEdgeParams = z.object({
+  from: z.string().min(1),
+  to: z.string().min(1),
+  score: z.number().min(0).max(1),
+  mutual: z.boolean(),
+  via: z.string().min(1),
+});
+export type WriteSeekEdgeParams = z.infer<typeof WriteSeekEdgeParams>;
+
+const WRITE_SEEK_EDGE_CYPHER = `
+MATCH (a:Person {id: $from}), (b:Person {id: $to})
+MERGE (a)-[s:SEEKS]->(b)
+SET s.score = $score, s.mutual = $mutual, s.via = $via,
+    s._src = $_src, s._ts = $_ts, s._actor = $_actor
+RETURN [$from] AS writtenIds
+`.trim();
+
 export const ACTIONS = {
   ingest_person: {
     name: "ingest_person",
@@ -267,6 +339,30 @@ export const ACTIONS = {
     cypher: CHECK_IN_CYPHER,
     defaultSrc: "action:check_in",
     defaultActor: "human",
+  },
+  ingest_guest_v2: {
+    name: "ingest_guest_v2",
+    params: IngestGuestV2Params,
+    writesLabels: ["Person", "Party", "School", "Company", "Place", "Inspiration"],
+    writesPatterns: [
+      ["Person", "SIGNED_UP", "Party"],
+      ["Person", "STUDIES_AT", "School"],
+      ["Person", "WORKS_AT", "Company"],
+      ["Person", "FROM", "Place"],
+      ["Person", "INSPIRED_BY", "Inspiration"],
+    ],
+    cypher: INGEST_GUEST_V2_CYPHER,
+    defaultSrc: "csv:party-guest-v2",
+    defaultActor: "pipeline",
+  },
+  write_seek_edge: {
+    name: "write_seek_edge",
+    params: WriteSeekEdgeParams,
+    writesLabels: ["Person"],
+    writesPatterns: [["Person", "SEEKS", "Person"]],
+    cypher: WRITE_SEEK_EDGE_CYPHER,
+    defaultSrc: "action:write_seek_edge",
+    defaultActor: "pipeline",
   },
 } as const satisfies Record<string, ActionDef>;
 
