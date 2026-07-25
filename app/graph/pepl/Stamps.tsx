@@ -41,20 +41,19 @@ const SLOTS = [
 
 const firstWord = (s: string) => (s.split(/\s+/)[0] ?? "").toLowerCase();
 
-/** Tile a phrase around the oval's ring path — her 42–64 character band. */
-function ringText(phrase: string) {
-  let s = phrase;
-  while (s.length < 42) s += "   ·   " + phrase;
-  return s.slice(0, 64);
-}
-
 /* The ring is the ISSUER, not the person: the one line in the burst that is a
    fact about the night rather than a claim about the guest — exactly what the
    country ring on a real passport stamp is. It replaces the handle ring, which
    printed "@offline" on all 312 people: no Instagram handle exists in any
    emitted artifact, and none can, because graph.json fails its own PII gate on
-   a bare "@" (scripts/check-graph-emit.ts). */
-const RING = ringText("LA INTERN PARTY");
+   a bare "@" (scripts/check-graph-emit.ts).
+
+   Length is measured, not guessed: the ring path is 500.5 units long
+   (getTotalLength), and this string renders 441 at 20px / 1.5 tracking in the
+   room's Plus Jakarta Sans — a full ring with air at the seam. The old tiling
+   helper padded to ≥42 characters and sliced at 64, which overran the path and
+   lapped the text over itself on any handle worth reading. */
+const RING = "·   LA INTERN PARTY   ·   LA INTERN PARTY   ·";
 
 /** Real answers run long — an 80-character company cell squeezed into the
     nametag's 230px slot is compressed past reading. Cut with an ellipsis, which
