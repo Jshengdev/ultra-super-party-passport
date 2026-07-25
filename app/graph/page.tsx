@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * /graph — the room, three lenses deep (the Universe's analytical twin).
+ * /graph — the Universe, re-fed with the real party data.
  *
  * Route shell only, mirroring app/universe/page.tsx: pull Teri's design tokens in
  * per-route, then hand the whole surface to a client-only component. GraphLab
- * touches `window`/`document` from first paint (canvas + sessionStorage + the
- * drag-the-CSV entry), so it is dynamically imported with ssr:false — which also
- * keeps this route trivially static-exportable (no route handlers, no
+ * touches `window`/`document` from first paint (the force canvas + sessionStorage
+ * + the drag-the-CSV entry), so it is dynamically imported with ssr:false — which
+ * also keeps this route trivially static-exportable (no route handlers, no
  * searchParams, deep links live in location.hash).
  */
 

@@ -1,34 +1,43 @@
 "use client";
 
 /**
- * GraphLab — the /graph room: three lenses over ONE baked graph.
+ * GraphLab — /graph IS the Universe, re-fed with the real party data.
  *
- * Ported from the standalone prototype (scratchpad/graph-lab.html), with the two
- * layout functions deliberately left behind: `simTick` and `ringLayout` ran in the
- * browser there, but here every node arrives with its position already baked per
- * lens (`node.pos.web | .why | .seek`, emitted by scripts/emit-graph.ts). The only
- * motion left is the tween between lenses.
+ * One view, one grammar. Everything the Universe does on `/universe`
+ * (app/universe/UniverseGraph.tsx) it does here, over `/graph/graph.json`:
+ * a live `react-force-graph-2d` force room where people are flat cluster-hued
+ * dots and the things they SHARE — schools, companies, crafts — are quiet
+ * neutral hub dots that pull their people together. Convictions are the
+ * ValueCluster stamps: tilted mono small-caps outlines that appear when you
+ * lean in. Person↔person match edges (seek / why) are the SHARES_VALUE pattern —
+ * far too dense for physics, so they are kept OUT of the simulation and painted
+ * by hand for the selected person only.
  *
- * Laws honoured here:
- *  - colours come from passport/tokens.css ONLY — the canvas reads them with
- *    getComputedStyle (app/universe/lib/palette.ts convention). No invented hexes.
- *  - a claim without a receipt is a bug: connection rows open the verbatim quotes
- *    from the person record. If the record is missing we say so in the modal and
- *    never stamp "RECEIPT RESOLVED".
- *  - the dragged CSV never leaves the browser: papaparse runs client-side and the
- *    only thing we do with it is check it IS this party's guest list.
+ * What is NEW here is only the data: 312 real signups, their real answers, and
+ * the receipt behind every claim.
  *
- * Imperative canvas loop with refs (no per-frame React state), exactly like
- * app/universe/UniverseGraph.tsx.
+ * Laws honoured:
+ *  - colours come from passport/tokens.css ONLY, read with getComputedStyle
+ *    (the app/universe/lib/palette.ts convention, kept local so /graph imports
+ *    nothing across window boundaries). No invented hexes.
+ *  - a claim without a receipt is a bug: every connection row opens the verbatim
+ *    quotes from the person record, and the modal names which of the four
+ *    provenance states actually happened — it never stamps "RECEIPT RESOLVED"
+ *    over a record that did not load.
+ *  - the dragged CSV never leaves the browser: papaparse runs client-side and
+ *    the only thing we do with it is check it IS this party's guest list.
  */
 
+import dynamic from "next/dynamic";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { ForceGraphMethods, LinkObject, NodeObject } from "react-force-graph-2d";
+
 import styles from "./graph.module.css";
+import { verifyGuestList, type CsvVerdict } from "./verify";
 
 /* ============================================================ the contract */
 
-type Lens = "web" | "why" | "seek";
 type EdgeType = "school" | "company" | "why" | "seek";
 
 interface GNode {
@@ -43,7 +52,9 @@ interface GNode {
   impact: string | null;
   asp: string | null;
   deg: number;
-  pos: Partial<Record<Lens, [number, number]>>;
+  /** baked per-lens positions from the emitter — deliberately unused: this room
+   *  is a live force layout, exactly like the Universe's. */
+  pos?: Record<string, [number, number]>;
 }
 
 interface GEdge {
@@ -108,31 +119,39 @@ interface PersonRecord {
 
 interface Tokens {
   spectrum: string[];
+  canvasBg: string;
   ink: string;
   muted: string;
   faint: string;
   border: string;
   affinity: string;
+  affinityInk: string;
+  ringStrong: string;
+  orbTint: string;
   sans: string;
   mono: string;
 }
 
 // Mirrors the shipped values in passport/tokens.css so the canvas still renders
-// if the stylesheet is slow/absent (same guarantee palette.ts makes).
+// if the stylesheet is slow/absent (the same guarantee palette.ts makes).
 const FALLBACK_TOKENS: Tokens = {
   spectrum: ["#e3aab2", "#e0a877", "#d9b96e", "#a8c18e", "#94b0d4", "#7f9fc9", "#c9b6d9", "#9fc4bb"],
+  canvasBg: "#f7f6f3",
   ink: "#1b1b1f",
   muted: "#6b6b74",
   faint: "#9a9aa2",
   border: "#e7e4de",
   affinity: "#e7e5e0",
+  affinityInk: "#7a7873",
+  ringStrong: "rgba(27,27,31,0.55)",
+  orbTint: "#c9c6ff",
   sans: "ui-sans-serif, system-ui, sans-serif",
   mono: "ui-monospace, Menlo, monospace",
 };
 
-function readTokens(el: HTMLElement | null): Tokens {
-  if (typeof document === "undefined" || !el) return FALLBACK_TOKENS;
-  const s = getComputedStyle(el);
+function readTokens(): Tokens {
+  if (typeof document === "undefined") return FALLBACK_TOKENS;
+  const s = getComputedStyle(document.documentElement);
   const read = (name: string, fb: string) => {
     const v = s.getPropertyValue(name).trim();
     return v.length > 0 ? v : fb;
@@ -144,23 +163,47 @@ function readTokens(el: HTMLElement | null): Tokens {
   }
   return {
     spectrum: spectrum.length > 0 ? spectrum : FALLBACK_TOKENS.spectrum,
+    canvasBg: read("--usp-canvas-bg", FALLBACK_TOKENS.canvasBg),
     ink: read("--usp-ink", FALLBACK_TOKENS.ink),
     muted: read("--usp-ink-muted", FALLBACK_TOKENS.muted),
     faint: read("--usp-ink-faint", FALLBACK_TOKENS.faint),
     border: read("--usp-border", FALLBACK_TOKENS.border),
     affinity: read("--usp-affinity", FALLBACK_TOKENS.affinity),
+    affinityInk: read("--usp-affinity-ink", FALLBACK_TOKENS.affinityInk),
+    ringStrong: read("--usp-ring-strong", FALLBACK_TOKENS.ringStrong),
+    orbTint: read("--usp-orb-tint", FALLBACK_TOKENS.orbTint),
     sans: read("--usp-font-sans", FALLBACK_TOKENS.sans),
     mono: read("--usp-font-mono", FALLBACK_TOKENS.mono),
   };
 }
 
-/* ================================================================ helpers */
+/** Stable, order-independent hash so a tag always maps to the same spectrum stop. */
+function hashStop(tag: string | null | undefined, spectrum: string[]): string | null {
+  if (!tag) return null;
+  let h = 0;
+  for (let i = 0; i < tag.length; i++) h = (h * 31 + tag.charCodeAt(i)) >>> 0;
+  const pal = spectrum.length > 0 ? spectrum : FALLBACK_TOKENS.spectrum;
+  return pal[h % pal.length];
+}
 
-const LENSES: { key: Lens; label: string; sub: string }[] = [
-  { key: "web", label: "I · The Web", sub: "FIG. 1 — who shares your world · schools solid, companies dashed" },
-  { key: "why", label: "II · Currents", sub: "FIG. 2 — who shares your why · grouped by creative motive · convictions as chips" },
-  { key: "seek", label: "III · The Exchange", sub: "FIG. 3 — who is looking for whom · grouped by craft · warm = toward you" },
-];
+/** Parse a hex/rgb token value into an rgba() string (for halos + hairlines). */
+function withAlpha(color: string, alpha: number): string {
+  const c = color.trim();
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(c);
+  if (hex) {
+    let h = hex[1];
+    if (h.length === 3) h = h.split("").map((ch) => ch + ch).join("");
+    return `rgba(${parseInt(h.slice(0, 2), 16)},${parseInt(h.slice(2, 4), 16)},${parseInt(h.slice(4, 6), 16)},${alpha})`;
+  }
+  const rgb = /^rgba?\(([^)]+)\)$/i.exec(c);
+  if (rgb) {
+    const [r, g, b] = rgb[1].split(",").map((p) => p.trim());
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+  return c;
+}
+
+/* ================================================================ helpers */
 
 const ANSWER_LABEL: Record<string, string> = {
   goal: "ULTIMATE GOAL",
@@ -190,17 +233,12 @@ const TYPE_BADGE: Record<EdgeType, string> = {
 };
 
 const pretty = (s: string) => s.replace(/[_-]+/g, " ");
-const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
-
-function posOf(n: GNode, lens: Lens): [number, number] {
-  return n.pos?.[lens] ?? n.pos?.web ?? [0, 0];
-}
 
 function escapeRe(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-/** Port of the prototype's `hl()` — but as data, so React does the escaping. */
+/** Highlight the matched words inside a verbatim quote — as data, so React escapes. */
 function highlightParts(text: string, via?: string): { t: string; on: boolean }[] {
   if (!via) return [{ t: text, on: false }];
   const words = via
@@ -286,23 +324,583 @@ export function fieldFallback(n: GNode, type: EdgeType): { field: string; quote:
   return craft ? { field: "craft", quote: craft } : null;
 }
 
-/* ------------------------------------------------- the caption strip
- * The strip must never wait on an unrelated re-render to fill in: these two
- * helpers are what the component uses to decide "fetch this record now" and
- * "what does the strip say with what I have".
+/* ==================================================== the room (bipartite)
+ * Exactly the Universe's room shape: people + the things they share, all in ONE
+ * layout. A hub only exists when it actually gathers people (a school of one is
+ * not a room), freelancers get no company link, and convictions are anchors that
+ * never paint as dots — they paint as stamps.
  */
 
-export function needsRecordFetch(lens: Lens, id: string | null, cached: (id: string) => boolean): boolean {
-  return lens === "why" && Boolean(id) && !cached(id as string);
+type RoomNodeType = "Person" | "School" | "Company" | "Craft" | "Conviction";
+type RoomLinkKind = "school" | "company" | "craft" | "conviction";
+
+interface RoomNode {
+  id: string;
+  type: RoomNodeType;
+  label: string;
+  /** the Universe's line2, on the canvas: a person's craft (· class year when the
+   *  data ever carries one — graph.json has no year field today). */
+  sub?: string;
+  /** person: their motive hue · conviction: the tag's hue · hub: null (neutral) */
+  hue: string | null;
+  /** person: their edge degree · hub/conviction: how many people it holds */
+  weight: number;
+  memberIds?: string[];
+  x?: number;
+  y?: number;
 }
 
-export function stripQuoteFrom(record: PersonRecord | null | undefined): string | null {
-  return record?.answers?.goal ?? record?.answers?.drew ?? null;
+interface RoomLink {
+  source: string | RoomNode;
+  target: string | RoomNode;
+  kind: RoomLinkKind;
 }
 
-/* --------------------------------------------- Step 0: CSV verification (pure logic in ./verify) */
+interface Room {
+  nodes: RoomNode[];
+  links: RoomLink[];
+  byId: Map<string, RoomNode>;
+  /** node id → the ids it is linked to in the layout (the ego web) */
+  adjacency: Map<string, string[]>;
+  counts: { schools: number; companies: number; crafts: number; convictions: number };
+}
 
-import { verifyGuestList, type CsvVerdict } from "./verify";
+const MIN_SCHOOL = 2;
+const MIN_COMPANY = 2;
+const MIN_CRAFT = 4;
+const MIN_CONVICTION = 3;
+
+function groupPeople(
+  people: GNode[],
+  pick: (n: GNode) => string | null | undefined,
+  min: number,
+): [string, GNode[]][] {
+  const m = new Map<string, GNode[]>();
+  for (const n of people) {
+    const raw = pick(n);
+    const v = typeof raw === "string" ? raw.trim() : "";
+    if (!v) continue;
+    const list = m.get(v);
+    if (list) list.push(n);
+    else m.set(v, [n]);
+  }
+  return [...m.entries()].filter(([, list]) => list.length >= min).sort((a, b) => b[1].length - a[1].length);
+}
+
+function buildRoom(graph: Graph, spectrum: string[]): Room {
+  const nodes: RoomNode[] = [];
+  const links: RoomLink[] = [];
+  const adjacency = new Map<string, string[]>();
+
+  for (const p of graph.nodes) {
+    nodes.push({
+      id: p.id,
+      type: "Person",
+      label: p.name,
+      sub: p.asp ? pretty(p.asp) : undefined,
+      hue: hashStop(p.motive, spectrum),
+      weight: p.deg,
+    });
+    adjacency.set(p.id, []);
+  }
+
+  const addHub = (
+    id: string,
+    type: RoomNodeType,
+    label: string,
+    hue: string | null,
+    members: GNode[],
+    kind: RoomLinkKind,
+  ) => {
+    nodes.push({ id, type, label, hue, weight: members.length, memberIds: members.map((m) => m.id) });
+    adjacency.set(id, []);
+    for (const m of members) {
+      links.push({ source: m.id, target: id, kind });
+      adjacency.get(m.id)?.push(id);
+      adjacency.get(id)?.push(m.id);
+    }
+  };
+
+  const schools = groupPeople(graph.nodes, (n) => n.school, MIN_SCHOOL);
+  for (const [name, members] of schools) addHub(`school:${name}`, "School", name, null, members, "school");
+
+  // freelancers get no company link — "independent" is not a room you share
+  const companies = groupPeople(graph.nodes, (n) => (n.free ? null : n.company), MIN_COMPANY);
+  for (const [name, members] of companies) addHub(`company:${name}`, "Company", name, null, members, "company");
+
+  const crafts = groupPeople(graph.nodes, (n) => n.asp, MIN_CRAFT);
+  for (const [asp, members] of crafts) addHub(`craft:${asp}`, "Craft", pretty(asp), null, members, "craft");
+
+  // convictions: anchors in the layout (weak pull, like the Universe's IN_CLUSTER),
+  // painted as stamps rather than dots.
+  let convictions = 0;
+  for (const field of ["mission", "impact"] as const) {
+    for (const [tag, members] of groupPeople(graph.nodes, (n) => n[field], MIN_CONVICTION)) {
+      addHub(`conviction:${field}:${tag}`, "Conviction", pretty(tag), hashStop(tag, spectrum), members, "conviction");
+      convictions += 1;
+    }
+  }
+
+  return {
+    nodes,
+    links,
+    byId: new Map(nodes.map((n) => [n.id, n])),
+    adjacency,
+    counts: { schools: schools.length, companies: companies.length, crafts: crafts.length, convictions },
+  };
+}
+
+/* ================================================= the canvas (force room) */
+
+type FGNode = NodeObject<RoomNode>;
+type FGLink = LinkObject<RoomNode, RoomLink>;
+
+interface FGProps {
+  ref?: React.Ref<ForceGraphMethods<RoomNode, RoomLink> | undefined>;
+  graphData: { nodes: FGNode[]; links: FGLink[] };
+  width?: number;
+  height?: number;
+  backgroundColor?: string;
+  nodeRelSize?: number;
+  nodeLabel?: (node: FGNode) => string;
+  nodeCanvasObject?: (node: FGNode, ctx: CanvasRenderingContext2D, scale: number) => void;
+  nodePointerAreaPaint?: (node: FGNode, color: string, ctx: CanvasRenderingContext2D, scale: number) => void;
+  linkColor?: (link: FGLink) => string;
+  linkWidth?: (link: FGLink) => number;
+  linkLineDash?: (link: FGLink) => number[] | null;
+  onNodeClick?: (node: FGNode) => void;
+  onBackgroundClick?: () => void;
+  onRenderFramePre?: (ctx: CanvasRenderingContext2D, scale: number) => void;
+  onRenderFramePost?: (ctx: CanvasRenderingContext2D, scale: number) => void;
+  onEngineStop?: () => void;
+  autoPauseRedraw?: boolean;
+  d3VelocityDecay?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  enableNodeDrag?: boolean;
+}
+
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
+  ssr: false,
+}) as unknown as React.ComponentType<FGProps>;
+
+// Force tuning, straight from the Universe: hub spokes stay short (the fine web);
+// conviction ties are longer and weak so the clouds read as tendencies, not silos.
+const LINK_DISTANCE: Record<RoomLinkKind, number> = {
+  school: 28,
+  company: 28,
+  craft: 32,
+  conviction: 40,
+};
+const CONVICTION_STRENGTH = 0.15;
+const CHARGE_STRENGTH = -28;
+/** convictions name themselves only once you lean in (progressive disclosure) */
+const STAMP_ZOOM = 1.15;
+
+interface CanvasProps {
+  room: Room;
+  /** person↔person seek/why edges of the selected person — painted, never simulated */
+  matchEdges: GEdge[];
+  selectedId: string | null;
+  /** a search hit asks the camera to fly; the nonce lets the same person re-focus */
+  focusReq: { id: string; n: number } | null;
+  matchedIds: Set<string> | null;
+  tokens: Tokens;
+  onSelect: (node: RoomNode | null) => void;
+}
+
+function GraphRoom({ room, matchEdges, selectedId, focusReq, matchedIds, tokens, onSelect }: CanvasProps) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
+  const fgRef = useRef<ForceGraphMethods<RoomNode, RoomLink> | undefined>(undefined);
+  const [size, setSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+
+  // Stable copy: force-graph mutates x/y/source/target in place and must not
+  // corrupt the room the panel reads from.
+  const graphData = useMemo(
+    () => ({
+      nodes: room.nodes.map((n) => ({ ...n })) as FGNode[],
+      links: room.links.map((l) => ({ ...l })) as FGLink[],
+    }),
+    [room],
+  );
+
+  const simById = useMemo(() => new Map(graphData.nodes.map((n) => [String(n.id), n])), [graphData]);
+  const stampNodes = useMemo(() => graphData.nodes.filter((n) => n.type === "Conviction"), [graphData]);
+
+  // top people by degree — the only names shown at mid-zoom (progressive disclosure)
+  const labelElect = useMemo(
+    () =>
+      new Set(
+        room.nodes
+          .filter((n) => n.type === "Person")
+          .sort((a, b) => b.weight - a.weight)
+          .slice(0, 24)
+          .map((n) => n.id),
+      ),
+    [room],
+  );
+
+  // container measurement
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // ---- force tuning ----
+  // ForceGraph2D is dynamically imported and only mounts once the host is
+  // measured, so fgRef.current is not there on the first effect run — retry on
+  // rAF until it is, then shape the layout and reheat.
+  useEffect(() => {
+    let raf = 0;
+    let cancelled = false;
+
+    const endId = (e: FGLink["source"]): string => String(typeof e === "object" && e !== null ? (e as FGNode).id : e);
+    const degree = new Map<string, number>();
+    for (const l of graphData.links) {
+      for (const k of [endId(l.source), endId(l.target)]) degree.set(k, (degree.get(k) ?? 0) + 1);
+    }
+
+    const tune = () => {
+      if (cancelled) return;
+      const fg = fgRef.current;
+      if (!fg) {
+        raf = requestAnimationFrame(tune);
+        return;
+      }
+      const linkForce = fg.d3Force("link");
+      if (linkForce) {
+        linkForce.distance((l: FGLink) => LINK_DISTANCE[l.kind] ?? 30);
+        linkForce.strength((l: FGLink) => {
+          if (l.kind === "conviction") return CONVICTION_STRENGTH;
+          // d3's default heuristic — hubs with many spokes pull each spoke less,
+          // which is what keeps the attribute mesh fine and organic.
+          const s = degree.get(endId(l.source)) ?? 1;
+          const t = degree.get(endId(l.target)) ?? 1;
+          return 1 / Math.min(s, t);
+        });
+      }
+      const charge = fg.d3Force("charge");
+      if (charge) charge.strength(CHARGE_STRENGTH);
+      fg.d3ReheatSimulation();
+    };
+
+    tune();
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
+  }, [graphData]);
+
+  // fly to a searched name
+  useEffect(() => {
+    if (!focusReq) return;
+    const fg = fgRef.current;
+    const n = simById.get(focusReq.id);
+    if (!fg || !n || typeof n.x !== "number" || typeof n.y !== "number") return;
+    fg.centerAt(n.x, n.y, 700);
+    fg.zoom(2.4, 700);
+  }, [focusReq, simById]);
+
+  // the lit set: the selected node, its hubs, and (for a person) their match-mates
+  const egoSet = useMemo(() => {
+    if (!selectedId) return null;
+    const set = new Set<string>([selectedId, ...(room.adjacency.get(selectedId) ?? [])]);
+    for (const e of matchEdges) set.add(e.s === selectedId ? e.t : e.s);
+    return set;
+  }, [selectedId, room, matchEdges]);
+
+  const radiusOf = useCallback((n: FGNode): number => {
+    if (n.type === "Person") return 5;
+    return Math.min(2.8 + Math.sqrt(Math.max(n.weight, 1)) * 1.15, 16);
+  }, []);
+
+  // ---- the selected person's match web + halo (painted, never simulated) ----
+  const onRenderFramePre = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      if (!selectedId) return;
+      const sel = simById.get(selectedId);
+      if (!sel || typeof sel.x !== "number" || typeof sel.y !== "number") return;
+      const spec = tokens.spectrum;
+      ctx.save();
+      for (const e of matchEdges) {
+        const otherId = e.s === selectedId ? e.t : e.s;
+        const other = simById.get(otherId);
+        if (!other || typeof other.x !== "number" || typeof other.y !== "number") continue;
+        const inbound = e.type === "seek" && e.t === selectedId;
+        const hue =
+          e.type === "why"
+            ? spec[6] ?? tokens.ink
+            : inbound
+              ? spec[1] ?? tokens.ink // warm: someone is looking for THEM
+              : spec[5] ?? tokens.ink; // cool: they are the one looking
+        ctx.strokeStyle = withAlpha(hue, e.type === "why" ? 0.55 : 0.8);
+        ctx.lineWidth = e.m ? 1.8 : e.type === "why" ? 0.8 : 1.1;
+        ctx.beginPath();
+        ctx.moveTo(sel.x, sel.y);
+        if (e.type === "seek") {
+          // a slight arc, so inbound and outbound never sit on top of each other
+          const mx = (sel.x + other.x) / 2 + (other.y - sel.y) * 0.12;
+          const my = (sel.y + other.y) / 2 - (other.x - sel.x) * 0.12;
+          ctx.quadraticCurveTo(mx, my, other.x, other.y);
+        } else {
+          ctx.lineTo(other.x, other.y);
+        }
+        ctx.stroke();
+      }
+      const R = 16;
+      const g = ctx.createRadialGradient(sel.x, sel.y, 0, sel.x, sel.y, R);
+      g.addColorStop(0, withAlpha(tokens.ringStrong, 0.35));
+      g.addColorStop(1, withAlpha(tokens.ringStrong, 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(sel.x, sel.y, R, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    },
+    [matchEdges, selectedId, simById, tokens],
+  );
+
+  // ---- node painting ----
+  const nodeCanvasObject = useCallback(
+    (node: FGNode, ctx: CanvasRenderingContext2D, scale: number) => {
+      if (node.type === "Conviction") return; // stamps are painted after the frame
+      const x = node.x ?? 0;
+      const y = node.y ?? 0;
+      const r = radiusOf(node);
+      const selected = node.id === selectedId;
+      const dimmed = egoSet ? !egoSet.has(String(node.id)) : false;
+      ctx.globalAlpha = dimmed ? 0.12 : 1;
+
+      if (node.type === "Person") {
+        // colour IS the relationship mapping: a person wears their creative
+        // motive as a flat, confident fill — no glow, just ink-ringed colour.
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = withAlpha(node.hue ?? tokens.orbTint, selected ? 1 : 0.88);
+        ctx.fill();
+        ctx.lineWidth = selected ? 1.4 : 0.6;
+        ctx.strokeStyle = selected ? tokens.ringStrong : withAlpha(tokens.ink, 0.35);
+        ctx.stroke();
+      } else {
+        // school / company / craft: quiet neutral anchors
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = withAlpha(tokens.affinity, 0.9);
+        ctx.fill();
+        ctx.lineWidth = selected ? 1.2 : 0.4;
+        ctx.strokeStyle = selected ? tokens.ringStrong : withAlpha(tokens.affinityInk, 0.4);
+        ctx.stroke();
+        // the number the size speaks for
+        if (node.weight >= 4 && r >= 6.5) {
+          ctx.font = `600 ${Math.max(r * 0.9, 5)}px ${tokens.sans}`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = withAlpha(tokens.ink, 0.75);
+          ctx.fillText(String(node.weight), x, y);
+        }
+      }
+
+      const matched = (matchedIds?.has(String(node.id)) ?? false) || (selected && node.type === "Person");
+      const showLabel =
+        selected ||
+        (node.type === "Person" && ((scale > 0.95 && labelElect.has(String(node.id))) || scale > 1.35)) ||
+        (node.type !== "Person" && scale > 1.7);
+      if (!showLabel && !matched) {
+        ctx.globalAlpha = 1;
+        return;
+      }
+
+      // the found-you moment reads from across the room: matched names render
+      // ~2.2x, ride a slow wave, and the dot wears a breathing ring.
+      const fontPx = (matched ? 22 : node.type === "Person" ? 10 : 8) / scale;
+      ctx.font = `${matched ? 700 : 420} ${fontPx}px ${tokens.sans}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      const labelY = y + r + 1.5 / scale;
+      ctx.lineJoin = "round";
+      ctx.lineWidth = (matched ? 5 : 3) / scale;
+      ctx.strokeStyle = withAlpha(tokens.canvasBg, selected || matched ? 0.95 : 0.7);
+      if (matched) {
+        const pulse = 1 + Math.sin(performance.now() / 300) * 0.25;
+        ctx.beginPath();
+        ctx.arc(x, y, r + 4 * pulse, 0, Math.PI * 2);
+        ctx.strokeStyle = withAlpha(tokens.spectrum[3] ?? tokens.ink, 0.65);
+        ctx.lineWidth = 1.6 / scale;
+        ctx.stroke();
+        ctx.strokeStyle = withAlpha(tokens.canvasBg, 0.95);
+        ctx.lineWidth = 5 / scale;
+        // each letter rides the wave, the spectrum blended across the whole name
+        const t = performance.now();
+        const letters = (node.label ?? "").split("");
+        const widths = letters.map((ch) => ctx.measureText(ch).width);
+        const total = widths.reduce((a, b) => a + b, 0);
+        const grad = ctx.createLinearGradient(x - total / 2, 0, x + total / 2, 0);
+        const spec = tokens.spectrum;
+        const stops = [spec[0], spec[3], spec[4], spec[5] ?? spec[0]].filter(Boolean);
+        stops.forEach((c, si) => grad.addColorStop(si / Math.max(1, stops.length - 1), c));
+        ctx.textAlign = "left";
+        let cx = x - total / 2;
+        letters.forEach((ch, li) => {
+          const dy = Math.sin(t / 260 + li * 0.6) * (3.4 / scale);
+          ctx.strokeText(ch, cx, labelY + dy);
+          ctx.fillStyle = grad;
+          ctx.fillText(ch, cx, labelY + dy);
+          cx += widths[li];
+        });
+        ctx.textAlign = "center";
+      } else {
+        ctx.strokeText(node.label, x, labelY);
+        ctx.fillStyle = node.type === "Person" ? tokens.ink : tokens.affinityInk;
+        ctx.fillText(node.label, x, labelY);
+      }
+      // the line2 pattern: a person's craft rides under their name whenever the
+      // name shows — same threshold, one tier quieter (the hub-label size/ink).
+      if (node.type === "Person" && node.sub) {
+        const subPx = 8 / scale;
+        ctx.font = `420 ${subPx}px ${tokens.sans}`;
+        ctx.textAlign = "center";
+        ctx.lineWidth = 3 / scale;
+        ctx.strokeStyle = withAlpha(tokens.canvasBg, 0.85);
+        const subY = labelY + fontPx + 1.5 / scale;
+        ctx.strokeText(node.sub, x, subY);
+        ctx.fillStyle = tokens.affinityInk;
+        ctx.fillText(node.sub, x, subY);
+      }
+      ctx.globalAlpha = 1;
+    },
+    [egoSet, labelElect, matchedIds, radiusOf, selectedId, tokens],
+  );
+
+  // ---- conviction stamps: tilted mono small-caps outlines at the anchors ----
+  const onRenderFramePost = useCallback(
+    (ctx: CanvasRenderingContext2D, scale: number) => {
+      if (scale <= STAMP_ZOOM) return;
+      const fontPx = 10 / scale;
+      ctx.save();
+      ctx.font = `600 ${fontPx}px ${tokens.mono}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const s of stampNodes) {
+        if (typeof s.x !== "number" || typeof s.y !== "number") continue;
+        const dimmed = egoSet ? !egoSet.has(String(s.id)) : false;
+        ctx.globalAlpha = dimmed ? 0.16 : 0.9;
+        const text = `${s.label.toUpperCase()} · ${s.weight}`;
+        const w = ctx.measureText(text).width;
+        const padX = 6 / scale;
+        const padY = 4 / scale;
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(-0.052);
+        ctx.fillStyle = withAlpha(tokens.canvasBg, 0.72);
+        ctx.beginPath();
+        ctx.roundRect(-w / 2 - padX, -fontPx / 2 - padY, w + padX * 2, fontPx + padY * 2, 4 / scale);
+        ctx.fill();
+        ctx.strokeStyle = withAlpha(s.hue ?? tokens.ink, 0.75);
+        ctx.lineWidth = 1 / scale;
+        ctx.stroke();
+        ctx.fillStyle = withAlpha(tokens.ink, 0.8);
+        ctx.fillText(text, 0, 0);
+        ctx.restore();
+      }
+      ctx.restore();
+    },
+    [egoSet, stampNodes, tokens],
+  );
+
+  const nodePointerAreaPaint = useCallback(
+    (node: FGNode, color: string, ctx: CanvasRenderingContext2D) => {
+      if (node.type === "Conviction") return; // stamps are scenery, not targets
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(node.x ?? 0, node.y ?? 0, radiusOf(node) + 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    },
+    [radiusOf],
+  );
+
+  const isSelectedEnd = useCallback(
+    (link: FGLink) => {
+      if (!selectedId) return false;
+      const a = link.source as FGNode | string;
+      const b = link.target as FGNode | string;
+      return (
+        String(typeof a === "object" ? a.id : a) === selectedId ||
+        String(typeof b === "object" ? b.id : b) === selectedId
+      );
+    },
+    [selectedId],
+  );
+
+  const linkColor = useCallback(
+    (link: FGLink) => {
+      const lit = isSelectedEnd(link);
+      if (!lit && egoSet) return withAlpha(tokens.ink, 0.03); // someone selected: the rest is paper
+      if (!lit) return withAlpha(tokens.ink, link.kind === "conviction" ? 0.04 : 0.08);
+      const spec = tokens.spectrum;
+      switch (link.kind) {
+        case "school":
+          return withAlpha(spec[3] ?? tokens.ink, 0.85);
+        case "company":
+          return withAlpha(spec[0] ?? tokens.ink, 0.85);
+        case "craft":
+          return withAlpha(spec[4] ?? tokens.ink, 0.85);
+        default:
+          return withAlpha(spec[6] ?? tokens.ink, 0.6);
+      }
+    },
+    [egoSet, isSelectedEnd, tokens],
+  );
+
+  const linkWidth = useCallback((link: FGLink) => (isSelectedEnd(link) ? 1.6 : 0.5), [isSelectedEnd]);
+  const linkLineDash = useCallback(
+    (link: FGLink) => (link.kind === "conviction" ? [2, 3] : link.kind === "company" ? [3, 4] : null),
+    [],
+  );
+
+  const handleNodeClick = useCallback((node: FGNode) => onSelect(node as RoomNode), [onSelect]);
+  const handleBgClick = useCallback(() => onSelect(null), [onSelect]);
+  const onEngineStop = useCallback(() => {
+    fgRef.current?.zoomToFit?.(500, 70);
+  }, []);
+
+  return (
+    <div ref={hostRef} className={styles.canvasHost}>
+      {size.w > 0 && size.h > 0 && (
+        <ForceGraph2D
+          ref={fgRef}
+          width={size.w}
+          height={size.h}
+          backgroundColor={tokens.canvasBg}
+          graphData={graphData}
+          nodeRelSize={5}
+          nodeLabel={(n) => n.label}
+          nodeCanvasObject={nodeCanvasObject}
+          nodePointerAreaPaint={nodePointerAreaPaint}
+          linkColor={linkColor}
+          linkWidth={linkWidth}
+          linkLineDash={linkLineDash}
+          onNodeClick={handleNodeClick}
+          onBackgroundClick={handleBgClick}
+          onRenderFramePre={onRenderFramePre}
+          onRenderFramePost={onRenderFramePost}
+          onEngineStop={onEngineStop}
+          autoPauseRedraw={false}
+          d3VelocityDecay={0.32}
+          minZoom={0.4}
+          maxZoom={12}
+          enableNodeDrag
+        />
+      )}
+    </div>
+  );
+}
+
+/* --------------------------------------------- Step 0: CSV verification */
 
 interface Beat {
   label: string;
@@ -396,13 +994,12 @@ interface ConnRow {
 }
 
 export default function GraphLab() {
-  const shellRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   /* ---- data ---- */
   const [graph, setGraph] = useState<Graph | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const graphRef = useRef<Graph | null>(null);
 
   /* ---- entry theatre ---- */
   const [phase, setPhase] = useState<Phase | null>(null); // null until we know
@@ -415,52 +1012,20 @@ export default function GraphLab() {
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   /* ---- room state ---- */
-  const [lens, setLens] = useState<Lens>("web");
-  const [selId, setSelId] = useState<string | null>(null);
-  const [hoverId, setHoverId] = useState<string | null>(null);
-  const [chip, setChip] = useState<{ field: "mission" | "impact"; tag: string } | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selRef = useRef<string | null>(null);
   const [query, setQuery] = useState("");
+  const [focusReq, setFocusReq] = useState<{ id: string; n: number } | null>(null);
   const [record, setRecord] = useState<PersonRecord | null>(null);
-  const [recordState, setRecordState] = useState<"idle" | "loading" | "ok" | "missing">("idle");
+  const [recordState, setRecordState] = useState<RecordState>("idle");
   const [receipt, setReceipt] = useState<ReceiptView | null>(null);
-  /** bumped whenever a person record lands in the cache (the cache is a ref) */
-  const [recordTick, setRecordTick] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  /* ---- refs the raf loop reads (never React state per frame) ---- */
-  const graphRef = useRef<Graph | null>(null);
-  const lensRef = useRef<Lens>("web");
-  const selRef = useRef<string | null>(null);
-  const hoverRef = useRef<string | null>(null);
-  const chipRef = useRef<{ field: "mission" | "impact"; tag: string } | null>(null);
-  const searchSetRef = useRef<Set<string> | null>(null);
-  const tokensRef = useRef<Tokens>(FALLBACK_TOKENS);
-  const camRef = useRef({ k: 1, x: 0, y: 0 });
-  const camFromRef = useRef({ k: 1, x: 0, y: 0 });
-  const camToRef = useRef({ k: 1, x: 0, y: 0 });
-  const tweenRef = useRef(1);
-  const fromPosRef = useRef<Map<string, [number, number]>>(new Map());
-  const drawPosRef = useRef<Map<string, [number, number]>>(new Map());
-  const sizeRef = useRef({ w: 0, h: 0 });
-  const stampsRef = useRef<{ label: string; n: number; x: number; y: number }[]>([]);
-  const userMovedRef = useRef(false);
   const recordCache = useRef<Map<string, PersonRecord | null>>(new Map());
   const inFlightRef = useRef<Set<string>>(new Set());
-  const hoverFetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const phaseRef = useRef<Phase | null>(null);
-
-  useEffect(() => {
-    phaseRef.current = phase;
-  }, [phase]);
 
   /* ---- Teri's tokens, read once (client-only component: safe at init) ---- */
-  const [tokens] = useState<Tokens>(() =>
-    readTokens(typeof document === "undefined" ? null : document.documentElement),
-  );
-  useEffect(() => {
-    tokensRef.current = tokens;
-  }, [tokens]);
+  const [tokens] = useState<Tokens>(() => readTokens());
 
   /* ------------------------------------------------------- derived data */
 
@@ -480,20 +1045,11 @@ export default function GraphLab() {
     return m;
   }, [graph]);
 
-  const motives = useMemo(() => {
-    const s = new Set<string>();
-    for (const n of graph?.nodes ?? []) if (n.motive) s.add(n.motive);
-    return [...s].sort();
-  }, [graph]);
+  const room = useMemo(() => (graph ? buildRoom(graph, tokens.spectrum) : null), [graph, tokens]);
 
   const hueOf = useCallback(
-    (n: GNode | null | undefined): string => {
-      const pal = tokens.spectrum;
-      if (!n?.motive) return tokens.affinity;
-      const i = motives.indexOf(n.motive);
-      return pal[(i < 0 ? 0 : i) % pal.length];
-    },
-    [motives, tokens],
+    (n: GNode | null | undefined): string => hashStop(n?.motive, tokens.spectrum) ?? tokens.orbTint,
+    [tokens],
   );
 
   const groupCounts = useMemo(() => {
@@ -506,48 +1062,16 @@ export default function GraphLab() {
     return { schools, companies };
   }, [graph]);
 
-  const chipList = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const n of graph?.nodes ?? []) {
-      if (n.mission) counts.set(`mission|${n.mission}`, (counts.get(`mission|${n.mission}`) ?? 0) + 1);
-      if (n.impact) counts.set(`impact|${n.impact}`, (counts.get(`impact|${n.impact}`) ?? 0) + 1);
-    }
-    return [...counts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 7)
-      .map(([key, n], i) => {
-        const [field, tag] = key.split("|");
-        return { field: field as "mission" | "impact", tag, n, i };
-      });
-  }, [graph]);
+  const selNode = selectedId ? byId.get(selectedId) ?? null : null;
+  const selHub = selectedId && !selNode ? room?.byId.get(selectedId) ?? null : null;
 
-  const stamps = useMemo(() => {
-    if (!graph || lens === "web") return [] as { label: string; n: number; x: number; y: number }[];
-    const key = lens === "why" ? "motive" : "asp";
-    const groups = new Map<string, GNode[]>();
-    for (const n of graph.nodes) {
-      const v = (n[key as "motive" | "asp"] ?? "").trim();
-      if (!v) continue;
-      const arr = groups.get(v) ?? [];
-      arr.push(n);
-      groups.set(v, arr);
-    }
-    const out: { label: string; n: number; x: number; y: number }[] = [];
-    for (const [label, members] of groups) {
-      let sx = 0;
-      let top = Infinity;
-      for (const m of members) {
-        const [x, y] = posOf(m, lens);
-        sx += x;
-        if (y < top) top = y;
-      }
-      out.push({ label: pretty(label), n: members.length, x: sx / members.length, y: top - 18 });
-    }
-    return out;
-  }, [graph, lens]);
-
-  const selNode = selId ? byId.get(selId) ?? null : null;
-  const hoverNode = hoverId ? byId.get(hoverId) ?? null : null;
+  /** the selected person's person↔person match edges: painted, never simulated */
+  const matchEdges = useMemo(() => {
+    if (!graph || !selNode || !selectedId) return [] as GEdge[];
+    return graph.edges.filter(
+      (e) => (e.type === "seek" || e.type === "why") && (e.s === selectedId || e.t === selectedId),
+    );
+  }, [graph, selNode, selectedId]);
 
   const searchHits = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -563,9 +1087,10 @@ export default function GraphLab() {
       .slice(0, 6);
   }, [query, graph]);
 
-  useEffect(() => {
-    searchSetRef.current = searchHits.length > 0 ? new Set(searchHits.map((h) => h.id)) : null;
-  }, [searchHits]);
+  const matchedIds = useMemo(
+    () => (searchHits.length > 0 ? new Set(searchHits.map((h) => h.id)) : null),
+    [searchHits],
+  );
 
   /* -------------------------------------------------------- data + entry */
 
@@ -577,7 +1102,9 @@ export default function GraphLab() {
         if (!res.ok) throw new Error(`graph.json → HTTP ${res.status}`);
         const data = (await res.json()) as Graph;
         if (cancelled) return;
-        if (!Array.isArray(data.nodes) || !Array.isArray(data.edges)) throw new Error("graph.json is missing nodes/edges");
+        if (!Array.isArray(data.nodes) || !Array.isArray(data.edges)) {
+          throw new Error("graph.json is missing nodes/edges");
+        }
         graphRef.current = data;
         setGraph(data);
       } catch (err) {
@@ -608,7 +1135,6 @@ export default function GraphLab() {
     return () => {
       timers.forEach(clearTimeout);
       if (toastTimer.current) clearTimeout(toastTimer.current);
-      if (hoverFetchTimer.current) clearTimeout(hoverFetchTimer.current);
     };
   }, []);
 
@@ -689,7 +1215,7 @@ export default function GraphLab() {
       }
       return;
     }
-    if (inFlightRef.current.has(id)) return; // hover-dwell and the strip can both ask
+    if (inFlightRef.current.has(id)) return;
     inFlightRef.current.add(id);
     if (selRef.current === id) setRecordState("loading");
     try {
@@ -709,14 +1235,11 @@ export default function GraphLab() {
       }
     } finally {
       inFlightRef.current.delete(id);
-      // the cache is a ref: tick so anything reading it (the caption strip)
-      // re-renders the moment a record lands, not on the next unrelated render
-      setRecordTick((t) => t + 1);
     }
   }, []);
 
-  const select = useCallback(
-    (id: string, opts?: { zoom?: boolean }) => {
+  const selectPerson = useCallback(
+    (id: string) => {
       if (!graphRef.current) return;
       if (!graphRef.current.nodes.some((n) => n.id === id)) {
         // fail loud, never silently: a deep link to nobody says so
@@ -724,27 +1247,15 @@ export default function GraphLab() {
         return;
       }
       selRef.current = id;
-      chipRef.current = null;
-      setChip(null);
-      setSelId(id);
-      setRecord(recordCache.current.get(id) ?? null);
-      setRecordState(recordCache.current.get(id) ? "ok" : "idle");
+      setSelectedId(id);
+      const cached = recordCache.current.get(id);
+      setRecord(cached ?? null);
+      setRecordState(cached ? "ok" : "idle");
       void loadRecord(id);
       try {
         history.replaceState(null, "", `#${id}`);
       } catch {
         /* non-fatal */
-      }
-      if (opts?.zoom) {
-        const node = graphRef.current.nodes.find((n) => n.id === id);
-        if (node) {
-          const [x, y] = posOf(node, lensRef.current);
-          camRef.current = { k: Math.max(camRef.current.k, 1.6), x, y };
-          camToRef.current = { ...camRef.current };
-          camFromRef.current = { ...camRef.current };
-          tweenRef.current = 1;
-          userMovedRef.current = true;
-        }
       }
     },
     [loadRecord, showToast],
@@ -752,7 +1263,7 @@ export default function GraphLab() {
 
   const deselect = useCallback(() => {
     selRef.current = null;
-    setSelId(null);
+    setSelectedId(null);
     setRecord(null);
     setRecordState("idle");
     try {
@@ -762,449 +1273,66 @@ export default function GraphLab() {
     }
   }, []);
 
+  const onSelectNode = useCallback(
+    (node: RoomNode | null) => {
+      if (!node) {
+        deselect();
+        return;
+      }
+      if (node.type === "Person") {
+        selectPerson(node.id);
+        return;
+      }
+      // a hub: the room itself, and everyone standing in it
+      selRef.current = null;
+      setSelectedId(node.id);
+      setRecord(null);
+      setRecordState("idle");
+    },
+    [deselect, selectPerson],
+  );
+
   // hash deep links (initial + back/forward)
   useEffect(() => {
     if (!graph) return;
     const fromHash = () => {
       const id = decodeURIComponent(location.hash.slice(1));
-      if (id) select(id);
+      if (id) selectPerson(id);
     };
     fromHash();
     const onHash = () => fromHash();
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, [graph, select]);
-
-  useEffect(() => {
-    selRef.current = selId;
-  }, [selId]);
-  useEffect(() => {
-    chipRef.current = chip;
-  }, [chip]);
-  useEffect(() => {
-    hoverRef.current = hoverId;
-  }, [hoverId]);
-
-  /* ------------------------------------------------------- lens + camera */
-
-  const fitFor = useCallback((nodes: GNode[], l: Lens, w: number, h: number) => {
-    if (nodes.length === 0 || w === 0 || h === 0) return { k: 1, x: 0, y: 0 };
-    let minX = Infinity;
-    let maxX = -Infinity;
-    let minY = Infinity;
-    let maxY = -Infinity;
-    for (const n of nodes) {
-      const [x, y] = posOf(n, l);
-      if (x < minX) minX = x;
-      if (x > maxX) maxX = x;
-      if (y < minY) minY = y;
-      if (y > maxY) maxY = y;
-    }
-    const spanX = Math.max(maxX - minX, 1);
-    const spanY = Math.max(maxY - minY, 1);
-    const k = clamp(Math.min((w - 120) / spanX, (h - 230) / spanY), 0.22, 2.6);
-    return { k, x: (minX + maxX) / 2, y: (minY + maxY) / 2 + 24 };
-  }, []);
-
-  const switchLens = useCallback(
-    (l: Lens) => {
-      const g = graphRef.current;
-      if (!g) return;
-      // freeze the CURRENT drawn positions as the tween origin
-      const from = new Map<string, [number, number]>();
-      for (const n of g.nodes) {
-        const d = drawPosRef.current.get(n.id) ?? posOf(n, lensRef.current);
-        from.set(n.id, [d[0], d[1]]);
-      }
-      fromPosRef.current = from;
-      lensRef.current = l;
-      setLens(l);
-      const reduced = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-      tweenRef.current = reduced ? 1 : 0;
-      camFromRef.current = { ...camRef.current };
-      camToRef.current = fitFor(g.nodes, l, sizeRef.current.w, sizeRef.current.h);
-      if (reduced) camRef.current = { ...camToRef.current };
-      userMovedRef.current = false;
-      setChip(null);
-      chipRef.current = null;
-    },
-    [fitFor],
-  );
-
-  /* ------------------------------------------------- the canvas raf loop */
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const shell = shellRef.current;
-    if (!canvas || !shell) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    tokensRef.current = readTokens(shell);
-
-    const DPR = Math.min(typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1, 2);
-    const sizeCanvas = () => {
-      const w = shell.clientWidth || window.innerWidth;
-      const h = shell.clientHeight || window.innerHeight;
-      sizeRef.current = { w, h };
-      canvas.width = Math.round(w * DPR);
-      canvas.height = Math.round(h * DPR);
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      const g = graphRef.current;
-      if (g && !userMovedRef.current) {
-        const fit = fitFor(g.nodes, lensRef.current, w, h);
-        camRef.current = { ...fit };
-        camFromRef.current = { ...fit };
-        camToRef.current = { ...fit };
-      }
-    };
-    sizeCanvas();
-    window.addEventListener("resize", sizeCanvas);
-
-    let raf = 0;
-    const T0 = performance.now();
-
-    const toScreen = (x: number, y: number): [number, number] => {
-      const { w, h } = sizeRef.current;
-      const cam = camRef.current;
-      return [w / 2 + (x - cam.x) * cam.k, h / 2 + (y - cam.y) * cam.k];
-    };
-
-    const draw = (now: number) => {
-      raf = requestAnimationFrame(draw);
-      const g = graphRef.current;
-      const { w, h } = sizeRef.current;
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      ctx.clearRect(0, 0, w, h);
-      if (!g) return;
-
-      const T = tokensRef.current;
-      const L = lensRef.current;
-      const sel = selRef.current;
-      const hov = hoverRef.current;
-      const chipSel = chipRef.current;
-      const searchSet = searchSetRef.current;
-
-      if (tweenRef.current < 1) {
-        tweenRef.current = Math.min(1, tweenRef.current + 0.045);
-        const tt = 1 - Math.pow(1 - tweenRef.current, 3);
-        const a = camFromRef.current;
-        const b = camToRef.current;
-        camRef.current = { k: a.k + (b.k - a.k) * tt, x: a.x + (b.x - a.x) * tt, y: a.y + (b.y - a.y) * tt };
-      }
-      const tt = 1 - Math.pow(1 - tweenRef.current, 3);
-
-      // positions: baked per lens, tweened from the previous lens
-      const dp = drawPosRef.current;
-      for (const n of g.nodes) {
-        const target = posOf(n, L);
-        const from = fromPosRef.current.get(n.id) ?? target;
-        dp.set(n.id, [from[0] + (target[0] - from[0]) * tt, from[1] + (target[1] - from[1]) * tt]);
-      }
-
-      const egoSet = sel
-        ? new Set<string>([sel, ...(g.edges.filter((e) => e.s === sel || e.t === sel).map((e) => (e.s === sel ? e.t : e.s)))])
-        : null;
-      const chipSet = chipSel
-        ? new Set(g.nodes.filter((n) => n[chipSel.field] === chipSel.tag).map((n) => n.id))
-        : null;
-      const focusSet = egoSet ?? chipSet;
-
-      /* ---- edges ---- */
-      for (const e of g.edges) {
-        const visible =
-          L === "web"
-            ? e.type === "school" || e.type === "company"
-            : L === "why"
-              ? e.type === "why" && Boolean(sel || chipSel)
-              : e.type === "seek";
-        if (!visible) continue;
-        const A = dp.get(e.s);
-        const B = dp.get(e.t);
-        if (!A || !B) continue;
-        const inFocus = Boolean(focusSet && focusSet.has(e.s) && focusSet.has(e.t));
-        const touchesSel = Boolean(sel && (e.s === sel || e.t === sel));
-        if (L === "why" && !(inFocus || touchesSel)) continue;
-        if (L === "seek" && focusSet && !touchesSel) continue;
-        const baseAlpha = focusSet ? (touchesSel || inFocus ? 0.55 : 0.03) : 0.1;
-        const [x1, y1] = toScreen(A[0], A[1]);
-        const [x2, y2] = toScreen(B[0], B[1]);
-        ctx.beginPath();
-        if (e.type === "seek") {
-          const mx = (x1 + x2) / 2 + (y2 - y1) * 0.14;
-          const my = (y1 + y2) / 2 - (x2 - x1) * 0.14;
-          ctx.moveTo(x1, y1);
-          ctx.quadraticCurveTo(mx, my, x2, y2);
-          const inbound = Boolean(sel && e.t === sel);
-          ctx.strokeStyle = inbound ? T.spectrum[1] ?? T.ink : T.spectrum[5] ?? T.ink;
-          ctx.lineWidth = touchesSel ? (e.m ? 2.4 : 1.6) : 0.7;
-          ctx.globalAlpha = touchesSel ? 0.85 : baseAlpha;
-        } else {
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          if (e.type === "why") {
-            ctx.strokeStyle = T.spectrum[6] ?? T.ink;
-            ctx.lineWidth = 1.3;
-            ctx.globalAlpha = 0.7;
-          } else {
-            ctx.strokeStyle = T.ink;
-            ctx.lineWidth = 1;
-            ctx.globalAlpha = focusSet ? (touchesSel ? 0.35 : 0.03) : 0.07;
-            ctx.setLineDash(e.type === "company" ? [3, 4] : []);
-          }
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.globalAlpha = 1;
-      }
-
-      /* ---- nodes ---- */
-      const cam = camRef.current;
-      const zoomed = cam.k > 1.15;
-      for (const n of g.nodes) {
-        const d = dp.get(n.id);
-        if (!d) continue;
-        const [sx, sy] = toScreen(d[0], d[1]);
-        if (sx < -30 || sy < -30 || sx > w + 30 || sy > h + 30) continue;
-        const dim = Boolean(focusSet && !focusSet.has(n.id));
-        const r = 3.6 + Math.min(Math.sqrt(Math.max(n.deg, 0)) * 1.1, 5);
-        ctx.globalAlpha = dim ? 0.12 : 1;
-        ctx.beginPath();
-        ctx.arc(sx, sy, r * Math.max(cam.k, 0.7), 0, Math.PI * 2);
-        ctx.fillStyle = hueOf(n);
-        ctx.fill();
-        ctx.lineWidth = n.id === sel ? 1.8 : 0.8;
-        ctx.strokeStyle = T.ink;
-        ctx.globalAlpha = dim ? 0.12 : n.id === sel ? 0.55 : 0.24;
-        ctx.stroke();
-        ctx.globalAlpha = dim ? 0.12 : 1;
-        if (n.id === sel) {
-          const breathe = 1 + Math.sin((now - T0) / 300) * 0.22;
-          ctx.beginPath();
-          ctx.arc(sx, sy, (r + 5) * breathe * Math.max(cam.k, 0.7), 0, Math.PI * 2);
-          ctx.strokeStyle = T.ink;
-          ctx.globalAlpha = 0.5;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
-        const named =
-          n.id === sel ||
-          n.id === hov ||
-          Boolean(searchSet && searchSet.has(n.id)) ||
-          (!dim &&
-            (zoomed ||
-              Boolean(egoSet && egoSet.has(n.id)) ||
-              Boolean(chipSet && chipSet.has(n.id) && cam.k > 0.8) ||
-              (n.deg > 5 && cam.k > 0.85)));
-        if (named && !dim) {
-          ctx.font = `560 11px ${T.sans}`;
-          ctx.fillStyle = T.ink;
-          ctx.textAlign = "center";
-          ctx.fillText(n.name, sx, sy - r * cam.k - 12);
-          ctx.font = `9px ${T.mono}`;
-          ctx.fillStyle = T.faint;
-          ctx.fillText((n.title ?? "").toUpperCase().slice(0, 26), sx, sy - r * cam.k - 2);
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      /* ---- cluster stamps ---- */
-      if (L !== "web") {
-        ctx.textAlign = "center";
-        for (const s of stampsRef.current) {
-          const [sx, sy] = toScreen(s.x, s.y);
-          ctx.save();
-          ctx.translate(sx, sy);
-          ctx.rotate(-0.05);
-          ctx.font = `10px ${T.mono}`;
-          const label = `${s.label.toUpperCase()} · ${s.n}`;
-          const bw = ctx.measureText(label).width + 18;
-          ctx.globalAlpha = focusSet ? 0.35 : 0.9;
-          ctx.strokeStyle = T.border;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.roundRect(-bw / 2, -11, bw, 20, 10);
-          ctx.stroke();
-          ctx.fillStyle = T.muted;
-          ctx.fillText(label, 0, 3.5);
-          ctx.restore();
-          ctx.globalAlpha = 1;
-        }
-      }
-    };
-    raf = requestAnimationFrame(draw);
-
-    /* ---- pointer: pan / zoom / pick ---- */
-    const pick = (mx: number, my: number): string | null => {
-      const g = graphRef.current;
-      if (!g) return null;
-      let best: string | null = null;
-      let bd = 18 * 18;
-      for (const n of g.nodes) {
-        const d = drawPosRef.current.get(n.id);
-        if (!d) continue;
-        const [sx, sy] = toScreen(d[0], d[1]);
-        const dist = (sx - mx) ** 2 + (sy - my) ** 2;
-        if (dist < bd) {
-          bd = dist;
-          best = n.id;
-        }
-      }
-      return best;
-    };
-
-    let drag: { x: number; y: number; cx: number; cy: number } | null = null;
-    let moved = false;
-    let touchPointer = false;
-
-    const onDown = (e: PointerEvent) => {
-      touchPointer = e.pointerType === "touch";
-      drag = { x: e.clientX, y: e.clientY, cx: camRef.current.x, cy: camRef.current.y };
-      moved = false;
-      canvas.setPointerCapture(e.pointerId);
-    };
-    const onMove = (e: PointerEvent) => {
-      if (drag) {
-        const dx = e.clientX - drag.x;
-        const dy = e.clientY - drag.y;
-        if (Math.abs(dx) + Math.abs(dy) > 4) {
-          moved = true;
-          userMovedRef.current = true;
-          tweenRef.current = Math.max(tweenRef.current, 1);
-        }
-        camRef.current = { ...camRef.current, x: drag.cx - dx / camRef.current.k, y: drag.cy - dy / camRef.current.k };
-        return;
-      }
-      // phone grammar: no hover on touch — selection replaces it
-      if (touchPointer || e.pointerType === "touch") return;
-      const id = pick(e.clientX, e.clientY);
-      if (id !== hoverRef.current) {
-        hoverRef.current = id;
-        setHoverId(id);
-        if (hoverFetchTimer.current) clearTimeout(hoverFetchTimer.current);
-        if (id && !recordCache.current.has(id)) {
-          hoverFetchTimer.current = setTimeout(() => {
-            const target = hoverRef.current;
-            if (target && !recordCache.current.has(target)) void loadRecord(target);
-          }, 260);
-        }
-      }
-      canvas.style.cursor = id ? "pointer" : "default";
-    };
-    const onUp = (e: PointerEvent) => {
-      if (!moved) {
-        const id = pick(e.clientX, e.clientY);
-        if (id) select(id);
-        else deselect();
-      }
-      drag = null;
-    };
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      userMovedRef.current = true;
-      tweenRef.current = Math.max(tweenRef.current, 1);
-      const f = Math.exp(-e.deltaY * 0.0016);
-      camRef.current = { ...camRef.current, k: clamp(camRef.current.k * f, 0.25, 6) };
-    };
-    let pinch: number | null = null;
-    const dist2 = (t: TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) pinch = dist2(e.touches);
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (pinch && e.touches.length === 2) {
-        const d = dist2(e.touches);
-        userMovedRef.current = true;
-        camRef.current = { ...camRef.current, k: clamp((camRef.current.k * d) / pinch, 0.25, 6) };
-        pinch = d;
-        e.preventDefault();
-      }
-    };
-    const onTouchEnd = () => {
-      pinch = null;
-    };
-
-    canvas.addEventListener("pointerdown", onDown);
-    canvas.addEventListener("pointermove", onMove);
-    canvas.addEventListener("pointerup", onUp);
-    canvas.addEventListener("wheel", onWheel, { passive: false });
-    canvas.addEventListener("touchstart", onTouchStart, { passive: true });
-    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
-    canvas.addEventListener("touchend", onTouchEnd);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", sizeCanvas);
-      canvas.removeEventListener("pointerdown", onDown);
-      canvas.removeEventListener("pointermove", onMove);
-      canvas.removeEventListener("pointerup", onUp);
-      canvas.removeEventListener("wheel", onWheel);
-      canvas.removeEventListener("touchstart", onTouchStart);
-      canvas.removeEventListener("touchmove", onTouchMove);
-      canvas.removeEventListener("touchend", onTouchEnd);
-    };
-  }, [deselect, fitFor, hueOf, loadRecord, select]);
-
-  // stamps live in a ref so the loop never re-subscribes
-  useEffect(() => {
-    stampsRef.current = stamps;
-  }, [stamps]);
-
-  // first fit once the data lands
-  useEffect(() => {
-    if (!graph) return;
-    const { w, h } = sizeRef.current;
-    if (w === 0 || h === 0) return;
-    const fit = fitFor(graph.nodes, lensRef.current, w, h);
-    camRef.current = { ...fit };
-    camFromRef.current = { ...fit };
-    camToRef.current = { ...fit };
-  }, [graph, fitFor]);
+  }, [graph, selectPerson]);
 
   useEffect(() => {
     if (phase !== "live" || !graph) return;
-    const { w, h } = sizeRef.current;
-    if (w === 0 || h === 0) return;
-    if (!userMovedRef.current) {
-      const fit = fitFor(graph.nodes, lensRef.current, w, h);
-      camRef.current = { ...fit };
-      camToRef.current = { ...fit };
-      camFromRef.current = { ...fit };
-    }
-    showToast(`${graph.meta?.people ?? graph.nodes.length} REAL GUESTS · TAP A DOT · KEYS 1 2 3 SWITCH LENSES`);
-  }, [phase, graph, fitFor, showToast]);
+    showToast(`${graph.meta?.people ?? graph.nodes.length} REAL GUESTS · TAP A DOT TO SEE WHO IS LOOKING FOR THEM`);
+  }, [phase, graph, showToast]);
 
   /* --------------------------------------------------------- keyboard */
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (receipt) setReceipt(null);
-        else deselect();
-        return;
-      }
-      const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
-      if (phaseRef.current !== "live") return;
-      if (e.key === "1") switchLens("web");
-      if (e.key === "2") switchLens("why");
-      if (e.key === "3") switchLens("seek");
+      if (e.key !== "Escape") return;
+      if (receipt) setReceipt(null);
+      else deselect();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [deselect, receipt, switchLens]);
+  }, [deselect, receipt]);
 
   /* ------------------------------------------------- connection rows */
 
-  /** Port of the prototype's `rankEdges` — the fallback when the person record
-   *  is unavailable. Same ordering the emit script bakes into the record. */
+  /** The fallback ranking when the person record is unavailable — the same
+   *  ordering the emit script bakes into the record. */
   const rowsFromGraph = useCallback(
     (id: string): ConnRow[] => {
       const list = (adjacency.get(id) ?? []).map((e) => {
         const other = e.s === id ? e.t : e.s;
         const inbound = e.type === "seek" && e.t === id;
-        const w = e.type === "seek" ? (e.m ? 100 : inbound ? 90 : 80) : e.type === "why" ? 60 : e.type === "company" ? 40 : 30;
+        const w =
+          e.type === "seek" ? (e.m ? 100 : inbound ? 90 : 80) : e.type === "why" ? 60 : e.type === "company" ? 40 : 30;
         return { e, other, inbound, w };
       });
       const seen = new Set<string>();
@@ -1213,14 +1341,7 @@ export default function GraphLab() {
         const k = `${r.other}|${r.e.type}|${r.inbound}`;
         if (seen.has(k)) continue;
         seen.add(k);
-        out.push({
-          key: k,
-          otherId: r.other,
-          type: r.e.type,
-          via: r.e.via,
-          inbound: r.inbound,
-          mutual: Boolean(r.e.m),
-        });
+        out.push({ key: k, otherId: r.other, type: r.e.type, via: r.e.via, inbound: r.inbound, mutual: Boolean(r.e.m) });
       }
       return out;
     },
@@ -1228,7 +1349,7 @@ export default function GraphLab() {
   );
 
   const rows: ConnRow[] = useMemo(() => {
-    if (!selId) return [];
+    if (!selNode) return [];
     if (recordState === "ok" && record?.edges?.length) {
       return record.edges.map((e, i) => {
         const dir = (e.direction ?? "").toLowerCase();
@@ -1245,15 +1366,15 @@ export default function GraphLab() {
         };
       });
     }
-    return rowsFromGraph(selId);
-  }, [selId, record, recordState, rowsFromGraph]);
+    return rowsFromGraph(selNode.id);
+  }, [selNode, record, recordState, rowsFromGraph]);
 
   const inboundRows = rows.filter((r) => r.type === "seek" && r.inbound);
   const otherRows = rows.filter((r) => !(r.type === "seek" && r.inbound)).slice(0, 12);
 
   const openReceipt = useCallback(
     (row: ConnRow) => {
-      const self = selId ? byId.get(selId) ?? null : null;
+      const self = selNode;
       const other = byId.get(row.otherId) ?? null;
       if (!self || !other) return;
       const yours = row.receipt?.yours?.quote ? row.receipt.yours : undefined;
@@ -1261,9 +1382,7 @@ export default function GraphLab() {
       const source = receiptSource(Boolean(yours), Boolean(theirs), recordState);
       // each column names its OWN provenance: a verbatim answer or a profile cell
       const sideOf = (node: GNode, quoted: ReceiptSide | undefined): ReceiptSideView | null => {
-        if (quoted) {
-          return { name: node.name, hue: hueOf(node), label: fieldQ(quoted.field), quote: quoted.quote };
-        }
+        if (quoted) return { name: node.name, hue: hueOf(node), label: fieldQ(quoted.field), quote: quoted.quote };
         const cell = fieldFallback(node, row.type);
         return cell ? { name: node.name, hue: hueOf(node), label: fieldF(cell.field), quote: cell.quote } : null;
       };
@@ -1275,10 +1394,10 @@ export default function GraphLab() {
         source,
         left: sideOf(self, yours),
         right: sideOf(other, theirs),
-        prov: provenanceFor(source, row.type, selId ?? "—", Boolean(yours) !== Boolean(theirs)),
+        prov: provenanceFor(source, row.type, self.id, Boolean(yours) !== Boolean(theirs)),
       });
     },
-    [byId, hueOf, recordState, selId],
+    [byId, hueOf, recordState, selNode],
   );
 
   /* ------------------------------------------------------ facts (fallback) */
@@ -1297,40 +1416,25 @@ export default function GraphLab() {
 
   /* ---------------------------------------------------------------- view */
 
-  const stripPerson = hoverNode ?? selNode;
-  // The strip reads a ref-held cache, so it re-reads on every recordTick — the
-  // quote fills in the moment the record lands (name/school line shows at once).
-  const stripQuote = useMemo(() => {
-    void recordTick;
-    return stripPerson ? stripQuoteFrom(recordCache.current.get(stripPerson.id)) : null;
-  }, [stripPerson, recordTick]);
-  const showStrip = phase === "live" && lens === "why" && Boolean(stripPerson);
-
-  // Currents: hovering or selecting someone kicks their record immediately (no
-  // dwell) so the strip's verbatim quote arrives on its own, not by luck.
-  const stripPersonId = stripPerson?.id ?? null;
-  useEffect(() => {
-    if (!needsRecordFetch(lens, stripPersonId, (id) => recordCache.current.has(id))) return;
-    void loadRecord(stripPersonId as string);
-  }, [lens, stripPersonId, loadRecord]);
-  const subLine = LENSES.find((l) => l.key === lens)?.sub ?? "";
+  const counts = room?.counts;
+  const hubKicker = selHub?.type === "School" ? "Studies at" : selHub?.type === "Company" ? "Works at" : "Craft";
   const beatProgress = entering ? 1 : (beatIdx + 1) / BEAT_MS.length;
 
-  const gradFor = (n: GNode) => {
-    const pal = tokens.spectrum;
-    const a = hueOf(n);
-    const idx = n.motive ? motives.indexOf(n.motive) : 0;
-    const b = pal[((idx < 0 ? 0 : idx) + 3) % pal.length] ?? a;
-    return `linear-gradient(90deg, ${a}, ${b})`;
-  };
-
   return (
-    <div className={styles.host} ref={shellRef}>
-      <canvas
-        ref={canvasRef}
-        className={`${styles.canvas} ${phase === "live" ? styles.canvasLive : ""}`}
-        aria-label="the party graph"
-      />
+    <div className={styles.host}>
+      <div className={`${styles.canvasFade} ${phase === "live" ? styles.canvasLive : ""}`}>
+        {room && (
+          <GraphRoom
+            room={room}
+            matchEdges={matchEdges}
+            selectedId={selectedId}
+            focusReq={focusReq}
+            matchedIds={matchedIds}
+            tokens={tokens}
+            onSelect={onSelectNode}
+          />
+        )}
+      </div>
 
       {/* ---------------- Step 0: drag the CSV, watch it process ------------ */}
       {phase !== null && phase !== "live" && (
@@ -1364,7 +1468,8 @@ export default function GraphLab() {
                     The room is already built. Drop the CSV it was built from and watch it assemble.
                   </div>
                   <div className={styles.dropHint}>
-                    parsed in this browser · never uploaded · {graph ? `${graph.meta?.guestIds?.length ?? 0} ids on file` : "loading the room…"}
+                    parsed in this browser · never uploaded ·{" "}
+                    {graph ? `${graph.meta?.guestIds?.length ?? 0} ids on file` : "loading the room…"}
                   </div>
                 </div>
                 <input
@@ -1425,131 +1530,74 @@ export default function GraphLab() {
       {/* ---------------- the room ---------------- */}
       {phase === "live" && (
         <>
-          <div className={styles.hdr}>
-            <div className={styles.hdrRow}>
-              <div className={styles.brand}>
-                ULTRA SUPER PARTY <span>· graph lab</span>
-              </div>
-              <div className={styles.cap}>
-                {graph ? `${graph.meta?.people ?? graph.nodes.length} guests · real answers · every claim has a receipt` : "loading…"}
-              </div>
+          <header className={styles.header}>
+            <div className={styles.titleWrap}>
+              <h1 className={styles.title}>The Party Graph</h1>
+              {counts && graph && (
+                <p className={styles.subtitle}>
+                  {graph.meta?.people ?? graph.nodes.length} people · {counts.schools} schools · {counts.companies}{" "}
+                  companies · {counts.crafts} crafts
+                </p>
+              )}
             </div>
-            <div className={styles.rain} />
-            <div className={styles.tabs} role="tablist" aria-label="lenses">
-              {LENSES.map((l) => (
-                <button
-                  key={l.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={lens === l.key}
-                  className={`${styles.tab} ${lens === l.key ? styles.tabOn : ""}`}
-                  onClick={() => switchLens(l.key)}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-            <div className={styles.sub}>{subLine}</div>
-          </div>
+            <span className={styles.banner}>
+              <span className={styles.dot} /> Real signups · every claim has a receipt
+            </span>
+          </header>
 
           <div className={styles.searchWrap}>
             <input
               className={styles.search}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="FIND YOURSELF —"
+              placeholder="what’s your name?"
               aria-label="find a guest"
               autoComplete="off"
               spellCheck={false}
             />
-            {searchHits.length > 0 && (
-              <div className={styles.hits}>
-                {searchHits.map((n) => (
-                  <button
-                    key={n.id}
-                    type="button"
-                    className={styles.hit}
-                    onClick={() => {
-                      select(n.id, { zoom: true });
-                      setQuery("");
-                    }}
-                  >
-                    <b className={styles.hitName}>{n.name}</b>
-                    <small className={styles.hitMeta}>
-                      {[n.title, n.school, n.company].filter(Boolean).join(" · ")}
-                    </small>
-                  </button>
-                ))}
-              </div>
-            )}
+            {searchHits.map((n) => (
+              <button
+                key={n.id}
+                type="button"
+                className={styles.hit}
+                onClick={() => {
+                  selectPerson(n.id);
+                  setFocusReq({ id: n.id, n: Date.now() });
+                  setQuery("");
+                }}
+              >
+                <span className={styles.hitName}>{n.name}</span>
+                <span className={styles.hitMeta}>find yourself →</span>
+              </button>
+            ))}
           </div>
 
-          {lens === "why" && chipList.length > 0 && (
-            <div className={styles.chips}>
-              {chipList.map((c) => {
-                const on = chip?.tag === c.tag && chip?.field === c.field;
-                return (
-                  <button
-                    key={`${c.field}|${c.tag}`}
-                    type="button"
-                    className={`${styles.chip} ${on ? styles.chipOn : ""}`}
-                    onClick={() => {
-                      if (on) {
-                        setChip(null);
-                        chipRef.current = null;
-                        showToast(null);
-                        return;
-                      }
-                      setChip({ field: c.field, tag: c.tag });
-                      chipRef.current = { field: c.field, tag: c.tag };
-                      deselect();
-                      showToast(`${c.n} PEOPLE SHARE THIS CONVICTION — ACROSS DIFFERENT CRAFTS`);
-                    }}
-                  >
-                    <span
-                      className={styles.chipDot}
-                      style={{ background: tokens.spectrum[(c.i + 2) % tokens.spectrum.length] }}
-                    />
-                    {pretty(c.tag)} · {c.n}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          <div className={styles.legend}>
-            <div className={styles.lrow}>
-              <span className={styles.lswatch} /> shared school
-            </div>
-            <div className={styles.lrow}>
-              <span className={`${styles.lswatch} ${styles.lswatchDash}`} /> shared company
-            </div>
-            <div className={styles.lrow}>
-              <span className={`${styles.lswatch} ${styles.lswatchWhy}`} /> same conviction
-            </div>
-            <div className={styles.lrow}>
-              <span className={`${styles.lswatch} ${styles.lswatchIn}`} /> looking for you
-            </div>
-            <div className={styles.lrow}>
-              <span className={`${styles.lswatch} ${styles.lswatchOut}`} /> you&apos;re looking for
-            </div>
-            <div className={styles.legendNote}>tap a dot → their web · tap a row → the receipt</div>
-          </div>
-
-          {showStrip && stripPerson && (
-            <div className={styles.strip}>
-              <div className={styles.stripQ}>
-                {stripQuote
-                  ? `“${stripQuote}”`
-                  : [stripPerson.mission, stripPerson.impact]
-                      .filter((v): v is string => Boolean(v))
-                      .map(pretty)
-                      .join(" · ") || "—"}
+          {room && (
+            <div className={styles.legend}>
+              <div className={styles.legendRow}>
+                <span className={styles.legendSwatch} /> Schools · companies · crafts
               </div>
-              <div className={styles.stripA}>
-                — {stripPerson.name}
-                {stripPerson.school ? ` · ${stripPerson.school}` : ""}
-                {stripPerson.title ? ` · ${stripPerson.title}` : ""}
+              <div className={styles.legendRow}>
+                <span className={`${styles.legendLine} ${styles.lineSchool}`} /> Same school
+              </div>
+              <div className={styles.legendRow}>
+                <span className={`${styles.legendLine} ${styles.lineCompany}`} /> Same company
+              </div>
+              <div className={styles.legendRow}>
+                <span className={styles.legendStamp} /> Conviction stamps — zoom in
+              </div>
+              <div className={styles.legendRow}>
+                <span className={`${styles.legendLine} ${styles.lineIn}`} /> Looking for them
+              </div>
+              <div className={styles.legendRow}>
+                <span className={`${styles.legendLine} ${styles.lineOut}`} /> They’re looking for
+              </div>
+              <div className={styles.legendRow}>
+                <span className={`${styles.legendLine} ${styles.lineWhy}`} /> Same conviction
+              </div>
+              <div className={styles.legendHint}>
+                A dot is a person — the colour is their creative motive. Select someone: the warm edges are people
+                looking for them.
               </div>
             </div>
           )}
@@ -1559,29 +1607,42 @@ export default function GraphLab() {
           {loadError && (
             <div className={styles.center}>
               <div className={styles.centerTitle}>The graph artifact is missing</div>
-              <div className={styles.centerBody}>
-                {loadError} — run the emit script so /graph/graph.json exists.
-              </div>
+              <div className={styles.centerBody}>{loadError} — run the emit script so /graph/graph.json exists.</div>
+            </div>
+          )}
+
+          {!graph && !loadError && (
+            <div className={styles.center}>
+              <div className={styles.spinner} />
+              <div className={styles.centerBody}>Assembling the room…</div>
             </div>
           )}
         </>
       )}
 
-      {/* ---------------- the person panel ---------------- */}
-      <aside className={`${styles.panel} ${selNode ? styles.panelShow : ""}`} aria-label="person">
+      {/* ---------------- the person / hub panel ---------------- */}
+      <aside className={`${styles.panel} ${selNode || selHub ? styles.panelShow : ""}`} aria-label="person">
         {selNode && (
           <>
             <div className={styles.panelHead}>
               <button type="button" className={styles.pclose} onClick={deselect} aria-label="close">
                 ✕
               </button>
+              <div className={styles.pkicker}>
+                <span className={styles.pswatch} style={{ background: hueOf(selNode) }} />
+                {selNode.motive ? pretty(selNode.motive) : "Person"}
+              </div>
               <div className={styles.pname}>{selNode.name}</div>
               <div className={styles.pline}>
-                {[selNode.title, selNode.company ?? (selNode.free ? "independent °" : null), selNode.school]
+                {[
+                  selNode.asp ? pretty(selNode.asp) : null,
+                  selNode.title,
+                  selNode.company ?? (selNode.free ? "independent °" : null),
+                  selNode.school,
+                ]
                   .filter(Boolean)
                   .join(" · ")}
               </div>
-              <div className={styles.pgrad} style={{ background: gradFor(selNode) }} />
             </div>
             <div className={styles.pbody}>
               {recordState === "missing" && (
@@ -1633,7 +1694,7 @@ export default function GraphLab() {
                             return target ? (
                               <span key={t}>
                                 {ti === 0 ? " " : " · "}
-                                <button type="button" className={styles.factLink} onClick={() => select(t)}>
+                                <button type="button" className={styles.factLink} onClick={() => selectPerson(t)}>
                                   {target.name}
                                 </button>
                               </span>
@@ -1665,6 +1726,40 @@ export default function GraphLab() {
                 </>
               )}
               {recordState === "loading" && <div className={styles.degraded}>reading their record…</div>}
+            </div>
+          </>
+        )}
+
+        {!selNode && selHub && (
+          <>
+            <div className={styles.panelHead}>
+              <button type="button" className={styles.pclose} onClick={deselect} aria-label="close">
+                ✕
+              </button>
+              <div className={styles.pkicker}>
+                <span className={`${styles.pswatch} ${styles.pswatchHub}`} />
+                {hubKicker}
+              </div>
+              <div className={styles.pname}>{selHub.label}</div>
+              <div className={styles.pline}>{selHub.weight} people here tonight</div>
+            </div>
+            <div className={styles.pbody}>
+              <div className={`${styles.sec} ${styles.secFirst}`}>WHO’S HERE</div>
+              {(selHub.memberIds ?? []).map((id) => {
+                const m = byId.get(id);
+                if (!m) return null;
+                return (
+                  <button key={id} type="button" className={styles.conn} onClick={() => selectPerson(id)}>
+                    <span className={styles.connVia}>
+                      <span className={styles.pswatch} style={{ background: hueOf(m) }} />
+                      {(m.motive ? pretty(m.motive) : "—").toUpperCase()}
+                    </span>
+                    <div className={styles.connWho}>
+                      {m.name} <small>· {m.title || m.school || ""}</small>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </>
         )}
@@ -1735,8 +1830,7 @@ function ConnButton({
   onOpen: (row: ConnRow) => void;
 }) {
   if (!other) return null;
-  const badgeClass =
-    row.type === "seek" ? (row.inbound ? styles.bSeekIn : styles.bSeekOut) : TYPE_BADGE[row.type];
+  const badgeClass = row.type === "seek" ? (row.inbound ? styles.bSeekIn : styles.bSeekOut) : TYPE_BADGE[row.type];
   const via =
     row.type === "seek"
       ? `${row.mutual ? "MUTUAL · " : row.inbound ? "THEY SEEK · " : "YOU SEEK · "}${row.via}`
