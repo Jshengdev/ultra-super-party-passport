@@ -5,202 +5,194 @@
 **Positioning:** [/positioning.html](https://ultra-super-party-passport.butterbase.dev/positioning.html) ·
 **Demo video:** [Drive](https://drive.google.com/drive/folders/1DDGzIAD0a9tTNt1ZJwswI6IPLzXwfc9H?usp=drive_link)
 
-**193 guests · 6 value clouds · 3,133 shared-value ties · 164 distilled interests · 193 passports · 0 unreceipted claims**
+**312 real guests · 22 value clusters · 2,091 shared-value ties · 962 directed seeking edges ·
+312 passports · 6,080 + 1,088 receipts · 0 unreceipted claims**
 
 **Sign up to a party, and a passport writes itself** — the two people you'd click with tonight and one
-thing it somehow knew about you. It's **relational, not a knowledge graph** (it connects people, not
-your tags), and the AI is completely **invisible**.
+thing it somehow knew about you. It's **relational, not a knowledge graph of tags** (it connects
+people), and the AI is completely **invisible**.
 
-Our HackwithBay 3.0 entry (submitted — entry `d7a73662`, v3). Built for a real event: an LA intern
-party for creatives (7/18), running on the party's REAL 193-guest list. Everyone signs up through a
-Luma-style form with one extra question — *"what do you think it means to be creative?"* — and gets
-back a personalized passport: the two people to find (one who shares your work, one who shares your
-values, each with a receipted reason), a hidden scavenger prompt, a **magic inference** (something you
-never typed — "how does it know?"), and a gradient generated from who you are.
+Our HackwithBay 3.0 entry (submitted — entry `d7a73662`, v3), built for a real event: an LA intern
+party for creatives (7/18). It now runs on the party's **real 312-person guest list** — the full Luma
+export with four free-text answers per guest — after the original 193-person build-week population
+was retired to git history in an authorized reset. Every guest gets a passport: the people to find
+(each with a receipted reason), a hidden scavenger prompt, a **magic inference** ("how does it
+know?"), and a gradient generated from who they are.
 
-**The full experience:** drop the guest CSV → the analysis plays (every number parsed live from the
-file) → the room: a paper-white relational map where each person wears their value cloud's color,
-shared interests bridge the clouds as amber touchpoints, and hubs are sized by the people they hold →
-type your name (the matched name waves in gradient on the map) → *I'm going* → **Generate my
-passport** → the cover flips open: Teri's document with foil tilt + holo sheen, stamps, the MRZ line —
-plus a sketch-your-headshot frame (the brush ink IS the brand gradient) and a QR that puts your
-passport on your phone.
+**The full experience:** drop the guest CSV onto `/graph` (parsed in your browser, verified against
+the baked room, never uploaded) → the pipeline's real numbers play as beats → the room: Teri's
+redesigned world over the real party — poppable bubbles, craft subsections inside the clouds, school
+crests and company logos, connection threads that carry their receipts — → type your name (it waves
+in gradient) → the panel: who's looking for someone like you, warm edges inbound → **Generate my
+passport** → the cover flips open: foil tilt + holo sheen, stamps, the MRZ line, the sketch frame,
+and a QR that puts it on your phone.
 
 ---
 
 ## The story in one breath
 
 Underneath the party toy is a thesis we've been building for a year: **AI as an honest mirror** — a
-tool that reflects a true perspective back so you can make better choices. The passport is the smallest,
-most fun version of that mirror: it tells you who you are by telling you who, in this room, you'd click
-with and why. And it stays invisible on purpose — the moment you say "AI," people flinch and stop
-sharing. So there's no chatbot. You fill a form; you get a gift.
+tool that reflects a true perspective back so you can make better choices. The passport is the
+smallest, most fun version of that mirror: it tells you who you are by telling you who, in this
+room, you'd click with and why. And it stays invisible on purpose — the moment you say "AI," people
+flinch and stop sharing. So there's no chatbot. You fill a form; you get a gift.
 
 ## Stack
 
 Three integrations are load-bearing (deep-integration or it doesn't count):
 
 ```
-  Luma-style sign-up form
-          │  name · school · major · what_you_do · working_on · belief_creative
+  The party's REAL Luma export (364 rows → 312 unique approved guests)
+          │  name · company · title · school · hometown · instagram
+          │  + four answers: what drew you · ultimate goal · who you seek · inspiration
           ▼
   ┌──────────────────────────────────────────────────────────────┐
-  │  RocketRide  ── deployed .pipe (cloud.rocketride.ai) ─────────│  the INFERENCE PATH
-  │  the app POSTs sign-ups here; the pipe runs ingest/inference  │  (deployed, not local)
-  └───────────────────────────┬──────────────────────────────────┘
-                              ▼
-  ┌──────────────────────────────────────────────────────────────┐
-  │  Butterbase  ── backend + auth + OpenAI-compatible AI gateway │  the BRAIN + BACKBONE
-  │  every LLM/embedding call routes through the gateway          │  (one bb_sk_ key)
+  │  Butterbase  ── backend + OpenAI-compatible AI gateway        │  the BRAIN + BACKBONE
+  │  guarded chat for convictions & passport synthesis            │  (one bb_sk_ key)
   │  deploy target · submission via Butterbase MCP                │
   └───────────────────────────┬──────────────────────────────────┘
                               ▼  writes ONLY through lib/ontology-gate.ts (validate → Cypher → provenance)
   ┌──────────────────────────────────────────────────────────────┐
   │  Neo4j Aura  ── the typed ontology property graph            │  the RELATIONAL LAYER
-  │  Person→Person edges (WORKS_ON, SHARES_VALUE); traversed,     │  (a graph, not a KV store)
-  │  not stored. off-ontology writes are unrepresentable.         │
+  │  people ↔ schools/companies/places/activities/beliefs/       │  (a graph, not a KV store)
+  │  convictions + directed SEEKS edges; traversed, not stored.   │
+  │  off-ontology writes are unrepresentable.                     │
   └───────────────────────────┬──────────────────────────────────┘
                               ▼  agent traverses real paths → path_receipts
       ┌───────────────────────┴───────────────────────┐
       ▼                                                ▼
-  /universe  (the glowing relational map)      data/passports/<personId>.json
-                                               (2 people to find + why · magic line · gradient)
+  /graph  (Teri's room over the real party)    data/passports/<personId>.json — 312 of them
+  + /universe (the original map)               (people to find + why · magic line · gradient)
 ```
+
+RocketRide's deployed `.pipe` (cloud.rocketride.ai) remains the inference path for passport
+synthesis — see layer 4.
 
 ## Architecture, in detail
 
 **The data flow, end to end:**
-`Luma CSV → precache (normalize + enrich) → ontology-gated ingest → Neo4j property graph →
-typed traversal → passport JSON (receipted) → static build (graph + 193 passport pages baked) →
-Butterbase CDN`
+`Luma CSV → dedupe + canonicalize (312, non-PII ids) → ontology-gated ingest → guarded conviction
+extraction → directed seek matching → gated value-clusters → emit (baked artifacts + the managed
+sheet) → passports (receipted) → three audits → static build → Butterbase CDN`
 
 ### 1 · The frontend (Next.js 15 · React 19 · TypeScript strict · Tailwind 4 · framer-motion)
-App Router throughout. The deploy is a **static export** (`output: 'export'`): every React page —
-including all 193 passports via `generateStaticParams` — pre-renders to HTML at build, then hydrates
-client-side. `/api/graph` is a route handler that runs live Cypher at build time, so **the graph
-snapshot is baked into the bundle** (the "invisible precache" — the analysis page replays real,
-pre-computed work with numbers parsed live from the dropped file). Surfaces: `/` (analysis theater),
-`/universe` (force-graph canvas: color = value cloud, amber = shared interests, hub size = people
-held, always-animating gradient wave on matched names), `/passport/[id]` (Teri's document: foil tilt,
-holo sheen, sketch frame, QR), `/deck` (Teri's React slide system).
+App Router; the deploy is a **static export**: every page — including all 312 passports via
+`generateStaticParams` — pre-renders at build. Surfaces: `/graph` (the drag-the-CSV entry and
+Teri's redesigned room over the real data), `/universe` (the original relational map), `/passport/[id]`
+(Teri's document: foil tilt, holo sheen, sketch frame, QR), `/deck`. The graph page reads baked
+JSON (`public/graph/*`) — no server, no view-time inference, verified in the browser against the
+dropped file.
 
 ### 2 · The ontology + the gate (Neo4j Aura · `ontology/manifest.ts` · `lib/ontology-gate.ts`)
 One zod manifest is the single source of truth: object types (`Person, School, Major, Activity,
-Belief, ValueCluster, Interest, Party, Company`), a **patterns allowlist** of legal
-`(subject)-[REL]->(object)` triples (`STUDIES_AT, MAJORS_IN, WORKS_AT, DOES, WORKING_ON, BELIEVES,
-IN_CLUSTER, SHARES_VALUE, INTERESTED_IN, SIGNED_UP`), and **typed ACTION definitions**
-(`ingest_person, write_value_cluster, write_interests, check_in`) — each a zod schema + parameterized
-Cypher template. `lib/ontology-gate.ts:dispatch()` is the ONLY write path: validate against the
-manifest → refuse unknown labels/patterns (`OffOntologyWrite`) → parameterized MERGE → provenance
-props (`_src, _ts, _actor`) on every node and edge. **An off-ontology fact is unrepresentable.**
-Plain Cypher only (no GDS): value clouds cluster app-side; causal/shared paths use variable-length
-traversal.
+Belief, ValueCluster, Interest, Party, Company, Place, Inspiration`), a **patterns allowlist**
+(`STUDIES_AT, MAJORS_IN, WORKS_AT, DOES, WORKING_ON, BELIEVES, IN_CLUSTER, SHARES_VALUE,
+INTERESTED_IN, SIGNED_UP, FROM, INSPIRED_BY, SEEKS`), and **typed ACTION definitions**
+(`ingest_person, ingest_guest_v2, write_value_cluster, write_seek_edge, write_interests, check_in,
+reset_graph`) — each a zod schema + parameterized Cypher. `dispatch()` is the ONLY write path:
+validate → refuse unknown labels/patterns → parameterized MERGE → provenance (`_src, _ts, _actor`)
+on every node and edge. **An off-ontology fact is unrepresentable.** Plain Cypher only (no GDS) —
+clustering happens app-side.
 
 ### 3 · The agent layer (`lib/traverse.ts` · `lib/passport.ts`)
-The agent never freeforms Cypher. It reads through **typed traversal templates** —
-`sameWorkPath`, `valuesPath`, `sharedContextPath`, `personNeighborhood`, `standoutFacts` — each
-returning candidates WITH their `path_receipt` (`[{from, rel, to}]`, the actual edges walked).
-`buildPassport()` assembles: two finds (same-work + values-aligned, deduped), why-lines through a
-**deterministic guard** (a why may reference ONLY proper nouns present in its receipt — one retry,
-then fail loud), the hidden scavenger prompt (deterministic, from the rarest standout fact), the
-**magic inference** (an interpretive read of the person's own words — guarded to never restate
-verbatim, never invent facts), and a gradient derived from stable hashes of who they are. Output
+Typed traversal templates — `sameWorkPath`, `valuesPath`, `sharedContextPath`, `seeksPath`,
+`personNeighborhood`, `standoutFacts` — each returning candidates WITH their `path_receipt`.
+`buildPassport()` assembles the finds (same-work + values-aligned; a real `SEEKS` edge is the
+last-resort anchor — "they told the sheet they're looking for someone like you" — and one true
+structural singleton honestly ships a single find rather than a fabricated second), why-lines
+through a **deterministic guard**, the scavenger prompt, the magic inference, the gradient. Output
 validates against `passport/schema.ts` — grounding by construction.
 
 ### 4 · The inference pipeline (RocketRide Cloud · `pipeline/party-passport.pipe`)
-The `.pipe` (portable JSON DAG) is **deployed and resident** on cloud.rocketride.ai; invocation is
-task-token-gated (`pipeline/client.ts`: `runInference()` → pipe first, Butterbase-gateway fallback so
-the build never blocks). The `passport_inference` leg (magic inference) routes through it — the app
-as thin client over a managed production endpoint.
+The `.pipe` is **deployed and resident** on cloud.rocketride.ai; `runInference()` goes pipe-first
+with a Butterbase-gateway fallback so the build never blocks. The `passport_inference` leg routes
+through it — the app as thin client over a managed endpoint.
 
-### 5 · The model plane (Butterbase AI gateway · `lib/gateway.ts`)
-Every LLM and embedding call routes through Butterbase's OpenAI-compatible gateway with one key:
-`chat(model, messages, zodSchema)` gives schema-validated JSON with one corrective retry then a loud
-`GatewaySchemaError`; `embed()` for vectors. Mid-event the gateway's embeddings surface 502'd across
-all models — clustering fell back to **chat-surface grouping under a deterministic partition-repair
-guard** (code enforces the partition; the model only proposes) — method changed, bar unchanged,
-provenance says so.
+### 5 · The model plane (Butterbase AI gateway · `lib/gateway.ts`) — and the honest fallback ledger
+Every LLM call routes through the gateway: `chat(model, messages, zodSchema)` returns
+schema-validated JSON with one corrective retry then a loud error. Convictions run on a
+golden-calibrated model (`CONVICTION_MODEL`), and every extracted quote is **snapped to the exact
+byte span of the guest's own answer** — receipts are literal by construction. The environmental
+truth, on the record twice: mid-event the gateway's embeddings 502'd (clustering fell back to
+chat-surface grouping under a partition-repair guard); post-event the platform removed embedding
+models entirely — so seek/doppelgänger matching runs on a **named lexical TF-IDF fallback**
+(`EMBED_PROVIDER`, provenance `match:tfidf-v1` on every edge, the gateway path retained for when
+embeddings return). Method changed, bar unchanged, provenance says so.
 
-### 6 · The audit (`scripts/audit-receipts.ts` + the goal gate)
-`verify-goal.sh` runs a leg per goal (contract: `gx/goals/usp-v1.md`): ontology conformance (zero
-off-manifest labels/rels, zero unprovenanced writes), cluster cardinality, **the receipts audit** —
-every `path_receipt` edge and every recommended person on every passport must exist in the live
-graph or the gate exits nonzero. Current run: **0 unreceipted claims across 193 passports.**
+### 6 · The audits — three of them, all able to FAIL
+`scripts/audit-receipts.ts`: every passport `path_receipt` edge and every recommended person must
+exist in the live graph — **312 passports · 1,088 receipt edges · all grounded**.
+`scripts/audit-graph.ts`: every artifact receipt byte-checked against the sheet, every numeric claim
+independently re-counted, seek edges reconciled against Neo4j **both ways** — 6,080 receipts, 0
+violations. `scripts/check-graph-e2e.ts`: serves the built site and traces a rendered receipt back
+to the CSV cell it came from. Plus conformance (zero off-manifest anything) and the goal gate.
 
-### 7 · The enrichment layer (provenance-marked, honest)
-The real Luma export carries name/school/major/year. `scripts/precache.ts` normalizes the mess (six
-spellings of IYA → one node) and enriches deterministically from a **persona-archetype library**
-(cheap-model swarm) + a **unique-voice pass** (193 distinct working-on/belief lines, zero repeats) +
-an **interest distillation** (what people SAY → 164 canonical tags, 48 shared — the amber bridges).
-Every derived field is marked derived in provenance; founder rows carry real data via
-`data/real-overrides.json`.
+### 7 · The managed dataset (the curation loop — new, and already used in production)
+`data/graph-enriched.csv` — one row per guest, every computed field visible (37 columns: identity,
+conviction tags with verbatim quotes, groups, top-5 matches, doppelgänger). A sparse
+`data/graph-overrides.csv` steers it: retag, hide, pin — off-vocabulary values fail loud, quotes are
+untouchable, every override lands in the artifacts with `_overridden` provenance. Teri's redesign
+shipped with her own override entries (splitting a generic motive into personality motives), which
+is exactly the loop working: **designers curate data through a CSV; the gates prove nothing broke.**
 
-### 8 · Graph v2 — the real room (`/graph`, branch `feat/party-graph-v2`)
-The July guest export (364 rows → 312 unique approved people, real emails/phones NEVER emitted)
-flows through the same laws into the same graph: `lib/guests.ts` (dedupe + canonicalize +
-non-PII personIds) → `scripts/ingest-guests.ts` (gate-dispatched: School/Company/Place/Inspiration)
-→ `scripts/enrich-convictions.ts` (guarded closed-vocab extraction; quotes snapped to byte-literal
-sheet spans) → `scripts/enrich-matches.ts` (seek matrix + doppelgängers; `SEEKS` edges written
-through the gate) → `scripts/emit-graph.ts` (baked `public/graph/*`: 312 person records with
-receipted, ranked matches and a dignity floor). Audited by `scripts/audit-graph.ts` — every count
-re-derived, every quote byte-checked, both-way Neo4j reconciliation — and `scripts/check-graph-e2e.ts`
-traces a rendered receipt back to the CSV cell it came from. The surface: drag the guest CSV onto
-`/graph` (parsed in-browser, verified against the baked room) → the Universe's own visual grammar,
-re-fed — select a person and the warm edges are people looking for them.
-
-**Bonus integrations (status kept honest):**
-
-- **Cognee** — agent memory (OSS, Neo4j-backed). Planned; wired only after the three mandatories are
-  green. *Not yet integrated.*
-- **Daytona** — sandbox. No code-run surface on the demo path, so intentionally skipped. *Not integrated.*
+**Bonus integrations (status kept honest):** Cognee — planned, *not yet integrated*. Daytona —
+intentionally skipped.
 
 ## Quickstart
 
 ```bash
-cp .env.example .env     # fill Neo4j + Butterbase (+ RocketRide) creds; runs DEGRADED without them
-npm install              # deps are pinned (next15 / react19 / neo4j-driver6 / openai / zod / tsx …)
+cp .env.example .env      # Neo4j + Butterbase (+ RocketRide) creds; DEGRADED without them
+npm install
 
-npx tsx scripts/precache.ts <luma-export.csv> data/party.csv   # normalize + enrich the real guest list
-# (or: npm run gen:csv for the synthetic 40-person test CSV)
-npm run ingest           # CSV → ontology-gated graph (through the deployed .pipe / gateway)
-npm run passports        # agent traverses the graph → data/passports/<personId>.json
-npm run dev              # http://localhost:3000 — the Universe + passport surfaces
+# Visual work needs NO creds — the artifacts are committed:
+npm run dev               # /graph (the real party) · /universe · /passport/<id>
 
-npm run verify:goal      # the usp-v1 goal gate (ingest · values · passport · universe · ship)
-npx tsx scripts/check-ship.ts   # the ship checklist (submission · README · pipe · passports · live URL)
+# The v2 pipeline (tsx does NOT autoload .env — source it first):
+set -a; source .env; set +a
+export GUESTS_CSV="<the Luma export>" EMBED_PROVIDER=tfidf CONVICTION_MODEL=anthropic/claude-haiku-4.5
+npx tsx scripts/ingest-guests.ts          # gated ingest (312, non-PII ids)
+npx tsx scripts/enrich-convictions.ts     # guarded extraction, quote-snapped receipts
+npx tsx scripts/enrich-matches.ts         # seek matrix → gated SEEKS edges
+npx tsx scripts/write-conviction-values.ts# conviction groups → value clusters
+npx tsx scripts/emit-graph.ts             # baked artifacts + the managed sheet
+PASSPORT_CONCURRENCY=6 npx tsx scripts/generate-passports.ts
+
+# The gates (each can fail; green means proven):
+npx tsx scripts/check-conformance.ts && npx tsx scripts/check-graph-emit.ts \
+  && npx tsx scripts/audit-graph.ts && npx tsx scripts/audit-receipts.ts
 ```
 
-Every credential is read from `process.env` and **never hardcoded**. With a cred missing, the app
-boots in **DEGRADED mode** and the first gateway call throws a *named* error telling you which env is
-absent — fail loud, no silent fake answers.
+Every credential is read from `process.env` and **never hardcoded**; missing creds → **DEGRADED
+mode** with a *named* error. No emitted artifact contains an email, phone number, or wallet address —
+the PII tripwire is part of the gates.
 
-**Changing this repo (human or agent): `CLAUDE.md` is the source of truth.** It carries the
-non-negotiable laws, the code map, the graph-v2 command chain, and the gates a change must keep
-green. Everything else is meant to be learned by reading the code — rationale lives in constraint
-comments at the source, not in side documents.
+**Changing this repo (human or agent): `CLAUDE.md` is the source of truth** — the laws, the code
+map, the command chains, and the gates a change must keep green. Everything else is meant to be
+learned by reading the code; rationale lives in constraint comments at the source.
 
 ## AI disclosure
 
 This project was **built live by an AI lab process** (the gx product-build method), and we treat that
 as a **differentiator, not a footnote.**
 
-- **Human-originated.** The vision is **Johnny's**; the design language and tokens are **Teri's**; the
-  distribution framing and the DNA-gradient are **Sarah's**. The humans originate and judge; the AI
-  captures, organizes, drafts, and executes — it never invents the vision.
+- **Human-originated.** The vision is **Johnny's**; the design language, tokens, and the redesigned
+  room are **Teri's**; the distribution framing and the DNA-gradient are **Sarah's**. The humans
+  originate and judge; the AI captures, organizes, drafts, and executes — it never invents the vision.
 - **Invisible to the end user, transparent to you.** On the passport, the AI is deliberately
-  unfelt — no chatbot, no "generated by AI" badge, just a gift that happens to know things. In this
-  repo it is fully disclosed: how it's wired, where the model is load-bearing, and what it can and
-  can't do.
-- **Grounded, not vibes.** Every claim on a passport carries a `path_receipt` that must resolve to real
-  graph edges, or it's a bug. The AI cannot write an off-ontology fact — the gate makes it
-  *unrepresentable*. Deterministic guards wrap every model call (validate → retry once → fail loud).
+  unfelt — no chatbot, no badge, just a gift that happens to know things. In this repo it is fully
+  disclosed: how it's wired, where the model is load-bearing, and what it can and can't do.
+- **Grounded, not vibes.** Every claim carries a receipt that must resolve — to a real graph edge, a
+  byte-literal quote from the guest's own answer, or an independently re-derived count — or a gate
+  fails. The AI cannot write an off-ontology fact; deterministic guards wrap every model call
+  (validate → retry once → fail loud).
 
 The honest version of "we used AI to build this" is: *humans decided what's true and beautiful; the
 machine made it concrete, under receipts.*
 
 ---
 
-Contract: `gx/goals/usp-v1.md`. Project brain + laws + window-ownership map: `CLAUDE.md`.
+Contract: `gx/goals/usp-v1.md` (+ the as-built departure report in
+`docs/superpowers/specs/2026-07-25-party-graph-design.md`). Project brain + laws + code map: `CLAUDE.md`.
 Demo: `docs/DEMO-SCRIPT.md`. Submission: `docs/SUBMISSION.md`. Positioning: `docs/POSITIONING.md`.
 
 **Team:** JOHNNY SHENG — PART-TIME WARRIOR · TERI SHIM — FOUNDING DESIGNER.
