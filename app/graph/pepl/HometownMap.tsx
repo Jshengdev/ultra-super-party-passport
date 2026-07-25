@@ -45,7 +45,8 @@ const LAND: [number, number][][] = [
 const toPath = (ring: [number, number][]) =>
   ring.map(([lng, lat], i) => `${i ? "L" : "M"}${px(lng).toFixed(1)} ${py(lat).toFixed(1)}`).join(" ") + " Z";
 
-export default function HometownMap() {
+/** `bottom` rides the ticker: 128 clears it, 20 is the bare floor. */
+export default function HometownMap({ bottom = 128 }: { bottom?: number }) {
   /* hover label — the native <title> tooltip is a second-long wait; this
      answers instantly. Holds the hovered pin's name, count and position. */
   const [hover, setHover] = useState<{ name: string; n: number; x: number; y: number } | null>(null);
@@ -54,7 +55,7 @@ export default function HometownMap() {
       style={{
         position: "absolute",
         right: 20,
-        bottom: 128,
+        bottom,
         width: W + 28,
         padding: "10px 14px 10px",
         borderRadius: 0,
