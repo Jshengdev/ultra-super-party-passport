@@ -92,15 +92,46 @@ const PAN_START = 0.02;
        SINGLE input. Select and deselect therefore cross-fade together, and no
        other state may reach in and toggle the veil.
 
-   Uniform by choice: the focused dot and its neighbours are painted IN the
-   canvas and so soften with the room. At 2.2px that is imperceptible on a
-   dot, and a sharp window tracking the focus anchor would mean a per-frame
-   mask write fighting the render loop for no visible gain. Idle cost is zero:
-   a full-viewport backdrop-filter over a 60fps canvas is paid every frame, so
-   the blur is only attached while the veil is alive (see `veilMounted`). */
+   (d) THE BUBBLE IS THE CLARITY LENS — a TWO-STATE model, pinned verbatim.
+       Addendum 3: "for the blur, make sure whatever the bubble hovers on it
+       converts that section into full clairty." Addendum 4: "so basically for
+       more clairty on the bubble. when we are in a zoomed out view. eveyrhting
+       should be crystal clear and the buble just does the edge effect. but
+       when you select on one individual whatever is in the buble will recieve
+       the full calirty." Therefore:
+       · REST (no selection) — no veil, so the lens is STRICTLY INERT: the mask
+         is not attached and the frame loop writes nothing (`veilLiveRef`). The
+         room is crystal; the bubble contributes only its own edge effect.
+       · SELECTED — the veil's alpha is cut out over the bubble's screen circle,
+         so BOTH the 5% ink and the 2.2px backdrop blur stop at the glass and
+         the softened room reads sharp through it, wherever it is dragged.
+       Mechanism: ONE static radial-gradient mask parameterised by three custom
+       properties written per frame (--lens-x/--lens-y/--lens-r) — no gradient
+       string is rebuilt, and the write rides the same imperative-DOM-from-the-
+       frame-loop path as the stamp anchor. The feather sits INSIDE the radius
+       so the clear disc can never spill past a wobbling or squished rim; it
+       lands in the shader's own rim band, which is why the edge reads as the
+       glass refracting rather than a cut hole. During the pop burst lensR runs
+       to 0 and back, so the hole shrinks to nothing and regrows with it.
+       A/B'd in Chromium (2026-07-25): mask-image clips the backdrop-filtered
+       region as well as the painted background, so one sheet carries both. An
+       engine that masked only the ink would need two stacked masked sheets —
+       a half-hole must never ship silently.
+
+   The focused dot and its neighbours are painted IN the canvas and so soften
+   with the room; at 2.2px that is imperceptible on a dot, and the one sharp
+   window the room gets is the bubble itself. Idle cost is zero: a full-viewport
+   backdrop-filter over a 60fps canvas is paid every frame, so the blur AND the
+   lens mask are attached only while the veil is alive (see `veilMounted`). */
 const VEIL_DIM = 0.05;
 const VEIL_BLUR_PX = 2.2;
 const VEIL_MS = 480;
+/* how far inside the rim the clarity hole feathers back to veiled. ~the
+   shader's rim band (d 0.84–1.0) at the popped radius on a laptop. */
+const LENS_FEATHER_PX = 18;
+const LENS_MASK =
+  `radial-gradient(circle at var(--lens-x) var(--lens-y), transparent 0 ` +
+  `max(0px, calc(var(--lens-r) - ${LENS_FEATHER_PX}px)), #000 var(--lens-r))`;
 
 /** A baked person record (public/graph/people/<id>.json) — fetched on focus for
     the relationships widget. The stamps do not read it: they are composed from
@@ -331,6 +362,13 @@ export default function PeplGraph() {
     const t = setTimeout(() => setVeilMounted(false), VEIL_MS + 80);
     return () => clearTimeout(t);
   }, [veilOn]);
+  /* the clarity lens's handle + gate (law (d)): the frame loop writes the hole
+     only while the mask is actually attached, so rest state costs nothing */
+  const veilRef = useRef<HTMLDivElement>(null);
+  const veilLiveRef = useRef(false);
+  useEffect(() => {
+    veilLiveRef.current = veilMounted;
+  }, [veilMounted]);
   useEffect(() => {
     setReceiptOpen(null);
     if (!focusKey) {
@@ -1219,6 +1257,16 @@ export default function PeplGraph() {
       });
       const bubbleSheet = toSheet(b.x, b.y);
       const lensPx = lensR * mn;
+      /* --- the clarity lens: punch the bubble out of the veil (law (d) at
+             VEIL_DIM). CSS px throughout — dims() is clientWidth/Height and
+             the veil is inset:0 in the same box, so this is the very space
+             the stamp anchor writes in; no dpr anywhere. --- */
+      if (veilLiveRef.current && veilRef.current) {
+        const vs = veilRef.current.style;
+        vs.setProperty("--lens-x", `${bubbleSheet.x.toFixed(1)}px`);
+        vs.setProperty("--lens-y", `${bubbleSheet.y.toFixed(1)}px`);
+        vs.setProperty("--lens-r", `${Math.max(0, lensPx).toFixed(1)}px`);
+      }
       /* the focused dot anchors the label bloom; the bubble anchors
          only the genuine lens-proximity effects */
       const focusDot = focused
@@ -1548,7 +1596,12 @@ export default function PeplGraph() {
         }
         /* the focus veil's cross-fade — opacity only, so the compositor owns
            it and the blur radius never animates over a live canvas */
-        .pepl-veil { transition: opacity ${VEIL_MS}ms cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --lens-r: 0px is the no-hole default, so a veil that mounts before
+           the first frame writes is a plain sheet, never a flash of clarity */
+        .pepl-veil {
+          transition: opacity ${VEIL_MS}ms cubic-bezier(0.4, 0, 0.2, 1);
+          --lens-x: 50%; --lens-y: 50%; --lens-r: 0px;
+        }
         @media (prefers-reduced-motion: reduce) {
           .pepl-group { animation: none; }
           .pepl-pill:active, .pepl-item:active { transform: none; }
@@ -1575,6 +1628,7 @@ export default function PeplGraph() {
           sibling-order law live at VEIL_DIM up top; every widget below this
           line is above it in paint order, and must stay there to stay sharp. */}
       <div
+        ref={veilRef}
         className="pepl-veil"
         aria-hidden="true"
         style={{
@@ -1584,6 +1638,9 @@ export default function PeplGraph() {
           opacity: veilOn ? 1 : 0,
           background: `rgba(38,36,44,${VEIL_DIM})`,
           backdropFilter: veilMounted ? `blur(${VEIL_BLUR_PX}px)` : "none",
+          /* the clarity lens — law (d): the hole cuts the ink AND the blur */
+          maskImage: veilMounted ? LENS_MASK : "none",
+          WebkitMaskImage: veilMounted ? LENS_MASK : "none",
         }}
       />
 
