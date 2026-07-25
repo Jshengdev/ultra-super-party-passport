@@ -1,0 +1,69 @@
+{
+  "personId": "brandon-iobbi-b8c1",
+  "name": "Brandon Iobbi",
+  "line2": "Firework",
+  "find": [
+    {
+      "personId": "nicolas-silva-8ca1",
+      "name": "Nicolas Silva",
+      "why": "You should meet Nicolas Silva because you both share experiences as production assistants, and he has some great insights to share.",
+      "basis_kind": "same_work",
+      "via": "production assistant",
+      "path_receipt": [
+        {
+          "from": "Brandon Iobbi",
+          "rel": "DOES",
+          "to": "production assistant"
+        },
+        {
+          "from": "Nicolas Silva",
+          "rel": "DOES",
+          "to": "production assistant"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You’ll enjoy meeting Rimi Bhoopalam because of your shared lifelong passion for film and television as a powerful medium for connection and creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Brandon Iobbi",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emerson",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Assistant",
+    "company": "Firework",
+    "belief": "Love for Film and TV from a young age",
+    "working_on": "Working as a below the line agent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your dedication to being a below the line agent reveals a deep desire to shape stories behind the scenes, fueling your lifelong passion for film.",
+  "gradient": {
+    "seed": 3450720570,
+    "stops": [
+      {
+        "color": "hsl(240 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(50 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

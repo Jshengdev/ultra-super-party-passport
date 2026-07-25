@@ -1,0 +1,73 @@
+{
+  "personId": "maya-spencer-dfb5",
+  "name": "Maya Spencer",
+  "line2": "The Team",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both share a connection to represent-agency and might have some interesting insights to exchange.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Maya Spencer",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You and Isabel Soliman both connect to represent-agency, making it a perfect opportunity to share insights and experiences in your field.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Maya Spencer",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Isabel Soliman",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Elon University",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern, Music (Global Festivals)",
+    "company": "The Team",
+    "belief": "I’d been involved in music my entire life on both the creative and organizational side. I’m passionate about developing a talent and helping make things happen, so the entertainment industry was always my target career path. I enjoy the business and I love the music.",
+    "working_on": "Music Talent Representation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for nurturing artistry, merging your love for music with a desire to empower talent in the industry.",
+  "gradient": {
+    "seed": 185939146,
+    "stops": [
+      {
+        "color": "hsl(163 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(147 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

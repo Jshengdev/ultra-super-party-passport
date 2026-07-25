@@ -1,0 +1,69 @@
+{
+  "personId": "harshini-kaparaju-51e6",
+  "name": "Harshini Kaparaju",
+  "line2": "Anomaly LA",
+  "find": [
+    {
+      "personId": "ruby-washio-dcf5",
+      "name": "ruby washio",
+      "why": "You should meet Ruby Washio, as you both share a connection to Anomaly LA and could exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "Anomaly LA",
+      "path_receipt": [
+        {
+          "from": "Harshini Kaparaju",
+          "rel": "WORKS_AT",
+          "to": "Anomaly LA"
+        },
+        {
+          "from": "ruby washio",
+          "rel": "WORKS_AT",
+          "to": "Anomaly LA"
+        }
+      ]
+    },
+    {
+      "personId": "sunny-mccall-a0cf",
+      "name": "Sunny McCall",
+      "why": "You should meet Sunny McCall, as both of you share a passion for the excitement of collaborating on creative projects that inspire innovation.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "I love the collaboration within the entertainment industry, and all the work people do in order to bring stories to life. No matter the kinds of projects, dramas, comedies or even superhero films it is always amazing to see how others view the world and the ways they come up with to express their interests.",
+      "path_receipt": [
+        {
+          "from": "Harshini Kaparaju",
+          "rel": "SHARES_VALUE",
+          "to": "Sunny McCall"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "TXST",
+    "major": "",
+    "grad_year": "",
+    "position": "Art Director Intern",
+    "company": "Anomaly LA",
+    "belief": "The ability to be creative and collaborate with other creative minded people. It is exciting to work on something that will be digested and interpreted by all kinds of people.",
+    "working_on": "Creating work that can influence how people think and interact with world. I want to be apart of making films/art that explore deeper human themes and make people feel seen."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect souls through creativity, fostering understanding and empathy in a world that often feels disconnected.",
+  "gradient": {
+    "seed": 3075114261,
+    "stops": [
+      {
+        "color": "hsl(334 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(24 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "william-tseng-d7ff",
+  "name": "William Tseng",
+  "line2": "Capital Group",
+  "find": [
+    {
+      "personId": "jason-drucker-24ee",
+      "name": "Jason drucker",
+      "why": "You should meet Jason Drucker because you both share a passion for producing that could lead to inspiring collaborations and creative conversations.",
+      "basis_kind": "same_work",
+      "via": "Producer",
+      "path_receipt": [
+        {
+          "from": "William Tseng",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        },
+        {
+          "from": "Jason drucker",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because his lifelong passion for film and television mirrors yours, sparking a meaningful conversation about creativity and connection.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Film has been a big part of my life since I was young, and I love idea of being a part of the industry that brings these stories to life in a way that brightens people’s lives.",
+      "path_receipt": [
+        {
+          "from": "Aidan Teeling",
+          "rel": "SHARES_VALUE",
+          "to": "William Tseng"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "AI Strategist",
+    "company": "Capital Group",
+    "belief": "Love for film",
+    "working_on": "Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for storytelling, believing in film's unique power to connect hearts and inspire change.",
+  "gradient": {
+    "seed": 4219831102,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(199 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "personId": "zachary-camat-13bc",
+  "name": "Zachary Camat",
+  "line2": "CSULA",
+  "find": [
+    {
+      "personId": "kelly-teguh-151f",
+      "name": "Kelly Teguh",
+      "why": "You should meet Kelly Teguh, as you both share a passion for editing that could lead to some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "edit",
+      "path_receipt": [
+        {
+          "from": "Zachary Camat",
+          "rel": "DOES",
+          "to": "edit"
+        },
+        {
+          "from": "Kelly Teguh",
+          "rel": "DOES",
+          "to": "edit"
+        }
+      ]
+    },
+    {
+      "personId": "zitlaly-ekoh-b783",
+      "name": "Zitlaly Ekoh",
+      "why": "You should meet Zitlaly Ekoh, as you both expressed a desire to connect with someone who shares your interests and aspirations.",
+      "basis_kind": "shared_context",
+      "via": "edit",
+      "path_receipt": [
+        {
+          "from": "Zitlaly Ekoh",
+          "rel": "SEEKS",
+          "to": "Zachary Camat"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSULA",
+    "major": "",
+    "grad_year": "",
+    "position": "Video Editor/ Sound Editor",
+    "company": "",
+    "belief": "In high school, I would teach myself to how to use different editing programs and make my own video for fun. In the midst of it, I discovered sound design and fell in love with it.  In the college I ended up pursuing a film degree in post -production in hopes of editing for film/tv.",
+    "working_on": "My goal is quite broad. I'd like to do sound editing and design for films and tv shows. In addition, I'd like to do work in podcasting as I am a heavy consumer of podcasts. I also wouldn't mind doing social media marketing and content creation as well."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to shape experiences through sound and creativity across diverse media platforms.",
+  "gradient": {
+    "seed": 170436156,
+    "stops": [
+      {
+        "color": "hsl(193 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(74 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

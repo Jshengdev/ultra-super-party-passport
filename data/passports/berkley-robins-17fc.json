@@ -1,0 +1,69 @@
+{
+  "personId": "berkley-robins-17fc",
+  "name": "Berkley Robins",
+  "line2": "Breakaway projects",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both bring unique perspectives and experiences from represent-agency that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Berkley Robins",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You’ll connect beautifully with YU-SHENG CHIEN over your shared deep-rooted love for music and performance as a powerful form of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Berkley Robins",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CU Boulder",
+    "major": "",
+    "grad_year": "",
+    "position": "I intern for a label but i specifically work on the management side helping artists (djs) on tour.",
+    "company": "Breakaway projects",
+    "belief": "I’ve always loved music and have been managing a dj and band since i started college.",
+    "working_on": "I want to work full time in artist management"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for music and early experiences in management reveal a deep desire to empower and elevate artists, creating meaningful connections in the industry.",
+  "gradient": {
+    "seed": 1065124445,
+    "stops": [
+      {
+        "color": "hsl(356 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(135 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

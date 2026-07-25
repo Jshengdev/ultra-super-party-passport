@@ -1,0 +1,73 @@
+{
+  "personId": "lydia-de2b",
+  "name": "Lydia",
+  "line2": "DreamWorks",
+  "find": [
+    {
+      "personId": "rafa-padilla-9c7e",
+      "name": "Rafa Padilla",
+      "why": "You would really enjoy meeting Rafa Padilla, as you both share a fascinating connection to DreamWorks that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Lydia",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You should meet Ethan Schwesinger; he has some fascinating insights about Chapman that I think you’d both enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Lydia",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "DreamWorks",
+    "belief": "I’m truly the biggest animation fan out there, and have been my whole life. Working in entertainment has truly been so fulfilling to me as a creative who is pursuing production. I’m so grateful to be apart of these fantastic projects with so many talented and dedicated artists behind them.",
+    "working_on": "Animation Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling and collaboration, finding joy in bringing animated worlds to life alongside fellow creatives.",
+  "gradient": {
+    "seed": 2609252836,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(73 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

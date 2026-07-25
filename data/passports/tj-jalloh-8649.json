@@ -1,0 +1,69 @@
+{
+  "personId": "tj-jalloh-8649",
+  "name": "TJ Jalloh",
+  "line2": "Amsel, Eisenstadt, Frazier & Hinojosa (AEFH) Talent Agency",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You would really enjoy meeting Junior Contreras because you both share a passion for acting that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "TJ Jalloh",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You’ll find a kindred spirit in Isabel Soliman, as she shares your conviction to keep stories alive through impactful storytelling.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-keep-stories-alive",
+      "match_belief": "A passion for working with and advocating for artists! Storytelling is incredibly empowering, and I want to be a part of the teams that share great stories and make other people passionate about the arts.",
+      "path_receipt": [
+        {
+          "from": "Isabel Soliman",
+          "rel": "SHARES_VALUE",
+          "to": "TJ Jalloh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Vanderbilt",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Amsel, Eisenstadt, Frazier & Hinojosa (AEFH) Talent Agency",
+    "belief": "Ever since middle school i’ve always been drawn to the arts and being able to artistically express myself. In middle school I had all the lead / supporting male roles in performing arts, whether it’s Seymore from Little Shop of Horrors, Benny from In the Heights, or Tin man from the Wiz. I was also a stepper. After Covid into highschool I stopped pursuing the arts and chased a path my parents wanted for me, engineering. I never felt truly free there honestly. As an artist i’m always looking for a means to express myself because when I don’t I feel like a caged bird. So I started expressing myself through poetry. I wrote my first poem for my English class to get some extra credit and it was probably the best decision i’ve ever made. I started writing more and more. Going into college still trying to pursue engineering I took my first chemistry class with a mix of engineering classes, and one acting class: THTR Fundamentals of Acting in order to fill up my credit hours. This was also another one of my greatest decisions I’ve ever made. In the midst of me failing chemistry and not enjoying engineering this class became my outlet, my source of happiness. I made the hard decision of switching out of the school of engineering, losing a scholarship to chase that dream. And now I am a poet, an actor, and a content creator because of that.",
+    "working_on": "I want to be recognized for my talent. What ultimately drew me to acting is the aspect of story telling and the importance of telling stories and keeping stories alive. I want to be recognized for my ability to tell stories. I want to be in a movie with Michael B Jordan and Damson Idris my two goats!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire for authentic self-expression, finding liberation in storytelling that resonates with your true identity and passion.",
+  "gradient": {
+    "seed": 536215342,
+    "stops": [
+      {
+        "color": "hsl(148 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(190 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(237 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

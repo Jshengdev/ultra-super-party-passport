@@ -1,0 +1,69 @@
+{
+  "personId": "anna-zhai-266f",
+  "name": "Anna Zhai",
+  "line2": "Lauren Records",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because your shared passion for produce could spark some exciting discussions and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Anna Zhai",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You and Maggie share a deep commitment to building community, making your conversation a perfect opportunity for inspiring collaboration and shared ideas.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Anna Zhai",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emory",
+    "major": "",
+    "grad_year": "",
+    "position": "Label Operations Intern",
+    "company": "Lauren Records",
+    "belief": "I’m a musician who loves to support other musicians! Especially within DIY scenes.",
+    "working_on": "I’m school I focus on documentary filmmaking with a beat in grassroots art organizations. I’d like to eventually start my own indie label in the future."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for grassroots art reflects a deep commitment to community and collaboration, driving your desire to uplift and amplify diverse voices.",
+  "gradient": {
+    "seed": 3054719613,
+    "stops": [
+      {
+        "color": "hsl(77 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(355 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

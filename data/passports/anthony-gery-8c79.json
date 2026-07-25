@@ -1,0 +1,69 @@
+{
+  "personId": "anthony-gery-8c79",
+  "name": "Anthony Gery",
+  "line2": "UTA",
+  "find": [
+    {
+      "personId": "will-chandrasekhar-4aab",
+      "name": "Will Chandrasekhar",
+      "why": "You should meet Will Chandrasekhar because you both share a connection to UTA and can exchange great stories from your experiences there.",
+      "basis_kind": "same_work",
+      "via": "UTA",
+      "path_receipt": [
+        {
+          "from": "Anthony Gery",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        },
+        {
+          "from": "Will Chandrasekhar",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You would connect beautifully with Yu-Sheng Chien over your shared deep-rooted love for music and performance as a powerful means of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Anthony Gery",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Indiana",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "UTA",
+    "belief": "I think the entertainment industry is the most exciting form of business one can work in.",
+    "working_on": "Becoming an agent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to be at the heart of creativity, where passion and innovation shape experiences that inspire others.",
+  "gradient": {
+    "seed": 2101219166,
+    "stops": [
+      {
+        "color": "hsl(45 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(351 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

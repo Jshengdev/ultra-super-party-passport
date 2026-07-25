@@ -1,0 +1,73 @@
+{
+  "personId": "miranda-sanchez-3ec5",
+  "name": "Miranda Sanchez",
+  "line2": "Freelance and Personal assisting",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You and Grace Carr both have a passion for design, making your conversation an inspiring opportunity to share ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Miranda Sanchez",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "tyler-bumgarner-2bd0",
+      "name": "Tyler Bumgarner",
+      "why": "You should meet Tyler Bumgarner because your shared passion for design will spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Miranda Sanchez",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "Tyler Bumgarner",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Florida international university",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative director of social media. And HP Personal Assistant",
+    "company": "Freelance and Personal assisting",
+    "belief": "Wanting to help create for movie production specifically A24",
+    "working_on": "Working as creative director for A24"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for storytelling, seeking to craft unique cinematic experiences that resonate deeply with audiences.",
+  "gradient": {
+    "seed": 590456691,
+    "stops": [
+      {
+        "color": "hsl(66 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(305 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

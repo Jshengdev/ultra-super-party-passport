@@ -1,0 +1,73 @@
+{
+  "personId": "marion-mongello-fcc0",
+  "name": "Marion Mongello",
+  "line2": "Rise Management",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both share a connection through represent-agency and can exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Marion Mongello",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You should meet Isabel Soliman, as you both share a connection to represent-agency and can exchange valuable insights from your experiences there.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Marion Mongello",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Isabel Soliman",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Carnegie Mellon",
+    "major": "",
+    "grad_year": "",
+    "position": "Office Assistant",
+    "company": "Rise Management",
+    "belief": "I love understanding the behind-the-scenes of storytelling, and working on teams with artists to solve problems!",
+    "working_on": "Talent Manager / Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for collaboration and creativity, finding joy in unearthing the magic that transforms ideas into impactful narratives.",
+  "gradient": {
+    "seed": 2856784556,
+    "stops": [
+      {
+        "color": "hsl(350 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(297 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

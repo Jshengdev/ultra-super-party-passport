@@ -1,0 +1,69 @@
+{
+  "personId": "savannah-gasca-f89e",
+  "name": "Savannah Gasca",
+  "line2": "Television Academy Foundation",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce and can exchange valuable insights and experiences in that field.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Savannah Gasca",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava because you both share a deep conviction in building community, which could lead to inspiring conversations and collaboration.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Savannah Gasca",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSULB",
+    "major": "",
+    "grad_year": "",
+    "position": "Getting Real Unscripted: Development Intern",
+    "company": "Television Academy Foundation",
+    "belief": "The way it can connect people from completely different backgrounds",
+    "working_on": "Becoming apart of the small documentary community"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to foster understanding and connection, believing in the transformative power of shared stories across diverse experiences.",
+  "gradient": {
+    "seed": 141905592,
+    "stops": [
+      {
+        "color": "hsl(16 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(98 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

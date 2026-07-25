@@ -1,0 +1,73 @@
+{
+  "personId": "andrew-lee-c88c",
+  "name": "Andrew Lee",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You and Grace Carr both share a passion for design, making your conversation a perfect opportunity to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Andrew Lee",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because he has some fascinating insights about UCLA that I think you'll both enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Andrew Lee",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "set builder, set dresser, PA, extra/background",
+    "company": "",
+    "belief": "Wanted to get into YouTube. Didn't know how to get into crew work for YouTube creators so I hopped into the film/entertainment industry.",
+    "working_on": "Scenic Fabricator"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create meaningful experiences, seeking connection in the dynamic world of storytelling through visual artistry.",
+  "gradient": {
+    "seed": 1702620732,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(149 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

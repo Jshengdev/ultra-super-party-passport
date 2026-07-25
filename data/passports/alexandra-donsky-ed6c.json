@@ -1,0 +1,69 @@
+{
+  "personId": "alexandra-donsky-ed6c",
+  "name": "Alexandra Donsky",
+  "line2": "DreamWorks",
+  "find": [
+    {
+      "personId": "rafa-padilla-9c7e",
+      "name": "Rafa Padilla",
+      "why": "You would really enjoy meeting Rafa Padilla, as you both share a unique connection to DreamWorks that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Alexandra Donsky",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should meet Kalen Kang because you both share a passionate conviction to inspire the next generation through meaningful and grounded initiatives.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "I was drawn to the entertainment industry because of its crossover with tech and business. Good ideas become experiences that genuinely connect with people! I love being part of the work behind the scenes that brings those moments to life, and I believe entertainment has a unique ability to inspire and add something meaningful to everyday life.",
+      "path_receipt": [
+        {
+          "from": "Alexandra Donsky",
+          "rel": "SHARES_VALUE",
+          "to": "Kalen Kang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "SVA",
+    "major": "",
+    "grad_year": "",
+    "position": "Feature Production Intern",
+    "company": "DreamWorks",
+    "belief": "I first fell in love with animation as a child. In addition to the usual Saturday morning cartoon rotation of the early 2000s, I would also pop in VHS tapes and CDs of Soviet Animation that my parents grew up with in the USSR. I became obsessed with learning how it all worked. Years later, I learned exactly that, and graduated at the top of my class from the School of Visual Arts in NYC with a BFA in Animation. Now, I itch to tell my stories through animation, and help others tell theirs.",
+    "working_on": "My goal is to become a producer and help shepherd the next generation of animated storytelling."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for storytelling's transformative power, eager to share that magic and nurture creativity in others.",
+  "gradient": {
+    "seed": 2972471669,
+    "stops": [
+      {
+        "color": "hsl(71 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(120 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

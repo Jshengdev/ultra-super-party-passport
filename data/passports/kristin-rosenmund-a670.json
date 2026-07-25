@@ -1,0 +1,69 @@
+{
+  "personId": "kristin-rosenmund-a670",
+  "name": "Kristin Rosenmund",
+  "line2": "Get Lifted Entertainment and Flynn Picture Company",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she also interned and has some great insights about her experience that you might find really helpful.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Kristin Rosenmund",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "taro-arthur-bb9a",
+      "name": "Taro Arthur",
+      "why": "You should meet Taro Arthur, as you both share a deep conviction in the power of creativity to inspire wonder and meaningful impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-create-escape-wonder",
+      "match_belief": "Watching Toy Story 3 for the first time in theatres and being absolutely immersed. That and the unique space on film that combines tech with creative innovation.",
+      "path_receipt": [
+        {
+          "from": "Kristin Rosenmund",
+          "rel": "SHARES_VALUE",
+          "to": "Taro Arthur"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Boston University",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Get Lifted Entertainment and Flynn Picture Company",
+    "belief": "I have always appreciated entertainment as a way that anyone in the world, no matter what they are going through, can use this outlet as a way to escape from the biggest to smallest of problems. Creating and telling stories broadens the minds of those who may be succumbed to or stuck in their own bubble. Even those in the worst circumstances can have the world at their fingertips.",
+    "working_on": "Screenwriter/ Staffed Television Writer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to connect and uplift others, using storytelling as a transformative escape from life's challenges.",
+  "gradient": {
+    "seed": 892005876,
+    "stops": [
+      {
+        "color": "hsl(308 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(43 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(99 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

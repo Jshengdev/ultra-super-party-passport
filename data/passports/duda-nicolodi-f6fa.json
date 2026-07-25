@@ -1,0 +1,69 @@
+{
+  "personId": "duda-nicolodi-f6fa",
+  "name": "duda nicolodi",
+  "line2": "Black Box LA",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "duda nicolodi",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your shared conviction, and I think you'll inspire each other.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "duda nicolodi",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Audience and Community Manager",
+    "company": "Black Box LA",
+    "belief": "I’ve always been drawn to the way entertainment brings people together and creates lasting emotional connections. What excites me most is the storytelling behind an artist or project and the opportunity to help that story reach the right audience. Through my experience in public relations and social media, I’ve discovered that I enjoy the strategy just as much as the creativity, whether that’s building campaigns, developing an artist’s brand, or finding unique ways to connect with fans. Working in the music industry, in particular, has shown me how much impact thoughtful marketing and PR can have on an artist’s career.",
+    "working_on": "My ultimate goal is to work in music public relations and artist marketing, helping artists build meaningful careers through strategic storytelling, branding, and fan engagement."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to amplify authentic narratives, believing in the transformative power of music to forge genuine connections.",
+  "gradient": {
+    "seed": 1474613545,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(338 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

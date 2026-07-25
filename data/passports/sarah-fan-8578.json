@@ -1,0 +1,63 @@
+{
+  "personId": "sarah-fan-8578",
+  "name": "Sarah Fan",
+  "line2": "",
+  "find": [
+    {
+      "personId": "bj-46da",
+      "name": "BJ",
+      "why": "You should definitely meet BJ, as they’re eager to connect with someone who shares your passion for crafting.",
+      "basis_kind": "shared_context",
+      "via": "their craft",
+      "path_receipt": [
+        {
+          "from": "BJ",
+          "rel": "SEEKS",
+          "to": "Sarah Fan"
+        }
+      ]
+    },
+    {
+      "personId": "leona-4ffe",
+      "name": "Leona",
+      "why": "You and Leona both share a passion for creative writing, making your conversation likely to spark inspiration and new ideas.",
+      "basis_kind": "shared_context",
+      "via": "their craft",
+      "path_receipt": [
+        {
+          "from": "Leona",
+          "rel": "SEEKS",
+          "to": "Sarah Fan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "",
+    "company": "",
+    "belief": "",
+    "working_on": ""
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You showed up — which is already a small bet on serendipity.",
+  "gradient": {
+    "seed": 1023132159,
+    "stops": [
+      {
+        "color": "hsl(53 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(53 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

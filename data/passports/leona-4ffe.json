@@ -1,0 +1,73 @@
+{
+  "personId": "leona-4ffe",
+  "name": "Leona",
+  "line2": "LemFI",
+  "find": [
+    {
+      "personId": "pragya-bhatt-6eed",
+      "name": "Pragya Bhatt",
+      "why": "You should meet Pragya Bhatt because your shared passion for Representation will spark an inspiring conversation between you both.",
+      "basis_kind": "same_work",
+      "via": "Representation",
+      "path_receipt": [
+        {
+          "from": "Leona",
+          "rel": "WORKING_ON",
+          "to": "Representation"
+        },
+        {
+          "from": "Pragya Bhatt",
+          "rel": "WORKING_ON",
+          "to": "Representation"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would really enjoy meeting Maggie Lee, as you both share a deep connection through represent-agency that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Leona",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Senior Manager",
+    "company": "LemFI",
+    "belief": "Working with influencers",
+    "working_on": "Representation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to amplify diverse voices, believing that collaboration with influencers can create a broader impact and connection.",
+  "gradient": {
+    "seed": 389704134,
+    "stops": [
+      {
+        "color": "hsl(318 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(24 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

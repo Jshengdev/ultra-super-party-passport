@@ -1,0 +1,69 @@
+{
+  "personId": "rimi-bhoopalam-3176",
+  "name": "Rimi Bhoopalam",
+  "line2": "Smokehouse Pictures (George Clooney’s Company on the Warner Brothers Lot)",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share the experience of being interns and can exchange valuable insights from your journeys.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Rimi Bhoopalam",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "samantha-kellener-e32e",
+      "name": "Samantha Kellener",
+      "why": "You should meet Samantha Kellener because her lifelong passion for film and television mirrors yours, creating a perfect spark for a deep conversation.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Growing up, I always had a passion for film and all things related. I have multiple family members who work in the entertainment industry (Warner Brothers, Dream Works, Netflix, Titmouse) and I would love to follow in their footsteps. I’d love the opportunity to work behind the scenes on creative projects that test the boundaries of current film and television.",
+      "path_receipt": [
+        {
+          "from": "Rimi Bhoopalam",
+          "rel": "SHARES_VALUE",
+          "to": "Samantha Kellener"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Smokehouse Pictures (George Clooney’s Company on the Warner Brothers Lot)",
+    "belief": "The power film/tv has to influence and improve people’s lives!",
+    "working_on": "TV producing or TV studio exec"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to harness storytelling as a transformative force, believing in its potential to uplift and inspire.",
+  "gradient": {
+    "seed": 3545366402,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(330 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

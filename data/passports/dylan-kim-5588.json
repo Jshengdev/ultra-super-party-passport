@@ -1,0 +1,73 @@
+{
+  "personId": "dylan-kim-5588",
+  "name": "Dylan Kim",
+  "line2": "northeastern",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi because you both share the experience of being undecided, which could lead to an inspiring conversation about your journeys.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Dylan Kim",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "eugene-choi-2a22",
+      "name": "Eugene Choi",
+      "why": "You should meet Eugene Choi, as you both share the experience of being undecided, which could lead to an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Dylan Kim",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Eugene Choi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "northeastern",
+    "major": "",
+    "grad_year": "",
+    "position": "Creator",
+    "company": "",
+    "belief": "Ever since I was younger it was the only thing that ever consistently kept my attention. Sports, movies, the internet, it was all I ever wanted to be a part of. I’m pursuing a degree in marketing due to these interests, and I couldn’t be happier.",
+    "working_on": "I would love to be an independent video creator who makes content on YouTube. I’ve always found storytelling to be a compelling and amazing art, and I hope to do that in the future as well."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to connect with others through your experiences and creativity in a captivating way.",
+  "gradient": {
+    "seed": 4243809080,
+    "stops": [
+      {
+        "color": "hsl(92 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(23 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

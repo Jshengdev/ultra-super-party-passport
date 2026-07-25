@@ -1,0 +1,69 @@
+{
+  "personId": "rita-chun-5861",
+  "name": "Rita Chun",
+  "line2": "LMU",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah Einisman both have a passion for direct communication, which makes for engaging conversations and valuable insights.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Rita Chun",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You’ll connect wonderfully with Yu-Sheng Chien, as you both share a deep conviction in making people feel seen and valued.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Rita Chun",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Writer/Director",
+    "company": "",
+    "belief": "Fate",
+    "working_on": "Being a writer/director whose work touches the hearts of many"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect with others, believing that your storytelling has the power to shape destinies and emotions.",
+  "gradient": {
+    "seed": 99651733,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(1 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

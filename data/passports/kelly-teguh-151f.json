@@ -1,0 +1,69 @@
+{
+  "personId": "kelly-teguh-151f",
+  "name": "Kelly Teguh",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "zachary-camat-13bc",
+      "name": "Zachary Camat",
+      "why": "You should meet Zachary Camat because you both share a passion for editing that could lead to some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "edit",
+      "path_receipt": [
+        {
+          "from": "Kelly Teguh",
+          "rel": "DOES",
+          "to": "edit"
+        },
+        {
+          "from": "Zachary Camat",
+          "rel": "DOES",
+          "to": "edit"
+        }
+      ]
+    },
+    {
+      "personId": "kornelia-welmso-ed35",
+      "name": "Kornelia Welmsö",
+      "why": "You would enjoy meeting Kornelia Welmsö because her passion for bringing joy aligns beautifully with your own conviction about making a positive impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "It’s the reason why I moved here, combined with the dance and performance industry. I’m a big fan of hiphop dance as well. Los Angeles is also an amazing place to network, especially in this industry. My passion is within it, and therefore I want to do my best to fill my life with as much joy and experiences as possible here. Big focus on the career as well, and how I can come forward with my creativity.",
+      "path_receipt": [
+        {
+          "from": "Kelly Teguh",
+          "rel": "SHARES_VALUE",
+          "to": "Kornelia Welmsö"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Script Supervisor",
+    "company": "",
+    "belief": "Film is truly the best form of storytelling. The way I feel about a cinematic masterpiece is incomparable, and nothing like anything else I’ve ever felt. That exactly is what I want to do in the future, be involved in creating these entratining stories that help people feel connected, emotional and more. The entertainment industry is so vast and large, and as an international student coming from Indonesia, it acts as a connector to different varying people, uniting us into valuable friendships.",
+    "working_on": "For now I’m heavily interested in anything within production, whether that be script supervising, PA-ing, or other roles like production designing and more. I’m currently taking on roles involved within development, doing script coverages, aiding as an assistant, like helping on the more administrative work, and other tedious work."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to forge connections through storytelling, believing that film can transcend boundaries and evoke profound emotions.",
+  "gradient": {
+    "seed": 2527657654,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(55 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

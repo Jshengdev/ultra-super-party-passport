@@ -1,0 +1,73 @@
+{
+  "personId": "leslie-mendez-ce3c",
+  "name": "Leslie Mendez",
+  "line2": "Netflix",
+  "find": [
+    {
+      "personId": "mulang-zhu-a9ef",
+      "name": "Mulang Zhu",
+      "why": "You should meet Mulang Zhu because you both have a passion for Netflix and can share your favorite shows and recommendations.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Leslie Mendez",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Mulang Zhu",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    },
+    {
+      "personId": "jessie-b-evans-35fa",
+      "name": "Jessie B. Evans",
+      "why": "You should meet Jessie B. Evans because you both share a passion for Netflix and can bond over your favorite shows and movies.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Leslie Mendez",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Jessie B. Evans",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Netflix",
+    "belief": "The money plus fun environment and past experiences",
+    "working_on": "Production and creative direction"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend joy with creativity, seeking to craft experiences that resonate and inspire others.",
+  "gradient": {
+    "seed": 3254563082,
+    "stops": [
+      {
+        "color": "hsl(106 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

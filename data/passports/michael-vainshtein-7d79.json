@@ -1,0 +1,73 @@
+{
+  "personId": "michael-vainshtein-7d79",
+  "name": "Michael Vainshtein",
+  "line2": "Kalmenson & Kalmenson",
+  "find": [
+    {
+      "personId": "stephanie-lee-b659",
+      "name": "Stephanie Lee",
+      "why": "You and Stephanie Lee both share a passion for casting, making it a great opportunity to exchange insights and experiences in the industry.",
+      "basis_kind": "same_work",
+      "via": "casting",
+      "path_receipt": [
+        {
+          "from": "Michael Vainshtein",
+          "rel": "DOES",
+          "to": "casting"
+        },
+        {
+          "from": "Stephanie Lee",
+          "rel": "DOES",
+          "to": "casting"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should meet Kalen Kang, as you both have a connection to UCSD and could share some insightful experiences from your time there.",
+      "basis_kind": "shared_context",
+      "via": "UCSD",
+      "path_receipt": [
+        {
+          "from": "Michael Vainshtein",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        },
+        {
+          "from": "Kalen Kang",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "Associate Casting Director",
+    "company": "Kalmenson & Kalmenson",
+    "belief": "I’ve always been very intertwined with the Industry growing up and both myself and my family have always been huge animation fans with some family members working it in. I’ve always wanted to work in entertainment, more specifically in the animation field, but behind the microphone rather than in front of it. I truly believe that the most magical and influential medium in entertainment is animation and would love to keep working in it for the rest of my life!",
+    "working_on": "I would love to be a voice over casting director  with my own agency or being an executive in-house casting director for a company like Pixar or Dreamworks."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for animation and a desire to shape its magic, ensuring its legacy continues through your voice.",
+  "gradient": {
+    "seed": 2394942804,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(56 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

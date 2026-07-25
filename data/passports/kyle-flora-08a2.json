@@ -1,0 +1,73 @@
+{
+  "personId": "kyle-flora-08a2",
+  "name": "Kyle Flora",
+  "line2": "Capitol Records",
+  "find": [
+    {
+      "personId": "isabel-ramirez-52a0",
+      "name": "Isabel Ramirez",
+      "why": "You should meet Isabel Ramirez because you both share a unique connection to Capitol Records that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "Capitol Records",
+      "path_receipt": [
+        {
+          "from": "Kyle Flora",
+          "rel": "WORKS_AT",
+          "to": "Capitol Records"
+        },
+        {
+          "from": "Isabel Ramirez",
+          "rel": "WORKS_AT",
+          "to": "Capitol Records"
+        }
+      ]
+    },
+    {
+      "personId": "remington-d154",
+      "name": "Remington",
+      "why": "You should meet Remington because you both share a connection to Cal Poly and can swap stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Cal Poly",
+      "path_receipt": [
+        {
+          "from": "Kyle Flora",
+          "rel": "STUDIES_AT",
+          "to": "Cal Poly"
+        },
+        {
+          "from": "Remington",
+          "rel": "STUDIES_AT",
+          "to": "Cal Poly"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cal Poly",
+    "major": "",
+    "grad_year": "",
+    "position": "Viral Marketing",
+    "company": "Capitol Records",
+    "belief": "Music and fandom",
+    "working_on": "SVP/EVP of marketing/digital"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep connection to creativity and community, seeking to amplify voices and experiences within the vibrant world of fandom.",
+  "gradient": {
+    "seed": 220216407,
+    "stops": [
+      {
+        "color": "hsl(247 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(288 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

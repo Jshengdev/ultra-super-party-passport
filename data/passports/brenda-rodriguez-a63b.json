@@ -1,0 +1,73 @@
+{
+  "personId": "brenda-rodriguez-a63b",
+  "name": "Brenda Rodriguez",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because you both share a strong connection to NBCUniversal and can exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Brenda Rodriguez",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "keona-edwards-2305",
+      "name": "Keona Edwards",
+      "why": "You should meet Keona Edwards, as you both share a connection to NBCUniversal and can exchange valuable insights from your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Brenda Rodriguez",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Keona Edwards",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cal Poly Slo Dec",
+    "major": "",
+    "grad_year": "",
+    "position": "Controllership Intern",
+    "company": "NBCUniversal",
+    "belief": "The ability to work and support a creative output.",
+    "working_on": "Director in Controllership"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize structure and creativity, believing that effective oversight can empower innovative expression.",
+  "gradient": {
+    "seed": 1576848876,
+    "stops": [
+      {
+        "color": "hsl(235 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(10 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

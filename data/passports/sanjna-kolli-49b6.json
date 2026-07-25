@@ -1,0 +1,69 @@
+{
+  "personId": "sanjna-kolli-49b6",
+  "name": "Sanjna Kolli",
+  "line2": "Honua Music Group",
+  "find": [
+    {
+      "personId": "emma-choy-17e5",
+      "name": "Emma Choy",
+      "why": "You should definitely meet Emma Choy; your shared connection to Honua Music Group could spark some inspiring conversations about music and creativity.",
+      "basis_kind": "same_work",
+      "via": "Honua Music Group",
+      "path_receipt": [
+        {
+          "from": "Sanjna Kolli",
+          "rel": "WORKS_AT",
+          "to": "Honua Music Group"
+        },
+        {
+          "from": "Emma Choy",
+          "rel": "WORKS_AT",
+          "to": "Honua Music Group"
+        }
+      ]
+    },
+    {
+      "personId": "eva-kennedy-d195",
+      "name": "Eva Kennedy",
+      "why": "You should connect with Eva Kennedy because her passion for championing artists aligns beautifully with your own commitment to supporting the creative community.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-champion-artists",
+      "match_belief": "Growing up in LA i was always curious, but it wasn’t until I was removed from it at college that I realized it was a passion that ran deep. My favorite thing is working with people, especially people who create cool art. What better job than one that combines both?",
+      "path_receipt": [
+        {
+          "from": "Eva Kennedy",
+          "rel": "SHARES_VALUE",
+          "to": "Sanjna Kolli"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Berklee",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Honua Music Group",
+    "belief": "Music has been a part of my life since I was 4 but only as a hobby. Being able to do it as a career has been a dream. Waking up to never hate my job is probably the only thing I can ask for. Music is something everyone listens to no matter what, being able to be at the forefront of that is definitely what drew me to it.",
+    "working_on": "My goal that I am working up to right now is being an A&R exec at Indie major label. But the ultimate goal is to start my own record label that is very artist forward that doesn't make artists feel like they are heard and they have a team to support them to get their creative vision across."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to empower artists, ensuring their voices are heard while fulfilling your own dream of a meaningful career.",
+  "gradient": {
+    "seed": 1244886160,
+    "stops": [
+      {
+        "color": "hsl(227 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(237 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(323 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

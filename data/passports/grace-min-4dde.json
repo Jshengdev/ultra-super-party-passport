@@ -1,0 +1,73 @@
+{
+  "personId": "grace-min-4dde",
+  "name": "Grace Min",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because he shares your passion for Disney and has some incredible stories about his favorite experiences there.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Grace Min",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You should meet Connor James because he shares your passion for Disney and has some incredible stories about his favorite characters and memories.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Grace Min",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Connor James",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSUF",
+    "major": "",
+    "grad_year": "",
+    "position": "Public Relations Intern",
+    "company": "Disney",
+    "belief": "Storytelling",
+    "working_on": "Publicity for late night TV in NYC"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for connection, using storytelling to illuminate diverse voices and create shared experiences in a vibrant city.",
+  "gradient": {
+    "seed": 2271328750,
+    "stops": [
+      {
+        "color": "hsl(172 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(268 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "dlency-zheng-93dc",
+  "name": "Dlency Zheng",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "sebastian-ellis-5e12",
+      "name": "Sebastian Ellis",
+      "why": "You should meet Sebastian Ellis, as you both share a connection to Paramount and could exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Dlency Zheng",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because you both share a connection to UCLA and can swap great stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Dlency Zheng",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Global Content Licensing",
+    "company": "Paramount",
+    "belief": "Started releasing my own music with my high school band!",
+    "working_on": "Opening my own record label"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for music and a desire to create a platform that nurtures and showcases artistic expression.",
+  "gradient": {
+    "seed": 1040550905,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(174 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

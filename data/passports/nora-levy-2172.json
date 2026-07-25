@@ -1,0 +1,69 @@
+{
+  "personId": "nora-levy-2172",
+  "name": "Nora Levy",
+  "line2": "Red Wagon Entertainment",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both share the experience of being development interns, which could lead to some insightful conversations.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Nora Levy",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "raizel-prijanto-62cf",
+      "name": "Raizel Prijanto",
+      "why": "You would enjoy meeting Raizel Prijanto because she shares your conviction in the power of connecting people to create meaningful impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-connect-people",
+      "match_belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+      "path_receipt": [
+        {
+          "from": "Nora Levy",
+          "rel": "SHARES_VALUE",
+          "to": "Raizel Prijanto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UChicago",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Red Wagon Entertainment",
+    "belief": "I am drawn to telling stories that need to be told and making an avenue for talented creatives to do their best work. As an only child in a rural area, there wasn’t much for me to do, so I became enamored with what tv and films taught me and the connections they bring.",
+    "working_on": "I would love to be head of TV Development at a Studio or Head of an Agency TV Scripted department."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create connection and opportunity through storytelling, transforming your own isolation into a nurturing creative space for others.",
+  "gradient": {
+    "seed": 2791254887,
+    "stops": [
+      {
+        "color": "hsl(272 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(29 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(275 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

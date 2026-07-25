@@ -1,0 +1,69 @@
+{
+  "personId": "kornelia-welmso-ed35",
+  "name": "Kornelia Welmsö",
+  "line2": "Creative (both student, photographer, videographer, dancer, and have 2 interns atm)",
+  "find": [
+    {
+      "personId": "maya-lockwood-6f6d",
+      "name": "Maya Lockwood",
+      "why": "You would love to meet Maya Lockwood, as she has a unique perspective on photography that I think would inspire you both creatively.",
+      "basis_kind": "same_work",
+      "via": "photography",
+      "path_receipt": [
+        {
+          "from": "Kornelia Welmsö",
+          "rel": "DOES",
+          "to": "photography"
+        },
+        {
+          "from": "Maya Lockwood",
+          "rel": "DOES",
+          "to": "photography"
+        }
+      ]
+    },
+    {
+      "personId": "sam-1722",
+      "name": "Sam",
+      "why": "You should meet Sam because both of you share a deep conviction in bringing joy to others, and I think you'd inspire each other.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "Being able to create things that help people and can turn your entire mood around.",
+      "path_receipt": [
+        {
+          "from": "Kornelia Welmsö",
+          "rel": "SHARES_VALUE",
+          "to": "Sam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "SMC, graduate",
+    "major": "",
+    "grad_year": "",
+    "position": "Communication & production intern Blue13Dance, videographer at Movement Lifestyle Dance Studio, and creator",
+    "company": "Creative (both student, photographer, videographer, dancer, and have 2 interns atm)",
+    "belief": "It’s the reason why I moved here, combined with the dance and performance industry. I’m a big fan of hiphop dance as well. Los Angeles is also an amazing place to network, especially in this industry. My passion is within it, and therefore I want to do my best to fill my life with as much joy and experiences as possible here. Big focus on the career as well, and how I can come forward with my creativity.",
+    "working_on": "I have no specific role in mind, but I would describe it with these words:\n\nDance, film, behind the scenes, photography, concerts, marketing, campaigns, social media, videography, advertising, editing, big studios, production…\n\nWherever these takes me, I’m happy!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to immerse yourself in creativity and connection, seeking joy and fulfillment through the vibrant arts community around you.",
+  "gradient": {
+    "seed": 3385872652,
+    "stops": [
+      {
+        "color": "hsl(123 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(87 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

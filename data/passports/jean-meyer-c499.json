@@ -1,0 +1,73 @@
+{
+  "personId": "jean-meyer-c499",
+  "name": "Jean Meyer",
+  "line2": "Netflix",
+  "find": [
+    {
+      "personId": "mulang-zhu-a9ef",
+      "name": "Mulang Zhu",
+      "why": "You should meet Mulang Zhu, as both of you have a passion for Netflix that will spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Jean Meyer",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Mulang Zhu",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    },
+    {
+      "personId": "jessie-b-evans-35fa",
+      "name": "Jessie B. Evans",
+      "why": "You and Jessie B. Evans both have a passion for Netflix, making it a perfect opportunity to share favorite shows and movie recommendations.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Jean Meyer",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Jessie B. Evans",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Netflix",
+    "belief": "I just kind of ended up in entertainment.",
+    "working_on": "CEO of Netflix"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are likely driven by a curiosity to explore the unexpected paths that lead to meaningful connections and stories in entertainment.",
+  "gradient": {
+    "seed": 1712325466,
+    "stops": [
+      {
+        "color": "hsl(205 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(167 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

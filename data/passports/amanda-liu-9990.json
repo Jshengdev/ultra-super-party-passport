@@ -1,0 +1,73 @@
+{
+  "personId": "amanda-liu-9990",
+  "name": "Amanda Liu",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because you both share a passion for NBCUniversal and can exchange insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Amanda Liu",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she has fascinating insights about USC that I think you'll both enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Amanda Liu",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Global Business Operations Intern",
+    "company": "NBCUniversal",
+    "belief": "I first discovered the creative side of entertainment through voice acting and broadcasting as a child. As I grew older and developed an interest in business, I realized I wanted to build a career that bridged those two passions!",
+    "working_on": "Working on the corporate side of entertainment, whether it be in business development or finance!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize creativity and commerce, crafting pathways that honor your artistic roots while thriving in the business realm.",
+  "gradient": {
+    "seed": 509367632,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(302 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

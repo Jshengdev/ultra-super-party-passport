@@ -1,0 +1,69 @@
+{
+  "personId": "chloe-osmers-1fa4",
+  "name": "Chloe Osmers",
+  "line2": "ESPN LA",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras, as you both share a passion for ESPN LA and can bond over your favorite sports moments.",
+      "basis_kind": "same_work",
+      "via": "ESPN LA",
+      "path_receipt": [
+        {
+          "from": "Chloe Osmers",
+          "rel": "WORKS_AT",
+          "to": "ESPN LA"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "WORKS_AT",
+          "to": "ESPN LA"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You would really connect with Connor James, as both of you share a deep conviction in the power of bringing joy to others.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "watching movies",
+      "path_receipt": [
+        {
+          "from": "Chloe Osmers",
+          "rel": "SHARES_VALUE",
+          "to": "Connor James"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Pepperdine",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing Intern",
+    "company": "ESPN LA",
+    "belief": "I have a passion for contributing to things that bring people joy and creating joyful meaningful experiences through sports, music , and film.",
+    "working_on": "My ultimate goal within entertainment is to be a chief marketing officer in an entertainment because it’s where i feel called to contribute and so much of a successful project comes from how the project is shown to the fans and lovers of entertainment."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to amplify joy and connection, ensuring that the stories you love resonate powerfully with others.",
+  "gradient": {
+    "seed": 849244671,
+    "stops": [
+      {
+        "color": "hsl(323 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(354 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

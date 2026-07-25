@@ -1,0 +1,69 @@
+{
+  "personId": "ani-16df",
+  "name": "Ani",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "brooke-byrd-c91e",
+      "name": "Brooke Byrd",
+      "why": "You and Brooke Byrd both have a passion for directing, making it a perfect opportunity to exchange insights and experiences in the field.",
+      "basis_kind": "same_work",
+      "via": "director",
+      "path_receipt": [
+        {
+          "from": "Ani",
+          "rel": "DOES",
+          "to": "director"
+        },
+        {
+          "from": "Brooke Byrd",
+          "rel": "DOES",
+          "to": "director"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a deep conviction in making people feel seen and valued in every interaction.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Ani",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Director",
+    "company": "",
+    "belief": "Growing up, I was the kid who'd rewatch the same movie just to catch how a scene was built. I'd try my hardest to deconstruct the scene.  That habit never left; now I catch myself doing the same thing with films and shows as an adult, picking apart pacing and structure instead of just watching. That curiosity is basically why I want to be on the development side of things.",
+    "working_on": "My goal is to work in content development with a focus on representation, specifically making sure people of all abilities are actually reflected on screen. That's grown out of real work, not just an interest: research at the Annenberg Inclusion Initiative and leading EDIA efforts at Brand New Theatre showed me how much intention it takes to get representation right, and I want to keep building that into the stories that get made."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to amplify diverse voices, believing that intentional storytelling can reshape perceptions and foster inclusion.",
+  "gradient": {
+    "seed": 1664969669,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(161 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

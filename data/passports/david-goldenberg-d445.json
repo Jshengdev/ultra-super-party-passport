@@ -1,0 +1,73 @@
+{
+  "personId": "david-goldenberg-d445",
+  "name": "David Goldenberg",
+  "line2": "Zero Gravity Management",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she has some fascinating insights about her internship experience that I think you'll both enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "David Goldenberg",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because you both have great insights from your internship experiences that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "David Goldenberg",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Tufts",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Zero Gravity Management",
+    "belief": "I was a very artsy kid and always knew I wanted a career that could become my primary creative outlet. I did theater for most of my life, but as I began exploring other paths, I became increasingly drawn to film. It offered a broader range of creative opportunities and more room for growth than I felt I had in theater. Once I made that decision before college, I began actively pursuing opportunities in the entertainment industry.",
+    "working_on": "I want to be an Agent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to express your creativity in diverse ways, seeking a vibrant platform where your artistic vision can flourish.",
+  "gradient": {
+    "seed": 643002109,
+    "stops": [
+      {
+        "color": "hsl(209 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(100 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

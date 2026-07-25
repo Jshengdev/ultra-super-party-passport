@@ -1,0 +1,69 @@
+{
+  "personId": "sarah-boyanton-3ce9",
+  "name": "Sarah Boyanton",
+  "line2": "C3 Management + HeadCount",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share a connection to represent-agency, opening up great opportunities for collaboration and insights.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Sarah Boyanton",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava, as both of you share a deep conviction in building community, which could lead to inspiring conversations.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Sarah Boyanton",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Syracuse University graduating December",
+    "major": "",
+    "grad_year": "",
+    "position": "Artist Management Intern + Artist Relations",
+    "company": "C3 Management + HeadCount",
+    "belief": "I wanted to have a hand in curating experiences for fans that are meaningful.",
+    "working_on": "Day to day artist management"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to forge genuine connections, transforming artistic expression into shared moments that resonate deeply with others.",
+  "gradient": {
+    "seed": 1550705496,
+    "stops": [
+      {
+        "color": "hsl(169 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(30 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

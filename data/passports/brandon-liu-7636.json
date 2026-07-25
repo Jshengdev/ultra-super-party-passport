@@ -1,0 +1,73 @@
+{
+  "personId": "brandon-liu-7636",
+  "name": "Brandon Liu",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You’ll really enjoy meeting Connor James, as he shares your passion for Disney and has some great stories from his favorite films.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Connor James",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because you both share a connection to UCLA and could exchange some great experiences from your time there.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Disney",
+    "belief": "Passion for movies and desire to support the behind the scenes of what makes the magic happen!",
+    "working_on": "Finance/strategy lead at Disney Entertainment or Experiences"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep appreciation for storytelling, wanting to amplify its impact by ensuring financial success behind the scenes.",
+  "gradient": {
+    "seed": 3164894895,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(326 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

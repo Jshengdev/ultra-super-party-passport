@@ -1,0 +1,69 @@
+{
+  "personId": "phong-nguyen-6b26",
+  "name": "Phong Nguyen",
+  "line2": "Fremantle",
+  "find": [
+    {
+      "personId": "ava-wilson-1791",
+      "name": "Ava Wilson",
+      "why": "You should meet Ava Wilson; she shares your passion for Fremantle and has some fascinating stories about the area that you'll both enjoy.",
+      "basis_kind": "same_work",
+      "via": "Fremantle",
+      "path_receipt": [
+        {
+          "from": "Phong Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Fremantle"
+        },
+        {
+          "from": "Ava Wilson",
+          "rel": "WORKS_AT",
+          "to": "Fremantle"
+        }
+      ]
+    },
+    {
+      "personId": "shreena-garg-3394",
+      "name": "Shreena Garg",
+      "why": "You should meet Shreena Garg because her passion for expressing creativity through diverse mediums aligns beautifully with your own artistic pursuits.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "I’ve always had a big passion for arts and crafts growing up and then it transitioned into photography. I loved the idea that every photograph had a different interpretation based on the person viewing it. I picked up film photography in college and i love that film can make any ordinary or dull moment look and feel so nostalgic and beautiful. The entertainment industry as a whole has a way of uniting people that might even have different day to day interests. My favorite icebreaker is “what show are you watching right now?” it’s so fun to discuss easter eggs in cinema as well.",
+      "path_receipt": [
+        {
+          "from": "Phong Nguyen",
+          "rel": "SHARES_VALUE",
+          "to": "Shreena Garg"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Rochester",
+    "major": "",
+    "grad_year": "",
+    "position": "Acquisitions Intern",
+    "company": "Fremantle",
+    "belief": "I want to champion diverse voices and stories on screen.",
+    "working_on": "Being Film Producer and creating more Asian representation."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to authenticity and inclusion, striving to amplify narratives that resonate with underrepresented communities.",
+  "gradient": {
+    "seed": 1010785997,
+    "stops": [
+      {
+        "color": "hsl(201 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(108 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "dylan-daniel-a639",
+  "name": "Dylan Daniel",
+  "line2": "Independent artist group",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has great insights from her internship that I think you'd both find really inspiring.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Dylan Daniel",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu, as you both share the experience of being interns and can exchange valuable insights from your journeys.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Dylan Daniel",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of south florida",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Independent artist group",
+    "belief": "The ability to incorporate connections and social charisma into the work place.",
+    "working_on": "My goal is to eventually become a sports entertainment/ agent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend your passion for sports with authentic relationships, believing that connection is key to success.",
+  "gradient": {
+    "seed": 3939848385,
+    "stops": [
+      {
+        "color": "hsl(110 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(281 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

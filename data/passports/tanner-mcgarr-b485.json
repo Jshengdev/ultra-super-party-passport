@@ -1,0 +1,73 @@
+{
+  "personId": "tanner-mcgarr-b485",
+  "name": "Tanner McGarr",
+  "line2": "Sony Pictures",
+  "find": [
+    {
+      "personId": "jason-drucker-24ee",
+      "name": "Jason drucker",
+      "why": "You should meet Jason Drucker, as you both share a passion for producing that could spark some truly inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "Producer",
+      "path_receipt": [
+        {
+          "from": "Tanner McGarr",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        },
+        {
+          "from": "Jason drucker",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You should meet Ethan Schwesinger; you both have a connection to Chapman that could spark some great conversations and memories.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Tanner McGarr",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Trainee",
+    "company": "Sony Pictures",
+    "belief": "My desire to explore everything about the world & tell stories of resilience",
+    "working_on": "Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep curiosity and a heartfelt commitment to illuminate the strength of the human spirit through storytelling.",
+  "gradient": {
+    "seed": 2291823918,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(199 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

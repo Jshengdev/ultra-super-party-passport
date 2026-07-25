@@ -1,0 +1,73 @@
+{
+  "personId": "ziyu-gao-ea13",
+  "name": "Ziyu Gao",
+  "line2": "USC School of Cinematic Arts",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce that could spark some interesting conversations and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Ziyu Gao",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would really enjoy meeting Maggie Lee, as you both have a strong connection to USC and can share some great memories.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Ziyu Gao",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Producer",
+    "company": "USC School of Cinematic Arts",
+    "belief": "The people!",
+    "working_on": "Studio Exec & Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep commitment to amplify voices and stories, believing in the transformative power of creativity through collaboration.",
+  "gradient": {
+    "seed": 1461158319,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(144 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

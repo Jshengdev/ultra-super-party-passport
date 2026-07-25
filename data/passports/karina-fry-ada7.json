@@ -1,0 +1,69 @@
+{
+  "personId": "karina-fry-ada7",
+  "name": "Karina Fry",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as both of you share a connection to NBCUniversal and could exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Karina Fry",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN, as you both share a deep conviction for representation and the importance of making everyone feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Karina Fry",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Franchise Strategy & Creative",
+    "company": "NBCUniversal",
+    "belief": "I have a passion for telling stories, and entertainment has so many different avenues for doing exactly this. Whether it is being on the creative development side of filmmaking or finding ways to bring such stories to life through consumer products, the entertainment industry is a space for fueling the imagination/creativity that shaped who I am today.",
+    "working_on": "I would love to work in creative film development on the story side for either TV shows, live action movies, but more specifically, an animation studio. I am still discovering all the incredible roles within the industry, and where I fall into everything. My goal can be narrowed down to simply sharing stories and having my viewpoints/visions represented in the content we consume."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect and inspire through storytelling, believing that your unique perspective can enrich the narratives we share.",
+  "gradient": {
+    "seed": 3476471203,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(73 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

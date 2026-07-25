@@ -1,0 +1,69 @@
+{
+  "personId": "tavishi-srivastava-1a18",
+  "name": "Tavishi Srivastava",
+  "line2": "UCSB ‘25, UCLA M.S",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights on market-brand strategies could complement your own ideas beautifully.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Tavishi Srivastava",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maya-labrache-ca7e",
+      "name": "Maya LaBrache",
+      "why": "You would enjoy meeting Maya LaBrache, as you both share a passion for how entertainment connects diverse cultures and communities.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "Having grown up overseas in Abu Dhabi and Saudi Arabia, I’ve always been interested in the role of media, specifically music, in shaping culture and community. Living as an expat initially drew me to the entertainment industry as it allowed me to connect with my peers and learn about the world around me through creativity. Between concerts, festivals, or even album drops, music has allowed me to feel a sense of belonging and that is something I hope to foster within others as I drive into the industry.",
+      "path_receipt": [
+        {
+          "from": "Maya LaBrache",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSB ‘25, UCLA M.S",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing",
+    "company": "",
+    "belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+    "working_on": "My ultimate goal is to build a career in entertainment, especially in marketing and the creative process. I want to combine my background in marketing, psychology, and creativity to help artists and brands connect with audiences in meaningful ways. I hope to contribute to projects that bring people across cultures together through storytelling and creativity."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to bridge cultures and foster connection, using creativity as a powerful tool for shared human experience.",
+  "gradient": {
+    "seed": 2874655778,
+    "stops": [
+      {
+        "color": "hsl(302 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(319 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "courtney-hannon-8a02",
+  "name": "Courtney Hannon",
+  "line2": "Ragdoll PR",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights on market-brand strategies could spark some exciting ideas for your own projects.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Courtney Hannon",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "kornelia-welmso-ed35",
+      "name": "Kornelia Welmsö",
+      "why": "You’d love to meet Kornelia Welmsö, as you both share a deep conviction in bringing joy to others through meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "It’s the reason why I moved here, combined with the dance and performance industry. I’m a big fan of hiphop dance as well. Los Angeles is also an amazing place to network, especially in this industry. My passion is within it, and therefore I want to do my best to fill my life with as much joy and experiences as possible here. Big focus on the career as well, and how I can come forward with my creativity.",
+      "path_receipt": [
+        {
+          "from": "Courtney Hannon",
+          "rel": "SHARES_VALUE",
+          "to": "Kornelia Welmsö"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Lasell",
+    "major": "",
+    "grad_year": "",
+    "position": "PR Intern",
+    "company": "Ragdoll PR",
+    "belief": "I’ve always enjoyed music and movies",
+    "working_on": "I want to make people happy!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for music and movies reveals a deep desire to connect and uplift others, creating joy through shared experiences and emotions.",
+  "gradient": {
+    "seed": 1714119257,
+    "stops": [
+      {
+        "color": "hsl(246 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(323 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

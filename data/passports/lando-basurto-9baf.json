@@ -1,0 +1,73 @@
+{
+  "personId": "lando-basurto-9baf",
+  "name": "Lando Basurto",
+  "line2": "Barry Katz Entertainment",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel, as you both share a passion for produce that could spark some inspiring discussions and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Lando Basurto",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as both of you share a connection to USC and could reminisce about your experiences there together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Lando Basurto",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative",
+    "company": "Barry Katz Entertainment",
+    "belief": "Watching content since I was little",
+    "working_on": "Producer screenwriting directing and acting"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for storytelling, seeking to create the immersive experiences that inspired you from a young age.",
+  "gradient": {
+    "seed": 448918951,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(127 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

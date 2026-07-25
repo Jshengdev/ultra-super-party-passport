@@ -1,0 +1,69 @@
+{
+  "personId": "yael-perez-ochoa-ca29",
+  "name": "Yael Perez Ochoa",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights on market-brand strategies could really complement your own ideas and spark a great conversation.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Yael Perez Ochoa",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns beautifully with your own mission and vision for meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Maggie Lee",
+          "rel": "SHARES_VALUE",
+          "to": "Yael Perez Ochoa"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Entertainment Marketing & Brand Strategy",
+    "company": "",
+    "belief": "I’m drawn to how entertainment combines storytelling, culture, and strategy. My experience in film marketing showed me how the right campaign can help a story connect with its audience.",
+    "working_on": "To lead marketing and brand strategy for a major film, music, or entertainment company."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to shape narratives that resonate, believing in the transformative power of strategic storytelling in connecting people.",
+  "gradient": {
+    "seed": 876159846,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(331 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

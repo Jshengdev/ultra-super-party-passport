@@ -1,0 +1,69 @@
+{
+  "personId": "maia-pak-9b28",
+  "name": "Maia Pak",
+  "line2": "Tesla Design Studio",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You would love to meet Caterina Terrizzi because she has insightful perspectives on market-brand strategies that could resonate with your own experiences.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Maia Pak",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You would love to meet Tavishi Srivastava, as both of you share a deep commitment to building community in meaningful ways.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Maia Pak",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Stanford",
+    "major": "",
+    "grad_year": "",
+    "position": "Design/Comms/Branding",
+    "company": "Tesla Design Studio",
+    "belief": "My passion journalism and media became an obsession with consumer habits; currently focused on learning how to truly understand audiences.",
+    "working_on": "Owning communications strategy for a cause or org I care about, in a way that benefits others."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect and empower others, using your insights to foster meaningful change through informed communication.",
+  "gradient": {
+    "seed": 784184658,
+    "stops": [
+      {
+        "color": "hsl(92 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(259 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "gracielly-c983",
+  "name": "gracielly",
+  "line2": "",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi because you both share the intriguing experience of being undecided, which could lead to a fascinating conversation.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "gracielly",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "eugene-choi-2a22",
+      "name": "Eugene Choi",
+      "why": "You and Eugene Choi both connect to undecided, so you’ll enjoy discussing your perspectives and experiences together.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "gracielly",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Eugene Choi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Fellow",
+    "company": "",
+    "belief": "Culture",
+    "working_on": "Culture"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to shape connections and foster understanding, believing that culture is the essence of human experience.",
+  "gradient": {
+    "seed": 218301529,
+    "stops": [
+      {
+        "color": "hsl(149 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(121 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

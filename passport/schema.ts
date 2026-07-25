@@ -48,7 +48,9 @@ export const passportSchema = z.object({
   personId: z.string().min(1),
   name: z.string().min(1),
   line2: z.string(),                             // company || school (may be "" if neither exists)
-  find: z.array(findSchema).length(2),           // exactly two: [0] same-work, [1] values-aligned
+  find: z.array(findSchema).min(1).max(2),       // [0] same-work-first, [1] values-aligned; a TRUE
+                                                 // structural singleton ships one honest find rather
+                                                 // than a fabricated second (dignity > symmetry)
   profile: z
     .object({
       school: z.string().default(""),

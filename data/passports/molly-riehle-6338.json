@@ -1,0 +1,69 @@
+{
+  "personId": "molly-riehle-6338",
+  "name": "Molly Riehle",
+  "line2": "THE TEAM (formerly Wasserman)",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both have valuable insights and experiences to share from your time at represent-agency.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Molly Riehle",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava because her passion for building community aligns perfectly with your own shared mission and vision for meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Molly Riehle",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Brown University",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Intern, Tour Marketing",
+    "company": "THE TEAM (formerly Wasserman)",
+    "belief": "I love that entertainment unifies people. Getting to work in live music has been so rewarding because I get to be a part of the behind-the-scenes world that brings people together to enjoy a performance. I have met so many creative, kind, incredible, hard-working people in this industry, and it is really something I want to be a part of.",
+    "working_on": "Anything in live music! Creative/marketing, agent, tour manager, photographer, etc."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for connection, seeking to amplify the joy and unity that live music fosters among diverse communities.",
+  "gradient": {
+    "seed": 2067522987,
+    "stops": [
+      {
+        "color": "hsl(281 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(235 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

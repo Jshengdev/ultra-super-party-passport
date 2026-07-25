@@ -1,0 +1,73 @@
+{
+  "personId": "jordan-stahl-6a56",
+  "name": "Jordan Stahl",
+  "line2": "Live Nation Entertainment",
+  "find": [
+    {
+      "personId": "matt-dimaandal-d738",
+      "name": "Matt Dimaandal",
+      "why": "You should meet Matt Dimaandal because he has great insights about Live Nation Entertainment that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "Live Nation Entertainment",
+      "path_receipt": [
+        {
+          "from": "Jordan Stahl",
+          "rel": "WORKS_AT",
+          "to": "Live Nation Entertainment"
+        },
+        {
+          "from": "Matt Dimaandal",
+          "rel": "WORKS_AT",
+          "to": "Live Nation Entertainment"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has amazing insights about USC that you both will appreciate and enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Jordan Stahl",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Content Producer",
+    "company": "Live Nation Entertainment",
+    "belief": "I always been keen to content development and thought myself different creative tools growing up.",
+    "working_on": "I would love to work on movie sets."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to express your unique creativity, seeking the thrill of collaboration and storytelling in dynamic environments.",
+  "gradient": {
+    "seed": 1254510305,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(199 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

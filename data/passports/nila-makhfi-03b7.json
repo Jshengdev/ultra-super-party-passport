@@ -1,0 +1,73 @@
+{
+  "personId": "nila-makhfi-03b7",
+  "name": "Nila Makhfi",
+  "line2": "Parkzy",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights into market-brand strategies could complement your own experiences beautifully.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Nila Makhfi",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would love to meet Maggie Lee, as you both share a strong connection to USC and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Nila Makhfi",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Cmo",
+    "company": "Parkzy",
+    "belief": "The creativity :)",
+    "working_on": "Tech and entertainment marketing"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for merging innovation with artistry, seeking to inspire and connect through the vibrant world of entertainment.",
+  "gradient": {
+    "seed": 2411526759,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(138 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

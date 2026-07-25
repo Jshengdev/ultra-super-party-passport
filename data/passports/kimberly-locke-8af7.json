@@ -1,0 +1,73 @@
+{
+  "personId": "kimberly-locke-8af7",
+  "name": "Kimberly Locke",
+  "line2": "Adore Creative AI",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah Einisman share a passion for direct connections, making your conversations sure to spark exciting ideas and insights.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Kimberly Locke",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "crystal-qianhui-xu-1989",
+      "name": "Crystal Qianhui Xu",
+      "why": "You and Crystal Qianhui Xu both connect to direct, making it a great opportunity for you to exchange insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Kimberly Locke",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Crystal Qianhui Xu",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "AMDA DTLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Executive",
+    "company": "Adore Creative AI",
+    "belief": "Great storytelling and television. Wanting to be apart of a creative team.",
+    "working_on": "Director and Executive"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect people through compelling narratives, seeking collaboration that transforms stories into memorable experiences.",
+  "gradient": {
+    "seed": 1696676604,
+    "stops": [
+      {
+        "color": "hsl(299 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(282 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

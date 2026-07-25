@@ -1,0 +1,73 @@
+{
+  "personId": "natalie-sperling-3642",
+  "name": "Natalie Sperling",
+  "line2": "Focus Features",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi, as you both share the experience of being undecided and can exchange insights about navigating that journey.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Natalie Sperling",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "maya-labrache-ca7e",
+      "name": "Maya LaBrache",
+      "why": "You should meet Maya LaBrache because she has incredible insights about UC Berkeley that I think you'll both enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "UC Berkeley",
+      "path_receipt": [
+        {
+          "from": "Natalie Sperling",
+          "rel": "STUDIES_AT",
+          "to": "UC Berkeley"
+        },
+        {
+          "from": "Maya LaBrache",
+          "rel": "STUDIES_AT",
+          "to": "UC Berkeley"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Digital Marketing Intern",
+    "company": "Focus Features",
+    "belief": "The creativity and connections between everyone.",
+    "working_on": "No idea… something in marketing and creative"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to forge meaningful connections and unleash creativity, believing that collaboration holds the key to transformative ideas.",
+  "gradient": {
+    "seed": 3579879638,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(346 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

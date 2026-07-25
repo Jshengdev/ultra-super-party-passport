@@ -1,0 +1,73 @@
+{
+  "personId": "taniya-kumar-f4de",
+  "name": "Taniya Kumar",
+  "line2": "UCLA Anderson MBA Student",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu; he has some fascinating stories about his time at UCLA that I think you'll both enjoy sharing.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Taniya Kumar",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling; he shares your UCLA background and has some fascinating stories about his experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Taniya Kumar",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "UCLA Anderson MBA Student",
+    "company": "UCLA Anderson MBA Student",
+    "belief": "Before business school, I worked at Netflix and saw firsthand how thoughtful localization and an understanding of different audiences could turn a show into a global conversation. That experience drew me to entertainment because it showed me that stories aren't just content, they're a way to build emotional connection at scale. That's still the lens I bring to everything I do today.",
+    "working_on": "My long-term goal is to build consumer products and brands that create the same kind of emotional connection that great entertainment does. Working at Netflix showed me that when you understand people deeply, stories can transcend cultures and bring millions together. As I build at the intersection of AI, consumer tech, and storytelling, I want to create experiences that people don't just use, but genuinely trust, remember, and share."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to forge deep emotional connections, believing that storytelling can unite diverse audiences in meaningful ways.",
+  "gradient": {
+    "seed": 473681630,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(103 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "maryam-rahimie-cac2",
+  "name": "Maryam Rahimie",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah share a unique connection to direct, and I think you'd both enjoy exchanging insights and experiences in that area.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Maryam Rahimie",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she shares your passion for USC and has some incredible stories about her time there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Maryam Rahimie",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Photographer",
+    "company": "",
+    "belief": "Makes the most sense for who I am and what I love!",
+    "working_on": "Representation at a photo agency, Becoming a Director"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to express your authentic self, seeking to shape narratives that resonate with your passions and identity.",
+  "gradient": {
+    "seed": 2935134716,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(316 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "kyungmin-lee-76ba",
+  "name": "Kyungmin Lee",
+  "line2": "Chapman",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both share a passion for direct connection and can exchange valuable insights on the topic.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Kyungmin Lee",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would enjoy meeting Maggie Lee because she shares your passion for building community and has inspiring ideas on how to make a difference.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Kyungmin Lee",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Director/editor",
+    "company": "",
+    "belief": "What drew me to the entertainment industry was seeing the power of visual language that broke barriers of culture and language. As I grew up in Romania form a young age, I fell in love with movies that spoke to me despite its language difference.",
+    "working_on": "I want to be a director of feature films and music videos that can reach and connect global audiences."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create connections that transcend boundaries, using visual storytelling to unite diverse audiences through shared experiences.",
+  "gradient": {
+    "seed": 420770477,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(196 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

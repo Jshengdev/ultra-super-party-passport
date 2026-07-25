@@ -1,0 +1,73 @@
+{
+  "personId": "kelly-4cde",
+  "name": "Kelly",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You and Aidan Teeling both connect to NBCUniversal, so you’ll enjoy sharing insights and experiences from your time there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Kelly",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You and Maggie Lee both share a connection to USC, and her insights about campus life could resonate with your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Kelly",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Unscripted Formats",
+    "company": "NBCUniversal",
+    "belief": "I’m always watching TV in my free time, so why not make it? I also love the community and people I meet in the industry and us all pursuing a common cause",
+    "working_on": "Making reality TV shows"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for storytelling and connection, finding joy in shaping shared experiences that unite people through entertainment.",
+  "gradient": {
+    "seed": 1769410053,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(172 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

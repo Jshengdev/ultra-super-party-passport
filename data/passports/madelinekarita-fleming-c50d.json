@@ -1,0 +1,73 @@
+{
+  "personId": "madelinekarita-fleming-c50d",
+  "name": "Madelinekarita Fleming",
+  "line2": "Mkf Inc",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because you both share a passion for acting that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Madelinekarita Fleming",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "garvin-kim-7534",
+      "name": "Garvin Kim",
+      "why": "You would enjoy meeting Garvin Kim, as you both share a wonderful connection to Harvard that could spark some great conversations.",
+      "basis_kind": "shared_context",
+      "via": "Harvard",
+      "path_receipt": [
+        {
+          "from": "Madelinekarita Fleming",
+          "rel": "STUDIES_AT",
+          "to": "Harvard"
+        },
+        {
+          "from": "Garvin Kim",
+          "rel": "STUDIES_AT",
+          "to": "Harvard"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Harvard",
+    "major": "",
+    "grad_year": "",
+    "position": "Owner",
+    "company": "Mkf Inc",
+    "belief": "Been acting since birth",
+    "working_on": "Running and acting in international films"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling that transcends borders, allowing your authentic self to shine through every performance.",
+  "gradient": {
+    "seed": 481251612,
+    "stops": [
+      {
+        "color": "hsl(199 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(201 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

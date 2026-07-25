@@ -1,0 +1,73 @@
+{
+  "personId": "cierra-trujillo-3fd6",
+  "name": "Cierra Trujillo",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should definitely meet Aidan Teeling, as you both share a strong connection to NBCUniversal and can exchange valuable insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Cierra Trujillo",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "keona-edwards-2305",
+      "name": "Keona Edwards",
+      "why": "You should meet Keona Edwards because you both have a passion for NBCUniversal and can share exciting insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Cierra Trujillo",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Keona Edwards",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Texas A&M",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "NBCUniversal",
+    "belief": "The fact that every day brings a new challenge and that I love films. It allows me to bring my passion for films and my degree of Finance together.",
+    "working_on": "I would like to continue in corporate film finance and eventually be a director or higher."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to merge your love for storytelling with strategic thinking, seeking to create impactful narratives in film.",
+  "gradient": {
+    "seed": 1116091833,
+    "stops": [
+      {
+        "color": "hsl(116 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(8 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

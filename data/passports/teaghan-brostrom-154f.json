@@ -1,0 +1,69 @@
+{
+  "personId": "teaghan-brostrom-154f",
+  "name": "Teaghan Brostrom",
+  "line2": "NBC",
+  "find": [
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should meet Jenae Sperling because you both share a passion for journalism and can exchange inspiring stories and insights from your experiences.",
+      "basis_kind": "same_work",
+      "via": "journalism",
+      "path_receipt": [
+        {
+          "from": "Teaghan Brostrom",
+          "rel": "DOES",
+          "to": "journalism"
+        },
+        {
+          "from": "Jenae Sperling",
+          "rel": "DOES",
+          "to": "journalism"
+        }
+      ]
+    },
+    {
+      "personId": "yael-perez-ochoa-ca29",
+      "name": "Yael Perez Ochoa",
+      "why": "You should meet Yael Perez Ochoa because her passion for building community aligns perfectly with your own vision and could spark inspiring discussions.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "I’m drawn to how entertainment combines storytelling, culture, and strategy. My experience in film marketing showed me how the right campaign can help a story connect with its audience.",
+      "path_receipt": [
+        {
+          "from": "Teaghan Brostrom",
+          "rel": "SHARES_VALUE",
+          "to": "Yael Perez Ochoa"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Syracuse University",
+    "major": "",
+    "grad_year": "",
+    "position": "Newsroom Intern",
+    "company": "NBC",
+    "belief": "Movies and TV shows connect people, by giving them something to talk about or providing an opportunity for people to do things together. I love that aspect of entertainment & am interested in sharing it as a journalist.",
+    "working_on": "My ultimate goal is to be a TV reporter."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to foster connection and conversation, believing that storytelling can unite people in shared experiences and understanding.",
+  "gradient": {
+    "seed": 3002080279,
+    "stops": [
+      {
+        "color": "hsl(40 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(281 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

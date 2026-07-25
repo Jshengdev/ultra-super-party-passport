@@ -1,0 +1,69 @@
+{
+  "personId": "daniel-pan-aa50",
+  "name": "Daniel Pan",
+  "line2": "AMC Networks",
+  "find": [
+    {
+      "personId": "sarah-takami-b5e0",
+      "name": "Sarah Takami",
+      "why": "You and Sarah Takami both connect to AMC Networks, and she has some fascinating insights into the industry that you would really enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "AMC Networks",
+      "path_receipt": [
+        {
+          "from": "Daniel Pan",
+          "rel": "WORKS_AT",
+          "to": "AMC Networks"
+        },
+        {
+          "from": "Sarah Takami",
+          "rel": "WORKS_AT",
+          "to": "AMC Networks"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You would enjoy meeting YU-SHENG CHIEN because both of you share a deep-rooted love for music and performance as a powerful means of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Daniel Pan",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Coordinator",
+    "company": "AMC Networks",
+    "belief": "Breaking Bad and Stranger Things",
+    "working_on": "Writer/Director for Indie Feature Films"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to explore the complexities of morality and the extraordinary in everyday life, crafting compelling narratives that resonate.",
+  "gradient": {
+    "seed": 1249321744,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(178 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

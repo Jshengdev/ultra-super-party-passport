@@ -1,0 +1,69 @@
+{
+  "personId": "ting-ting-chen-ba21",
+  "name": "Ting Ting Chen",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You would really enjoy meeting Grace Carr, as you both share a deep passion for design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Ting Ting Chen",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You’d enjoy meeting Aidan Teeling because you both share a deep conviction in proving it's possible through guarded extraction and quote-grounded discussions.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-prove-its-possible",
+      "match_belief": "Film has been a big part of my life since I was young, and I love idea of being a part of the industry that brings these stories to life in a way that brightens people’s lives.",
+      "path_receipt": [
+        {
+          "from": "Aidan Teeling",
+          "rel": "SHARES_VALUE",
+          "to": "Ting Ting Chen"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Fellow",
+    "company": "",
+    "belief": "I’m drawn to the entertainment industry because it brings together creativity, technology, and an understanding of how people connect with stories and experiences. I’m especially interested in research and development, where emerging technologies and new ideas can improve how content is created, delivered, and experienced. I would love to contribute my background in science, research, and technology to help develop innovative and meaningful experiences for audiences.",
+    "working_on": "My ultimate goal is to work in research and development within the entertainment industry, helping create new technologies, tools, and experiences that improve how content is produced and how audiences engage with it. I’m especially interested in combining science, technology, and creativity to contribute to innovative projects behind the scenes."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bridge creativity and technology, believing that innovation can transform how stories resonate with audiences.",
+  "gradient": {
+    "seed": 3082426654,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(308 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(18 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

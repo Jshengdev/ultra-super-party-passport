@@ -1,0 +1,69 @@
+{
+  "personId": "faheem-rahman-7599",
+  "name": "faheem rahman",
+  "line2": "WashU",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You should meet Grace Carr, as you both share a passion for design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "faheem rahman",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You should meet Madilyn Palosi because her passion for elevating underdogs aligns perfectly with your shared conviction and mission.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-elevate-underdogs",
+      "match_belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+      "path_receipt": [
+        {
+          "from": "faheem rahman",
+          "rel": "SHARES_VALUE",
+          "to": "Madilyn Palosi"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "WashU",
+    "major": "",
+    "grad_year": "",
+    "position": "Fashion Designer",
+    "company": "",
+    "belief": "The LA Music scene and wanting to make fashion an artistic staple that brings in art form",
+    "working_on": "I’d love to become a creative director and being sustainability to the fashion industry"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize creativity and sustainability, aiming to transform fashion into a powerful expression of culture and artistry.",
+  "gradient": {
+    "seed": 1608216398,
+    "stops": [
+      {
+        "color": "hsl(1 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(147 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(272 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

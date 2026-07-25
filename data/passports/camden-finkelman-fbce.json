@@ -1,0 +1,73 @@
+{
+  "personId": "camden-finkelman-fbce",
+  "name": "Camden Finkelman",
+  "line2": "Growth consulting",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You’ll find a great conversation partner in Caterina, as you both share a passion for market-brand insights and strategies.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Camden Finkelman",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "ruby-washio-dcf5",
+      "name": "ruby washio",
+      "why": "You should meet Ruby Washio because you both share a passion for market-brand, and I think you'll have amazing insights to exchange.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Camden Finkelman",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "ruby washio",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Elon",
+    "major": "",
+    "grad_year": "",
+    "position": "Head of growth",
+    "company": "Growth consulting",
+    "belief": "Ran meme pages and then joined a startup that worked with all the record labels and music companies so got to meet them and work on lots of campaigns. Then expanded my services and started working with tech startups.",
+    "working_on": "Movie marketing director or pivot to acting later on"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You seek to blend creativity with influence, driven by a desire to connect stories and audiences through innovative marketing and personal expression.",
+  "gradient": {
+    "seed": 232142290,
+    "stops": [
+      {
+        "color": "hsl(165 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(44 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

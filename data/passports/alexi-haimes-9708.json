@@ -1,0 +1,69 @@
+{
+  "personId": "alexi-haimes-9708",
+  "name": "Alexi Haimes",
+  "line2": "Focus Features (Universal)",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You and Junior Contreras both share a passion for acting, making it a perfect opportunity to exchange experiences and insights in the craft.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Alexi Haimes",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam, as both of you share a lifelong passion for film and television that sparks incredible conversations and creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Alexi Haimes",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Publicity",
+    "company": "Focus Features (Universal)",
+    "belief": "I love movies and how it allows me to connect my passion into my career",
+    "working_on": "Actress"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to fuse your passion with purpose, seeking connection through the transformative power of storytelling in film.",
+  "gradient": {
+    "seed": 1162253337,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(128 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

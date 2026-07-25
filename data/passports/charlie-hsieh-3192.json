@@ -1,0 +1,73 @@
+{
+  "personId": "charlie-hsieh-3192",
+  "name": "Charlie Hsieh",
+  "line2": "Lionsgate",
+  "find": [
+    {
+      "personId": "sam-1722",
+      "name": "Sam",
+      "why": "You would really enjoy meeting Sam, as you both have a unique connection through Lionsgate that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "Lionsgate",
+      "path_receipt": [
+        {
+          "from": "Charlie Hsieh",
+          "rel": "WORKS_AT",
+          "to": "Lionsgate"
+        },
+        {
+          "from": "Sam",
+          "rel": "WORKS_AT",
+          "to": "Lionsgate"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You’ll enjoy meeting Ethan Schwesinger, as you both share a connection to Chapman and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Charlie Hsieh",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Assistant",
+    "company": "Lionsgate",
+    "belief": "A Q&A held by someone who worked in Entertainment Marketing.",
+    "working_on": "To work in Sales & Distribution"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to connect and share ideas, seeking inspiration from those who have successfully navigated creative industries.",
+  "gradient": {
+    "seed": 2447295255,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(68 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

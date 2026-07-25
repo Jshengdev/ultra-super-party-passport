@@ -1,0 +1,73 @@
+{
+  "personId": "vianne-nguyen-313a",
+  "name": "Vianne Nguyen",
+  "line2": "Warner Bros Discovery",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You would enjoy meeting Saamya Patel, as you both share a connection to Warner Bros Discovery and can exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Warner Bros Discovery",
+      "path_receipt": [
+        {
+          "from": "Vianne Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        }
+      ]
+    },
+    {
+      "personId": "briana-rivera-65bc",
+      "name": "Briana Rivera",
+      "why": "You should meet Briana Rivera, as you both share a fascinating connection with Warner Bros Discovery that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "Warner Bros Discovery",
+      "path_receipt": [
+        {
+          "from": "Vianne Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        },
+        {
+          "from": "Briana Rivera",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Georgia Tech",
+    "major": "",
+    "grad_year": "",
+    "position": "product management intern",
+    "company": "Warner Bros Discovery",
+    "belief": "I love how the entertainment industry functions and how creative it is",
+    "working_on": "being a product manager"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for creativity in the entertainment industry reveals a desire to merge innovation with user experiences that inspire and engage.",
+  "gradient": {
+    "seed": 657516950,
+    "stops": [
+      {
+        "color": "hsl(265 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(119 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

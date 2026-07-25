@@ -1,0 +1,73 @@
+{
+  "personId": "melanie-cho-eddc",
+  "name": "Melanie Cho",
+  "line2": "FOX Entertainment",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because her passion for produce parallels yours, and I think you'd enjoy exchanging ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Melanie Cho",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You should meet Ethan Schwesinger; he has some fascinating insights about Chapman that I think you'll both enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Melanie Cho",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Alternative Development & Production",
+    "company": "FOX Entertainment",
+    "belief": "I have always loved entertainment as a kid! I loved how it can spark conversations and connect others!!!",
+    "working_on": "agent or production executive!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for entertainment reveals a deep desire to foster connections and inspire dialogue, reflecting your belief in its transformative power.",
+  "gradient": {
+    "seed": 2482320564,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(243 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

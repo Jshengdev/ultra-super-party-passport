@@ -1,0 +1,73 @@
+{
+  "personId": "christina-yeghnazarian-9cd4",
+  "name": "Christina Yeghnazarian",
+  "line2": "Rosen Law Group - Transactional Entertainment Law",
+  "find": [
+    {
+      "personId": "eliza-arnold-2264",
+      "name": "Eliza Arnold",
+      "why": "You should meet Eliza Arnold, as you both share a passion for entertainment law and could exchange valuable insights and experiences in the field.",
+      "basis_kind": "same_work",
+      "via": "entertainment-law",
+      "path_receipt": [
+        {
+          "from": "Christina Yeghnazarian",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        },
+        {
+          "from": "Eliza Arnold",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        }
+      ]
+    },
+    {
+      "personId": "emma-chen-0089",
+      "name": "Emma Chen",
+      "why": "You should meet Emma Chen because her insights into entertainment law could spark fascinating discussions and inspire new ideas for your work.",
+      "basis_kind": "same_work",
+      "via": "entertainment-law",
+      "path_receipt": [
+        {
+          "from": "Christina Yeghnazarian",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        },
+        {
+          "from": "Emma Chen",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Southwestern Law School",
+    "major": "",
+    "grad_year": "",
+    "position": "Transactional Entertainment Law Legal Extern/Intern",
+    "company": "Rosen Law Group - Transactional Entertainment Law",
+    "belief": "As a Disney adult, content creator and law student, it made the most sense to explore the Entertainment Law path, and this has been solidified with my current experience as an extern in an Entertainment Law Firm and having taken, aced, and truly enjoyed my Copyright class in school.",
+    "working_on": "I want to work in-house for a major studio in their legal department."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for creativity and storytelling, seeking to protect and enhance the narratives that resonate deeply with you.",
+  "gradient": {
+    "seed": 2104420781,
+    "stops": [
+      {
+        "color": "hsl(352 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(271 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

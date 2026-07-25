@@ -1,0 +1,69 @@
+{
+  "personId": "imani-ford-b419",
+  "name": "Imani Ford",
+  "line2": "OBB Media",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You and Grace Carr both share a passion for design, making it a perfect opportunity for you to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Imani Ford",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You should meet Madilyn Palosi because her passion for inspiring action aligns perfectly with your shared conviction in making a meaningful impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-inspire-action",
+      "match_belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+      "path_receipt": [
+        {
+          "from": "Imani Ford",
+          "rel": "SHARES_VALUE",
+          "to": "Madilyn Palosi"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Howard University",
+    "major": "",
+    "grad_year": "",
+    "position": "Summer Intern",
+    "company": "OBB Media",
+    "belief": "What drew me to the entertainment industry was my desire to express myself through storytelling, drawing from my unique perspective on life and personal experiences. In 2020, I picked up a camera, everything changed for me. It provided me with an outlet to fully and creatively express myself during a time when the outside world seemed distant and mute. This newfound passion led me to establish a photography business, and then I secured internship opportunities that helped me realize the kind of impact I could and wanted to make in the broader entertainment space.",
+    "working_on": "My ultimate goal is to become an Executive Creative Director and CEO of my own creative agency that integrates photography, production, advertising, and branding. A more immediate goal of mine is to become an Art/Creative Director for a creative agency."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep need to connect and communicate your unique experiences, transforming personal stories into impactful narratives through creative expression.",
+  "gradient": {
+    "seed": 896478118,
+    "stops": [
+      {
+        "color": "hsl(310 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(208 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(59 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

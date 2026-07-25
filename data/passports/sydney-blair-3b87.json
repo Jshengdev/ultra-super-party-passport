@@ -1,0 +1,69 @@
+{
+  "personId": "sydney-blair-3b87",
+  "name": "Sydney Blair",
+  "line2": "Millennium Media / MPI",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah both have experience as development interns, so you might enjoy sharing insights and stories about your journeys in that role.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Sydney Blair",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "amelia-kosmal-5ad8",
+      "name": "Amelia Kosmal",
+      "why": "You would love to meet Amelia Kosmal, as both of you share a strong desire to tell stories that connect and resonate with audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "I want to be involved in impacting people's lives through storytelling as someone who has been personally influenced by all the stories I've seen through media.",
+      "path_receipt": [
+        {
+          "from": "Amelia Kosmal",
+          "rel": "SHARES_VALUE",
+          "to": "Sydney Blair"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Belmont University",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Millennium Media / MPI",
+    "belief": "Telling stories that make people feel something",
+    "working_on": "Produced - adapt books to TV"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect hearts and minds through the transformative power of storytelling, inviting empathy and understanding.",
+  "gradient": {
+    "seed": 2952109289,
+    "stops": [
+      {
+        "color": "hsl(202 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(9 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

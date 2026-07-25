@@ -1,0 +1,73 @@
+{
+  "personId": "joy-bae-76da",
+  "name": "Joy Bae",
+  "line2": "UC Irvine",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You would really enjoy meeting Grace Carr, as you both share a passion for design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Joy Bae",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "kaley-ouyang-ed02",
+      "name": "Kaley Ouyang",
+      "why": "You should meet Kaley Ouyang because her experiences at UC Irvine might inspire some great conversations about your time there.",
+      "basis_kind": "shared_context",
+      "via": "UC Irvine",
+      "path_receipt": [
+        {
+          "from": "Joy Bae",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        },
+        {
+          "from": "Kaley Ouyang",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Irvine",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Coordinator",
+    "company": "",
+    "belief": "Working with professionals at the Paramount studio set at the age of 18, coordinating and translating for multi-thousand productions, it totally opened up my eyes towards the endless potential entertainment holds. \n\nI’ve been a production assistant since Sophomore year of HS for people like Zach King and BLACKPINK, and the excitement of creating something together that ultimately impacts the celebrity and the crew in a way that you intend is the reason why I think entertainment is the best industry for people who are adventurous, creative, organized, and ambitious, like I am.",
+    "working_on": "I want to become a visual director and creative director for artists. I intentionally took on a visual directing internship last Summer 2026 because of this, learning the ins and outs of pre-production for magazine cover shoots for brands like VOGUE, fashion show attendances for VALENTINO, etc, and learned how a single detail can become a huge hit depending on how you execute it. \n\nI want to be someone that has an eye out for those details in the future, for the artist to benefit from the ideas and concepts that I propose, and for us to create something that benefits the both of us in the industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to elevate artistic expression, harnessing your keen eye for detail to enhance collaborative creativity.",
+  "gradient": {
+    "seed": 1753120537,
+    "stops": [
+      {
+        "color": "hsl(140 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(252 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

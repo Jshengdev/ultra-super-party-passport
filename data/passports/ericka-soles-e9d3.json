@@ -1,0 +1,69 @@
+{
+  "personId": "ericka-soles-e9d3",
+  "name": "Ericka Soles",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You would love to meet Brandon Liu because he shares your passion for Disney and has some incredible stories about his favorite films and experiences.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Ericka Soles",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "kornelia-welmso-ed35",
+      "name": "Kornelia Welmsö",
+      "why": "You would love to meet Kornelia Welmsö because her passion for bringing joy aligns beautifully with your shared conviction in creating positive impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "It’s the reason why I moved here, combined with the dance and performance industry. I’m a big fan of hiphop dance as well. Los Angeles is also an amazing place to network, especially in this industry. My passion is within it, and therefore I want to do my best to fill my life with as much joy and experiences as possible here. Big focus on the career as well, and how I can come forward with my creativity.",
+      "path_receipt": [
+        {
+          "from": "Ericka Soles",
+          "rel": "SHARES_VALUE",
+          "to": "Kornelia Welmsö"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "PSU",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Department Secretary",
+    "company": "Disney",
+    "belief": "I love entertaining, especially for kids and families.",
+    "working_on": "I want to produce animated shows and movies."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create joy and connection, using storytelling to inspire imagination and laughter in young hearts.",
+  "gradient": {
+    "seed": 3179326447,
+    "stops": [
+      {
+        "color": "hsl(155 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(322 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

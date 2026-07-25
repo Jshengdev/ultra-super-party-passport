@@ -1,0 +1,73 @@
+{
+  "personId": "layla-harbert-d7e1",
+  "name": "Layla Harbert",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as you both share a connection to NBCUniversal and could exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Layla Harbert",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she shares your passion for USC and has some fascinating stories about her time there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Layla Harbert",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing & Publicity Intern",
+    "company": "NBCUniversal",
+    "belief": "I absolutely adore the psychology and storytelling that goes into creating experiences for viewers to immerse themselves in. The creative thought behind every event/campaign/idea never cease to amaze me",
+    "working_on": "My ultimate goal is to become a creative director for Universal Pictures. I’d love to head their creative efforts and digital + experiential marketing."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep appreciation for the transformative power of storytelling, seeking to craft immersive experiences that resonate profoundly with audiences.",
+  "gradient": {
+    "seed": 3606172349,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(303 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "halas-graden-f769",
+  "name": "Halas Graden",
+  "line2": "Final Boss Sour / Science",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You would really enjoy meeting Grace Carr, as you both share a passion for innovative design and creative inspiration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Halas Graden",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should connect with Kalen Kang, as both of you share a deep commitment to inspiring the next generation in meaningful ways.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "I was drawn to the entertainment industry because of its crossover with tech and business. Good ideas become experiences that genuinely connect with people! I love being part of the work behind the scenes that brings those moments to life, and I believe entertainment has a unique ability to inspire and add something meaningful to everyday life.",
+      "path_receipt": [
+        {
+          "from": "Halas Graden",
+          "rel": "SHARES_VALUE",
+          "to": "Kalen Kang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Design & Product",
+    "company": "Final Boss Sour / Science",
+    "belief": "I think the ability to captivate people and the unmatched ability to experiment and explore new possibilities.",
+    "working_on": "I want to pursue entertainment for social impact and to genuinely empower others through unique mediums."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to inspire change and foster connection, believing in the transformative power of creative expression.",
+  "gradient": {
+    "seed": 2174109655,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(17 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

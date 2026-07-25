@@ -1,0 +1,73 @@
+{
+  "personId": "richie-3f18",
+  "name": "Richie",
+  "line2": "UC Irvine",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah Einisman both share a passion for direct communication, making it easy for you to connect and share insights.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Richie",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "joy-bae-76da",
+      "name": "Joy Bae",
+      "why": "You should meet Joy Bae because she has fascinating insights about UC Irvine that I think you'll both enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "UC Irvine",
+      "path_receipt": [
+        {
+          "from": "Richie",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        },
+        {
+          "from": "Joy Bae",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Irvine",
+    "major": "",
+    "grad_year": "",
+    "position": "director",
+    "company": "",
+    "belief": "Since little I have been fascinated by it, watching it sparked it and as I got older I began studying it.",
+    "working_on": "Being a director producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling, seeking to transform your childhood fascination into a creative legacy that inspires others.",
+  "gradient": {
+    "seed": 2795010276,
+    "stops": [
+      {
+        "color": "hsl(140 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(105 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

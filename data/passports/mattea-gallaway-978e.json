@@ -1,0 +1,73 @@
+{
+  "personId": "mattea-gallaway-978e",
+  "name": "Mattea Gallaway",
+  "line2": "The Kennedy/Marshall Company & Olive Bridge Entertainment",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce, and I think you'll find each other's insights inspiring.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Mattea Gallaway",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "alexi-haimes-9708",
+      "name": "Alexi Haimes",
+      "why": "You should meet Alexi Haimes because you both share a connection to UT Austin and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UT Austin",
+      "path_receipt": [
+        {
+          "from": "Mattea Gallaway",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        },
+        {
+          "from": "Alexi Haimes",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Documentary Intern & Development Intern",
+    "company": "The Kennedy/Marshall Company & Olive Bridge Entertainment",
+    "belief": "Watching movies/TV with my parents growing up and making my own!",
+    "working_on": "Showrunner for a sitcom!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to recreate the joy and connection you felt with your parents through storytelling and laughter.",
+  "gradient": {
+    "seed": 1831498098,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(170 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "eliza-arnold-2264",
+  "name": "Eliza Arnold",
+  "line2": "AEFH",
+  "find": [
+    {
+      "personId": "christina-yeghnazarian-9cd4",
+      "name": "Christina Yeghnazarian",
+      "why": "You would enjoy meeting Christina Yeghnazarian, as she shares your passion for entertainment law and has fascinating insights into the industry.",
+      "basis_kind": "same_work",
+      "via": "entertainment-law",
+      "path_receipt": [
+        {
+          "from": "Eliza Arnold",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        },
+        {
+          "from": "Christina Yeghnazarian",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You should meet Isabel Soliman; she has some fascinating insights about Vanderbilt that I think you'd both enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "Vanderbilt",
+      "path_receipt": [
+        {
+          "from": "Eliza Arnold",
+          "rel": "STUDIES_AT",
+          "to": "Vanderbilt"
+        },
+        {
+          "from": "Isabel Soliman",
+          "rel": "STUDIES_AT",
+          "to": "Vanderbilt"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Vanderbilt",
+    "major": "",
+    "grad_year": "",
+    "position": "intern",
+    "company": "AEFH",
+    "belief": "Entertainment law",
+    "working_on": "Entertainment law"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You’re driven by a passion for creativity, seeking to protect artistic expression while navigating the complex intersections of art and commerce.",
+  "gradient": {
+    "seed": 3971269210,
+    "stops": [
+      {
+        "color": "hsl(148 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(161 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

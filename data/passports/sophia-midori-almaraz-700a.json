@@ -1,0 +1,69 @@
+{
+  "personId": "sophia-midori-almaraz-700a",
+  "name": "Sophia Midori Almaraz",
+  "line2": "DreamWorks Animation (NBCUniversal)",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah both share a passion for direct communication that could spark some fascinating conversations and innovative ideas.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Sophia Midori Almaraz",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "tristan-britton-harr-e92a",
+      "name": "Tristan Britton-Harr",
+      "why": "You and Tristan both share a deep commitment to inspiring action, making your conversation a perfect opportunity for impactful ideas and collaboration.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-inspire-action",
+      "match_belief": "I like how media can connect to people on a deeper level and move them in ways other industries can’t. I want to contribute making art accessible to people to impact their lives in a meaningful way.",
+      "path_receipt": [
+        {
+          "from": "Sophia Midori Almaraz",
+          "rel": "SHARES_VALUE",
+          "to": "Tristan Britton-Harr"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "ArtCenter",
+    "major": "",
+    "grad_year": "",
+    "position": "Custom Animation Intern",
+    "company": "DreamWorks Animation (NBCUniversal)",
+    "belief": "Watching film, drawing stories and watching theater as a Japanese and Mexican kid, feeling pride and connection through art.",
+    "working_on": "Directing a feature animated film at DreamWorks Animation that reminds everyone that by being alive, they still have the power to choose hope, love and change."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to inspire others, using your cultural heritage to illuminate the transformative power of hope and love.",
+  "gradient": {
+    "seed": 689851038,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(208 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(145 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

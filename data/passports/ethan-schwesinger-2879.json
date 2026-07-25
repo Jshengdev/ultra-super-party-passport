@@ -1,0 +1,69 @@
+{
+  "personId": "ethan-schwesinger-2879",
+  "name": "Ethan Schwesinger",
+  "line2": "Chapman",
+  "find": [
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You should meet Kate Honsik because her unique writing style could inspire your own creative process in ways you haven't yet imagined.",
+      "basis_kind": "same_work",
+      "via": "write",
+      "path_receipt": [
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "DOES",
+          "to": "write"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "DOES",
+          "to": "write"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because both of you are passionate about building community and can share inspiring ideas on how to make a difference.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Writer",
+    "company": "",
+    "belief": "I’m a former college athlete.  After I suffered 3 significant injuries in a row, I decided to take some film classes at my local junior college while I recovered.  It was there that I found out the similarities between sports and film.  People working together towards a common goal to create something meaningful.  The better the teamwork and community, the better the product.  I think this industry is so important in understanding other perspectives, while also giving people all over the world something to enjoy and talk about with one another.  Who wouldn’t want to be a part of that?",
+    "working_on": "I want to do what Rachel Sennott, Quinta Brunson, and Issa Rae are doing.  A mix of writing, performing, and maybe directing.  However, I am incredibly open to wherever the wind takes me."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to forge connections and create shared experiences, transforming personal challenges into meaningful contributions that resonate widely.",
+  "gradient": {
+    "seed": 2969501897,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(218 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

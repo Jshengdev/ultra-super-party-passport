@@ -1,0 +1,73 @@
+{
+  "personId": "roy-ding-e700",
+  "name": "Roy Ding",
+  "line2": "Alibaba Entertainment",
+  "find": [
+    {
+      "personId": "kaylie-porter-65bf",
+      "name": "Kaylie Porter",
+      "why": "You and Kaylie Porter both connect to the vibrant world of art, making a conversation between you two a delightful exchange of creativity.",
+      "basis_kind": "same_work",
+      "via": "-",
+      "path_receipt": [
+        {
+          "from": "Roy Ding",
+          "rel": "WORKING_ON",
+          "to": "-"
+        },
+        {
+          "from": "Kaylie Porter",
+          "rel": "DOES",
+          "to": "-"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should definitely meet Maggie Lee; her insights on USC life will resonate with your own experiences and spark a great conversation.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Roy Ding",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "EA",
+    "company": "Alibaba Entertainment",
+    "belief": "-",
+    "working_on": "-"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "It seems you are motivated by a deep desire to create meaningful connections and inspire others through your work.",
+  "gradient": {
+    "seed": 389681487,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(16 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

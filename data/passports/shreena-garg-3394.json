@@ -1,0 +1,69 @@
+{
+  "personId": "shreena-garg-3394",
+  "name": "Shreena Garg",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You and Brandon Liu both share a love for Disney, making it a perfect opportunity to bond over your favorite movies and memories.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Shreena Garg",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "varleine-coq-af04",
+      "name": "Varleine Coq",
+      "why": "You should meet Varleine Coq because her passion for expressing herself through creative mediums aligns beautifully with your own artistic journey.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "I’ve always loved storytelling and collaborating with others since I was young, and I want Connie to find creative way to tell stories.",
+      "path_receipt": [
+        {
+          "from": "Shreena Garg",
+          "rel": "SHARES_VALUE",
+          "to": "Varleine Coq"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "asu",
+    "major": "",
+    "grad_year": "",
+    "position": "social media marketing intern",
+    "company": "Disney",
+    "belief": "I’ve always had a big passion for arts and crafts growing up and then it transitioned into photography. I loved the idea that every photograph had a different interpretation based on the person viewing it. I picked up film photography in college and i love that film can make any ordinary or dull moment look and feel so nostalgic and beautiful. The entertainment industry as a whole has a way of uniting people that might even have different day to day interests. My favorite icebreaker is “what show are you watching right now?” it’s so fun to discuss easter eggs in cinema as well.",
+    "working_on": "I just want to be able to experience and see the behind the scenes of how such cool forms of media are made. through my internship, i’ve been on set for photoshoots and commercials and it’s been so fun because i finally understand how much it takes to create just one piece of art and it’s so fulfilling to be able to see the final deliverable after all the effort you put in. it’s so rewarding. i am still figuring out exactly what i want to do but i am getting closer to doing so."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to uncover the magic behind creativity, seeking connection and meaning through shared artistic experiences that transcend individuality.",
+  "gradient": {
+    "seed": 1774939839,
+    "stops": [
+      {
+        "color": "hsl(192 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(66 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

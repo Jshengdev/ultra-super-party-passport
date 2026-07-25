@@ -1,0 +1,73 @@
+{
+  "personId": "jonah-einisman-06d2",
+  "name": "Jonah Einisman",
+  "line2": "Rideback",
+  "find": [
+    {
+      "personId": "tiggy-agok-65de",
+      "name": "Tiggy Agok",
+      "why": "You should meet Tiggy Agok because you both share a connection to Rideback and can exchange valuable insights and experiences from your time there.",
+      "basis_kind": "same_work",
+      "via": "Rideback",
+      "path_receipt": [
+        {
+          "from": "Jonah Einisman",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        },
+        {
+          "from": "Tiggy Agok",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        }
+      ]
+    },
+    {
+      "personId": "brooklynne-cad2",
+      "name": "Brooklynne",
+      "why": "You should meet Brooklynne because you both share a connection to the University of Michigan, which could spark some great conversations.",
+      "basis_kind": "shared_context",
+      "via": "University of Michigan",
+      "path_receipt": [
+        {
+          "from": "Jonah Einisman",
+          "rel": "STUDIES_AT",
+          "to": "University of Michigan"
+        },
+        {
+          "from": "Brooklynne",
+          "rel": "STUDIES_AT",
+          "to": "University of Michigan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Michigan",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Rideback",
+    "belief": "I’ve always known I wanted to pursue something creative and was always interested in drawing, painting, and music. At age 3 I got hooked on SpongeBob and started drawing cartoons in my free time which really influenced my creative interests. As I got older, I started watching more TV and realized I wanted to create my own show one day. Since then, I’ve known I wanted to pursue film and TV, and I’d love to work with animation!",
+    "working_on": "Showrunner"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated desire to translate your childhood joy into storytelling, crafting worlds that inspire and connect with others.",
+  "gradient": {
+    "seed": 2611766371,
+    "stops": [
+      {
+        "color": "hsl(44 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(222 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

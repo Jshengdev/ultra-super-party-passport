@@ -1,0 +1,69 @@
+{
+  "personId": "samantha-kellener-e32e",
+  "name": "Samantha Kellener",
+  "line2": "UCSD",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You and Caterina Terrizzi both connect to market-brand, so you’ll find plenty to discuss about innovative strategies and ideas in that space.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Samantha Kellener",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "william-tseng-d7ff",
+      "name": "William Tseng",
+      "why": "You and William Tseng both share a lifelong passion for film and television, making it a perfect opportunity to connect over your favorite stories and experiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "Love for film",
+      "path_receipt": [
+        {
+          "from": "Samantha Kellener",
+          "rel": "SHARES_VALUE",
+          "to": "William Tseng"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "Content Creator/ Social Media Marketing",
+    "company": "",
+    "belief": "Growing up, I always had a passion for film and all things related. I have multiple family members who work in the entertainment industry (Warner Brothers, Dream Works, Netflix, Titmouse) and I would love to follow in their footsteps. I’d love the opportunity to work behind the scenes on creative projects that test the boundaries of current film and television.",
+    "working_on": "My ultimate goal in pursuing entertainment is to build up a successful career in social media and creating thoughtful and engaging content for the audience of creative projects. I want to develop my skills in content creation, branding, and digital marketing. I’d like to establish myself as a trusted and creative professional in social media industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect with an audience and honor your family's legacy in the creative landscape of entertainment.",
+  "gradient": {
+    "seed": 1628242509,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(18 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

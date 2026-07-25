@@ -1,0 +1,69 @@
+{
+  "personId": "sunny-mccall-a0cf",
+  "name": "Sunny McCall",
+  "line2": "Bard",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah Einisman both connect to direct, and I think you'll enjoy sharing insights and experiences in that area together.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Sunny McCall",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "zitlaly-ekoh-b783",
+      "name": "Zitlaly Ekoh",
+      "why": "You should meet Zitlaly Ekoh because her passion for collaboration in creative projects aligns perfectly with your own interests and energy.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "How it’s a collaborative creative art form",
+      "path_receipt": [
+        {
+          "from": "Sunny McCall",
+          "rel": "SHARES_VALUE",
+          "to": "Zitlaly Ekoh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Bard",
+    "major": "",
+    "grad_year": "",
+    "position": "Director/ editor/ story developer",
+    "company": "",
+    "belief": "I love the collaboration within the entertainment industry, and all the work people do in order to bring stories to life. No matter the kinds of projects, dramas, comedies or even superhero films it is always amazing to see how others view the world and the ways they come up with to express their interests.",
+    "working_on": "My ultimate goal in entertainment is easily summed up in the title show runner. I work interdisciplinary though, so I would love to create IP projects."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound appreciation for diverse perspectives, seeking to weave collective creativity into narratives that resonate deeply with others.",
+  "gradient": {
+    "seed": 2351004618,
+    "stops": [
+      {
+        "color": "hsl(138 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(192 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

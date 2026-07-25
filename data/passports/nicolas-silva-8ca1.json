@@ -1,0 +1,69 @@
+{
+  "personId": "nicolas-silva-8ca1",
+  "name": "Nicolas Silva",
+  "line2": "Gonzaga",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You and Junior Contreras both share a passion for acting, making it a great opportunity for you to exchange experiences and insights.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Nicolas Silva",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "raizel-prijanto-62cf",
+      "name": "Raizel Prijanto",
+      "why": "You should meet Raizel Prijanto because both of you share a passion for inspiring the next generation through innovative ideas and meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+      "path_receipt": [
+        {
+          "from": "Nicolas Silva",
+          "rel": "SHARES_VALUE",
+          "to": "Raizel Prijanto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Gonzaga",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Assistant",
+    "company": "",
+    "belief": "Movies and TV drew me into the entertainment industry.",
+    "working_on": "To be a part of a project that I love, whether I’m an actor, director, writer, etc. I want to work on something that inspires others and makes them feel moved or understood."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create meaningful connections through storytelling, hoping to inspire and resonate with others' experiences.",
+  "gradient": {
+    "seed": 2483414794,
+    "stops": [
+      {
+        "color": "hsl(58 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(71 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

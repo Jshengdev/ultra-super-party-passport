@@ -1,0 +1,69 @@
+{
+  "personId": "taro-arthur-bb9a",
+  "name": "Taro Arthur",
+  "line2": "Sony",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You should meet Grace Carr because her innovative approach to design perfectly complements your creative vision.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Taro Arthur",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "kristin-rosenmund-a670",
+      "name": "Kristin Rosenmund",
+      "why": "You should meet Kristin Rosenmund because her passion for creating impactful experiences aligns perfectly with your shared belief in the power of wonder and escape.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-create-escape-wonder",
+      "match_belief": "I have always appreciated entertainment as a way that anyone in the world, no matter what they are going through, can use this outlet as a way to escape from the biggest to smallest of problems. Creating and telling stories broadens the minds of those who may be succumbed to or stuck in their own bubble. Even those in the worst circumstances can have the world at their fingertips.",
+      "path_receipt": [
+        {
+          "from": "Kristin Rosenmund",
+          "rel": "SHARES_VALUE",
+          "to": "Taro Arthur"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Associate",
+    "company": "Sony",
+    "belief": "Watching Toy Story 3 for the first time in theatres and being absolutely immersed. That and the unique space on film that combines tech with creative innovation.",
+    "working_on": "I’m a creative technologist & immersive filmmaker. My goal is to pioneer novel AI-accelerated pipelines across various creative verticals - virtual production, CG animation, location-based entertainment, and beyond. Additionally, I’m developing the next generation of immersive theatrical presentation that pushes the envelope beyond IMAX, VR, dome, etc."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to transform storytelling through technology, seeking to create experiences that evoke the same wonder you felt as a child.",
+  "gradient": {
+    "seed": 4103634217,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(43 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(285 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

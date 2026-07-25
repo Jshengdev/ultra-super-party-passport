@@ -1,0 +1,73 @@
+{
+  "personId": "kshae-a6d0",
+  "name": "KShae",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah Einisman both connect to direct, so you'll enjoy exchanging insights on your experiences and perspectives in that area.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "KShae",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You'd really enjoy meeting Maggie Lee, as you both share a strong connection to USC and can exchange great stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "KShae",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Writer/Director/Producer",
+    "company": "",
+    "belief": "Binge watching movies and tv with my family every night.",
+    "working_on": "Indie Feature Film Director"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create shared experiences that bring people closer, capturing the magic of storytelling in your films.",
+  "gradient": {
+    "seed": 3298741565,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(292 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "britney-doan-7474",
+  "name": "Britney Doan",
+  "line2": "e.l.f. Beauty",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights into market-brand strategies could offer you fresh perspectives that align perfectly with your interests.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Britney Doan",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both have a strong connection to USC and can share your experiences and insights from there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Britney Doan",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Influencer and Creator Marketing Intern",
+    "company": "e.l.f. Beauty",
+    "belief": "Growing up constantly in front of the screen, I’ve always been drawn to entertainment as it felt like an escape from reality. When I got to college and learned the different industries within marketing, I realized that it’s possible to work behind-the-scenes for the companies of shows/movies I grew up watching.",
+    "working_on": "I’d love to work in marketing within the entertainment industry and experience the behind-the-scenes! Whether I’m working directly for the companies or partnering with them for brand activations, my goal is to be the person behind all the campaigns and events people see on social media."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform your childhood escapism into a vibrant reality, creating engaging experiences that connect others to the magic of entertainment.",
+  "gradient": {
+    "seed": 1801402676,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(345 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

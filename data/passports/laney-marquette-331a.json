@@ -1,0 +1,69 @@
+{
+  "personId": "laney-marquette-331a",
+  "name": "Laney Marquette",
+  "line2": "AMC Studios/Global Media",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce and can exchange great insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Laney Marquette",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your shared conviction and vision for a more connected world.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Laney Marquette",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Integrated Marketing & Development",
+    "company": "AMC Studios/Global Media",
+    "belief": "Came because I was passionate about being creative, stayed due to the shared passion with others. Originally filmmaking, but through set and professional experience, I was drawn rather to coordinating and collaborating with multiple teams across multiple projects.",
+    "working_on": "Executive producer work with a current focus on the studio/company side"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to connect creative energies, fostering collaboration that transforms individual visions into collective achievements.",
+  "gradient": {
+    "seed": 2775335926,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(327 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "rudy-rodriguez-wehe-fa5c",
+  "name": "Rudy Rodriguez-Wehe",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Rudy Rodriguez-Wehe",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "tristan-britton-harr-e92a",
+      "name": "Tristan Britton-Harr",
+      "why": "You’ll find a kindred spirit in Tristan Britton-Harr, as both of you are passionate about elevating underdogs and sharing impactful stories.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-elevate-underdogs",
+      "match_belief": "I like how media can connect to people on a deeper level and move them in ways other industries can’t. I want to contribute making art accessible to people to impact their lives in a meaningful way.",
+      "path_receipt": [
+        {
+          "from": "Rudy Rodriguez-Wehe",
+          "rel": "SHARES_VALUE",
+          "to": "Tristan Britton-Harr"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Producer",
+    "company": "",
+    "belief": "I want to be in the entertainment industry because I believe stories have the power to influence culture, inspire people, and create shared experiences. I’m drawn to the intersection of creativity and business, where talent, strategy, and relationships come together to bring ideas to life. I want to be part of the teams that discover, develop, and deliver the next generation of entertainment.",
+    "working_on": "For me the ULTIMATE goal would be to be on the leading front of film and entertainment back home in the DR. Would love to represent Latino talent and then create back home."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep desire to uplift your culture and inspire others through storytelling, blending creativity with meaningful impact.",
+  "gradient": {
+    "seed": 3954208663,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(147 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(1 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

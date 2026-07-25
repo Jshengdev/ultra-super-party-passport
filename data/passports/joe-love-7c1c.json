@@ -1,0 +1,73 @@
+{
+  "personId": "joe-love-7c1c",
+  "name": "Joe Love",
+  "line2": "Creative + Remote Control Productions",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because your shared passion for composing music could spark some incredible creative collaborations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Joe Love",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "kayla-mcintyre-5388",
+      "name": "Kayla McIntyre",
+      "why": "You should meet Kayla McIntyre, as her unique approach to compose-music could inspire your own creative process in exciting ways.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Joe Love",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "Kayla McIntyre",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Composer, Intern",
+    "company": "Creative + Remote Control Productions",
+    "belief": "I used to be a touring guitarist for a heavy metal band in my late-teens, very early-20’s, but started getting opportunities to score small films here in LA, and really fell in love with it. I decided this was what I wanted to dedicate my life to.",
+    "working_on": "Scoring more and more projects and ultimately being a more mainstream Hollywood composer."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform passion into a lasting legacy, merging your musical roots with a vibrant creative future.",
+  "gradient": {
+    "seed": 3220086389,
+    "stops": [
+      {
+        "color": "hsl(279 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(257 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

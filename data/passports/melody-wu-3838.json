@@ -1,0 +1,73 @@
+{
+  "personId": "melody-wu-3838",
+  "name": "Melody wu",
+  "line2": "Nbc Universal",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet Yu-Sheng Chien, as you both share a passion for composing music that could spark an inspiring collaboration.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Melody wu",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; her experiences at USC are inspiring and she has great insights on campus life that you'll both appreciate.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Melody wu",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Film Music Creative Intern",
+    "company": "Nbc Universal",
+    "belief": "The people",
+    "working_on": "Music supervisor/ executive producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to elevate voices and stories through music, fostering connection and resonance in every project you touch.",
+  "gradient": {
+    "seed": 1376904635,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(265 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

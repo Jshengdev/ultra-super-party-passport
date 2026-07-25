@@ -1,0 +1,69 @@
+{
+  "personId": "amishi-6a12",
+  "name": "Amishi",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You and Caterina Terrizzi share a connection to Live Nation, making it a perfect opportunity to exchange insights and experiences in the industry.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Amishi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You would really enjoy meeting Yu-Sheng Chien, as you both share a deep-rooted love for music and performance as a means of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Amishi",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Purdue",
+    "major": "",
+    "grad_year": "",
+    "position": "CISO Intern",
+    "company": "Live Nation",
+    "belief": "I love listening to new music and attending concerts!",
+    "working_on": "Women representation in the entertainment industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for music and live experiences reveals a desire to amplify diverse voices and create spaces where all stories can be heard.",
+  "gradient": {
+    "seed": 1177585641,
+    "stops": [
+      {
+        "color": "hsl(238 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(16 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

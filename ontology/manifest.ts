@@ -466,6 +466,23 @@ ORDER BY other.name
 LIMIT $limit`.trim(),
     params: z.object({ personId: z.string(), limit: z.number().int().positive().default(10) }),
   },
+  // LAST-RESORT find: a real SEEKS edge between $personId and another guest, either direction.
+  // Read ONLY when same-work / values / shared-context cannot fill two finds — a stated intent is
+  // a weaker anchor than a shared entity, but it is a real, auditable edge, which is the bar.
+  // Ordered inbound-first ("they're looking for someone like you"), then mutual, then outbound.
+  seeks_path: {
+    name: "seeks_path",
+    cypher: `
+MATCH (p:Person {id: $personId})-[s:SEEKS]-(other:Person)
+WHERE other.id <> $personId
+RETURN other.id AS personId, other.name AS name, s.via AS via,
+       coalesce(s.score, 0) AS score, coalesce(s.mutual, false) AS mutual,
+       startNode(s).id = $personId AS outbound,
+       [{ from: startNode(s).name, rel: 'SEEKS', to: endNode(s).name }] AS path_receipt
+ORDER BY outbound ASC, mutual DESC, score DESC, other.name
+LIMIT $limit`.trim(),
+    params: z.object({ personId: z.string(), limit: z.number().int().positive().default(10) }),
+  },
   // full neighborhood of a person (for panels / debugging)
   person_neighborhood: {
     name: "person_neighborhood",

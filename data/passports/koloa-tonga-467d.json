@@ -1,0 +1,69 @@
+{
+  "personId": "koloa-tonga-467d",
+  "name": "Koloa Tonga",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "raegan-smith-7246",
+      "name": "Raegan smith",
+      "why": "You should meet Raegan Smith because you both share a passion for cinematography that could spark some inspiring conversations and creative ideas.",
+      "basis_kind": "same_work",
+      "via": "cinematography",
+      "path_receipt": [
+        {
+          "from": "Koloa Tonga",
+          "rel": "DOES",
+          "to": "cinematography"
+        },
+        {
+          "from": "Raegan smith",
+          "rel": "DOES",
+          "to": "cinematography"
+        }
+      ]
+    },
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You should meet Madilyn Palosi because her passion for elevating underdogs aligns perfectly with your shared mission and could spark inspiring conversations between you both.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-elevate-underdogs",
+      "match_belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+      "path_receipt": [
+        {
+          "from": "Koloa Tonga",
+          "rel": "SHARES_VALUE",
+          "to": "Madilyn Palosi"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "DP/Editor",
+    "company": "",
+    "belief": "The ability to express myself through film and not words haha",
+    "working_on": "Representing voices that are not heard, as well as paving new pathways for women in film. More women on crew!!!!!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to amplify unheard voices, believing that authentic representation in film can reshape narratives and empower others.",
+  "gradient": {
+    "seed": 1123816089,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(147 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(100 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

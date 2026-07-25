@@ -1,0 +1,69 @@
+{
+  "personId": "sam-1722",
+  "name": "Sam",
+  "line2": "Lionsgate",
+  "find": [
+    {
+      "personId": "charlie-hsieh-3192",
+      "name": "Charlie Hsieh",
+      "why": "You should meet Charlie Hsieh, as you both have a unique connection to Lionsgate that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "Lionsgate",
+      "path_receipt": [
+        {
+          "from": "Sam",
+          "rel": "WORKS_AT",
+          "to": "Lionsgate"
+        },
+        {
+          "from": "Charlie Hsieh",
+          "rel": "WORKS_AT",
+          "to": "Lionsgate"
+        }
+      ]
+    },
+    {
+      "personId": "talya-fleisher-67f0",
+      "name": "Talya Fleisher",
+      "why": "You should meet Talya Fleisher, as her passion for bringing joy aligns beautifully with your own conviction and will inspire meaningful conversations between you both.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "I love writing :) and telling stories that move people and make them laugh",
+      "path_receipt": [
+        {
+          "from": "Sam",
+          "rel": "SHARES_VALUE",
+          "to": "Talya Fleisher"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "NYU",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern to the chair of TV",
+    "company": "Lionsgate",
+    "belief": "Being able to create things that help people and can turn your entire mood around.",
+    "working_on": "Devolpment Exuctive or independent producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to uplift others, believing that your creative contributions can spark joy and transformation in their lives.",
+  "gradient": {
+    "seed": 1297012531,
+    "stops": [
+      {
+        "color": "hsl(343 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(119 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

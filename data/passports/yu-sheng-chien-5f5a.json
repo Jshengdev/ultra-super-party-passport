@@ -1,0 +1,69 @@
+{
+  "personId": "yu-sheng-chien-5f5a",
+  "name": "YU-SHENG CHIEN",
+  "line2": "370 music label",
+  "find": [
+    {
+      "personId": "kayla-mcintyre-5388",
+      "name": "Kayla McIntyre",
+      "why": "You should meet Kayla McIntyre because she shares your passion for composing music and has some inspiring insights to share.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "Kayla McIntyre",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "anthony-gery-8c79",
+      "name": "Anthony Gery",
+      "why": "You should meet Anthony Gery because he shares your deep-rooted love for music and performance as a powerful means of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "I think the entertainment industry is the most exciting form of business one can work in.",
+      "path_receipt": [
+        {
+          "from": "Anthony Gery",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LACM",
+    "major": "",
+    "grad_year": "",
+    "position": "marketing and A&R volunteer",
+    "company": "370 music label",
+    "belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+    "working_on": "Artist, In-house songwriter at a big label, producer."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect with others, using music as a vessel for shared emotions and transformative experiences.",
+  "gradient": {
+    "seed": 1423948207,
+    "stops": [
+      {
+        "color": "hsl(94 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(328 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "rebel-daniels-68ff",
+  "name": "Rebel Daniels",
+  "line2": "Dropout",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a passion for composing music that could spark some truly creative conversations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Rebel Daniels",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "w-stewart-fenn-760a",
+      "name": "W. Stewart Fenn",
+      "why": "You should meet W. Stewart Fenn because his passion for spreading joy and positivity aligns beautifully with your own uplifting vision.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-joy-positivity",
+      "match_belief": "Deep love of entertaining people. I started as a stand up comic and that just grew into me loving the entire industry.",
+      "path_receipt": [
+        {
+          "from": "Rebel Daniels",
+          "rel": "SHARES_VALUE",
+          "to": "W. Stewart Fenn"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Dropout",
+    "major": "",
+    "grad_year": "",
+    "position": "Music artist",
+    "company": "",
+    "belief": "It just happened fr, and I fell in love ever since.",
+    "working_on": "Breaking doors, and getting paid for doing something that I love"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for discovery, finding joy in the unexpected and transforming your love into fulfilling opportunities.",
+  "gradient": {
+    "seed": 3334615599,
+    "stops": [
+      {
+        "color": "hsl(216 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(190 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(302 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

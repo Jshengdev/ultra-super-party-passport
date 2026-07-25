@@ -1,0 +1,69 @@
+{
+  "personId": "debora-soegiarto-b009",
+  "name": "Debora Soegiarto",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "sebastian-ellis-5e12",
+      "name": "Sebastian Ellis",
+      "why": "You would enjoy meeting Sebastian Ellis, as you both share a strong connection to Paramount and can exchange fascinating insights from your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Debora Soegiarto",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your shared conviction and vision for creating meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Debora Soegiarto",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Pepperdine",
+    "major": "",
+    "grad_year": "",
+    "position": "Corporate Social Responsibility Intern",
+    "company": "Paramount",
+    "belief": "How it’s such a cross-cultural connected between all people!",
+    "working_on": "Working in international/global content distribution!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bridge cultures and foster understanding, creating connections that unite diverse perspectives across the globe.",
+  "gradient": {
+    "seed": 2095410932,
+    "stops": [
+      {
+        "color": "hsl(323 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(11 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

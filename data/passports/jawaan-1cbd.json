@@ -1,0 +1,73 @@
+{
+  "personId": "jawaan-1cbd",
+  "name": "Jawaan",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You and Brandon Liu both share a passion for Disney, making it a perfect opportunity to swap favorite memories and experiences.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Jawaan",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You should meet Connor James because he shares your passion for Disney and has some incredible stories about his experiences there.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Jawaan",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Connor James",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Morgan State University",
+    "major": "",
+    "grad_year": "",
+    "position": "Architectural Engineer",
+    "company": "Disney",
+    "belief": "The entertainment world needs a built environment and a good designed environment at that!",
+    "working_on": "Idk yet, still traversing the layout of the LAnd."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a vision to create spaces that enhance experiences, believing that thoughtfully designed environments can elevate the art of storytelling.",
+  "gradient": {
+    "seed": 4129143964,
+    "stops": [
+      {
+        "color": "hsl(92 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(186 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

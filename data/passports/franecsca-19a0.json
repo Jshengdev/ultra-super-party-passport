@@ -1,0 +1,69 @@
+{
+  "personId": "franecsca-19a0",
+  "name": "Franecsca",
+  "line2": "Sarah Lawrence College",
+  "find": [
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You and Kate Honsik both share a passion for writing, making it a perfect opportunity for you to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "write",
+      "path_receipt": [
+        {
+          "from": "Franecsca",
+          "rel": "DOES",
+          "to": "write"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "DOES",
+          "to": "write"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a deep conviction in making people feel seen and valued in every interaction.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Franecsca",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Sarah Lawrence College",
+    "major": "",
+    "grad_year": "",
+    "position": "screenwriter",
+    "company": "",
+    "belief": "I was drawn to the entertainment industry through screenwriters like Paddy Chayefsky and authors like Milan Kundera. Both writers who are able to understand the internal dynamics within the human and translate it beautifully onto paper.",
+    "working_on": "My ultimate goal would be to be a screenwriter/director and use my skills to amplify minority voices through my storytelling."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling reveals a deep commitment to elevating diverse narratives, driven by a desire to connect humanity through shared experiences.",
+  "gradient": {
+    "seed": 14992569,
+    "stops": [
+      {
+        "color": "hsl(332 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(254 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

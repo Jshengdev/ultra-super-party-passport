@@ -1,0 +1,69 @@
+{
+  "personId": "jessica-torres-2b0a",
+  "name": "Jessica Torres",
+  "line2": "SDSU",
+  "find": [
+    {
+      "personId": "neeka-peyman-c3b3",
+      "name": "Neeka Peyman",
+      "why": "You and Neeka Peyman share a passion for creative direction, making it a great opportunity to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "creative director",
+      "path_receipt": [
+        {
+          "from": "Jessica Torres",
+          "rel": "DOES",
+          "to": "creative director"
+        },
+        {
+          "from": "Neeka Peyman",
+          "rel": "DOES",
+          "to": "creative director"
+        }
+      ]
+    },
+    {
+      "personId": "sanjna-kolli-49b6",
+      "name": "Sanjna Kolli",
+      "why": "You should meet Sanjna Kolli because her passion for championing artists aligns beautifully with your own mission to support and uplift creative voices.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-champion-artists",
+      "match_belief": "Music has been a part of my life since I was 4 but only as a hobby. Being able to do it as a career has been a dream. Waking up to never hate my job is probably the only thing I can ask for. Music is something everyone listens to no matter what, being able to be at the forefront of that is definitely what drew me to it.",
+      "path_receipt": [
+        {
+          "from": "Jessica Torres",
+          "rel": "SHARES_VALUE",
+          "to": "Sanjna Kolli"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "SDSU",
+    "major": "",
+    "grad_year": "",
+    "position": "creative director",
+    "company": "",
+    "belief": "I've always been drawn to film because of its ability to tell stories that connect people, inspire, and leave a lasting cultural impact. I believe entertainment has the power to shape perspectives, spark conversations, and bring people together in a way that few other mediums can.\n\nThat passion for storytelling is what led me to pursue a career in the entertainment industry. I'm driven by the opportunity to help bring meaningful stories and creative voices to the forefront, whether that's by supporting artists, representing talent, or helping great projects find the audiences they deserve. I want to be a voice and a vessel for creativity, contributing to work that resonates with people and makes a lasting impact.",
+    "working_on": "My experience across production, including working as a production assistant, directing, art directing, and styling, has given me a well rounded understanding of the creative process from concept to execution. Through those experiences, I realized that what excites me most is championing the people behind the work.\n\nMy ultimate goal is to represent talent and help amplify their voices by connecting them with meaningful opportunities that align with their creative vision. I want to advocate for artists, storytellers, and creators. I'd love to help them build lasting careers while bringing impactful stories to audiences. Being part of the process of discovering talent, fostering creative partnerships, and helping shape the entertainment industry is what motivates me most."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to uplift and amplify the voices of others, believing in the transformative power of shared stories.",
+  "gradient": {
+    "seed": 2914055875,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(237 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(61 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

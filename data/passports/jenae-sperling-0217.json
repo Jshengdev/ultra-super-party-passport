@@ -1,0 +1,69 @@
+{
+  "personId": "jenae-sperling-0217",
+  "name": "Jenae Sperling",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because his passion for Disney storytelling mirrors your own, and I think you'll have a delightful conversation.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Jenae Sperling",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "jessica-zabala-f378",
+      "name": "Jessica Zabala",
+      "why": "You’d love to meet Jessica Zabala because her passion for storytelling mirrors your own, and you both seek to connect deeply with audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "My grandma a very well known Bolivian artist. She had a group with her siblings and got signed to a Brazilian label and constantly traveling throughout the continent. Seeing how she was so important in all Latin America, yet my country never showed any interest in them or supporting the arts, was the fuel and motivation I had to study music business and become the change they need.",
+      "path_receipt": [
+        {
+          "from": "Jenae Sperling",
+          "rel": "SHARES_VALUE",
+          "to": "Jessica Zabala"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "OREGON",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Intern",
+    "company": "Disney",
+    "belief": "Telling meaningful stories that highlight other's humanity.",
+    "working_on": "Becoming a reporter or production executive"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to amplify voices and foster connection, believing in the transformative power of shared narratives.",
+  "gradient": {
+    "seed": 2298994740,
+    "stops": [
+      {
+        "color": "hsl(13 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(91 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "blake-berry-9b6c",
+  "name": "Blake Berry",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You would enjoy meeting Caterina Terrizzi because she has fascinating insights about Live Nation that could inspire your own work in the industry.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Blake Berry",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should meet Jenae Sperling because both of you share a strong desire to tell stories that connect and resonate deeply with audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Telling meaningful stories that highlight other's humanity.",
+      "path_receipt": [
+        {
+          "from": "Blake Berry",
+          "rel": "SHARES_VALUE",
+          "to": "Jenae Sperling"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing Intern",
+    "company": "Live Nation",
+    "belief": "Talent Management. Amplifying the platform of POC/Queer talent across all creative fields.",
+    "working_on": "Founder, Talent Management Firm"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound commitment to elevate underrepresented voices, seeking to reshape the creative landscape into a more inclusive space.",
+  "gradient": {
+    "seed": 1123314610,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(119 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

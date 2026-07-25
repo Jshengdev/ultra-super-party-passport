@@ -1,0 +1,69 @@
+{
+  "personId": "ruby-washio-dcf5",
+  "name": "ruby washio",
+  "line2": "Anomaly LA",
+  "find": [
+    {
+      "personId": "harshini-kaparaju-51e6",
+      "name": "Harshini Kaparaju",
+      "why": "You should meet Harshini Kaparaju because she shares your connection to Anomaly LA and has some incredible insights about their recent projects.",
+      "basis_kind": "same_work",
+      "via": "Anomaly LA",
+      "path_receipt": [
+        {
+          "from": "ruby washio",
+          "rel": "WORKS_AT",
+          "to": "Anomaly LA"
+        },
+        {
+          "from": "Harshini Kaparaju",
+          "rel": "WORKS_AT",
+          "to": "Anomaly LA"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a deep conviction about the importance of representation and making others feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "ruby washio",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Minerva",
+    "major": "",
+    "grad_year": "",
+    "position": "Account Management Intern",
+    "company": "Anomaly LA",
+    "belief": "I've always loved creative problem-solving whether it was colouring books or how to solve a problem on my family's chicken farm or making YT videos! I love the business side but absolutely must be working to make something creative and beautiful.",
+    "working_on": "Ultimately I was inspired by Naomi Osaka's NIKE campaign and seeing a mixed race japanese person speak openly for the first time. I'd love improve inclusion, particularly for Japan's racial diversity."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend creativity and advocacy, crafting spaces where diverse voices can be celebrated and understood.",
+  "gradient": {
+    "seed": 2265258946,
+    "stops": [
+      {
+        "color": "hsl(285 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(291 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

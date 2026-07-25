@@ -1,0 +1,69 @@
+{
+  "personId": "alexandra-sepe-aa0c",
+  "name": "Alexandra Sepe",
+  "line2": "HBO MAX",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has insightful experiences at represent-agency that could inspire your own creative journey.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Alexandra Sepe",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "eva-kennedy-d195",
+      "name": "Eva Kennedy",
+      "why": "You should meet Eva Kennedy because she shares your passion for championing artists and has insightful perspectives that could inspire your mission.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-champion-artists",
+      "match_belief": "Growing up in LA i was always curious, but it wasn’t until I was removed from it at college that I realized it was a passion that ran deep. My favorite thing is working with people, especially people who create cool art. What better job than one that combines both?",
+      "path_receipt": [
+        {
+          "from": "Alexandra Sepe",
+          "rel": "SHARES_VALUE",
+          "to": "Eva Kennedy"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Barnard",
+    "major": "",
+    "grad_year": "",
+    "position": "Streaming Communications Intern",
+    "company": "HBO MAX",
+    "belief": "I just love art - in all its forms! Working in the entertainment industry would allow me to be close to the creative projects that I care about. I specifically want to work in talent representation and help creatives achieve their goals.",
+    "working_on": "I want to be a talent agent and champion creatives."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for art fuels a deep desire to nurture and elevate others, revealing a commitment to creativity that transforms lives and careers.",
+  "gradient": {
+    "seed": 158727243,
+    "stops": [
+      {
+        "color": "hsl(33 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(237 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(234 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

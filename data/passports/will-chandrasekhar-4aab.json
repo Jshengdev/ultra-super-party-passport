@@ -1,0 +1,73 @@
+{
+  "personId": "will-chandrasekhar-4aab",
+  "name": "Will Chandrasekhar",
+  "line2": "UTA",
+  "find": [
+    {
+      "personId": "anthony-gery-8c79",
+      "name": "Anthony Gery",
+      "why": "You should meet Anthony Gery, as both of you share a connection to UTA and could have some great insights to exchange.",
+      "basis_kind": "same_work",
+      "via": "UTA",
+      "path_receipt": [
+        {
+          "from": "Will Chandrasekhar",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        },
+        {
+          "from": "Anthony Gery",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        }
+      ]
+    },
+    {
+      "personId": "emily-zhang-4b7a",
+      "name": "Emily Zhang",
+      "why": "You should meet Emily Zhang, as you both share a connection to UTA and could exchange valuable insights and experiences from your time there.",
+      "basis_kind": "same_work",
+      "via": "UTA",
+      "path_receipt": [
+        {
+          "from": "Will Chandrasekhar",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        },
+        {
+          "from": "Emily Zhang",
+          "rel": "WORKS_AT",
+          "to": "UTA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Colgate",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "UTA",
+    "belief": "My love for filmmaking and storytelling.",
+    "working_on": "Talent representation."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to elevate voices and narratives, weaving your passion for storytelling into a tapestry of shared experiences.",
+  "gradient": {
+    "seed": 1381993164,
+    "stops": [
+      {
+        "color": "hsl(118 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(158 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "tyler-norman-78be",
+  "name": "Tyler Norman",
+  "line2": "Creative Artist Agency",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share the experience of being interns, which could lead to some great conversations and insights.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Tyler Norman",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "kelly-r-3837",
+      "name": "Kelly R",
+      "why": "You would really enjoy meeting Kelly R, as you both share a connection to CSUN and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "CSUN",
+      "path_receipt": [
+        {
+          "from": "Tyler Norman",
+          "rel": "STUDIES_AT",
+          "to": "CSUN"
+        },
+        {
+          "from": "Kelly R",
+          "rel": "STUDIES_AT",
+          "to": "CSUN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSUN",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Creative Artist Agency",
+    "belief": "My love for music production and developing of artists careers early.",
+    "working_on": "To become an agent that signs an artist that I am passionate about and enjoy their vision and art."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to nurture creativity and help others realize their artistic potential, finding fulfillment in collaborative journeys.",
+  "gradient": {
+    "seed": 1079972718,
+    "stops": [
+      {
+        "color": "hsl(268 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(64 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

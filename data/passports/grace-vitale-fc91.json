@@ -1,0 +1,73 @@
+{
+  "personId": "grace-vitale-fc91",
+  "name": "Grace Vitale",
+  "line2": "Iron Ocean Films/Phoenix Pictures",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman; he has some insightful experiences as a development intern that I think you'll both enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Grace Vitale",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "alexi-haimes-9708",
+      "name": "Alexi Haimes",
+      "why": "You should meet Alexi Haimes because you both share a strong connection to UT Austin and can exchange great stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UT Austin",
+      "path_receipt": [
+        {
+          "from": "Grace Vitale",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        },
+        {
+          "from": "Alexi Haimes",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Iron Ocean Films/Phoenix Pictures",
+    "belief": "My love of film, primarily independent.",
+    "working_on": "Working in development and doing screenwriting on the side."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create meaningful narratives that resonate with others, blending your passion for storytelling and social impact.",
+  "gradient": {
+    "seed": 1242998943,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(261 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

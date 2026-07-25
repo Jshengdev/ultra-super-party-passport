@@ -1,0 +1,69 @@
+{
+  "personId": "juno-azuz-zacher-1767",
+  "name": "Juno Azuz Zacher",
+  "line2": "Hyphenate Media Group/ Television Academy Foundation",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because you both share a passion for acting that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Juno Azuz Zacher",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a deep commitment to representation and the belief that everyone deserves to feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Juno Azuz Zacher",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Northwestern",
+    "major": "",
+    "grad_year": "",
+    "position": "Scripted Development Intern",
+    "company": "Hyphenate Media Group/ Television Academy Foundation",
+    "belief": "I grew up in the middle of Catalina Island with only ten other houses, surrounded by bison and dirt roads. Through this isolation, tv became my tunnel to the outside world and I would make up stories as I wandered around the island. I’d look over the water on clear nights and see this sparkling city of LA that I dreamed to work in, and knew that was where I was meant to be.",
+    "working_on": "My ultimate goal is to be a full time actor."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep yearning for connection and expression, using storytelling to bridge the gap between your isolated beginnings and your dreams.",
+  "gradient": {
+    "seed": 1220147836,
+    "stops": [
+      {
+        "color": "hsl(186 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(353 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

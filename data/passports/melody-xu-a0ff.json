@@ -1,0 +1,69 @@
+{
+  "personId": "melody-xu-a0ff",
+  "name": "Melody Xu",
+  "line2": "Los Angeles Times",
+  "find": [
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should definitely meet Jenae Sperling, as you both share a passion for journalism that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "journalism",
+      "path_receipt": [
+        {
+          "from": "Melody Xu",
+          "rel": "DOES",
+          "to": "journalism"
+        },
+        {
+          "from": "Jenae Sperling",
+          "rel": "DOES",
+          "to": "journalism"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You would really enjoy meeting Rimi Bhoopalam, as you both share a strong conviction in truth-inform and a passion for guarded extraction.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-truth-inform",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Melody Xu",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Northwestern",
+    "major": "",
+    "grad_year": "",
+    "position": "Food Reporting Intern",
+    "company": "Los Angeles Times",
+    "belief": "I've been a journalist since elementary school, when I immigrated to California from Shanghai. To teach myself English, I \"founded\" a \"newspaper\" called The Melody Times!",
+    "working_on": "Becoming a full time reporter and eventually editor of a legacy news publication. Ideally covering food or media."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep desire to connect cultures and share stories, driven by a passion for communication and community.",
+  "gradient": {
+    "seed": 954166115,
+    "stops": [
+      {
+        "color": "hsl(186 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(162 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(0 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

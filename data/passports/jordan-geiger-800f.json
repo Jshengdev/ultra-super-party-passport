@@ -1,0 +1,69 @@
+{
+  "personId": "jordan-geiger-800f",
+  "name": "Jordan Geiger",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You would enjoy meeting Jonah Einisman because you both have a strong connection to direct, which could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Jordan Geiger",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "lavanya-manikkan-72f3",
+      "name": "Lavanya Manikkan",
+      "why": "You should meet Lavanya Manikkan because her passion for provoking thought aligns perfectly with your own, sparking deep and impactful conversations.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-provoke-thought",
+      "match_belief": "The ability the create film and works of art that have the potential to move audiences, change perspectives and lives!",
+      "path_receipt": [
+        {
+          "from": "Jordan Geiger",
+          "rel": "SHARES_VALUE",
+          "to": "Lavanya Manikkan"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "writer/director",
+    "company": "",
+    "belief": "telling stores that make people feel something",
+    "working_on": "directing larger projects"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect with others emotionally, using storytelling as a bridge to shared experiences and understanding.",
+  "gradient": {
+    "seed": 1035875810,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(337 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(27 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

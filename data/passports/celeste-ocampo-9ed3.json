@@ -1,0 +1,69 @@
+{
+  "personId": "celeste-ocampo-9ed3",
+  "name": "Celeste Ocampo",
+  "line2": "Strand Entertainment",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You would enjoy meeting Saamya Patel because you both share a passion for produce and can exchange creative ideas in that area.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Celeste Ocampo",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You’ll find an inspiring connection with Connor James, as both of you passionately believe in the transformative power of bringing joy to others.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "watching movies",
+      "path_receipt": [
+        {
+          "from": "Celeste Ocampo",
+          "rel": "SHARES_VALUE",
+          "to": "Connor James"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emerson",
+    "major": "",
+    "grad_year": "",
+    "position": "Talent Management Intern",
+    "company": "Strand Entertainment",
+    "belief": "There are so many reasons, but above all, I want to be apart of telling stories that leave an impact on people and art of collaboration to make something beautiful has always drawn me to this industry!",
+    "working_on": "I want to be on the producing side of the entertainment industry, particular in television."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to craft meaningful narratives that resonate with others, finding beauty in the collaborative creation process.",
+  "gradient": {
+    "seed": 3529500206,
+    "stops": [
+      {
+        "color": "hsl(240 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(166 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

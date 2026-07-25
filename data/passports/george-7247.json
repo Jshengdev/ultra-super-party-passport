@@ -1,0 +1,73 @@
+{
+  "personId": "george-7247",
+  "name": "George",
+  "line2": "DreamWorks",
+  "find": [
+    {
+      "personId": "rafa-padilla-9c7e",
+      "name": "Rafa Padilla",
+      "why": "You should meet Rafa Padilla because you both have a shared passion for DreamWorks that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "George",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    },
+    {
+      "personId": "alexandra-donsky-ed6c",
+      "name": "Alexandra Donsky",
+      "why": "You should meet Alexandra Donsky, as you both share a fascinating connection to DreamWorks that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "George",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Alexandra Donsky",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CalArts",
+    "major": "",
+    "grad_year": "",
+    "position": "Character FX Development Intern",
+    "company": "DreamWorks",
+    "belief": "Movies!",
+    "working_on": "Being able to draw and share stories, whether it's in animation, comics, something like tattoos, a combination"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect through visual storytelling, believing in its power to evoke emotions and inspire shared experiences.",
+  "gradient": {
+    "seed": 1853070803,
+    "stops": [
+      {
+        "color": "hsl(197 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(60 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

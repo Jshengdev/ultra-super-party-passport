@@ -1,0 +1,73 @@
+{
+  "personId": "erin-78a1",
+  "name": "erin",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You would really enjoy meeting Grace Carr, as you both share a passionate interest in design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "erin",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You and Maggie Lee both share a connection to USC, making her insights and experiences a great conversation starter for you both.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "erin",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Painter/Designer/Photographer",
+    "company": "",
+    "belief": "I’ve always liked watching movies growing up but moving to LA to pursue creative fields like fine arts and design has immersed me into a whole new world of film. The care and passion people have for the arts here made me fall in love with watching movies.",
+    "working_on": "I want to be a marketer or designer in entertainment; to find a way where visual arts and design can thrive in the movie industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to fuse your passion for visual arts with the transformative power of storytelling in film.",
+  "gradient": {
+    "seed": 51923069,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(246 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

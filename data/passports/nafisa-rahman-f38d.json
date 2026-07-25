@@ -1,0 +1,73 @@
+{
+  "personId": "nafisa-rahman-f38d",
+  "name": "Nafisa Rahman",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as both of you share a strong connection to CAA that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Nafisa Rahman",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You and Ethan both have a connection to Chapman, which makes for a great conversation about your experiences and shared memories there.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Nafisa Rahman",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Marketing Intern",
+    "company": "CAA",
+    "belief": "Growing up around music and always being drawn to the creative side of storytelling, I found my way into entertainment through the business side, specifically artist marketing.",
+    "working_on": "I want to be a music agent or exec in a talent agency!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for creativity, seeking to amplify artists' voices and connect their stories with the world.",
+  "gradient": {
+    "seed": 2247574851,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(307 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

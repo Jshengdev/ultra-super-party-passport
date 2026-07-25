@@ -1,0 +1,73 @@
+{
+  "personId": "andrew-huang-bfbb",
+  "name": "Andrew Huang",
+  "line2": "Universal",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both have a deep connection to direct and can share valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Andrew Huang",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should definitely meet Maggie Lee; she has some fascinating insights about USC that I think you'll both appreciate and enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Andrew Huang",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Advertising",
+    "company": "Universal",
+    "belief": "Love of the game",
+    "working_on": "Actor, director, creative producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to connect with others through the transformative power of performance and creativity.",
+  "gradient": {
+    "seed": 4100834879,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(35 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

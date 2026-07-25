@@ -1,0 +1,69 @@
+{
+  "personId": "maya-labrache-ca7e",
+  "name": "Maya LaBrache",
+  "line2": "Universal Music Group",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You and Caterina Terrizzi both have a passion for market-brand strategies, making for an exciting conversation about innovative approaches and trends in the field.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Maya LaBrache",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava because her insights on how entertainment bridges diverse cultures could inspire your own creative projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Maya LaBrache",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "International Audience Development - Famehouse Intern",
+    "company": "Universal Music Group",
+    "belief": "Having grown up overseas in Abu Dhabi and Saudi Arabia, I’ve always been interested in the role of media, specifically music, in shaping culture and community. Living as an expat initially drew me to the entertainment industry as it allowed me to connect with my peers and learn about the world around me through creativity. Between concerts, festivals, or even album drops, music has allowed me to feel a sense of belonging and that is something I hope to foster within others as I drive into the industry.",
+    "working_on": "My ultimate goal in pursuing a career entertainment is to find a role that combines my interest in partnerships, marketing, and potentially A&R. I’m still exploring which path is best to fit for me in my internship at UMG this summer has given me an incredible opportunity to connect with professionals across many different departments. One area that stands out to me is international marketing. I am fascinated by the challenge of bringing a product or an artist to audiences around the world and developing strategies that resonate across different cultures and markets. Whether it’s working on the global rollout of an artist or helping expand the reach of brand, I’m excited by the opportunity to combine creativity, strategy, and relationship building within the entertainment industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create connections and foster belonging through music, transforming personal experiences into opportunities for others worldwide.",
+  "gradient": {
+    "seed": 72715067,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(160 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

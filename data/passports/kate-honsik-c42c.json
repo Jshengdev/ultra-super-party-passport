@@ -1,0 +1,73 @@
+{
+  "personId": "kate-honsik-c42c",
+  "name": "Kate Honsik",
+  "line2": "AEFH Talent",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; you both share the experience of being interns and can swap valuable stories and insights.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Kate Honsik",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "emerson-eby-dc8f",
+      "name": "Emerson Eby",
+      "why": "You should meet Emerson Eby, as you both share a connection to LMU and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "LMU",
+      "path_receipt": [
+        {
+          "from": "Kate Honsik",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        },
+        {
+          "from": "Emerson Eby",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "AEFH Talent",
+    "belief": "Started as an actress, dipped toes into Production through HS/University. Fell in love with development & production as much as acting!",
+    "working_on": "Hopefully a dual writer/producer/actor."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to weave your creative talents into a tapestry that brings narratives to life.",
+  "gradient": {
+    "seed": 2389557738,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(86 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

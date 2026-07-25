@@ -1,0 +1,69 @@
+{
+  "personId": "madilyn-palosi-5d19",
+  "name": "Madilyn Palosi",
+  "line2": "ESPN Los Angeles",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because you both share a passion for acting that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Madilyn Palosi",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "tristan-britton-harr-e92a",
+      "name": "Tristan Britton-Harr",
+      "why": "You should meet Tristan Britton-Harr, as you both share a passionate mission to elevate underdogs and can inspire each other with your insights.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-elevate-underdogs",
+      "match_belief": "I like how media can connect to people on a deeper level and move them in ways other industries can’t. I want to contribute making art accessible to people to impact their lives in a meaningful way.",
+      "path_receipt": [
+        {
+          "from": "Madilyn Palosi",
+          "rel": "SHARES_VALUE",
+          "to": "Tristan Britton-Harr"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Lewis and Clark College",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing Intern",
+    "company": "ESPN Los Angeles",
+    "belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+    "working_on": "My goal is to make a name for myself in the sports industry/sports media industry and help women dominate sports and earn respect."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion to elevate women's voices in sports, seeking to create a legacy that inspires and empowers future generations.",
+  "gradient": {
+    "seed": 3177911364,
+    "stops": [
+      {
+        "color": "hsl(250 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(147 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(264 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

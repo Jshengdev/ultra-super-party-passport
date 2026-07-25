@@ -1,0 +1,73 @@
+{
+  "personId": "satchel-williams-6ab6",
+  "name": "Satchel Williams",
+  "line2": "Idk",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You and Amishi both connect to undecided, so you'll have a lot of interesting insights to share about navigating choices and uncertainties.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Satchel Williams",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "sam-1722",
+      "name": "Sam",
+      "why": "You should meet Sam, as you both share a connection to NYU and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "NYU",
+      "path_receipt": [
+        {
+          "from": "Satchel Williams",
+          "rel": "STUDIES_AT",
+          "to": "NYU"
+        },
+        {
+          "from": "Sam",
+          "rel": "STUDIES_AT",
+          "to": "NYU"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "NYU",
+    "major": "",
+    "grad_year": "",
+    "position": "Freelance",
+    "company": "Idk",
+    "belief": "The only way I could do that was if tttttty",
+    "working_on": "The only way I could"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to explore possibilities that challenge limitations, revealing your resilience and commitment to meaningful transformation.",
+  "gradient": {
+    "seed": 2026122184,
+    "stops": [
+      {
+        "color": "hsl(343 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(59 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

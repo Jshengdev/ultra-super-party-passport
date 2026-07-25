@@ -1,0 +1,73 @@
+{
+  "personId": "david-nguyen-1ccf",
+  "name": "David Nguyen",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights from Live Nation could spark some inspiring conversations about the music industry that you'll both enjoy.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "David Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You and Amishi both share a connection to Live Nation, making it a great opportunity to exchange insights and experiences in the live events industry.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "David Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Amishi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSULB grad",
+    "major": "",
+    "grad_year": "",
+    "position": "Project analyst intern",
+    "company": "Live Nation",
+    "belief": "Raving / music festivals",
+    "working_on": "Project management"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for creating vibrant experiences, where organization transforms chaos into unforgettable moments of connection and joy.",
+  "gradient": {
+    "seed": 3933079564,
+    "stops": [
+      {
+        "color": "hsl(224 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

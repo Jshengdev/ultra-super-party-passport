@@ -1,0 +1,73 @@
+{
+  "personId": "martin-lee-978c",
+  "name": "Martin Lee",
+  "line2": "Neocast",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both have a strong connection to direct, and I think you'll find your conversation inspiring.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Martin Lee",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should definitely meet Maggie Lee; she's a fellow USC alum with great stories about campus life and connections in the community.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Martin Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Founder",
+    "company": "Neocast",
+    "belief": "Got my first camera at 8 y/o",
+    "working_on": "Living the dream! Making my own show"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for storytelling, rooted in early creativity that continues to fuel your artistic journey.",
+  "gradient": {
+    "seed": 4239222489,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(139 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}
