@@ -79,6 +79,21 @@ export interface GraphPayload {
   meta: GraphMeta;
 }
 
+/**
+ * Boundary guard for anything coming off the wire.
+ *
+ * /api/graph answers 503 with `{error, message}` in DEGRADED mode, and that body
+ * is structurally nothing like a payload. Casting it and reading `.nodes` is a
+ * TypeError, which surfaces as a blank crashed room rather than the honest
+ * "graph is offline" state — the exact silent-failure law (b) forbids. Check the
+ * shape here so a bad response fails loud at the boundary instead.
+ */
+export function isGraphPayload(v: unknown): v is GraphPayload {
+  if (!v || typeof v !== 'object') return false;
+  const p = v as Partial<GraphPayload>;
+  return Array.isArray(p.nodes) && Array.isArray(p.links);
+}
+
 /** Stable node-id scheme. Person ids stay raw (so /passport/<id> works); others are namespaced. */
 export function nodeIdOf(type: NodeType, key: string): string {
   if (type === 'Person') return key;

@@ -1,0 +1,40 @@
+/* =============================================================================
+ * app/graph/pepl/tokens.css — the pepl vocabulary, pointed at our tokens.
+ *
+ * The ported scene reads pepl's names (`--cream`, `--ink`, `--seg-off`,
+ * `--font-jakarta`, `--font-hedvig`) and some of it reads them AT RUNTIME via
+ * getComputedStyle, because canvas 2D cannot resolve `var()` in `ctx.font`.
+ * Our app names the same things `--usp-*`, so without this layer those lookups
+ * return "" and the sheet renders with no typeface at all.
+ *
+ * This is an alias layer, not a second palette: every value points at
+ * passport/tokens.css (law f — one design handle).
+ * ========================================================================== */
+
+:root {
+  /* type — read back at runtime for canvas text, so these must resolve to a
+     real family list, not another indirection the canvas can't follow */
+  --font-jakarta: var(--usp-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-hedvig: var(--usp-hedvig), "Hedvig Letters Serif", Georgia, serif;
+  --font-plex-mono: var(--np-plex-mono), "IBM Plex Mono", monospace;
+
+  /* ground + ink */
+  --cream: var(--usp-canvas-bg);
+  --ink: var(--usp-ink);
+  --seg-off: rgba(38, 36, 44, 0.02); /* ink at 2% — the 'off' segment fill */
+
+  /* the film palette, mapped onto our spectrum (same thin-film physics,
+     our lightness) */
+  --film-gold: var(--usp-spectrum-1);
+  --film-magenta: var(--usp-spectrum-0);
+  --film-blue: var(--usp-spectrum-5);
+  --film-violet: var(--usp-spectrum-6);
+  --film-mint: var(--usp-spectrum-3);
+
+  /* the passport-stamp faces the ported SVGs resolve against */
+  --font-official: var(--usp-jakarta), "Plus Jakarta Sans", sans-serif;
+  --font-document: var(--usp-jakarta), "Plus Jakarta Sans", sans-serif;
+  --font-typewriter: var(--np-plex-mono), "IBM Plex Mono", monospace;
+  --ink-stamp: oklch(33% 0.04 285);
+  --ink-accent: oklch(52.7% 0.263 272.3);
+}

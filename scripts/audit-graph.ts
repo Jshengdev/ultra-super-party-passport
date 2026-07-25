@@ -48,6 +48,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import Papa from "papaparse";
 import { z } from "zod";
 import { loadGuests, type Guest } from "../lib/guests";
 import { run, close, isConfigured, toNum, Neo4jNotConfigured } from "../lib/neo4j";
@@ -725,10 +726,22 @@ function auditMeta(g: GraphDoc, guests: Guest[], stages: CsvStage | null): strin
     try {
       const raw = JSON.parse(readFileSync(CONVICTIONS_PATH, "utf8")) as unknown;
       const recs = convictionRecords(raw);
+      // The emit stamps this stage AFTER the enrichment overrides replace tags
+      // and drop their orphaned quotes (the override law in emit-graph.ts), so
+      // the corroboration must re-derive THROUGH the same layer — the raw cache
+      // alone would flag every mass override as a lie it isn't telling.
+      const ovRecs = convictionRecords(applyOverrideQuoteDrops(raw));
       if (recs !== null) {
         const candidates = new Set([recs.total, recs.tagged, recs.clean, recs.quoted]);
+        if (ovRecs !== null) for (const v of [ovRecs.tagged, ovRecs.clean, ovRecs.quoted]) candidates.add(v);
         if (!candidates.has(s.convictions)) {
-          add(F, "stage-count-mismatch", `meta.stages.convictions ${s.convictions} matches no convictions.json reading (total ${recs.total}, tagged ${recs.tagged}, unflagged ${recs.clean}, receipted ${recs.quoted})`);
+          add(
+            F,
+            "stage-count-mismatch",
+            `meta.stages.convictions ${s.convictions} matches no convictions.json reading ` +
+              `(total ${recs.total}, tagged ${recs.tagged}, unflagged ${recs.clean}, receipted ${recs.quoted}` +
+              `${ovRecs ? `, override-adjusted receipted ${ovRecs.quoted}` : ""})`,
+          );
         }
       }
     } catch {
@@ -738,6 +751,50 @@ function auditMeta(g: GraphDoc, guests: Guest[], stages: CsvStage | null): strin
     notes.push("convictions.json absent — convictions stage uncorroborated");
   }
   return notes;
+}
+
+/**
+ * Replay the emit's override layer over the RAW conviction cache: replace the
+ * four overridable tags and drop the quote behind each REPLACED tag unless an
+ * untouched tag still cites that answer field — the exact law implemented in
+ * scripts/emit-graph.ts (§1c). Deliberately tolerant of a missing/blank
+ * overrides file (→ the cache is returned untouched): the corroboration this
+ * feeds treats the overridden reading as one more candidate, never a pardon —
+ * a count matching NO reading still fails loud.
+ */
+function applyOverrideQuoteDrops(raw: unknown): unknown {
+  const ovPath = path.resolve(process.cwd(), process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.csv");
+  if (!existsSync(ovPath) || !raw || typeof raw !== "object" || Array.isArray(raw)) return raw;
+  let text = readFileSync(ovPath, "utf8");
+  if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+  const parsed = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true });
+  if (parsed.errors.length > 0) return raw; // emit fails loud on this long before an audit runs
+
+  const TAGS = ["motive", "mission", "impact", "aspiration"] as const;
+  const FIELD: Record<(typeof TAGS)[number], string> = { motive: "drew", mission: "goal", impact: "goal", aspiration: "goal" };
+  const src = ((raw as Record<string, unknown>).convictions ?? raw) as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const [id, rec] of Object.entries(src)) {
+    out[id] = rec && typeof rec === "object" ? { ...(rec as object), quotes: { ...((rec as { quotes?: object }).quotes ?? {}) } } : rec;
+  }
+  for (const row of parsed.data) {
+    const id = (row.person_id ?? "").trim();
+    const rec = out[id] as { quotes: Record<string, string> } & Record<string, unknown>;
+    if (!id || !rec || typeof rec !== "object") continue;
+    const applied: (typeof TAGS)[number][] = [];
+    for (const t of TAGS) {
+      const want = (row[t] ?? "").trim();
+      if (want === "" || rec[t] === want) continue;
+      rec[t] = want;
+      applied.push(t);
+    }
+    if (applied.length === 0) continue;
+    const stillCited = new Set(TAGS.filter((t) => rec[t] != null && !applied.includes(t)).map((t) => FIELD[t]));
+    for (const t of applied) {
+      if (!stillCited.has(FIELD[t])) delete rec.quotes[FIELD[t]];
+    }
+  }
+  return out;
 }
 
 function convictionRecords(

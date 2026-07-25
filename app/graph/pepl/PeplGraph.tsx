@@ -1,0 +1,2179 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { defaultAdapter, ROOM_EDGES, type RoomEdgeType } from "./adapter";
+import { GUEST_DETAILS } from "./adapter";
+import StampBurst, { type StampData } from "./Stamps";
+import HometownMap from "./HometownMap";
+import TagTicker from "./TagTicker";
+import { GraphSheet } from "./sheet";
+import { BoardState } from "./boards";
+import { Choreography, FocusedPerson } from "./choreo";
+import { BUBBLE_FRAG, BUBBLE_UNIFORMS } from "./shaders";
+import {
+  KUWAHARA_FRAG,
+  TENSOR_FRAG,
+  ANISO_KUWAHARA_FRAG,
+  GRADE_FRAG,
+  FINISH_FRAG,
+} from "./monet";
+import {
+  compileProgram,
+  uniformMap,
+  makeTexture,
+  makeTarget,
+  destroyTarget,
+  bindFullscreenTriangle,
+  QUAD_VERT,
+  RenderTarget,
+} from "./webgl";
+import { mulberry32 } from "./prng";
+import type { FieldName } from "./segments";
+
+/* The full stack: graph sheet → bubble lens → Monet chain.
+   Passes: scene (lens) → Kuwahara (half res) → composite+grade →
+   impasto+weave+grain. Layering order is fixed. */
+
+export const DEFAULTS = {
+  // lens — warp low: the rim should barely smear. The radius is the
+  // UNPOPPED bubble (holding the whole room); after the first click pops
+  // it, it returns at POPPED_SCALE of this. Values are Teri's tuning
+  // (2026-07-25 panel screenshot): max-size lens, gentle magnify.
+  zoom: 1.35, warp: 0.1,
+  // film
+  thick: 380, drain: 0.55, chroma: 1.0, edge: 0.62, turb: 0.3, flow: 0.35, back: 0.45,
+  // form
+  radius: 0.46, wobble: 0.018, surface: 0.016,
+  // motion — the bubble sits in the middle; wander is off by default
+  gravity: 0.0, drag: 3.4, wander: 0,
+  jiggle: 1.6, settle: 1.0, squish: -1.2, bounce: 0.30, grip: 0.25,
+  // morph timing — the feel of the whole piece
+  morphDur: 900, morphHold: 300, hopDur: 350, hopHold: 140,
+  // monet — weave is gone (it read as scan lines at any period); grain
+  // is drawn by the DOM veil so it covers the widgets too
+  kuwahara: 0.85, kuwaKernel: 2.4, grade: 0.65, impasto: 0.4, grain: 0.16,
+};
+
+export type Params = typeof DEFAULTS & {
+  field: FieldName;
+  exportQuality: boolean;
+};
+
+const INITIAL: Params = { ...DEFAULTS, field: "weather", exportQuality: false };
+
+const MAX_DEFORM = 0.3;
+/* the scene camera is the zoom; the bubble is a draggable lens toy
+   that lives in the middle and never flies to targets */
+const SCENE_ZOOM_PERSON = 2.2;
+/* after the first click pops the bubble it returns at this ABSOLUTE radius
+   (mn units) — a toy, no longer the room's container. 0.135 is Teri's call. */
+const POPPED_RADIUS = 0.135;
+/* movement (shader units) past which a press is a PAN, not a click/pop */
+const PAN_START = 0.02;
+
+/** A baked person record (public/graph/people/<id>.json) — fetched on focus
+    for the relationships widget and the stamps' real hometown/favorite. */
+type PersonRecord = {
+  personId: string;
+  name: string;
+  answers?: Record<string, string>;
+  edges?: {
+    targetId: string;
+    type: string;
+    direction?: "mutual" | "inbound" | "outbound";
+    strength?: number;
+    via: string;
+    receipt?: {
+      yours?: { field: string; quote: string };
+      theirs?: { field: string; quote: string };
+    };
+  }[];
+  highlights?: { kind: string; text: string; targets?: string[] }[];
+};
+
+/** widget row sections, in speaking order */
+const REL_SECTIONS: { key: string; title: string; match: (e: NonNullable<PersonRecord["edges"]>[number]) => boolean }[] = [
+  { key: "mutual", title: "You are looking for each other", match: (e) => e.direction === "mutual" },
+  { key: "inbound", title: "They are looking for you", match: (e) => e.direction === "inbound" },
+  { key: "outbound", title: "You are looking for them", match: (e) => e.direction === "outbound" },
+  { key: "why", title: "Shared conviction", match: (e) => e.type === "why" },
+  { key: "school", title: "Same school", match: (e) => e.type === "school" },
+  { key: "company", title: "Same company", match: (e) => e.type === "company" },
+];
+
+/* ---- tune panel definition (Bubble.jsx style) ---- */
+const PANEL_GROUPS: {
+  name: string;
+  items: { key: keyof typeof DEFAULTS; label: string; min: number; max: number; step: number; unit?: string }[];
+}[] = [
+  { name: "lens", items: [
+    { key: "zoom", label: "magnify", min: 1, max: 3.5, step: 0.05 },
+    { key: "warp", label: "fisheye", min: 0, max: 1.2, step: 0.01 },
+    { key: "radius", label: "radius", min: 0.12, max: 0.46, step: 0.005 },
+  ]},
+  { name: "morph", items: [
+    { key: "morphDur", label: "duration", min: 200, max: 2400, step: 20, unit: "ms" },
+    { key: "morphHold", label: "field hold", min: 0, max: 1200, step: 20, unit: "ms" },
+    { key: "hopDur", label: "hop", min: 120, max: 900, step: 10, unit: "ms" },
+    { key: "hopHold", label: "hop hold", min: 0, max: 500, step: 10, unit: "ms" },
+  ]},
+  { name: "monet", items: [
+    { key: "kuwahara", label: "kuwahara", min: 0, max: 1, step: 0.01 },
+    { key: "kuwaKernel", label: "kernel", min: 1, max: 3, step: 0.05 },
+    { key: "grade", label: "grade", min: 0, max: 1, step: 0.01 },
+    { key: "impasto", label: "impasto", min: 0, max: 1, step: 0.01 },
+    { key: "grain", label: "grain", min: 0, max: 0.5, step: 0.005 },
+  ]},
+  { name: "film", items: [
+    { key: "thick", label: "thickness", min: 120, max: 900, step: 1, unit: "nm" },
+    { key: "drain", label: "drain", min: 0, max: 0.95, step: 0.01 },
+    { key: "chroma", label: "chroma", min: 0, max: 1.8, step: 0.01 },
+    { key: "edge", label: "colour edge", min: 0, max: 0.97, step: 0.01 },
+    { key: "turb", label: "turbulence", min: 0, max: 1.5, step: 0.005 },
+    { key: "flow", label: "flow", min: 0, max: 3, step: 0.01 },
+    { key: "back", label: "far wall", min: 0, max: 1, step: 0.01 },
+  ]},
+  { name: "form", items: [
+    { key: "wobble", label: "silhouette", min: 0, max: 0.16, step: 0.001 },
+    { key: "surface", label: "undulation", min: 0, max: 0.16, step: 0.001 },
+  ]},
+  { name: "motion", items: [
+    { key: "gravity", label: "gravity", min: 0, max: 1.2, step: 0.01 },
+    { key: "drag", label: "viscosity", min: 0.2, max: 8, step: 0.05 },
+    { key: "wander", label: "wander", min: 0, max: 3, step: 0.02 },
+    { key: "grip", label: "grip", min: 0.05, max: 2, step: 0.01 },
+    { key: "jiggle", label: "response hz", min: 0.4, max: 7, step: 0.05 },
+    { key: "settle", label: "settle", min: 0.05, max: 1.4, step: 0.01 },
+    { key: "squish", label: "squish", min: -6, max: 6, step: 0.05 },
+    { key: "bounce", label: "bounce", min: 0, max: 0.9, step: 0.01 },
+  ]},
+];
+
+/* The grain veil — the film's last pass, moved OUT of the WebGL chain and into
+   the DOM. The ticker, map, pills and logo are DOM siblings the shader can
+   never touch; a fixed canvas as the LAST child of the shell grains all of
+   them and the scene alike. hard-light around exact 50% grey is an identity,
+   so the veil only ever adds the speckle, never a wash. Stepped ~12fps like
+   the shader grain was; pointer-events stay off so it can never eat a click. */
+function GrainVeil({ paramsRef }: { paramsRef: React.MutableRefObject<Params> }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+
+    /* a few pre-baked per-channel noise tiles, cycled with a drifting
+       anchor — regenerating full-viewport noise per step would be the
+       expensive way to draw the same thing */
+    const TILE = 224;
+    const rng = mulberry32(1913);
+    const tiles = Array.from({ length: 4 }, () => {
+      const t = document.createElement("canvas");
+      t.width = TILE;
+      t.height = TILE;
+      const tc = t.getContext("2d")!;
+      const img = tc.createImageData(TILE, TILE);
+      for (let p = 0; p < img.data.length; p += 4) {
+        img.data[p] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 1] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 2] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 3] = 255;
+      }
+      tc.putImageData(img, 0, 0);
+      return t;
+    });
+
+    const resize = () => {
+      const r = canvas.parentElement?.getBoundingClientRect();
+      canvas.width = Math.max(2, Math.floor((r?.width ?? 2) * dpr));
+      canvas.height = Math.max(2, Math.floor((r?.height ?? 2) * dpr));
+      lastStep = -1; // repaint at the new size on the next frame
+    };
+    let lastStep = -1;
+    resize();
+    const ro = new ResizeObserver(resize);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+
+    const paint = (step: number) => {
+      const pat = ctx.createPattern(tiles[step % tiles.length], "repeat");
+      if (!pat) return;
+      const ox = (step * 61) % TILE;
+      const oy = (step * 97) % TILE;
+      ctx.setTransform(1, 0, 0, 1, -ox, -oy);
+      ctx.fillStyle = pat;
+      ctx.fillRect(0, 0, canvas.width + TILE, canvas.height + TILE);
+    };
+
+    let raf = 0;
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const g = paramsRef.current.grain;
+      /* the slider stays live: it now drives the veil's opacity */
+      canvas.style.opacity = Math.min(1, g * 1.5).toFixed(3);
+      if (g <= 0) return;
+      /* frozen grain for reduced motion — texture without the flicker */
+      const step = reduced ? 0 : Math.floor(performance.now() * 0.012);
+      if (step === lastStep) return;
+      lastStep = step;
+      paint(step);
+    };
+    frame();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [paramsRef]);
+
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        mixBlendMode: "hard-light",
+      }}
+    />
+  );
+}
+
+export default function PeplGraph() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const [err, setErr] = useState<string | null>(null);
+  /** Popped = the lens is gone and the room is released to full size. */
+  const poppedRef = useRef(false);
+  const [popped, setPopped] = useState(false);
+  const [stamps, setStamps] = useState<(StampData & { on: boolean }) | null>(null);
+  const stampsRef = useRef<HTMLDivElement>(null);
+  const stampsLiveRef = useRef<(StampData & { on: boolean }) | null>(null);
+  /* a second, frozen-in-place burst that peels while the next pops */
+  const [peeling, setPeeling] = useState<
+    (StampData & { at: { x: number; y: number; k: number } }) | null
+  >(null);
+  const peelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (peelTimerRef.current) clearTimeout(peelTimerRef.current);
+    },
+    []
+  );
+
+  /* peeled-off stamps unmount after their exit animation */
+  useEffect(() => {
+    if (stamps && !stamps.on) {
+      const timer = setTimeout(() => setStamps(null), 700);
+      return () => clearTimeout(timer);
+    }
+  }, [stamps]);
+  const [indexOpen, setIndexOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
+  /* the tune panel is a design tool, not a party surface — hidden unless
+     the URL opts in with ?tune=1 */
+  const [tuneVisible, setTuneVisible] = useState(false);
+
+  /* the focused person's baked record — their ranked relationships with
+     receipts, their real hometown + favourite for the stamps */
+  const [profile, setProfile] = useState<PersonRecord | null>(null);
+  const [receiptOpen, setReceiptOpen] = useState<number | null>(null);
+  const profileCache = useRef(new Map<string, PersonRecord>());
+  const focusKey = stamps?.on ? stamps.personKey : null;
+  useEffect(() => {
+    setReceiptOpen(null);
+    if (!focusKey) {
+      setProfile(null);
+      return;
+    }
+    const cached = profileCache.current.get(focusKey);
+    if (cached) {
+      setProfile(cached);
+      return;
+    }
+    setProfile(null);
+    let gone = false;
+    fetch(`/graph/people/${focusKey}.json`)
+      .then((r) => (r.ok ? (r.json() as Promise<PersonRecord>) : null))
+      .then((rec) => {
+        if (gone || !rec) return;
+        profileCache.current.set(focusKey, rec);
+        setProfile(rec);
+      })
+      .catch(() => {}); // widget just stays empty — the room owes no error UI
+    return () => {
+      gone = true;
+    };
+  }, [focusKey]);
+
+  /* the record knows what graph.json does not: real hometown (from the
+     kind-keyed highlight) and the favourite answer — feed the stamps */
+  useEffect(() => {
+    if (!profile) return;
+    const hl = profile.highlights?.find((x) => x.kind === "hometown");
+    const hometown =
+      hl && hl.text.startsWith("Came from ") ? hl.text.slice(10).replace(/\.$/, "") : "";
+    const movie = profile.answers?.favorite ?? "";
+    if (!hometown && !movie) return;
+    setStamps((s) =>
+      s && s.personKey === profile.personId
+        ? {
+            ...s,
+            details: {
+              ...s.details,
+              ...(hometown ? { hometown } : {}),
+              ...(movie ? { movie } : {}),
+            },
+          }
+        : s,
+    );
+  }, [profile]);
+  const [params, setParams] = useState<Params>(INITIAL);
+  const [query, setQuery] = useState("");
+  const [searchIdx, setSearchIdx] = useState(0);
+
+  const paramsRef = useRef<Params>(INITIAL);
+  useEffect(() => {
+    paramsRef.current = params;
+  }, [params]);
+
+  /* thread-legend toggles: which connection types flood the whole room.
+     A focused person's own threads always draw. `why` starts on — the
+     conviction web is the room's grammar; the denser structural types
+     are opt-in. */
+  const [edgeOn, setEdgeOn] = useState<Record<RoomEdgeType, boolean>>({
+    school: false,
+    company: false,
+    seek: false,
+    why: true,
+  });
+  const edgeOnRef = useRef(edgeOn);
+  useEffect(() => {
+    edgeOnRef.current = edgeOn;
+  }, [edgeOn]);
+
+  /* URL overrides, e.g. ?kuwahara=0.4&grain=0 or ?perf=lite —
+     handy for weak GPUs and shareable tunings */
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if ([...q.keys()].length === 0) return;
+    if (q.get("tune") === "1") setTuneVisible(true);
+    setParams((pr) => {
+      const next = { ...pr };
+      if (q.get("perf") === "lite") {
+        next.kuwahara = 0.4;
+        next.kuwaKernel = 1.4;
+        next.impasto = 0.25;
+        next.grain = 0.08;
+      }
+      const limits = Object.fromEntries(
+        PANEL_GROUPS.flatMap((g) => g.items.map((i) => [i.key, i]))
+      );
+      for (const [k, v] of q.entries()) {
+        if (k === "field" && (v === "weather" || v === "cartography" || v === "stars")) {
+          next.field = v;
+        } else if (k in DEFAULTS && !Number.isNaN(parseFloat(v))) {
+          const n = parseFloat(v);
+          const lim = limits[k];
+          /* clamp to the slider range — raw floats reach shader uniforms */
+          (next as Record<string, unknown>)[k] = lim
+            ? Math.min(lim.max, Math.max(lim.min, n))
+            : n;
+        }
+      }
+      return next;
+    });
+  }, []);
+
+  const selectRef = useRef<(personId: string) => void>(() => {});
+  const selectGroupRef = useRef<(clusterIndex: number) => void>(() => {});
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const wrap = wrapRef.current;
+    if (!canvas || !wrap) return;
+
+    const gl = canvas.getContext("webgl", {
+      antialias: false,
+      alpha: false,
+      premultipliedAlpha: false,
+      powerPreference: "high-performance",
+    });
+    if (!gl) {
+      setErr("WebGL is not available in this context.");
+      return;
+    }
+
+    let bubbleProg: WebGLProgram, kuwaProg: WebGLProgram, gradeProg: WebGLProgram, finishProg: WebGLProgram;
+    let tensorProg: WebGLProgram, anisoProg: WebGLProgram;
+    try {
+      bubbleProg = compileProgram(gl, QUAD_VERT, BUBBLE_FRAG);
+      kuwaProg = compileProgram(gl, QUAD_VERT, KUWAHARA_FRAG);
+      tensorProg = compileProgram(gl, QUAD_VERT, TENSOR_FRAG);
+      anisoProg = compileProgram(gl, QUAD_VERT, ANISO_KUWAHARA_FRAG);
+      gradeProg = compileProgram(gl, QUAD_VERT, GRADE_FRAG);
+      finishProg = compileProgram(gl, QUAD_VERT, FINISH_FRAG);
+    } catch (e) {
+      console.error("[pepl] shader:", e);
+      setErr(String((e as Error).message || e));
+      return;
+    }
+
+    const UB = uniformMap(gl, bubbleProg, BUBBLE_UNIFORMS);
+    const UK = uniformMap(gl, kuwaProg, ["uTex", "uRes", "uKernel"]);
+    const UT = uniformMap(gl, tensorProg, ["uTex", "uRes"]);
+    const UA = uniformMap(gl, anisoProg, ["uTex", "uTensor", "uRes", "uKernel"]);
+    const UG = uniformMap(gl, gradeProg, ["uScene", "uKuwa", "uRes", "uKuwaAmt", "uGradeAmt", "uCenter", "uRadius"]);
+    const UF = uniformMap(gl, finishProg, ["uTex", "uRes", "uImpasto"]);
+
+    const buf = bindFullscreenTriangle(gl, [bubbleProg, kuwaProg, tensorProg, anisoProg, gradeProg, finishProg]);
+
+    const sheetTex = makeTexture(gl);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+    gl.useProgram(bubbleProg);
+    gl.uniform1i(UB.uTex as WebGLUniformLocation, 0);
+    gl.uniform1f(UB.uGrain as WebGLUniformLocation, 0.0); // grain moved to the last pass
+    gl.useProgram(kuwaProg);
+    gl.uniform1i(UK.uTex as WebGLUniformLocation, 0);
+    gl.useProgram(tensorProg);
+    gl.uniform1i(UT.uTex as WebGLUniformLocation, 0);
+    gl.useProgram(anisoProg);
+    gl.uniform1i(UA.uTex as WebGLUniformLocation, 0);
+    gl.uniform1i(UA.uTensor as WebGLUniformLocation, 1);
+    gl.useProgram(gradeProg);
+    gl.uniform1i(UG.uScene as WebGLUniformLocation, 0);
+    gl.uniform1i(UG.uKuwa as WebGLUniformLocation, 1);
+    gl.useProgram(finishProg);
+    gl.uniform1i(UF.uTex as WebGLUniformLocation, 0);
+
+    gl.clearColor(0.968, 0.964, 0.957, 1.0);
+
+    /* render targets */
+    let rtScene: RenderTarget | null = null;
+    let rtK: RenderTarget | null = null;
+    let rtB: RenderTarget | null = null;
+    let rtT: RenderTarget | null = null; // structure tensor, exportQuality only
+    /* 0.5 = live default; 0.25 = perf fallback; 1.0 = exportQuality stills */
+    let kuwaScale = 0.5;
+    let exportQ = false;
+
+    const recreateTargets = () => {
+      destroyTarget(gl, rtScene);
+      destroyTarget(gl, rtK);
+      destroyTarget(gl, rtB);
+      destroyTarget(gl, rtT);
+      rtT = null;
+      const w = canvas.width, h = canvas.height;
+      rtScene = makeTarget(gl, w, h);
+      rtB = makeTarget(gl, w, h);
+      const ks = exportQ ? 1.0 : kuwaScale;
+      rtK = makeTarget(gl, Math.max(2, Math.floor(w * ks)), Math.max(2, Math.floor(h * ks)));
+      if (exportQ) rtT = makeTarget(gl, w, h);
+    };
+
+    const sheet = new GraphSheet(defaultAdapter, ROOM_EDGES);
+    /* who touches whom, over every thread type — the focused person's
+       whole web lights up: dots swell and their names surface */
+    const neighborsByPerson = new Map<string, Set<string>>();
+    for (const e of ROOM_EDGES) {
+      let sa = neighborsByPerson.get(e.s);
+      if (!sa) neighborsByPerson.set(e.s, (sa = new Set()));
+      sa.add(e.t);
+      let sb = neighborsByPerson.get(e.t);
+      if (!sb) neighborsByPerson.set(e.t, (sb = new Set()));
+      sb.add(e.s);
+    }
+    let boards: BoardState[] = [];
+    let choreo = new Choreography(defaultAdapter.groups().length);
+    const breatheAt: number[] = [];
+    const breatheRng = mulberry32(77);
+    let labelAlpha: number[] = [];
+    let nameAlpha: number[] = [];
+    const t0 = performance.now();
+
+    const resolveFont = () => {
+      const css = getComputedStyle(document.documentElement);
+      const fam = css.getPropertyValue("--font-jakarta").trim();
+      const serif = css.getPropertyValue("--font-hedvig").trim();
+      if (fam) sheet.fontFamily = fam;
+      if (serif) sheet.serifFamily = `${serif}, Georgia, serif`;
+      /* thread hues ride the same runtime-token path as the type — the
+         canvas never invents a hex (law f) */
+      sheet.edgeHues = {
+        school: css.getPropertyValue("--film-blue").trim(),
+        company: css.getPropertyValue("--film-gold").trim(),
+        seek: css.getPropertyValue("--film-magenta").trim(),
+        why: css.getPropertyValue("--film-violet").trim(),
+      };
+    };
+    resolveFont();
+    document.fonts?.ready?.then(() => {
+      resolveFont();
+      sheet.bakeNames(); // rebake serif names with the real Hedvig
+    });
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+
+    /* ---------- bubble body ---------- */
+    const ptr = {
+      x: 0, y: 0, down: false, grabbed: false, id: -1, ox: 0, oy: 0, downT: 0, dx0: 0, dy0: 0,
+      /* camera pan: engaged once a non-bubble press travels past PAN_START */
+      panning: false, panCamX: 0, panCamY: 0, panPX: 0, panPY: 0,
+    };
+    const body = { x: 0, y: 0.06, vx: 0, vy: 0, dx: 0, dy: 0, dvx: 0, dvy: 0 };
+    let focused: FocusedPerson | null = null;
+    let selectedGroup: number | null = null;
+    let zoomAnim = paramsRef.current.zoom;
+    /* the LIVE lens radius — every hit-test, mask and uniform reads this,
+       never params.radius directly, so the pop can animate it as one */
+    let lensR = paramsRef.current.radius;
+    let radiusCur = lensR;
+    let popAt = -1; // >= 0 while the burst animation is running
+    let popFromR = 0;
+    /* scene camera: world point at view centre + scale, eased each frame */
+    const cam = { s: 1, x: 0, y: 0, ts: 1, tx: 0, ty: 0 };
+
+    /* ---------- space conversions ---------- */
+    const dims = () => {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      return { w, h, mn: Math.min(w, h) || 1 };
+    };
+    const toShader = (px: number, py: number) => {
+      const { w, h, mn } = dims();
+      return { x: (px - w / 2) / mn, y: -(py - h / 2) / mn };
+    };
+    const toSheet = (sx: number, sy: number) => {
+      const { w, h, mn } = dims();
+      return { x: sx * mn + w / 2, y: -sy * mn + h / 2 };
+    };
+    /* scene camera transforms: layout world px ↔ rendered screen px */
+    const worldToScreen = (wx: number, wy: number) => {
+      const { w, h } = dims();
+      return { x: (wx - cam.x) * cam.s + w / 2, y: (wy - cam.y) * cam.s + h / 2 };
+    };
+    const screenToWorld = (sx: number, sy: number) => {
+      const { w, h } = dims();
+      return { x: (sx - w / 2) / cam.s + cam.x, y: (sy - h / 2) / cam.s + cam.y };
+    };
+    /**
+     * Home is not 1:1 — it is "the whole room, small enough to sit inside the
+     * bubble". The sheet's own extent decides the scale, so the fit holds at any
+     * viewport size and for any guest count. Popping the bubble releases it to
+     * full size (see `popped`).
+     */
+    const camHome = () => {
+      const { w, h } = dims();
+      const L = sheet.layout;
+      let s = 1;
+      if (L && !poppedRef.current) {
+        let ext = 0;
+        for (const cl of L.clusters) {
+          ext = Math.max(ext, Math.hypot(cl.cx - w / 2, cl.cy - h / 2) + cl.radius);
+        }
+        // fit the whole room inside the lens, with a little air
+        const fitR = paramsRef.current.radius * Math.min(w, h) * 0.92;
+        if (ext > 0) s = Math.max(0.12, Math.min(1, fitR / ext));
+      }
+      cam.ts = s;
+      cam.tx = w / 2;
+      cam.ty = h / 2;
+    };
+    /* mirror the shader's forward sampling map (zoom + rim fisheye):
+       hit-testing asks "which sheet point is displayed at p", so apply
+       the same q = center + pc/zoom − N.xy·warp·(1−cosI)^1.5·0.55 */
+    const unproject = (p: { x: number; y: number }) => {
+      const P = paramsRef.current;
+      const dx = p.x - body.x, dy = p.y - body.y;
+      const d = Math.hypot(dx, dy);
+      if (d < lensR) {
+        const z = Math.max(zoomAnim, 1);
+        const dn = Math.min(d / lensR, 1);
+        const cosI = Math.sqrt(Math.max(0, 1 - dn * dn));
+        const w = P.warp * Math.pow(1 - cosI, 1.5) * 0.55;
+        return {
+          x: body.x + dx / z - (dx / lensR) * w,
+          y: body.y + dy / z - (dy / lensR) * w,
+        };
+      }
+      return p;
+    };
+    /* pointer (shader space) → through the lens → through the camera →
+       world-space dot lookup */
+    const dotAt = (p: { x: number; y: number }, tolPx = 9) => {
+      const L = sheet.layout;
+      if (!L) return null;
+      const g = unproject(p);
+      const s = toSheet(g.x, g.y);
+      const wpt = screenToWorld(s.x, s.y);
+      let best = null as (typeof L.dots)[number] | null;
+      let bestD = tolPx;
+      for (const d of L.dots) {
+        const dist = Math.hypot(d.x - wpt.x, d.y - wpt.y);
+        if (dist < bestD) {
+          bestD = dist;
+          best = d;
+        }
+      }
+      return best;
+    };
+    /* pointer → world → serif group-name hit. Only names that are
+       actually visible are clickable — a faded-out name over an awake
+       board must not swallow taps or show a phantom cursor. */
+    const groupNameAt = (p: { x: number; y: number }) => {
+      const g = unproject(p);
+      const s = toSheet(g.x, g.y);
+      const wpt = screenToWorld(s.x, s.y);
+      const rects = sheet.nameRects();
+      for (let ci = 0; ci < rects.length; ci++) {
+        /* only visible inscriptions are clickable */
+        if (choreo.phases[ci] === "focused" || nameAlpha[ci] < 0.2) continue;
+        const r = rects[ci];
+        if (
+          wpt.x >= r.x - 6 && wpt.x <= r.x + r.w + 6 &&
+          wpt.y >= r.y - 6 && wpt.y <= r.y + r.h + 6
+        ) {
+          return ci;
+        }
+      }
+      return null;
+    };
+
+    const rebuildBoards = () => {
+      const L = sheet.layout!;
+      boards = L.clusters.map((cl) => {
+        const b = new BoardState(cl.board.cols);
+        b.setText(""); // at rest the board is blank — the serif name speaks
+        return b;
+      });
+      choreo = new Choreography(L.clusters.length);
+      labelAlpha = L.clusters.map(() => 0);
+      nameAlpha = L.clusters.map(() => 0); // fades in from blank
+      breatheAt.length = 0;
+      /* offsets from now, not from mount — a rebuild late in the
+         session must not fire every board's breathe at once */
+      const tNow = (performance.now() - t0) / 1000;
+      L.clusters.forEach(() => breatheAt.push(tNow + 8 + breatheRng() * 16));
+      focused = null;
+      selectedGroup = null;
+      /* camera home, snapped — the layout underneath just changed */
+      camHome();
+      cam.s = cam.ts;
+      cam.x = cam.tx;
+      cam.y = cam.ty;
+    };
+
+    const resize = () => {
+      const { w, h } = dims();
+      const pw = Math.max(1, Math.floor(w * dpr));
+      const ph = Math.max(1, Math.floor(h * dpr));
+      const sizeChanged = canvas.width !== pw || canvas.height !== ph;
+      if (sizeChanged) {
+        canvas.width = pw;
+        canvas.height = ph;
+      }
+      /* Recreate on a size change OR whenever a target is missing.
+       *
+       * Upstream only recreated on a size change, which silently dies on a
+       * REMOUNT: the effect's cleanup destroys the targets and the new run
+       * starts with rt* = null, but the canvas ELEMENT survives with its
+       * width/height already set — so the size check is false, the targets are
+       * never built, and every frame returns at the `!rtScene` guard. The scene
+       * then renders one stale frame and freezes, with no error anywhere.
+       * React's double-invoked effects and Fast Refresh both hit this. */
+      if (sizeChanged || !rtScene || !rtK || !rtB) recreateTargets();
+      if (sheet.resize(w, h, dpr)) rebuildBoards();
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(wrap);
+
+    /* Pause the loop only when the TAB is hidden.
+     *
+     * Upstream gated this on an IntersectionObserver over the canvas. Here the
+     * canvas is a full-bleed child of a route shell that lays out after the
+     * observer is attached, so the first callback lands while the box is still
+     * empty, latches visible=false, and never re-fires — the loop then schedules
+     * forever and returns before drawing, leaving exactly one frame painted and
+     * every interaction dead. document.hidden expresses the real intent (don't
+     * burn GPU in a background tab) and cannot latch. */
+    let visible = typeof document === "undefined" ? true : !document.hidden;
+    const onVis = () => {
+      visible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    /* ---------- selection ---------- */
+    const flashFade = () => {
+      const f = fadeRef.current;
+      if (!f) return;
+      f.style.transition = "none";
+      f.style.opacity = "1";
+      requestAnimationFrame(() => {
+        f.style.transition = "opacity 200ms ease-out";
+        f.style.opacity = "0";
+      });
+    };
+
+    /* one-way for the session: the burst runs, then the small toy returns */
+    const popBubble = () => {
+      if (poppedRef.current) return;
+      poppedRef.current = true;
+      setPopped(true);
+      popAt = performance.now();
+      popFromR = lensR;
+    };
+
+    const select = (personId: string) => {
+      const L = sheet.layout;
+      if (!L) return;
+      const d = L.dots.find((x) => x.person.id === personId);
+      if (!d) return;
+      popBubble(); // the camera is about to enter the room — the room can't stay inside the lens
+      selectedGroup = null;
+      focused = { id: personId, name: d.person.name, clusterIndex: d.clusterIndex };
+      /* the camera does the travel: the person lands left-of-centre so
+         the stamps and echo have room — and always OUTSIDE the resident
+         bubble's footprint, or the dot ends up in the lens dead zone */
+      const { w, h, mn } = dims();
+      const s = SCENE_ZOOM_PERSON;
+      let ox = -0.17 * w, oy = -0.07 * h; // dot's screen offset from centre
+      /* clear of the bubble WHERE IT ACTUALLY IS — the popped toy is free-
+         floating, so its current position is the only truthful footprint */
+      const bx = body.x * mn, by = -body.y * mn;
+      const dPx = Math.hypot(ox - bx, oy - by);
+      const clear = lensR * mn * 1.15;
+      if (dPx < clear) {
+        const k = clear / Math.max(dPx, 1e-3);
+        ox = bx + (ox - bx) * k;
+        oy = by + (oy - by) * k;
+      }
+      cam.ts = s;
+      cam.tx = d.x - ox / s;
+      cam.ty = d.y - oy / s;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+        flashFade();
+      }
+    };
+    selectRef.current = select;
+
+    /* choose a whole group: zoom in until its serif inscription reads
+       large; the board wakes into the field underneath */
+    const selectGroup = (ci: number) => {
+      const L = sheet.layout;
+      if (!L || !L.clusters[ci]) return;
+      popBubble();
+      const cl = L.clusters[ci];
+      const { w, h, mn } = dims();
+      focused = null;
+      selectedGroup = ci;
+      cam.ts = Math.min(2.6, Math.max(1.9, (0.4 * mn) / cl.radius));
+      /* the inscription lands clear of the resident bubble — measured
+         as the title's full screen rect, not just its centre point */
+      const nx = cl.board.x + cl.board.w / 2;
+      const ny = cl.board.y + cl.board.h / 2;
+      let ox = -0.16 * w, oy = 0.1 * h;
+      const bx = body.x * mn, by = -body.y * mn;
+      const clear = lensR * mn * 1.15;
+      const nr = sheet.nameRects()[ci];
+      const hw2 = nr ? (nr.w / 2) * cam.ts : 0;
+      const hh2 = nr ? (nr.h / 2) * cam.ts : 0;
+      const dxn = Math.max(0, Math.abs(ox - bx) - hw2);
+      const dyn = Math.max(0, Math.abs(oy - by) - hh2);
+      if (Math.hypot(dxn, dyn) < clear) {
+        /* push the title straight down until its top edge clears */
+        oy = by + hh2 + Math.sqrt(Math.max(clear * clear - dxn * dxn, 0)) + 10;
+      }
+      cam.tx = nx - ox / cam.ts;
+      cam.ty = ny - oy / cam.ts;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+        flashFade();
+      }
+    };
+    selectGroupRef.current = selectGroup;
+
+    const clearFocus = () => {
+      if (reduced && (focused || selectedGroup != null)) flashFade();
+      focused = null;
+      selectedGroup = null;
+      camHome();
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      }
+    };
+
+    /* ---------- pointer ---------- */
+    const toLocal = (e: PointerEvent) => {
+      const r = wrap.getBoundingClientRect();
+      const mn = Math.min(r.width, r.height) || 1;
+      return {
+        x: (e.clientX - r.left - r.width / 2) / mn,
+        y: -(e.clientY - r.top - r.height / 2) / mn,
+      };
+    };
+
+    const hover = { id: null as string | null, group: null as number | null };
+
+    /* hover itself is re-derived every frame (the camera and bubble
+       move under a stationary pointer); onMove just records position */
+    const onMove = (e: PointerEvent) => {
+      if (ptr.down && e.pointerId !== ptr.id) return; // one pointer drives
+      const q = toLocal(e);
+      ptr.x = q.x;
+      ptr.y = q.y;
+      ptrIn = true;
+
+      /* click-drag on the sheet PANS the camera — 1:1 under the pointer,
+         so both the target and the eased position snap while it lasts */
+      if (ptr.down && !ptr.grabbed) {
+        if (!ptr.panning && Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0) > PAN_START) {
+          ptr.panning = true;
+          ptr.panCamX = cam.x;
+          ptr.panCamY = cam.y;
+          ptr.panPX = q.x;
+          ptr.panPY = q.y;
+          wrap.style.cursor = "grabbing";
+        }
+        if (ptr.panning) {
+          const { mn } = dims();
+          cam.tx = ptr.panCamX - ((q.x - ptr.panPX) * mn) / cam.s;
+          cam.ty = ptr.panCamY + ((q.y - ptr.panPY) * mn) / cam.s;
+          cam.x = cam.tx;
+          cam.y = cam.ty;
+        }
+      }
+    };
+
+    const onLeave = () => {
+      ptrIn = false;
+      hover.id = null;
+      hover.group = null;
+      if (!ptr.grabbed) wrap.style.cursor = "default";
+    };
+
+    const onDown = (e: PointerEvent) => {
+      if (ptr.down) return; // a second finger never steals the gesture
+      const q = toLocal(e);
+      ptr.id = e.pointerId;
+      ptr.x = q.x; ptr.y = q.y; ptr.down = true;
+      ptr.downT = performance.now();
+      ptr.dx0 = q.x; ptr.dy0 = q.y;
+      if (Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15) {
+        ptr.grabbed = true;
+        ptr.ox = body.x - q.x;
+        ptr.oy = body.y - q.y;
+        wrap.style.cursor = "grabbing";
+        try {
+          wrap.setPointerCapture(e.pointerId);
+        } catch {}
+      }
+    };
+
+    const onUp = (e: PointerEvent) => {
+      if (ptr.down && e.pointerId !== ptr.id) return;
+      const wasDown = ptr.down;
+      const wasGrabbed = ptr.grabbed;
+      const wasPanning = ptr.panning;
+      ptr.down = false;
+      ptr.grabbed = false;
+      ptr.panning = false;
+      ptr.id = -1;
+      if (wasPanning) {
+        /* a pan is not a click — the release changes nothing */
+        wrap.style.cursor = "default";
+        return;
+      }
+      /* releases that began on UI chrome (search, panel, pills) never
+         reach onDown, so they must not select or clear anything */
+      if (!wasDown) return;
+      wrap.style.cursor = "default";
+      /* an aborted gesture (system took the touch) must not select */
+      if (e.type === "pointercancel") return;
+
+      const q = "clientX" in e ? toLocal(e) : { x: ptr.x, y: ptr.y };
+      const elapsed = performance.now() - ptr.downT;
+      const moved = Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0);
+
+      /* the FIRST click pops the bubble — ANYWHERE on the scene, and with a
+         forgiving press (a few px of wobble must not read as a drag): the
+         whole room lives inside the lens pre-pop, so there is nothing else a
+         first click could mean. The room releases to full size and the
+         bubble returns as a small toy. A deliberate drag still moves it. */
+      if (!poppedRef.current && elapsed < 450 && moved < PAN_START) {
+        popBubble();
+        camHome(); // re-fit: popped home is the full-size room
+        return;
+      }
+
+      if (elapsed < 300 && moved < 0.012) {
+        const d = dotAt(q);
+        if (d) {
+          select(d.person.id);
+          return;
+        }
+        const gi = groupNameAt(q);
+        if (gi != null) selectGroup(gi);
+        else clearFocus();
+        return;
+      }
+
+      /* a drag-release just lets the bubble go — it springs back home
+         on its own; selection is clicks, titles, and search only */
+      void wasGrabbed;
+    };
+
+    wrap.addEventListener("pointermove", onMove);
+    wrap.addEventListener("pointerdown", onDown);
+    wrap.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+
+    /* Wheel is the SCENE's zoom, never the browser's. A trackpad pinch
+       arrives as ctrl+wheel, and without preventDefault the browser zooms
+       the whole site around the canvas. React's synthetic onWheel attaches
+       passively, so this must be a native non-passive listener — on the
+       route shell, so a pinch over the ticker or map is captured too.
+       Anchored to the cursor: the world point under it stays put. */
+    const rootEl = wrap.parentElement ?? wrap;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const r = wrap.getBoundingClientRect();
+      const sx = e.clientX - r.left;
+      const sy = e.clientY - r.top;
+      const anchor = screenToWorld(sx, sy);
+      const k = e.ctrlKey ? 0.008 : 0.0016; // pinch deltas are small + fast
+      const ns = Math.min(3.2, Math.max(0.1, cam.ts * Math.exp(-e.deltaY * k)));
+      cam.ts = ns;
+      cam.tx = anchor.x - (sx - r.width / 2) / ns;
+      cam.ty = anchor.y - (sy - r.height / 2) / ns;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      }
+    };
+    rootEl.addEventListener("wheel", onWheel, { passive: false });
+
+    /* ---------- loop ---------- */
+    let raf = 0;
+    let last = t0;
+    let lx = 0, ly = 0;
+    let burstShown = false;
+    let burstId = "";
+    let ptrIn = false;
+    let emaMs = 16;
+    let lastGateCheck = 0;
+    let kernelCap = 3;
+
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const now = performance.now();
+      const frameMs = now - last;
+      const dt = Math.min(0.032, Math.max(0.0005, frameMs / 1000));
+      last = now;
+      if (!visible) return;
+
+      /* perf gate: under ~45fps, drop Kuwahara to quarter res before
+         degrading anything else; if that isn't enough, cap the kernel */
+      emaMs = emaMs + (Math.min(frameMs, 100) - emaMs) * 0.04;
+      if (now - lastGateCheck > 1500) {
+        lastGateCheck = now;
+        if (!exportQ && emaMs > 22) {
+          if (kuwaScale > 0.3) {
+            kuwaScale = 0.25;
+            recreateTargets();
+          } else if (kernelCap > 1.6) {
+            kernelCap = 1.6;
+          }
+        }
+      }
+      if (paramsRef.current.exportQuality !== exportQ) {
+        exportQ = paramsRef.current.exportQuality;
+        recreateTargets();
+      }
+
+      const t = reduced ? 12.0 : (now - t0) / 1000;
+      const P = paramsRef.current;
+      const b = body;
+      const L = sheet.layout;
+      if (!L || !rtScene || !rtK || !rtB) return;
+      const { w, h, mn } = dims();
+
+      if (!Number.isFinite(b.x + b.y + b.vx + b.vy + b.dx + b.dy + b.dvx + b.dvy)) {
+        b.x = 0; b.y = 0.06;
+        b.vx = b.vy = b.dx = b.dy = b.dvx = b.dvy = 0;
+      }
+
+      /* --- lens radius: pop burst, then ease to the state's size --- */
+      const targetR = poppedRef.current ? POPPED_RADIUS : P.radius;
+      if (reduced) {
+        popAt = -1;
+        radiusCur = targetR;
+        lensR = targetR;
+      } else if (popAt >= 0) {
+        const el = now - popAt;
+        if (el < 160) {
+          lensR = popFromR * (1 - el / 160); // the burst
+        } else if (el < 460) {
+          lensR = 0; // a beat of absence before it comes back
+        } else {
+          popAt = -1;
+          radiusCur = 0; // regrow from nothing
+        }
+      }
+      if (popAt < 0 && !reduced) {
+        radiusCur += (targetR - radiusCur) * (1 - Math.exp(-dt * 3.2));
+        lensR = radiusCur;
+      }
+
+      /* --- scene camera easing (snapped when reduced) --- */
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      } else {
+        const ck = 1 - Math.exp(-dt * 2.4);
+        cam.s += (cam.ts - cam.s) * ck;
+        cam.x += (cam.tx - cam.x) * ck;
+        cam.y += (cam.ty - cam.y) * ck;
+      }
+
+      /* --- hover, re-derived per frame: the world moves under a
+             stationary pointer while the camera eases and the bubble
+             wanders --- */
+      if (ptrIn && !ptr.grabbed && !ptr.panning) {
+        const q = { x: ptr.x, y: ptr.y };
+        const hd = dotAt(q);
+        hover.id = hd ? hd.person.id : null;
+        hover.group = hd ? null : groupNameAt(q);
+        const overBubble =
+          Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15;
+        wrap.style.cursor =
+          hd || hover.group != null ? "pointer" : overBubble ? "grab" : "default";
+      }
+
+      /* --- forces --- */
+      let ax = 0, ay = 0;
+      const halfW = w / mn / 2;
+      const halfH = h / mn / 2;
+
+      if (ptr.grabbed) {
+        const k = 150 * P.grip;
+        const c = 2 * Math.sqrt(k) * 1.15;
+        ax += (ptr.x + ptr.ox - b.x) * k - b.vx * c;
+        ay += (ptr.y + ptr.oy - b.y) * k - b.vy * c;
+      } else if (!poppedRef.current) {
+        /* UNPOPPED, the bubble is the room's container: a spring holds it
+           centre-stage with the whole party inside. */
+        ax += (0 - b.x) * 6.0;
+        ay += (0.02 - b.y) * 6.0;
+        if (!reduced) {
+          ay -= P.gravity;
+          ax += (Math.sin(t * 0.31) + 0.6 * Math.sin(t * 0.17 + 2.1)) * 0.038 * P.wander;
+          ay += (Math.sin(t * 0.23 + 1.3) + 0.5 * Math.sin(t * 0.41 + 4.2)) * 0.032 * P.wander;
+        }
+      } else if (!reduced) {
+        /* POPPED, it is a free toy: no home spring — drag it into a corner
+           and it STAYS there (viscosity below brings it to rest; the walls
+           still bounce). Only gravity/wander act, both 0 by default. */
+        ay -= P.gravity;
+        ax += (Math.sin(t * 0.31) + 0.6 * Math.sin(t * 0.17 + 2.1)) * 0.038 * P.wander;
+        ay += (Math.sin(t * 0.23 + 1.3) + 0.5 * Math.sin(t * 0.41 + 4.2)) * 0.032 * P.wander;
+      }
+
+      ax -= b.vx * P.drag;
+      ay -= b.vy * P.drag;
+
+      b.vx += ax * dt; b.vy += ay * dt;
+      b.x += b.vx * dt; b.y += b.vy * dt;
+
+      const R = Math.max(lensR, 0.02); // popped-out zero must not wedge it in a wall
+      const KICK = 1.2;
+      if (b.x < -halfW + R) { b.x = -halfW + R; const s = Math.abs(b.vx); b.vx = s * P.bounce; b.dvy += s * KICK; }
+      if (b.x > halfW - R) { b.x = halfW - R; const s = Math.abs(b.vx); b.vx = -s * P.bounce; b.dvy += s * KICK; }
+      if (b.y < -halfH + R) { b.y = -halfH + R; const s = Math.abs(b.vy); b.vy = s * P.bounce; b.dvx += s * KICK; }
+      if (b.y > halfH - R) { b.y = halfH - R; const s = Math.abs(b.vy); b.vy = -s * P.bounce; b.dvx += s * KICK; }
+
+      /* --- squish spring --- */
+      const wfreq = 2 * Math.PI * P.jiggle;
+      const zeta = P.settle;
+      const sp = Math.hypot(b.vx, b.vy);
+      let tx = 0, ty = 0;
+      if (sp > 1e-5 && P.squish !== 0) {
+        const mag = MAX_DEFORM * (1 - Math.exp(-sp * Math.abs(P.squish)));
+        const ux = b.vx / sp, uy = b.vy / sp;
+        if (P.squish >= 0) { tx = -uy * mag; ty = ux * mag; }
+        else { tx = ux * mag; ty = uy * mag; }
+      }
+      b.dvx += (-(b.dx - tx) * wfreq * wfreq - b.dvx * 2 * zeta * wfreq) * dt;
+      b.dvy += (-(b.dy - ty) * wfreq * wfreq - b.dvy * 2 * zeta * wfreq) * dt;
+      b.dx += b.dvx * dt;
+      b.dy += b.dvy * dt;
+      const dvm = Math.hypot(b.dvx, b.dvy);
+      if (dvm > 8) { b.dvx *= 8 / dvm; b.dvy *= 8 / dvm; }
+
+      void sp;
+
+      /* --- lens zoom: constant toy magnification, eased for the slider --- */
+      if (reduced) zoomAnim = P.zoom;
+      else zoomAnim += (P.zoom - zoomAnim) * (1 - Math.exp(-dt * 3.2));
+
+      /* --- active cluster: the chosen person's, or the chosen group --- */
+      const active: number | null = focused ? focused.clusterIndex : selectedGroup;
+
+      /* --- choreography + boards --- */
+      choreo.update(now, active, focused, boards, L, {
+        morphDur: P.morphDur,
+        morphHold: P.morphHold,
+        hopDur: P.hopDur,
+        hopHold: P.hopHold,
+        field: P.field,
+      }, reduced);
+
+      const boardsDirty = boards.map((bd, ci) => {
+        if (
+          !reduced &&
+          choreo.phases[ci] === "rest" &&
+          !bd.isMorphing &&
+          t > breatheAt[ci]
+        ) {
+          breatheAt[ci] = t + 16 + breatheRng() * 12;
+          /* resting breathe: the blank board flashes weather and settles */
+          bd.morphToText("", now, { duration: 2600, fieldHold: 1100 }, reduced);
+        }
+        bd.fieldName = bd.isMorphing ? bd.fieldName : P.field;
+        /* hover bloom: the group title's glyphs surface lightly and
+           blobbily while the pointer rests on the inscription */
+        const gainTarget =
+          hover.group === ci && choreo.phases[ci] === "rest" && !bd.isMorphing ? 0.8 : 0;
+        bd.hoverGain += (gainTarget - bd.hoverGain) * (reduced ? 1 : 1 - Math.exp(-dt * 6));
+        return bd.update(now, t, reduced);
+      });
+
+      /* --- label + serif-name fades, dot emphasis --- */
+      const easeL = reduced ? 1 : 1 - Math.exp(-dt * 5);
+      labelAlpha = labelAlpha.map((v, ci) => v + (choreo.labelTarget(ci) - v) * easeL);
+      const easeN = reduced ? 1 : 1 - Math.exp(-dt * 2.6);
+      nameAlpha = nameAlpha.map((v, ci) => {
+        /* the inscription stays up while its group is framed — you
+           zoom in *until the group text is large*; it only yields
+           when a person inside is focused */
+        const target = choreo.phases[ci] === "focused" ? 0 : 1;
+        return v + (target - v) * easeN;
+      });
+      const bubbleSheet = toSheet(b.x, b.y);
+      const lensPx = lensR * mn;
+      /* the focused dot anchors the label bloom; the bubble anchors
+         only the genuine lens-proximity effects */
+      const focusDot = focused
+        ? L.dots.find((x) => x.person.id === focused!.id) ?? null
+        : null;
+      const focusAnchor = focusDot
+        ? worldToScreen(focusDot.x, focusDot.y)
+        : bubbleSheet;
+      /* distances measured on screen — the camera moves the world */
+      const dotScreenDist = (i: number) => {
+        const d = L.dots[i];
+        const s = worldToScreen(d.x, d.y);
+        return Math.hypot(s.x - bubbleSheet.x, s.y - bubbleSheet.y);
+      };
+      const nbrs = focused ? neighborsByPerson.get(focused.id) ?? null : null;
+      const dotEmphasis = (i: number) => {
+        const d = L.dots[i];
+        if (focused && d.person.id === focused.id) return 1.45;
+        if (nbrs?.has(d.person.id)) return 1.28;
+        return dotScreenDist(i) < lensPx ? 1.22 : 1;
+      };
+      /* every dot carries its name: a quiet rest label everywhere,
+         brighter under the lens, brightest around the focus */
+      const labelFor = (i: number) => {
+        const d = L.dots[i];
+        /* labels culled by the placement pass only surface for their
+           own hover/focus moment */
+        if (!d.labelVis) {
+          const mine =
+            hover.id === d.person.id ||
+            (focused && focused.id === d.person.id) ||
+            (nbrs?.has(d.person.id) ?? false);
+          return mine ? 1 : 0;
+        }
+        if (nbrs?.has(d.person.id)) return 0.92;
+        const rest = 0.38;
+        const underLens = dotScreenDist(i) < lensPx ? 0.62 : 0;
+        const ca = labelAlpha[d.clusterIndex];
+        const s2 = worldToScreen(d.x, d.y);
+        const fd = Math.hypot(s2.x - focusAnchor.x, s2.y - focusAnchor.y);
+        const fall =
+          1 - Math.min(1, Math.max(0, (fd - lensPx * 0.55) / (lensPx * 0.45)));
+        return Math.max(rest, underLens, ca * fall);
+      };
+
+      /* --- stamp burst, anchored to the focused dot. (The big serif name
+             echo that used to ride along is gone by decree — the stamps
+             already carry the name.) Identity is the id — two guests can
+             share a name. --- */
+      const wantBurst = !!focused;
+      if (wantBurst !== burstShown || (focused && focused.id !== burstId)) {
+        burstShown = wantBurst;
+        burstId = focused ? focused.id : burstId;
+        if (focused) {
+          const prev = stampsLiveRef.current;
+          if (prev && prev.on && prev.personKey !== focused.id && stampsRef.current) {
+            /* person-to-person refocus: keep the outgoing burst
+               mounted in place so it peels instead of jump-cutting */
+            const m = /translate\((-?[\d.]+)px, (-?[\d.]+)px\)(?: scale\((-?[\d.]+)\))?/.exec(
+              stampsRef.current.style.transform || ""
+            );
+            setPeeling({
+              ...prev,
+              at: m
+                ? { x: parseFloat(m[1]), y: parseFloat(m[2]), k: m[3] ? parseFloat(m[3]) : 1 }
+                : { x: 0, y: 0, k: 1 },
+            });
+            if (peelTimerRef.current) clearTimeout(peelTimerRef.current);
+            peelTimerRef.current = setTimeout(() => setPeeling(null), 700);
+          }
+          const next = {
+            personKey: focused.id,
+            name: focused.name,
+            details: GUEST_DETAILS[focused.id] ?? {},
+            on: true,
+          };
+          stampsLiveRef.current = next;
+          setStamps(next);
+        } else {
+          stampsLiveRef.current = stampsLiveRef.current
+            ? { ...stampsLiveRef.current, on: false }
+            : null;
+          setStamps((s) => (s && s.on ? { ...s, on: false } : s));
+        }
+      }
+      /* stamps draw OVER the bubble now — the old disc mask that tucked
+         them behind the lens hid half a burst whenever the toy drifted
+         near the focused dot */
+
+      if (focusDot) {
+        const ds = worldToScreen(focusDot.x, focusDot.y);
+        if (stampsRef.current) {
+          /* scale the burst down on small viewports; bounds derived
+             from the scaled extents so the clamps can never invert */
+          /* extents mirror Stamps.tsx SLOTS (tightened 2026-07-25) */
+          const k = Math.min(1, (w - 32) / 444, (h - 62) / 240);
+          const ax2 = Math.min(Math.max(ds.x, 218 * k + 14), w - 226 * k - 18);
+          const ay2 = Math.min(Math.max(ds.y, 158 * k + 18), h - 44);
+          stampsRef.current.style.transform = `translate(${ax2.toFixed(1)}px, ${ay2.toFixed(1)}px) scale(${k.toFixed(3)})`;
+        }
+      }
+
+      /* --- draw the sheet, upload as texture --- */
+      sheet.draw({
+        t,
+        dt,
+        reduced,
+        cam: { s: cam.s, x: cam.x, y: cam.y },
+        hoveredId: hover.id,
+        focusedId: focused ? focused.id : null,
+        boards,
+        boardsDirty,
+        nameAlpha,
+        labelFor,
+        dotEmphasis,
+        edgeOn: edgeOnRef.current,
+      });
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, sheetTex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sheet.canvas);
+
+      lx += (ptr.x - lx) * 0.05;
+      ly += (ptr.y - ly) * 0.05;
+
+      /* ---- pass 1: bubble lens → rtScene ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtScene.fbo);
+      gl.viewport(0, 0, rtScene.w, rtScene.h);
+      gl.useProgram(bubbleProg);
+      const ub = UB as Record<string, WebGLUniformLocation>;
+      gl.uniform2f(ub.uRes, rtScene.w, rtScene.h);
+      gl.uniform1f(ub.uTime, t);
+      gl.uniform2f(ub.uMouse, lx * 2, ly * 2);
+      gl.uniform2f(ub.uCenter, b.x, b.y);
+      gl.uniform2f(ub.uDeform, b.dx, b.dy);
+      gl.uniform2f(ub.uVel, b.vx, b.vy);
+      gl.uniform1f(ub.uThick, P.thick);
+      gl.uniform1f(ub.uDrain, P.drain);
+      gl.uniform1f(ub.uWobble, P.wobble);
+      gl.uniform1f(ub.uSurface, P.surface);
+      gl.uniform1f(ub.uFlow, reduced ? 0 : P.flow);
+      gl.uniform1f(ub.uTurb, P.turb);
+      gl.uniform1f(ub.uChroma, P.chroma);
+      gl.uniform1f(ub.uEdge, P.edge);
+      gl.uniform1f(ub.uZoom, zoomAnim);
+      gl.uniform1f(ub.uWarp, P.warp);
+      gl.uniform1f(ub.uRadius, lensR);
+      gl.uniform1f(ub.uBack, P.back);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* ---- pass 2: Kuwahara ----
+         live: generalized 8-sector at reduced res.
+         exportQuality: structure tensor → anisotropic oriented kernel
+         at full res (stills only). */
+      if (exportQ && rtT) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtT.fbo);
+        gl.viewport(0, 0, rtT.w, rtT.h);
+        gl.useProgram(tensorProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.uniform2f(UT.uRes as WebGLUniformLocation, rtT.w, rtT.h);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtK.fbo);
+        gl.viewport(0, 0, rtK.w, rtK.h);
+        gl.useProgram(anisoProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, rtT.tex);
+        gl.uniform2f(UA.uRes as WebGLUniformLocation, rtK.w, rtK.h);
+        gl.uniform1f(UA.uKernel as WebGLUniformLocation, P.kuwaKernel * 2);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, rtK.fbo);
+        gl.viewport(0, 0, rtK.w, rtK.h);
+        gl.useProgram(kuwaProg);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+        gl.uniform2f(UK.uRes as WebGLUniformLocation, rtK.w, rtK.h);
+        gl.uniform1f(UK.uKernel as WebGLUniformLocation, Math.min(P.kuwaKernel, kernelCap));
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      /* ---- pass 3: composite + grade → rtB ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, rtB.fbo);
+      gl.viewport(0, 0, rtB.w, rtB.h);
+      gl.useProgram(gradeProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtScene.tex);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, rtK.tex);
+      gl.uniform2f(UG.uRes as WebGLUniformLocation, rtB.w, rtB.h);
+      gl.uniform1f(UG.uKuwaAmt as WebGLUniformLocation, P.kuwahara);
+      gl.uniform1f(UG.uGradeAmt as WebGLUniformLocation, P.grade);
+      gl.uniform2f(UG.uCenter as WebGLUniformLocation, b.x, b.y);
+      gl.uniform1f(UG.uRadius as WebGLUniformLocation, lensR);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      /* ---- pass 4: impasto → screen (grain rides the DOM veil) ---- */
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.useProgram(finishProg);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, rtB.tex);
+      gl.uniform2f(UF.uRes as WebGLUniformLocation, canvas.width, canvas.height);
+      gl.uniform1f(UF.uImpasto as WebGLUniformLocation, P.impasto);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+    frame();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      document.removeEventListener("visibilitychange", onVis);
+      rootEl.removeEventListener("wheel", onWheel);
+      wrap.removeEventListener("pointermove", onMove);
+      wrap.removeEventListener("pointerdown", onDown);
+      wrap.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      destroyTarget(gl, rtScene);
+      destroyTarget(gl, rtK);
+      destroyTarget(gl, rtB);
+      destroyTarget(gl, rtT);
+      gl.deleteTexture(sheetTex);
+      [bubbleProg, kuwaProg, tensorProg, anisoProg, gradeProg, finishProg].forEach((p) =>
+        gl.deleteProgram(p)
+      );
+      gl.deleteBuffer(buf);
+    };
+  }, []);
+
+  const ui: React.CSSProperties = {
+    fontFamily: "var(--font-jakarta), system-ui, sans-serif",
+    fontSize: 10,
+    letterSpacing: "0.08em",
+    textTransform: "lowercase",
+  };
+  const shadow =
+    "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)";
+  /* active surfaces pick up the film-blue token; hovers warm with gold */
+  const pill = (on: boolean): React.CSSProperties => ({
+    ...ui,
+    padding: "8px 13px",
+    border: "none",
+    borderRadius: 999,
+    background: on ? "rgba(145,180,249,0.22)" : "rgba(255,253,251,0.72)",
+    backdropFilter: "blur(8px)",
+    boxShadow: shadow,
+    color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.52)",
+    cursor: "pointer",
+  });
+  /* slider readouts update live — format to the step's precision and
+     keep the digits tabular so nothing jitters */
+  const fmt = (v: number, step: number) =>
+    step >= 1 ? String(Math.round(v)) : v.toFixed(step >= 0.1 ? 1 : step >= 0.01 ? 2 : 3);
+
+  /* ---- relationships widget: rows from the fetched person record ---- */
+  const relEdges = profile?.edges ?? [];
+  const sectionOf = (e: NonNullable<PersonRecord["edges"]>[number]) =>
+    REL_SECTIONS.find((s) => s.match(e))?.key ?? "other";
+  const personName = (id: string) =>
+    defaultAdapter.people().find((p) => p.id === id)?.name ??
+    id.replace(/-[0-9a-f]{4}$/, "").replace(/-/g, " ");
+
+  /* ---- search: people + groups, flown to on pick ---- */
+  type SearchResult =
+    | { kind: "person"; id: string; label: string; sub: string }
+    | { kind: "group"; gi: number; label: string; sub: string };
+  const qn = query.trim().toLowerCase();
+  const searchResults: SearchResult[] = qn
+    ? [
+        ...defaultAdapter
+          .groups()
+          .map((g, gi) => ({ kind: "group" as const, gi, label: g.name, sub: "group" }))
+          .filter((r) => r.label.toLowerCase().includes(qn)),
+        ...defaultAdapter
+          .people()
+          .map((p) => ({
+            kind: "person" as const,
+            id: p.id,
+            label: p.name,
+            sub:
+              defaultAdapter.groups().find((g) => g.id === p.groupId)?.name.toLowerCase() ?? "",
+          }))
+          .filter((r) => r.label.toLowerCase().includes(qn)),
+      ].slice(0, 10)
+    : [];
+  const searchSel = Math.max(0, Math.min(searchIdx, searchResults.length - 1));
+  const pickResult = (r: SearchResult) => {
+    if (r.kind === "person") selectRef.current(r.id);
+    else selectGroupRef.current(r.gi);
+    setQuery("");
+    setSearchIdx(0);
+  };
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100vh",
+        background: "var(--cream)",
+        overflow: "hidden",
+        color: "var(--ink)",
+        touchAction: "none",
+      }}
+    >
+      <style>{`
+        .pepl-pill { transition: transform 120ms ease, background-color 150ms ease; }
+        .pepl-pill:active { transform: scale(0.96); }
+        .pepl-pill:focus-visible { outline: 2px solid rgba(145,180,249,0.8); outline-offset: 2px; }
+        .pepl-item { transition: transform 120ms ease, background-color 150ms ease; }
+        .pepl-item:hover { background-color: rgba(254,224,174,0.38); }
+        .pepl-item:active { transform: scale(0.96); }
+        .pepl-item:focus-visible { outline: 2px solid rgba(145,180,249,0.8); outline-offset: -1px; }
+        .pepl-group { animation: peplRise 260ms ease-out backwards; }
+        @keyframes peplRise {
+          from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .pepl-group { animation: none; }
+          .pepl-pill:active, .pepl-item:active { transform: none; }
+        }
+        .pepl-search { transition: box-shadow 150ms ease; }
+        .pepl-search:focus {
+          outline: 2px solid rgba(145,180,249,0.8);
+          outline-offset: 1px;
+        }
+        .pepl-search::placeholder { color: rgba(26,25,24,0.30); }
+      `}</style>
+      <div ref={wrapRef} style={{ position: "absolute", inset: 0, touchAction: "none" }}>
+        <canvas
+          ref={canvasRef}
+          aria-hidden="true"
+          style={{ width: "100%", height: "100%", display: "block" }}
+        />
+      </div>
+
+      {/* RSVP stamp burst around the focused dot — above the bubble, so a
+          burst is never half-eaten by the lens */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        <div
+          ref={stampsRef}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            pointerEvents: "none",
+            willChange: "transform",
+            transformOrigin: "0 0",
+          }}
+        >
+          {stamps && <StampBurst data={stamps} on={stamps.on} />}
+        </div>
+        {peeling && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+              transform: `translate(${peeling.at.x}px, ${peeling.at.y}px) scale(${peeling.at.k})`,
+              transformOrigin: "0 0",
+            }}
+          >
+            <StampBurst data={peeling} on={false} />
+          </div>
+        )}
+      </div>
+
+      {/* widgets — on top of everything */}
+      <TagTicker />
+      <HometownMap />
+
+      {/* thread legend — square corners, sentence case, film hues. Each row
+          toggles that connection type across the whole room; a focused
+          person's own threads draw regardless. */}
+      <div
+        style={{
+          position: "absolute",
+          left: 20,
+          bottom: 128,
+          width: 184,
+          padding: "10px 14px 12px",
+          borderRadius: 0,
+          background: "rgba(255,253,251,0.78)",
+          backdropFilter: "blur(12px)",
+          boxShadow:
+            "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-hedvig), Georgia, serif",
+            fontSize: 15,
+            letterSpacing: "0.01em",
+            color: "rgba(38,36,44,0.6)",
+            marginBottom: 7,
+          }}
+        >
+          connections
+        </div>
+        {(
+          [
+            { type: "why", label: "Shared conviction", hue: "var(--film-violet)" },
+            { type: "seek", label: "Seeking match", hue: "var(--film-magenta)" },
+            { type: "school", label: "Same school", hue: "var(--film-blue)" },
+            { type: "company", label: "Same company", hue: "var(--film-gold)" },
+          ] as { type: RoomEdgeType; label: string; hue: string }[]
+        ).map((row) => {
+          const on = edgeOn[row.type];
+          const n = ROOM_EDGES.filter((e) => e.type === row.type).length;
+          return (
+            <button
+              key={row.type}
+              className="pepl-item"
+              onClick={() => setEdgeOn((s) => ({ ...s, [row.type]: !s[row.type] }))}
+              aria-pressed={on}
+              style={{
+                ...ui,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                width: "100%",
+                textAlign: "left",
+                padding: "4px 4px",
+                border: "none",
+                borderRadius: 0,
+                background: "transparent",
+                color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.34)",
+                fontSize: 10.5,
+                letterSpacing: "0.02em",
+                cursor: "pointer",
+              }}
+            >
+              <span
+                style={{
+                  width: 16,
+                  height: 2,
+                  background: row.hue,
+                  opacity: on ? 0.95 : 0.3,
+                  flex: "none",
+                }}
+              />
+              <span style={{ flex: 1, whiteSpace: "nowrap" }}>{row.label}</span>
+              <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>{n}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* relationships — who the focused person is threaded to. Rows open
+          the receipts: their own words on both sides of the tie. */}
+      {focusKey && !indexOpen && profile && relEdges.length > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: 68,
+            right: 20,
+            width: 238,
+            padding: "12px 14px",
+            borderRadius: 0,
+            background: "rgba(255,253,251,0.82)",
+            backdropFilter: "blur(14px)",
+            boxShadow: shadow,
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-hedvig), Georgia, serif",
+              fontSize: 15,
+              letterSpacing: "0.01em",
+              color: "rgba(38,36,44,0.6)",
+              marginBottom: 4,
+            }}
+          >
+            their threads
+          </div>
+          {/* the list keeps to ~80px and scrolls — the widget is a peek,
+              not a page */}
+          <div style={{ maxHeight: 84, overflowY: "auto" }}>
+          {REL_SECTIONS.map((sec) => {
+            const rows = relEdges
+              .map((e, i) => ({ e, i }))
+              .filter(({ e }) => sectionOf(e) === sec.key);
+            if (rows.length === 0) return null;
+            return (
+              <div key={sec.key} style={{ marginTop: 8 }}>
+                <div
+                  style={{
+                    ...ui,
+                    textTransform: "none",
+                    fontSize: 9,
+                    letterSpacing: "0.05em",
+                    color: "rgba(26,25,24,0.36)",
+                    paddingBottom: 3,
+                    borderBottom: "1px solid rgba(38,36,44,0.05)",
+                    marginBottom: 3,
+                  }}
+                >
+                  {sec.title}
+                </div>
+                {rows.map(({ e, i }) => (
+                  <button
+                    key={i}
+                    className="pepl-item"
+                    onClick={() => setReceiptOpen(i)}
+                    style={{
+                      ...ui,
+                      textTransform: "none",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "baseline",
+                      gap: 8,
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "4px 5px",
+                      border: "none",
+                      borderRadius: 0,
+                      background: "transparent",
+                      color: "rgba(26,25,24,0.68)",
+                      fontSize: 11,
+                      letterSpacing: "0.015em",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <span style={{ textTransform: "capitalize", whiteSpace: "nowrap" }}>
+                      {personName(e.targetId).toLowerCase()}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 8.5,
+                        color: "rgba(26,25,24,0.34)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {e.via}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+          </div>
+        </div>
+      )}
+
+      {/* the receipt dialog: both sides of one thread, verbatim */}
+      {receiptOpen !== null && relEdges[receiptOpen] && (
+        <div
+          onClick={() => setReceiptOpen(null)}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(38,36,44,0.16)",
+          }}
+        >
+          <div
+            onClick={(ev) => ev.stopPropagation()}
+            style={{
+              width: 360,
+              maxWidth: "calc(100vw - 48px)",
+              maxHeight: "calc(100vh - 96px)",
+              overflowY: "auto",
+              padding: "18px 20px 16px",
+              borderRadius: 0,
+              background: "rgba(255,253,251,0.97)",
+              boxShadow:
+                "0 18px 50px rgba(38,36,44,0.18), inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "var(--font-hedvig), Georgia, serif",
+                fontSize: 19,
+                color: "rgba(26,25,24,0.82)",
+                textTransform: "capitalize",
+              }}
+            >
+              {personName(relEdges[receiptOpen].targetId).toLowerCase()}
+            </div>
+            <div style={{ ...ui, textTransform: "none", fontSize: 9.5, color: "rgba(26,25,24,0.4)", marginTop: 3 }}>
+              {REL_SECTIONS.find((s) => s.key === sectionOf(relEdges[receiptOpen]))?.title.toLowerCase()} ·{" "}
+              {relEdges[receiptOpen].via}
+            </div>
+            {([
+              ["you", relEdges[receiptOpen].receipt?.yours],
+              ["them", relEdges[receiptOpen].receipt?.theirs],
+            ] as const).map(([who, r]) =>
+              r ? (
+                <div key={who} style={{ marginTop: 12 }}>
+                  <div style={{ ...ui, textTransform: "none", fontSize: 9, color: "rgba(26,25,24,0.35)" }}>
+                    {who} · {r.field}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-hedvig), Georgia, serif",
+                      fontSize: 13.5,
+                      lineHeight: 1.45,
+                      color: "rgba(26,25,24,0.74)",
+                      marginTop: 3,
+                    }}
+                  >
+                    “{r.quote}”
+                  </div>
+                </div>
+              ) : null,
+            )}
+            {!relEdges[receiptOpen].receipt && (
+              <div style={{ ...ui, textTransform: "none", fontSize: 10, color: "rgba(26,25,24,0.42)", marginTop: 12 }}>
+                no quoted answer behind this thread — the tie itself is the receipt
+              </div>
+            )}
+            <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+              <button
+                className="pepl-item"
+                onClick={() => {
+                  const target = relEdges[receiptOpen].targetId;
+                  setReceiptOpen(null);
+                  selectRef.current(target);
+                }}
+                style={{ ...ui, flex: 1, padding: "7px 0", border: "none", borderRadius: 0, background: "rgba(145,180,249,0.22)", color: "rgba(26,25,24,0.72)", cursor: "pointer" }}
+              >
+                find them in the room
+              </button>
+              <button
+                className="pepl-item"
+                onClick={() => setReceiptOpen(null)}
+                style={{ ...ui, padding: "7px 12px", border: "none", borderRadius: 0, background: "rgba(26,25,24,0.05)", color: "rgba(26,25,24,0.52)", cursor: "pointer" }}
+              >
+                close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* reduced-motion teleport fade */}
+      <div
+        ref={fadeRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "var(--cream)",
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      />
+
+      {err && (
+        <pre
+          style={{
+            ...ui,
+            position: "absolute",
+            top: 20,
+            left: 20,
+            right: 20,
+            whiteSpace: "pre-wrap",
+            textTransform: "none",
+            lineHeight: 1.6,
+            color: "#8a3b3b",
+            background: "rgba(255,253,251,0.9)",
+            padding: "12px 14px",
+            borderRadius: 10,
+            boxShadow: shadow,
+            margin: 0,
+          }}
+        >
+          {err}
+        </pre>
+      )}
+
+      {/* search — flies the bubble to a person or frames a group */}
+      <div style={{ position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)", width: 264 }}>
+        <input
+          className="pepl-search"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setSearchIdx(0);
+          }}
+          onKeyDown={(e) => {
+            /* IME composition commit must not pick a result
+               (keyCode 229 covers Safari's post-compositionend Enter) */
+            if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+            if (e.key === "ArrowDown") {
+              e.preventDefault();
+              setSearchIdx((i) => Math.min(i + 1, searchResults.length - 1));
+            } else if (e.key === "ArrowUp") {
+              e.preventDefault();
+              setSearchIdx((i) => Math.max(i - 1, 0));
+            } else if (e.key === "Enter" && searchResults.length > 0) {
+              pickResult(searchResults[searchSel]);
+              (e.target as HTMLInputElement).blur();
+            } else if (e.key === "Escape") {
+              setQuery("");
+            }
+          }}
+          placeholder="search people + groups"
+          aria-label="search people and groups"
+          style={{
+            ...ui,
+            textTransform: "none",
+            width: "100%",
+            padding: "9px 15px",
+            border: "none",
+            borderRadius: 999,
+            background: "rgba(255,253,251,0.72)",
+            backdropFilter: "blur(8px)",
+            boxShadow: shadow,
+            color: "rgba(26,25,24,0.78)",
+            fontSize: 11.5,
+            letterSpacing: "0.03em",
+          }}
+        />
+        {searchResults.length > 0 && (
+          <div
+            className="pepl-group"
+            style={{
+              marginTop: 6,
+              borderRadius: 12,
+              background: "rgba(255,253,251,0.86)",
+              backdropFilter: "blur(14px)",
+              boxShadow:
+                "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+              padding: 6,
+              maxHeight: 296,
+              overflowY: "auto",
+            }}
+          >
+            {searchResults.map((r, i) => (
+              <button
+                key={r.kind === "person" ? r.id : `g-${r.gi}`}
+                className="pepl-item"
+                onMouseDown={(e) => {
+                  if (e.button !== 0) return; // right/middle click stays native
+                  e.preventDefault(); // keep the input's blur from eating the click
+                  pickResult(r);
+                }}
+                style={{
+                  ...ui,
+                  textTransform: "capitalize",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "6px 9px",
+                  border: "none",
+                  borderRadius: 7,
+                  background: i === searchSel ? "rgba(254,224,174,0.38)" : "transparent",
+                  color: "rgba(26,25,24,0.72)",
+                  fontSize: 11.5,
+                  letterSpacing: "0.015em",
+                  cursor: "pointer",
+                }}
+              >
+                <span>{r.label.toLowerCase()}</span>
+                <span style={{ fontSize: 9, color: "rgba(26,25,24,0.35)", letterSpacing: "0.08em" }}>
+                  {r.sub}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* the mark, top-left */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo.svg"
+        alt="pepl"
+        width={46}
+        height={46}
+        style={{
+          position: "absolute",
+          top: 14,
+          left: 18,
+          opacity: 0.88,
+          pointerEvents: "none",
+          userSelect: "none",
+        }}
+      />
+
+      <button
+        className="pepl-pill"
+        onClick={() => setIndexOpen((v) => !v)}
+        style={{ ...pill(indexOpen), position: "absolute", top: 20, right: tuneVisible ? 92 : 20 }}
+      >
+        index
+      </button>
+
+      {indexOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: 68,
+            right: tuneVisible ? 92 : 20,
+            width: 196,
+            /* ~80px of visible list (+ the card's padding), like the
+               threads widget — a peek that scrolls, not a page */
+            maxHeight: 104,
+            overflowY: "auto",
+            padding: "12px 14px",
+            /* the dropdown is square; only the button that opens it is a pill */
+            borderRadius: 0,
+            background: "rgba(255,253,251,0.78)",
+            backdropFilter: "blur(14px)",
+            boxShadow:
+              "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+          }}
+        >
+          {defaultAdapter.groups().map((g, gi) => (
+            <div key={g.id} className="pepl-group" style={{ marginBottom: 12, animationDelay: `${gi * 50}ms` }}>
+              <div
+                style={{
+                  ...ui,
+                  fontSize: 9,
+                  letterSpacing: "0.14em",
+                  color: "rgba(26,25,24,0.34)",
+                  paddingBottom: 5,
+                  marginBottom: 4,
+                  borderBottom: "1px solid rgba(38,36,44,0.05)",
+                }}
+              >
+                {g.name.toLowerCase()}
+              </div>
+              {defaultAdapter.people().filter((p) => p.groupId === g.id).map((p) => (
+                <button
+                  key={p.id}
+                  className="pepl-item"
+                  onClick={() => selectRef.current(p.id)}
+                  style={{
+                    ...ui,
+                    textTransform: "capitalize",
+                    display: "block",
+                    width: "100%",
+                    textAlign: "left",
+                    padding: "4px 6px",
+                    border: "none",
+                    borderRadius: 6,
+                    background: "transparent",
+                    color: "rgba(26,25,24,0.62)",
+                    fontSize: 11.5,
+                    letterSpacing: "0.015em",
+                    cursor: "pointer",
+                  }}
+                >
+                  {p.name.toLowerCase()}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {tuneVisible && (
+        <button className="pepl-pill" onClick={() => setPanelOpen((v) => !v)} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
+          {panelOpen ? "hide" : "tune"}
+        </button>
+      )}
+
+      {tuneVisible && panelOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: 56,
+            right: 20,
+            width: 218,
+            maxHeight: "calc(100vh - 96px)",
+            overflowY: "auto",
+            padding: "14px 16px",
+            borderRadius: 12,
+            background: "rgba(255,253,251,0.70)",
+            backdropFilter: "blur(14px)",
+            boxShadow:
+              "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+          }}
+        >
+          {/* board field choice */}
+          <div style={{ ...ui, color: "rgba(26,25,24,0.28)", marginBottom: 8 }}>board field</div>
+          <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+            {(["weather", "cartography", "stars"] as const).map((f) => (
+              <button
+                key={f}
+                className="pepl-item"
+                onClick={() => setParams((pr) => ({ ...pr, field: f }))}
+                style={{
+                  ...ui,
+                  flex: 1,
+                  padding: "6px 0",
+                  border: "none",
+                  borderRadius: 7,
+                  background: params.field === f ? "rgba(145,180,249,0.25)" : "rgba(26,25,24,0.03)",
+                  color: params.field === f ? "rgba(26,25,24,0.8)" : "rgba(26,25,24,0.45)",
+                  cursor: "pointer",
+                  fontSize: 9,
+                  textAlign: "center",
+                }}
+              >
+                {f === "cartography" ? "carto" : f}
+              </button>
+            ))}
+          </div>
+
+          {PANEL_GROUPS.map((g, gi) => (
+            <div key={g.name} className="pepl-group" style={{ marginTop: gi ? 16 : 0, animationDelay: `${gi * 45}ms` }}>
+              <div
+                style={{
+                  ...ui,
+                  fontSize: 9,
+                  letterSpacing: "0.14em",
+                  color: "rgba(26,25,24,0.34)",
+                  marginBottom: 9,
+                  paddingBottom: 6,
+                  borderBottom: "1px solid rgba(38,36,44,0.05)",
+                }}
+              >
+                {g.name}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {g.items.map((c) => (
+                  <label key={c.key} style={{ display: "block" }}>
+                    <div
+                      style={{
+                        ...ui,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: "rgba(26,25,24,0.42)",
+                        marginBottom: 4,
+                      }}
+                    >
+                      <span>{c.label}</span>
+                      <span style={{ color: "rgba(26,25,24,0.72)", fontVariantNumeric: "tabular-nums" }}>
+                        {fmt(params[c.key], c.step)}
+                        {c.unit || ""}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={c.min}
+                      max={c.max}
+                      step={c.step}
+                      value={params[c.key]}
+                      onChange={(e) =>
+                        setParams((pr) => ({ ...pr, [c.key]: parseFloat(e.target.value) }))
+                      }
+                      style={{ width: "100%", accentColor: "#1a1918", height: 14, cursor: "pointer" }}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <button
+            className="pepl-item"
+            onClick={() => setParams((pr) => ({ ...pr, exportQuality: !pr.exportQuality }))}
+            style={{
+              ...ui,
+              width: "100%",
+              marginTop: 14,
+              padding: "6px 0",
+              border: "none",
+              borderRadius: 7,
+              background: params.exportQuality ? "rgba(26,25,24,0.09)" : "rgba(26,25,24,0.04)",
+              color: "rgba(26,25,24,0.52)",
+              cursor: "pointer",
+            }}
+          >
+            export quality {params.exportQuality ? "on" : "off"}
+          </button>
+
+          <button
+            className="pepl-item"
+            onClick={() => setParams({ ...INITIAL })}
+            style={{
+              ...ui,
+              width: "100%",
+              marginTop: 8,
+              padding: "6px 0",
+              border: "none",
+              borderRadius: 7,
+              background: "rgba(26,25,24,0.05)",
+              color: "rgba(26,25,24,0.52)",
+              cursor: "pointer",
+            }}
+          >
+            reset
+          </button>
+        </div>
+      )}
+
+      {/* LAST child on purpose: the veil grains everything below it —
+          scene, ticker, map, pills, logo — the shader could never reach
+          the DOM widgets (they are siblings of the canvas, not pixels) */}
+      <GrainVeil paramsRef={paramsRef} />
+    </div>
+  );
+}

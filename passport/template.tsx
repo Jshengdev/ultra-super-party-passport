@@ -50,7 +50,7 @@ const S = {
     background: "var(--passport-bg, #faf9f6)",
     color: "var(--passport-ink, #111111)",
     borderRadius: "var(--passport-radius, 18px)",
-    border: "1px solid var(--passport-border, rgba(0,0,0,0.10))",
+    border: "1px solid var(--passport-border, rgba(120,110,170,0.16))",
     padding: "var(--passport-pad, 28px)",
     width: "100%",
     maxWidth: "var(--passport-w, 380px)",
@@ -58,7 +58,7 @@ const S = {
   },
   name: {
     fontSize: "var(--passport-name-size, 28px)",
-    fontWeight: 700,
+    fontWeight: 600,
     letterSpacing: "-0.02em",
     lineHeight: 1.1,
   },
@@ -77,15 +77,13 @@ const S = {
   kicker: {
     marginTop: 22,
     marginBottom: 8,
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase" as const,
+    fontSize: 13,
+    fontWeight: 500,
     color: "var(--passport-muted, #555555)",
   },
   findRow: {
     padding: "12px 0",
-    borderTop: "1px solid var(--passport-border, rgba(0,0,0,0.10))",
+    borderTop: "1px solid var(--passport-border, rgba(120,110,170,0.16))",
   },
   findName: { fontSize: 16, fontWeight: 600 },
   findWhy: {
@@ -106,10 +104,8 @@ const S = {
     color: "#ffffff",
   },
   backKicker: {
-    fontSize: 11,
-    fontWeight: 700,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase" as const,
+    fontSize: 13,
+    fontWeight: 500,
     opacity: 0.85,
   },
   backPrompt: {

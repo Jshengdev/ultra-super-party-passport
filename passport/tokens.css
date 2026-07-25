@@ -14,64 +14,120 @@
  * ========================================================================== */
 
 :root {
-  /* ▸ TWEAK — core neutral base (the "clean light canvas") ------------------ */
-  --usp-bg: #f4f2ee;            /* page background (warm paper) */
-  --usp-canvas-bg: #f7f6f3;     /* the universe canvas fill */
+  /* ▸ TWEAK — core neutral base (the "clean light canvas") ------------------
+   * Bright, near-white cream. The bubbles are translucent, so the canvas is
+   * literally visible THROUGH every node — it has to stay light or the glass
+   * turns to mud. Nothing here goes dark. */
+  --usp-bg: #fbfaf7;            /* page background (bright cream) */
+  --usp-canvas-bg: #fdfcfa;     /* the universe canvas fill — brightest surface */
   --usp-surface: #ffffff;       /* cards, panels */
-  --usp-surface-2: #fbfaf8;     /* subtle raised surface */
-  --usp-ink: #1b1b1f;           /* primary text */
-  --usp-ink-muted: #6b6b74;     /* secondary text */
-  --usp-ink-faint: #9a9aa2;     /* tertiary / captions */
-  --usp-border: #e7e4de;        /* hairlines */
+  --usp-surface-2: #fdfcfa;     /* subtle raised surface */
+  --usp-ink: #26242c;           /* primary text (soft charcoal, never black) */
+  --usp-ink-muted: #6f6c7a;     /* secondary text */
+  --usp-ink-faint: #a3a0ad;     /* tertiary / captions */
+  --usp-border: rgba(120, 110, 170, 0.16); /* hairlines — tinted, never grey/black */
 
-  /* ▸ TWEAK — the spectrum (value-cluster hues; glass-orb tints) ------------
-   * Muted pastels on purpose. Add/remove stops freely; the canvas hashes a
-   * cluster id into whatever stops exist (palette.ts reads --usp-spectrum-0..7). */
-  --usp-spectrum-0: #e3aab2;    /* premium pink (deepened #f3dfe0 family) */
-  --usp-spectrum-1: #e0a877;    /* premium peach (#f1c9a6 family) */
-  --usp-spectrum-2: #d9b96e;    /* premium gold (#ecd39f family) */
-  --usp-spectrum-3: #a8c18e;    /* premium sage (#cdd8b9 family) */
-  --usp-spectrum-4: #94b0d4;    /* premium dusty blue */
-  --usp-spectrum-5: #7f9fc9;    /* premium deep dusty */
-  --usp-spectrum-6: #c9b6d9;    /* premium lilac */
-  --usp-spectrum-7: #9fc4bb;    /* premium eucalyptus */
+  /* ▸ TWEAK — THE CHROMATIC SPECTRUM (thin-film / soap bubble) --------------
+   * Sampled from the interference colours a real soap film produces: the film
+   * cycles magenta → gold → mint → cyan → periwinkle → violet as it thins.
+   * These are the brand base now — value clouds, bubble rims, gradients and
+   * foil all draw from this one set. Kept high-lightness / mid-chroma so they
+   * stay legible against the bright cream and read as glass, not as paint.
+   * palette.ts reads --usp-spectrum-0..7 at runtime. */
+  --usp-spectrum-0: #f0a8d0;    /* film magenta */
+  --usp-spectrum-1: #f6b98a;    /* film gold */
+  --usp-spectrum-2: #f2e08a;    /* film citron */
+  --usp-spectrum-3: #9fe3c0;    /* film mint */
+  --usp-spectrum-4: #8fd8e8;    /* film cyan */
+  --usp-spectrum-5: #9db8f0;    /* film periwinkle */
+  --usp-spectrum-6: #c3a8f0;    /* film violet */
+  --usp-spectrum-7: #f0a8bc;    /* film rose (closes the loop back to magenta) */
 
-  /* orb rendering (people) ------------------------------------------------- */
-  --usp-orb-core: #ffffff;      /* radial-gradient centre (the glass highlight) */
-  --usp-orb-tint: #c9c6ff;      /* default edge tint when a person has no cluster */
-  --usp-ring: rgba(27, 27, 31, 0.14);        /* node hairline ring */
-  --usp-ring-strong: rgba(27, 27, 31, 0.55); /* selected node ring */
+  /* bubble rendering (people) ---------------------------------------------
+   * See app/universe/lib/bubble.ts. The rim carries the colour; the core is
+   * clear. There is no node stroke colour any more — --usp-ring is kept only
+   * for focus rings, and is tinted rather than black. */
+  --usp-orb-core: #ffffff;      /* the specular highlight */
+  --usp-orb-tint: #c9d4ff;      /* default film tint when a person has no cluster */
+  --usp-ring: rgba(120, 110, 170, 0.22);      /* soft focus ring */
+  --usp-ring-strong: rgba(120, 110, 200, 0.5);/* selected bubble ring */
 
   /* affinity nodes (school / major / company / activity) ------------------- */
-  --usp-affinity: #e7e5e0;      /* small neutral hub dot */
-  --usp-affinity-ink: #7a7873;  /* affinity label text */
+  --usp-affinity: #e8ecf6;      /* nearly clear glass hub */
+  --usp-affinity-ink: #8a879a;  /* affinity label text */
 
   /* links ------------------------------------------------------------------ */
-  --usp-link-faint: rgba(27, 27, 31, 0.08);   /* affinity edges (quiet) */
-  --usp-link-share: rgba(120, 110, 220, 0.38);/* SHARES_VALUE peer edges */
+  --usp-link-faint: rgba(120, 110, 170, 0.10); /* affinity edges (quiet, tinted) */
+  --usp-link-share: rgba(150, 130, 235, 0.34); /* SHARES_VALUE peer edges */
 
-  /* ▸ TWEAK — radii + elevation ------------------------------------------- */
-  --usp-radius-sm: 8px;
-  --usp-radius-md: 14px;
-  --usp-radius-lg: 22px;
+  /* ▸ TWEAK — radii + elevation -------------------------------------------
+   * Softer across the board: larger radii, and shadows that bloom in the film
+   * hues instead of going grey. No hard edges, no black. */
+  --usp-radius-sm: 12px;
+  --usp-radius-md: 18px;
+  --usp-radius-lg: 28px;
   --usp-radius-pill: 999px;
-  --usp-shadow-panel: 0 12px 40px rgba(24, 22, 30, 0.14);
-  --usp-shadow-soft: 0 2px 10px rgba(24, 22, 30, 0.06);
+  --usp-shadow-panel: 0 18px 50px rgba(120, 110, 170, 0.18), 0 2px 8px rgba(150, 130, 235, 0.08);
+  --usp-shadow-soft: 0 4px 18px rgba(120, 110, 170, 0.12);
+  --usp-shadow-bubble: 0 8px 28px rgba(150, 130, 235, 0.16);
 
-  /* ▸ TWEAK — typography --------------------------------------------------- */
-  --usp-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --usp-font-serif: ui-serif, Georgia, "Times New Roman", serif;
-  --usp-fs-xs: 0.72rem;
-  --usp-fs-sm: 0.84rem;
-  --usp-fs-md: 0.98rem;
-  --usp-fs-lg: 1.25rem;
-  --usp-fs-xl: 1.9rem;
-  --usp-fs-2xl: 2.6rem;
-  --usp-weight-normal: 420;
-  --usp-weight-medium: 560;
-  --usp-weight-bold: 680;
-  --usp-tracking-tight: -0.02em;
-  --usp-tracking-wide: 0.08em;
+  /* Primary action. The film hues are all high-lightness, so white text on any
+   * of them would fail WCAG — these are the deepened ends of the same spectrum,
+   * kept dark enough to hold white type (>= 4.5:1) without going to black. */
+  --usp-accent-deep: #4f49c4;   /* deep film violet — white text ~7.4:1 */
+  --usp-accent-deep-2: #6a5fd0; /* deep periwinkle, gradient partner */
+  --usp-on-accent: #ffffff;
+  --usp-cta: linear-gradient(135deg, var(--usp-accent-deep), var(--usp-accent-deep-2));
+
+  /* ▸ TWEAK — typography ---------------------------------------------------
+   * ONE typeface: Plus Jakarta Sans, loaded by next/font in app/layout.tsx.
+   * There is no mono and no serif voice in the app chrome — hierarchy is
+   * carried by size, weight, and colour, never by a second family or by caps.
+   *
+   * TYPE LAW (this pass): sentence case everywhere. No `text-transform:
+   * uppercase`, no wide letter-spacing on small text. If a label needs to
+   * recede, drop it to --usp-fs-xs + --usp-ink-faint — don't shout it quietly.
+   * The one exception is the passport MRZ + belief stamp, which are graphic
+   * devices (see passport/document/tokens.css) and keep their mono caps. */
+  --usp-font-sans: var(--usp-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* The display / human voice: group inscriptions and the focused-name echo.
+     Everything else is the sans — a serif anywhere else is a bug. */
+  --usp-font-display: var(--usp-hedvig), "Hedvig Letters Serif", Georgia, serif;
+  --usp-font-serif: var(--usp-font-sans); /* retired — kept so old refs stay on-system */
+
+  /* size scale — clear separation at every step (12/14/16/20/28/40).
+   * Body is 1rem so it never drops under the 16px readability floor. */
+  --usp-fs-xs: 0.75rem;    /* 12px — captions, meta, legend */
+  --usp-fs-sm: 0.875rem;   /* 14px — secondary text, labels */
+  --usp-fs-md: 1rem;       /* 16px — body */
+  --usp-fs-lg: 1.25rem;    /* 20px — subheading */
+  --usp-fs-xl: 1.75rem;    /* 28px — heading */
+  --usp-fs-2xl: 2.5rem;    /* 40px — display */
+
+  /* weight — SEMIBOLD IS THE CEILING. Nothing in the system goes past 600, and
+   * only 400/500/600 are loaded, so a heavier value would synthesise a fake
+   * bold rather than fail visibly. */
+  --usp-weight-regular: 400;
+  --usp-weight-medium: 500;
+  --usp-weight-semibold: 600;
+  /* back-compat aliases — prefer the names above */
+  --usp-weight-normal: var(--usp-weight-regular);
+  --usp-weight-bold: var(--usp-weight-semibold);
+
+  /* leading — tighter as type gets bigger */
+  --usp-leading-display: 1.1;
+  --usp-leading-heading: 1.25;
+  --usp-leading-body: 1.55;
+
+  /* tracking — negative on display only; small text sits at 0 now that
+   * nothing is uppercase (wide tracking on lowercase just looks broken). */
+  --usp-tracking-display: -0.02em;
+  --usp-tracking-tight: -0.01em;
+  --usp-tracking-normal: 0;
+  --usp-tracking-wide: 0.01em;
+
+  /* comfortable measure for prose blocks */
+  --usp-measure: 62ch;
 
   /* passport-specific ------------------------------------------------------ */
   --usp-passport-front-bg: #16151a;   /* the "black" front face */

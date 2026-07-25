@@ -4,9 +4,11 @@
  * /universe — the WOW surface (G2).
  *
  * Fetches the live party graph from /api/graph. If Aura is not configured the
- * route answers 503 and we transparently fall back to /api/graph?demo=1 so the
- * experience is always renderable (with an honest DEMO banner — never a silent
- * pretend-live). Click a node → side panel with their links, value-cloud, the
+ * route answers 503 and the room shows "the graph is offline" with the named
+ * error — never a silent pretend-live. To render without creds, start the dev
+ * server with GRAPH_DEMO=1, which makes the route serve the static fixture as a
+ * 200 with meta.source === 'demo' (shown behind an honest DEMO banner).
+ * Click a node → side panel with their links, value-cloud, the
  * peers they share values with, and a link into their passport.
  */
 
@@ -15,7 +17,7 @@ import '@/passport/tokens.css';
 import styles from './universe.module.css';
 import UniverseGraph from './UniverseGraph';
 import PersonPanel from './PersonPanel';
-import { buildAdjacency, type GraphNode, type GraphPayload } from './lib/graph';
+import { buildAdjacency, isGraphPayload, type GraphNode, type GraphPayload } from './lib/graph';
 import { clusterColor, readPalette, type Palette } from './lib/palette';
 
 type Status = 'loading' | 'live' | 'demo' | 'error';
@@ -36,24 +38,27 @@ export default function UniversePage() {
     (async () => {
       try {
         const res = await fetch(process.env.NEXT_PUBLIC_GRAPH_API || '/api/graph', { cache: 'no-store' });
-        if (res.status === 200) {
-          const data = (await res.json()) as GraphPayload;
-          if (cancelled) return;
-          setPayload(data);
-          setStatus(data.meta?.source === 'demo' ? 'demo' : 'live');
-          return;
-        }
-        if (res.status === 503) {
-          const demoRes = await fetch('/api/graph', { cache: 'no-store' });
-          const demo = (await demoRes.json()) as GraphPayload;
-          if (cancelled) return;
-          setPayload(demo);
-          setStatus('demo');
-          return;
-        }
-        const body = (await res.json().catch(() => ({}))) as { message?: string; error?: string };
+        const body: unknown = await res.json().catch(() => null);
         if (cancelled) return;
-        setErrorMsg(body.message ?? body.error ?? `Request failed (${res.status})`);
+
+        if (res.status === 200 && isGraphPayload(body)) {
+          setPayload(body);
+          setStatus(body.meta?.source === 'demo' ? 'demo' : 'live');
+          return;
+        }
+
+        // Everything else is DEGRADED or FAILED, and there is nothing to fall
+        // back to: the static fixture is env-gated behind GRAPH_DEMO=1, so the
+        // route has no query-param demo mode to retry against. (This used to
+        // re-fetch /api/graph and cast the 503 error body to a payload, which
+        // crashed the room on `.nodes` instead of showing the error state.)
+        // Fail loud with the named error — law (b).
+        const named = body as { message?: string; error?: string } | null;
+        setErrorMsg(
+          res.status === 200
+            ? 'The graph API returned a malformed payload (no nodes/links array).'
+            : named?.message ?? named?.error ?? `Request failed (${res.status})`,
+        );
         setStatus('error');
       } catch (err) {
         if (cancelled) return;

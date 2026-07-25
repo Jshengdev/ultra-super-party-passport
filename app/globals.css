@@ -4,18 +4,27 @@
    Jakarta-style humanist sans). All values are Teri's to override — passport/tokens.css
    custom properties win where present. */
 @theme {
-  --color-cream: #f4f4f5;
-  --color-cloud: #fafaf7;
-  --color-charcoal: #2a2a28;
-  --color-sky: #7fb2e5;
-  --color-ocean: #37618f;
-  --color-sunset-pink: #e8a8b8;
-  --color-sunset-orange: #e89a5c;
-  --color-gold: #e8c65c;
-  --color-mist: #e2e2de;
-  --color-stone: #8a8a86;
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  /* Base stays bright — the brand is glass on cream, so nothing here goes dark
+     and nothing is pure grey. Accents are the thin-film hues from
+     passport/tokens.css (--usp-spectrum-*), which is the single source. */
+  --color-cream: #fbfaf7;
+  --color-cloud: #fdfcfa;
+  --color-charcoal: #26242c;      /* soft charcoal, never #000 */
+  --color-sky: #8fd8e8;           /* film cyan */
+  --color-ocean: #7d93d8;         /* film periwinkle, deepened for text/CTA */
+  --color-sunset-pink: #f0a8d0;   /* film magenta */
+  --color-sunset-orange: #f6b98a; /* film gold */
+  --color-gold: #f2e08a;          /* film citron */
+  --color-mist: rgba(120, 110, 170, 0.16); /* tinted hairline, not grey */
+  --color-stone: #8a879a;
+  /* --usp-jakarta is set by next/font in app/layout.tsx. The literal name is the
+     fallback for surfaces rendered outside the React tree (static export, PNG). */
+  --font-sans: var(--usp-jakarta), "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* The app chrome has NO monospace voice — one typeface, hierarchy carried by
+     size/weight/colour instead. `font-mono` therefore resolves to the same face,
+     so a stray utility class can't reintroduce a second family. The only real
+     mono in the product is the passport MRZ, which loads IBM Plex Mono itself. */
+  --font-mono: var(--font-sans);
 }
 
 :root {
@@ -28,11 +37,81 @@
   --usp-line: var(--color-mist);
   --usp-accent: var(--color-ocean);
   --usp-font-sans: var(--font-sans);
-  --usp-font-mono: var(--font-mono);
+  --usp-font-mono: var(--font-sans);
 }
 
 body {
   background: var(--usp-bg);
   color: var(--usp-ink);
   font-family: var(--usp-font-sans);
+  font-weight: var(--usp-weight-regular);
+  line-height: var(--usp-leading-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: normal;
+}
+
+/* ===========================================================================
+ * CHROMATIC BASE — the brand surface.
+ *
+ * Referenced from the thin-film shader in ChromaticSheet: broad spectral washes
+ * plus fine RGB grain, on a bright cream ground. Rebuilt in CSS rather than
+ * WebGL so it costs nothing and stays light (design law f — no dark canvas).
+ * ======================================================================== */
+
+/* Fine film grain. feTurbulence baked to a data URI so it needs no asset and no
+   network. Sits at very low alpha — it should be felt, not seen. */
+:root {
+  --usp-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Soft spectral wash — use on any large surface that would otherwise read flat. */
+.chromatic-field {
+  position: relative;
+  background:
+    radial-gradient(60% 46% at 14% 10%, color-mix(in oklab, var(--usp-spectrum-5) 24%, transparent), transparent 70%),
+    radial-gradient(50% 42% at 88% 18%, color-mix(in oklab, var(--usp-spectrum-0) 20%, transparent), transparent 70%),
+    radial-gradient(56% 50% at 80% 90%, color-mix(in oklab, var(--usp-spectrum-3) 20%, transparent), transparent 72%),
+    radial-gradient(52% 44% at 8% 86%, color-mix(in oklab, var(--usp-spectrum-6) 18%, transparent), transparent 72%),
+    var(--usp-bg);
+}
+
+/* Grain overlay. Add alongside .chromatic-field, or on its own over imagery. */
+.chromatic-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--usp-grain);
+  background-repeat: repeat;
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+}
+
+/* A single bubble surface for DOM elements (cards, pills, the QR frame).
+   Same physics as the canvas orbs: clear centre, colour gathered at the rim,
+   specular up-left. No border — a bubble has a bright edge, not an outline. */
+.bubble-surface {
+  position: relative;
+  border: none;
+  border-radius: var(--usp-radius-pill);
+  background:
+    radial-gradient(70% 70% at 30% 24%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.28) 46%, transparent 72%),
+    conic-gradient(
+      from -50deg,
+      color-mix(in oklab, var(--usp-spectrum-0) 55%, transparent),
+      color-mix(in oklab, var(--usp-spectrum-2) 55%, transparent),
+      color-mix(in oklab, var(--usp-spectrum-3) 55%, transparent),
+      color-mix(in oklab, var(--usp-spectrum-4) 55%, transparent),
+      color-mix(in oklab, var(--usp-spectrum-6) 55%, transparent),
+      color-mix(in oklab, var(--usp-spectrum-0) 55%, transparent)
+    );
+  box-shadow: var(--usp-shadow-bubble), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chromatic-field,
+  .bubble-surface {
+    animation: none !important;
+  }
 }

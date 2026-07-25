@@ -35,11 +35,22 @@
   --holo-4: oklch(65% 0.16 300);
   --holo-5: oklch(80% 0.12 340);
 
-  /* type, faces fixed by the Figma text nodes; loaded via next/font in
-     app/passport/[id]/page.tsx, which sets the --np-* variables */
-  --font-document: var(--np-plex-sans, 'IBM Plex Sans'), sans-serif;
+  /* type. The document body and the "official" face now share the app typeface
+     (Plus Jakarta Sans, loaded by next/font in app/layout.tsx) so the document
+     reads as part of the same system as the Universe and the entry screen.
+
+     --font-typewriter is DELIBERATELY still IBM Plex Mono: it is used only by
+     the MRZ band and the belief stamp, which are graphic devices rather than
+     text. A machine-readable zone in a proportional sans stops reading as a
+     passport, and passport/document/textMetrics.ts depends on this face being
+     exactly 0.6em monospaced to lay the stamp out. Keep it mono. */
+  --font-document: var(--usp-jakarta), 'Plus Jakarta Sans', sans-serif;
   --font-typewriter: var(--np-plex-mono, 'IBM Plex Mono'), monospace;
-  --font-official: var(--np-garamond, 'EB Garamond'), serif;
+  --font-official: var(--usp-jakarta), 'Plus Jakarta Sans', sans-serif;
+  /* the MRZ band, pinned. It used to ride on --font-document, so moving the body
+     to Jakarta would have silently restyled it too — this token holds it on the
+     face it has always rendered in (IBM Plex Sans 500). */
+  --font-mrz: var(--np-plex-sans, 'IBM Plex Sans'), sans-serif;
 
   /* spacing scale, 4pt */
   --space-2xs: 2px;

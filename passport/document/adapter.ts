@@ -5,10 +5,11 @@
 // string comes from the passport JSON or its receipts.
 
 import type { Find, Passport, ReceiptEdge } from '@/passport/schema'
+import { sentenceCase } from '@/passport/textCase'
 import type { DocConnection, DocGradientStop, DocPassportData } from './types'
 
-const PARTY_CONTEXT = 'PEOPLE TO MEET AT THE LA INTERN PARTY'
-const DOC_TITLE = 'THE ULTRA SUPER SOCIAL PASSPORT'
+const PARTY_CONTEXT = 'People to meet at the LA intern party'
+const DOC_TITLE = 'The Ultra Super Social Passport'
 const ISSUED = '20260718' // the party date, 7/18
 
 /** company from the find's receipts, when a WORKS_AT edge exists for them. */
@@ -89,9 +90,9 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
     {
       id: `${passport.personId}-same-work`,
       kind: 'nametag',
-      person: { name: sameWork.name.toUpperCase(), org: orgFromReceipt(sameWork) },
+      person: { name: sameWork.name, org: orgFromReceipt(sameWork) },
       relation: 'same type of work',
-      headerLabel: 'SAME TYPE OF WORK',
+      headerLabel: 'Same type of work',
     },
     ...(valuesAligned
       ? [
@@ -116,16 +117,20 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
   return {
     data: {
       meta: { title: DOC_TITLE, context: PARTY_CONTEXT, issued: ISSUED },
+      // Identity fields keep their source casing. sentenceCase only settles the
+      // values that ship SHOUTING in data/passports/*.json (position is the big
+      // one, 186 distinct), and leaves acronyms like USC / IDBT untouched. The
+      // MRZ is unaffected — generateMrz uppercases internally via encode().
       holder: {
-        fullName: passport.name.toUpperCase(),
-        company: (
+        fullName: passport.name,
+        company: sentenceCase(
           passport.profile?.company ||
-          (passport.profile?.grad_year ? `USC · CLASS OF ${passport.profile.grad_year}` : passport.line2)
-        ).toUpperCase(),
-        position: (passport.profile?.position ?? '').toUpperCase(),
+            (passport.profile?.grad_year ? `USC · Class of ${passport.profile.grad_year}` : passport.line2),
+        ),
+        position: sentenceCase(passport.profile?.position ?? ''),
         gradYear: passport.profile?.grad_year ?? '',
-        school: (passport.profile?.school ?? '').toUpperCase(),
-        major: shortMajor(passport.profile?.major ?? '').toUpperCase(),
+        school: sentenceCase(passport.profile?.school ?? ''),
+        major: shortMajor(passport.profile?.major ?? ''),
         note: passport.profile?.working_on
           ? `currently — ${(() => {
               const w = passport.profile.working_on
@@ -135,7 +140,7 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
             })()}`
           : undefined,
         prompt: passport.profile?.belief
-          ? { question: 'What is a creative?', answer: passport.profile.belief.toUpperCase() }
+          ? { question: 'What is a creative?', answer: passport.profile.belief }
           : { question: 'Your hidden mission', answer: passport.hidden_prompt },
       },
       connections,

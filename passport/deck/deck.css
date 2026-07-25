@@ -228,8 +228,7 @@
   font-family: var(--font-document);
   font-weight: 500;
   font-size: 18px;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--ink-label);
 }
 
@@ -531,10 +530,9 @@
   color: var(--ink);
 }
 .stack-tag {
-  font-family: var(--font-typewriter);
+  font-family: var(--font-document);
   font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--ink-label);
   padding: 3px 9px;
   border: 1px solid oklch(from var(--ink-label) l c h / 0.4);
@@ -631,10 +629,8 @@
   font-family: var(--font-document);
   font-weight: 500;
   font-size: 26px;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--ink-label);
-  padding-left: 0.5em;
 }
 
 .title-hero {

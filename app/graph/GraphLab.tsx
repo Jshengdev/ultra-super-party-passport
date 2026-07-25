@@ -35,6 +35,7 @@ import type { ForceGraphMethods, LinkObject, NodeObject } from "react-force-grap
 
 import styles from "./graph.module.css";
 import { verifyGuestList, type CsvVerdict } from "./verify";
+import StampBurst, { type StampSpec } from "./StampBurst";
 
 /* ============================================================ the contract */
 
@@ -205,25 +206,38 @@ function withAlpha(color: string, alpha: number): string {
 
 /* ================================================================ helpers */
 
+/**
+ * Text for a round stamp's ring. The ring path is an ellipse ~320px around at
+ * 20px type — roughly 34 characters before it laps itself, so the token is
+ * repeated only as many times as fits and never truncated mid-word.
+ */
+function ring(token: string): string {
+  const t = token.trim().replace(/\s+/g, " ");
+  if (!t) return "";
+  const unit = `${t} · `;
+  const reps = Math.max(1, Math.floor(34 / unit.length));
+  return unit.repeat(reps);
+}
+
 const ANSWER_LABEL: Record<string, string> = {
-  goal: "ULTIMATE GOAL",
-  drew: "WHAT DREW THEM HERE",
-  seeking: "WHO THEY'RE LOOKING FOR",
-  inspiration: "WHO INSPIRES THEM",
-  favorite: "FAVORITE THING",
+  goal: "Ultimate goal",
+  drew: "What drew them here",
+  seeking: "Who they're looking for",
+  inspiration: "Who inspires them",
+  favorite: "Favorite thing",
   school: "SCHOOL",
   company: "COMPANY",
-  title: "WHAT THEY DO",
-  hometown: "HOMETOWN",
-  conviction: "CONVICTION TAG",
+  title: "What they do",
+  hometown: "Hometown",
+  conviction: "Conviction",
   craft: "CRAFT",
 };
 const ANSWER_ORDER = ["goal", "drew", "seeking", "inspiration", "favorite"];
-const labelOf = (f: string) => ANSWER_LABEL[f] ?? f.replace(/[_-]+/g, " ").toUpperCase();
+const labelOf = (f: string) => ANSWER_LABEL[f] ?? f.replace(/[_-]+/g, " ");
 /** a verbatim answer-sheet quote is introduced by its question… */
-const fieldQ = (f: string) => `Q · ${labelOf(f)}`;
+const fieldQ = (f: string) => `Their answer · ${labelOf(f)}`;
 /** …a profile cell read off the graph is introduced as a FIELD, never as a quote. */
-const fieldF = (f: string) => `FIELD · ${labelOf(f)}`;
+const fieldF = (f: string) => `Profile · ${labelOf(f)}`;
 
 const TYPE_BADGE: Record<EdgeType, string> = {
   school: styles.bSchool,
@@ -277,35 +291,24 @@ export function receiptSource(hasYours: boolean, hasTheirs: boolean, recordState
   return "record-loading";
 }
 
-const MATCH_NOTE: Record<EdgeType, string> = {
-  why: "SHARED CONVICTION TAG (LLM-EXTRACTED, QUOTE-GROUNDED)",
-  seek: "SEEKING ↔ WHAT THEY DO (GUARDED MATCH)",
-  school: "EXACT FIELD MATCH AFTER CANONICALIZATION",
-  company: "EXACT FIELD MATCH AFTER CANONICALIZATION",
-};
-
 /**
- * `oneSided` disambiguates the "fields" state: it's true when exactly one
- * column above is a verbatim answer-sheet quote (rendered under `Q ·`) and
- * the other is a profile field (`FIELD ·`) — as opposed to neither column
- * having a quote at all. Both are honestly "fields" (not both-verbatim), but
- * they are NOT the same claim: 60 shipped receipts are one-sided, and saying
- * "NO ANSWER-SHEET QUOTE ON THIS EDGE" while a `Q ·` label sits right above
- * it is a lie about provenance.
+ * The footer only speaks when the columns CANNOT.
+ *
+ * Provenance still has to be honest (law c), but each column already carries its
+ * own: "Their answer · …" over a signup quote, "Profile · …" over a profile
+ * cell. Restating that underneath was telling the reader something the label
+ * above already told them. So the resolved states say nothing, and the footer is
+ * reserved for the one thing the labels can't express — answers we do not have.
  */
-export function provenanceFor(source: ReceiptSource, type: EdgeType, personId: string, oneSided = false): string {
-  const match = MATCH_NOTE[type];
+export function provenanceFor(source: ReceiptSource, _type: EdgeType, _personId: string, _oneSided = false): string {
   switch (source) {
     case "verbatim":
-      return `SRC · SIGNUP SHEET (VERBATIM) · MATCH · ${match} · RECEIPT RESOLVED ✓`;
     case "fields":
-      return oneSided
-        ? `SRC · SIGNUP SHEET (VERBATIM, ONE SIDE) + THE GRAPH EDGE · MATCH · ${match} · ONE SIDE QUOTES THE SHEET — THE OTHER COLUMN IS ITS FIELD VALUE`
-        : `SRC · THE GRAPH EDGE + BOTH PROFILE FIELDS · MATCH · ${match} · NO ANSWER-SHEET QUOTE ON THIS EDGE — THE FIELDS ABOVE ARE THE RECEIPT`;
+      return "";
     case "record-loading":
-      return `READING /graph/people/${personId}.json — SHOWING THE EDGE'S FIELD VALUES UNTIL THE VERBATIM QUOTES ARRIVE.`;
+      return "Loading their answers…";
     case "record-missing":
-      return `/graph/people/${personId}.json DID NOT LOAD — VERBATIM QUOTES ARE WITHHELD, NOT GUESSED. THE EDGE AND FIELDS ABOVE ARE THE GRAPH'S OWN.`;
+      return "Their answers didn’t load.";
   }
 }
 
@@ -789,7 +792,7 @@ function GraphRoom({ room, matchEdges, selectedId, focusReq, matchedIds, tokens,
         if (typeof s.x !== "number" || typeof s.y !== "number") continue;
         const dimmed = egoSet ? !egoSet.has(String(s.id)) : false;
         ctx.globalAlpha = dimmed ? 0.16 : 0.9;
-        const text = `${s.label.toUpperCase()} · ${s.weight}`;
+        const text = `${s.label} · ${s.weight}`;
         const w = ctx.measureText(text).width;
         const padX = 6 / scale;
         const padY = 4 / scale;
@@ -1003,6 +1006,10 @@ export default function GraphLab() {
 
   /* ---- entry theatre ---- */
   const [phase, setPhase] = useState<Phase | null>(null); // null until we know
+  /** 0 = the party's name, 1 = the mark, 2 = dissolving into the room */
+  const [entryBeat, setEntryBeat] = useState(0);
+  /** the ranked list is a long tail — three rows, then on request */
+  const [showAllConns, setShowAllConns] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [entryError, setEntryError] = useState<{ code: string; message: string } | null>(null);
@@ -1117,8 +1124,9 @@ export default function GraphLab() {
     };
   }, []);
 
-  // Decide the entry once, before paint: hash deep links and return visits skip
-  // the theatre entirely.
+  // The entry is a title card, not a task. It names the party, shows the mark,
+  // and hands over to the room that is already built — no CSV, no decision. A
+  // deep link or a return visit skips it entirely.
   useEffect(() => {
     let seen = false;
     try {
@@ -1127,7 +1135,25 @@ export default function GraphLab() {
       seen = false;
     }
     const deepLink = typeof location !== "undefined" && location.hash.length > 1;
-    setPhase(deepLink || seen ? "live" : "entry");
+    if (deepLink || seen) {
+      setPhase("live");
+      return;
+    }
+    setPhase("entry");
+    const t = timersRef.current;
+    // title → mark → room
+    t.push(setTimeout(() => setEntryBeat(1), 1500));
+    t.push(setTimeout(() => setEntryBeat(2), 3000));
+    t.push(
+      setTimeout(() => {
+        try {
+          sessionStorage.setItem("usp-graph-seen", "1");
+        } catch {
+          /* private mode — the title card simply plays again next visit */
+        }
+        setPhase("live");
+      }, 3900),
+    );
   }, []);
 
   useEffect(() => {
@@ -1307,7 +1333,7 @@ export default function GraphLab() {
 
   useEffect(() => {
     if (phase !== "live" || !graph) return;
-    showToast(`${graph.meta?.people ?? graph.nodes.length} REAL GUESTS · TAP A DOT TO SEE WHO IS LOOKING FOR THEM`);
+    showToast(`Tap a dot to see who’s looking for them`);
   }, [phase, graph, showToast]);
 
   /* --------------------------------------------------------- keyboard */
@@ -1414,6 +1440,83 @@ export default function GraphLab() {
     return out;
   }, [selNode, groupCounts]);
 
+  /**
+   * The panel's facts, as stamp windows.
+   *
+   * Three artifacts carry every kind of fact — the art is a WINDOW, not a
+   * meaning. A cohort count ("one of 28 aiming to design") is a round stamp; a
+   * fact that names another guest is a nametag, because a nametag is what you
+   * read off a person; a quote is the belief card, because that is the one with
+   * a typewriter slot that wraps.
+   *
+   * Order matters: identity first, then the room's verdict on them.
+   */
+  const stampSpecs = useMemo<StampSpec[]>(() => {
+    if (!selNode) return [];
+    const out: StampSpec[] = [];
+    const first = selNode.name.split(/\s+/)[0] ?? selNode.name;
+    const ans = record?.answers ?? {};
+
+    // 1 — the day job
+    const org = [selNode.company, selNode.school].filter(Boolean).join(" · ");
+    if (selNode.title || org) {
+      out.push({
+        id: "dayjob",
+        asset: "nametag",
+        rot: -8,
+        values: { headerLabel: "The day job", org, name: selNode.title || "creative" },
+      });
+    }
+
+    // 2 — where they came from, as a rubber stamp.
+    // The ring runs an ellipse ~320px long at 20px type: anything past a few
+    // short words laps itself and turns to mud. Keep ring tokens tiny.
+    if (ans.hometown) {
+      out.push({
+        id: "hometown",
+        asset: "roundStamp",
+        rot: 3,
+        values: {
+          relation: ans.hometown,
+          ringText: ring(first),
+          name: "came from",
+        },
+      });
+    }
+
+    // 3+ — the room's verdict: cohort counts, and who it points you at.
+    //
+    // The belief card carries "you both believe" as OUTLINED ART, not a slot
+    // (pepl added a CHANGE_small there; our asset predates it). So it may only
+    // carry a fact where that sentence is literally true — one that names
+    // another guest you share an answer with. A cohort count in that frame
+    // would be a false claim, so counts get the rubber stamp instead.
+    const facts = record?.highlights?.length
+      ? record.highlights.map((h) => ({ text: h.text, targets: h.targets ?? [] }))
+      : fallbackFacts.map((t) => ({ text: t, targets: [] as string[] }));
+
+    facts.slice(0, 4).forEach((f, i) => {
+      const named = f.targets.map((t) => byId.get(t)?.name).filter(Boolean)[0];
+      out.push(
+        named
+          ? {
+              id: `fact-${i}`,
+              asset: "beliefStamp",
+              rot: i % 2 ? -5 : 7,
+              values: { belief: f.text, name: String(named).toLowerCase() },
+            }
+          : {
+              id: `fact-${i}`,
+              asset: "roundStamp",
+              rot: i % 2 ? 7 : -3,
+              values: { relation: f.text, ringText: ring("in the room"), name: "tonight" },
+            },
+      );
+    });
+
+    return out;
+  }, [selNode, record, fallbackFacts, byId]);
+
   /* ---------------------------------------------------------------- view */
 
   const counts = room?.counts;
@@ -1436,98 +1539,24 @@ export default function GraphLab() {
         )}
       </div>
 
-      {/* ---------------- Step 0: drag the CSV, watch it process ------------ */}
+      {/* ------------- the title card: name the party, show the mark ------- */}
       {phase !== null && phase !== "live" && (
-        <div className={`${styles.entry} ${entering ? styles.entryFading : ""}`}>
-          <div className={styles.entryInner}>
-            {phase === "entry" ? (
-              <>
-                <div
-                  className={`${styles.dropZone} ${dragOver ? styles.dropOver : ""}`}
-                  onClick={() => fileInputRef.current?.click()}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setDragOver(true);
-                  }}
-                  onDragLeave={() => setDragOver(false)}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    setDragOver(false);
-                    const f = e.dataTransfer.files?.[0];
-                    if (f) onFile(f);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click();
-                  }}
-                >
-                  <div className={styles.dropBand} />
-                  <div className={styles.dropTitle}>drop the guest list</div>
-                  <div className={styles.dropSub}>
-                    The room is already built. Drop the CSV it was built from and watch it assemble.
-                  </div>
-                  <div className={styles.dropHint}>
-                    parsed in this browser · never uploaded ·{" "}
-                    {graph ? `${graph.meta?.guestIds?.length ?? 0} ids on file` : "loading the room…"}
-                  </div>
-                </div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv,text/csv"
-                  hidden
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) onFile(f);
-                  }}
-                />
-                {entryError && (
-                  <div className={styles.entryErr} role="alert">
-                    {entryError.code} — {entryError.message}
-                  </div>
-                )}
-                {loadError && !entryError && (
-                  <div className={styles.entryErr} role="alert">
-                    GRAPH_ARTIFACT_UNAVAILABLE — {loadError}
-                  </div>
-                )}
-                <button type="button" className={styles.skip} onClick={goLive}>
-                  skip →
-                </button>
-              </>
-            ) : (
-              <>
-                {fileName && <div className={styles.fileName}>{fileName.toUpperCase()}</div>}
-                <div className={styles.bar}>
-                  <div className={styles.barFill} style={{ width: `${Math.round(beatProgress * 100)}%` }} />
-                </div>
-                {entering ? (
-                  <div className={styles.entering}>Entering the room…</div>
-                ) : (
-                  <div className={styles.beats}>
-                    {beats.map((b, i) =>
-                      i <= beatIdx ? (
-                        <div key={b.label} className={`${styles.beat} ${i === beatIdx ? styles.beatOn : ""}`}>
-                          <span className={styles.beatLabel}>
-                            {i < beatIdx ? "✓" : "·"} {b.label}
-                          </span>
-                          <span className={styles.beatDetail}>{b.detail}</span>
-                        </div>
-                      ) : null,
-                    )}
-                  </div>
-                )}
-                <button type="button" className={styles.skip} onClick={goLive}>
-                  skip →
-                </button>
-              </>
-            )}
+        <div className={`${styles.entry} ${entryBeat >= 2 ? styles.entryFading : ""}`}>
+          <div className={styles.titleCard}>
+            <div className={`${styles.cardLine} ${entryBeat === 0 ? styles.cardOn : styles.cardOff}`}>
+              <span className={styles.partyName}>LA Intern Party</span>
+            </div>
+            <div className={`${styles.cardLine} ${entryBeat === 1 ? styles.cardOn : styles.cardOff}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.svg" alt="2C" className={styles.mark} width={92} height={92} />
+            </div>
           </div>
+          <button type="button" className={styles.skip} onClick={goLive}>
+            skip →
+          </button>
         </div>
       )}
 
-      {/* ---------------- the room ---------------- */}
       {phase === "live" && (
         <>
           <header className={styles.header}>
@@ -1541,7 +1570,7 @@ export default function GraphLab() {
               )}
             </div>
             <span className={styles.banner}>
-              <span className={styles.dot} /> Real signups · every claim has a receipt
+              <span className={styles.dot} /> Real signups
             </span>
           </header>
 
@@ -1584,7 +1613,7 @@ export default function GraphLab() {
                 <span className={`${styles.legendLine} ${styles.lineCompany}`} /> Same company
               </div>
               <div className={styles.legendRow}>
-                <span className={styles.legendStamp} /> Conviction stamps — zoom in
+                <span className={styles.legendStamp} /> Conviction stamps
               </div>
               <div className={styles.legendRow}>
                 <span className={`${styles.legendLine} ${styles.lineIn}`} /> Looking for them
@@ -1594,10 +1623,6 @@ export default function GraphLab() {
               </div>
               <div className={styles.legendRow}>
                 <span className={`${styles.legendLine} ${styles.lineWhy}`} /> Same conviction
-              </div>
-              <div className={styles.legendHint}>
-                A dot is a person — the colour is their creative motive. Select someone: the warm edges are people
-                looking for them.
               </div>
             </div>
           )}
@@ -1647,17 +1672,40 @@ export default function GraphLab() {
             <div className={styles.pbody}>
               {recordState === "missing" && (
                 <div className={styles.degraded}>
-                  record loading not available — /graph/people/{selNode.id}.json did not load. Showing the graph edges
-                  only; verbatim quotes are withheld, not guessed.
+                  Their answers didn’t load.
                 </div>
               )}
               {record?.storyline && <div className={styles.storyline}>{record.storyline}</div>}
 
+              {stampSpecs.length > 0 && (
+                <>
+                  <div className={styles.sec}>On the record</div>
+                  <StampBurst specs={stampSpecs} on />
+                  {/* the targets a stamp names stay clickable underneath it */}
+                  {record?.highlights
+                    ?.flatMap((h) => h.targets ?? [])
+                    .slice(0, 4)
+                    .map((t) => {
+                      const target = byId.get(t);
+                      return target ? (
+                        <button
+                          key={t}
+                          type="button"
+                          className={styles.factLink}
+                          onClick={() => selectPerson(t)}
+                        >
+                          {target.name}
+                        </button>
+                      ) : null;
+                    })}
+                </>
+              )}
+
               {inboundRows.length > 0 && (
                 <>
                   <div className={`${styles.sec} ${styles.secFirst}`}>
-                    {inboundRows.length} {inboundRows.length === 1 ? "PERSON IS" : "PEOPLE ARE"} LOOKING FOR SOMEONE
-                    LIKE YOU
+                    {inboundRows.length} {inboundRows.length === 1 ? "person is" : "people are"} looking for someone
+                    like you
                   </div>
                   {inboundRows.map((r, i) => (
                     <ConnButton key={r.key} row={r} n={i + 1} other={byId.get(r.otherId)} onOpen={openReceipt} />
@@ -1667,10 +1715,8 @@ export default function GraphLab() {
 
               {otherRows.length > 0 && (
                 <>
-                  <div className={`${styles.sec} ${inboundRows.length === 0 ? styles.secFirst : ""}`}>
-                    YOUR PEOPLE TONIGHT · RANKED
-                  </div>
-                  {otherRows.map((r, i) => (
+                  <div className={styles.sec}>Your people tonight</div>
+                  {(showAllConns ? otherRows : otherRows.slice(0, 3)).map((r, i) => (
                     <ConnButton
                       key={r.key}
                       row={r}
@@ -1679,53 +1725,34 @@ export default function GraphLab() {
                       onOpen={openReceipt}
                     />
                   ))}
-                </>
-              )}
-
-              {(record?.highlights?.length || fallbackFacts.length > 0) && (
-                <>
-                  <div className={styles.sec}>ON THE RECORD</div>
-                  {record?.highlights?.length
-                    ? record.highlights.map((h, i) => (
-                        <div key={`${h.kind}-${i}`} className={styles.fact}>
-                          {h.text}
-                          {h.targets?.slice(0, 3).map((t, ti) => {
-                            const target = byId.get(t);
-                            return target ? (
-                              <span key={t}>
-                                {ti === 0 ? " " : " · "}
-                                <button type="button" className={styles.factLink} onClick={() => selectPerson(t)}>
-                                  {target.name}
-                                </button>
-                              </span>
-                            ) : null;
-                          })}
-                        </div>
-                      ))
-                    : fallbackFacts.map((f) => (
-                        <div key={f} className={styles.fact}>
-                          {f}
-                        </div>
-                      ))}
+                  {otherRows.length > 3 && (
+                    <button
+                      type="button"
+                      className={styles.moreConns}
+                      onClick={() => setShowAllConns((v: boolean) => !v)}
+                    >
+                      {showAllConns ? "show fewer" : `show ${otherRows.length - 3} more`}
+                    </button>
+                  )}
                 </>
               )}
 
               {record?.answers && (
                 <>
-                  <div className={styles.sec}>IN THEIR OWN WORDS</div>
+                  <div className={styles.sec}>In their own words</div>
                   {ANSWER_ORDER.map((f) => {
                     const v = record.answers?.[f];
                     if (!v) return null;
                     return (
                       <div key={f} className={styles.words}>
-                        <span className={styles.wordsLbl}>{ANSWER_LABEL[f] ?? f.toUpperCase()}</span>
+                        <span className={styles.wordsLbl}>{ANSWER_LABEL[f] ?? f}</span>
                         {v}
                       </div>
                     );
                   })}
                 </>
               )}
-              {recordState === "loading" && <div className={styles.degraded}>reading their record…</div>}
+              {recordState === "loading" && <div className={styles.degraded}>loading…</div>}
             </div>
           </>
         )}
@@ -1752,7 +1779,7 @@ export default function GraphLab() {
                   <button key={id} type="button" className={styles.conn} onClick={() => selectPerson(id)}>
                     <span className={styles.connVia}>
                       <span className={styles.pswatch} style={{ background: hueOf(m) }} />
-                      {(m.motive ? pretty(m.motive) : "—").toUpperCase()}
+                      {m.motive ? pretty(m.motive) : "—"}
                     </span>
                     <div className={styles.connWho}>
                       {m.name} <small>· {m.title || m.school || ""}</small>
@@ -1775,7 +1802,7 @@ export default function GraphLab() {
         >
           <div className={styles.receipt} role="dialog" aria-modal="true" aria-label="receipt">
             <div className={styles.rkick}>
-              RECEIPT —{" "}
+              Receipt —{" "}
               <span
                 className={`${styles.badge} ${
                   receipt.type === "seek"
@@ -1785,10 +1812,10 @@ export default function GraphLab() {
                     : TYPE_BADGE[receipt.type]
                 }`}
               >
-                {receipt.type.toUpperCase()}
+                {receipt.type}
                 {receipt.mutual ? " · MUTUAL" : ""}
               </span>{" "}
-              VIA “{receipt.via}”
+              via “{receipt.via}”
             </div>
             <div className={styles.rcols}>
               {[receipt.left, receipt.right].map((side, i) =>
@@ -1796,7 +1823,7 @@ export default function GraphLab() {
                   <div key={i}>
                     <div className={styles.rname}>{side.name}</div>
                     <div className={styles.rq}>{side.label}</div>
-                    <div className={styles.rtxt} style={{ borderColor: side.hue }}>
+                    <div className={styles.rtxt}>
                       {highlightParts(side.quote, receipt.via).map((p, j) =>
                         p.on ? <mark key={j}>{p.t}</mark> : <span key={j}>{p.t}</span>,
                       )}
@@ -1805,7 +1832,7 @@ export default function GraphLab() {
                 ) : null,
               )}
             </div>
-            <div className={styles.rprov}>{receipt.prov}</div>
+            {receipt.prov && <div className={styles.rprov}>{receipt.prov}</div>}
             <button type="button" className={styles.rclose} onClick={() => setReceipt(null)}>
               Close
             </button>
@@ -1833,13 +1860,13 @@ function ConnButton({
   const badgeClass = row.type === "seek" ? (row.inbound ? styles.bSeekIn : styles.bSeekOut) : TYPE_BADGE[row.type];
   const via =
     row.type === "seek"
-      ? `${row.mutual ? "MUTUAL · " : row.inbound ? "THEY SEEK · " : "YOU SEEK · "}${row.via}`
+      ? `${row.mutual ? "mutual · " : row.inbound ? "they seek · " : "you seek · "}${row.via}`
       : row.via;
   return (
     <button type="button" className={styles.conn} onClick={() => onOpen(row)}>
       <span className={styles.connVia}>
         <span className={styles.connN}>{String(n).padStart(2, "0")}</span>
-        <span className={`${styles.badge} ${badgeClass}`}>{via.toUpperCase().slice(0, 40)}</span>
+        <span className={`${styles.badge} ${badgeClass}`}>{via.slice(0, 40)}</span>
       </span>
       <div className={styles.connWho}>
         {other.name} <small>· {other.title || other.school || ""}</small>

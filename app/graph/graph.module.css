@@ -87,8 +87,7 @@
   justify-content: center;
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-faint);
 }
 
@@ -119,8 +118,7 @@
 .subtitle {
   font-family: var(--usp-font-mono, ui-monospace, monospace);
   font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
   margin: 0;
 }
@@ -234,19 +232,16 @@
   flex-direction: column;
   gap: 6px;
   padding: 12px 14px;
-  border-radius: var(--usp-radius-md);
+  border-radius: 0;
   background: color-mix(in srgb, var(--usp-surface) 82%, transparent);
   border: 1px solid color-mix(in oklab, var(--usp-border) 80%, transparent);
   backdrop-filter: blur(8px);
   box-shadow: var(--usp-shadow-soft);
   max-width: 250px;
 }
-.legendRow,
-.legendHint {
-  font-family: var(--usp-font-mono, ui-monospace, monospace);
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.legendRow {
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-muted);
 }
 .legendRow {
@@ -266,7 +261,7 @@
   width: 20px;
   height: 11px;
   flex: none;
-  border-radius: 3px;
+  border-radius: 0;
   border: 1px solid var(--usp-spectrum-6);
   transform: rotate(-3deg);
 }
@@ -335,7 +330,6 @@
   gap: 7px;
   font-size: var(--usp-fs-xs);
   font-weight: var(--usp-weight-medium);
-  text-transform: uppercase;
   letter-spacing: var(--usp-tracking-wide);
   color: var(--usp-ink-muted);
   margin-bottom: 10px;
@@ -361,8 +355,7 @@
 .pline {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
   margin-top: 6px;
   line-height: 1.7;
@@ -394,8 +387,7 @@
 .sec {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-faint);
   margin: 16px 0 8px;
 }
@@ -429,8 +421,7 @@
 .connVia {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.58rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
   display: flex;
   gap: 8px;
@@ -453,7 +444,7 @@
   font-size: 0.55rem;
   padding: 2px 7px;
   border-radius: var(--usp-radius-pill);
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
 }
 .bSchool {
@@ -506,17 +497,15 @@
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-style: normal;
   font-size: 0.55rem;
-  letter-spacing: 0.11em;
+  letter-spacing: 0;
   color: var(--usp-ink-faint);
   display: block;
   margin-bottom: 3px;
-  text-transform: uppercase;
 }
 .degraded {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.56rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
   line-height: 1.6;
   border: 1px dashed var(--usp-border);
@@ -539,17 +528,15 @@
 .receipt {
   width: min(640px, 100%);
   background: var(--usp-surface);
-  border-radius: var(--usp-radius-lg);
+  border-radius: 0;
   box-shadow: var(--usp-shadow-panel);
   padding: 22px 24px 18px;
   max-height: 86vh;
   overflow-y: auto;
 }
 .rkick {
-  font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
-  font-size: 0.62rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-muted);
   display: flex;
   align-items: center;
@@ -568,49 +555,43 @@
   letter-spacing: var(--usp-tracking-tight);
 }
 .rq {
-  font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
-  font-size: 0.55rem;
-  letter-spacing: 0.1em;
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-faint);
-  text-transform: uppercase;
   margin: 3px 0 8px;
 }
+/* No left rule: the quote is set apart by voice (italic) and the label above it,
+   not by a coloured bar. The hue already lives in the badge. */
 .rtxt {
-  font-family: var(--usp-font-serif);
+  font-family: var(--usp-font-sans);
   font-style: italic;
   font-size: var(--usp-fs-sm);
   line-height: 1.55;
-  border-left: 3px solid var(--usp-border);
-  padding-left: 11px;
 }
 .rtxt mark {
   background: color-mix(in srgb, var(--usp-spectrum-2) 34%, transparent);
   color: inherit;
-  border-radius: 3px;
+  border-radius: 0;
   padding: 0 2px;
 }
 .rprov {
-  font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
-  font-size: 0.56rem;
-  letter-spacing: 0.07em;
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-faint);
-  text-transform: uppercase;
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 1px dashed var(--usp-border);
-  line-height: 1.7;
+  border-top: 1px solid var(--usp-border);
+  line-height: 1.5;
 }
 .rclose {
   margin-top: 14px;
   border: 1px solid var(--usp-border);
   background: var(--usp-surface-2);
-  border-radius: var(--usp-radius-pill);
+  border-radius: 0;
   padding: 7px 18px;
   cursor: pointer;
-  font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-muted);
 }
 .rclose:hover {
@@ -628,8 +609,7 @@
   color: var(--usp-bg);
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   border-radius: var(--usp-radius-pill);
   padding: 9px 18px;
   opacity: 0.92;
@@ -642,6 +622,11 @@
 }
 
 /* ---------- Step 0: the entry (drag the CSV) --------------------------- */
+/* ---------- the title card ---------------------------------------------
+ * Two beats on a cream ground: the party's name, then the mark. It is a title
+ * card, not a task — nothing to drop, nothing to decide. The room behind it is
+ * already built, so this dissolves straight into it.
+ */
 .entry {
   position: absolute;
   inset: 0;
@@ -650,8 +635,62 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--usp-bg);
-  transition: opacity 0.7s ease;
+  background:
+    radial-gradient(60% 46% at 18% 12%, color-mix(in oklab, var(--usp-spectrum-5) 22%, transparent), transparent 70%),
+    radial-gradient(50% 42% at 84% 20%, color-mix(in oklab, var(--usp-spectrum-0) 18%, transparent), transparent 70%),
+    radial-gradient(56% 50% at 78% 88%, color-mix(in oklab, var(--usp-spectrum-3) 18%, transparent), transparent 72%),
+    var(--usp-bg);
+  transition: opacity 0.9s ease;
+}
+
+.titleCard {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  min-width: min(520px, 84vw);
+}
+
+/* both beats occupy the same cell, so one dissolves into the other in place */
+.cardLine {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cardOn {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.cardOff {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  pointer-events: none;
+}
+
+.partyName {
+  font-family: var(--usp-font-display);
+  font-size: clamp(2.2rem, 7vmin, 4rem);
+  font-weight: 400;
+  letter-spacing: var(--usp-tracking-display);
+  line-height: var(--usp-leading-display);
+  color: var(--usp-ink);
+  text-align: center;
+}
+
+.mark {
+  width: clamp(72px, 12vmin, 108px);
+  height: auto;
+  opacity: 0.9;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry,
+  .cardLine {
+    transition: none;
+  }
 }
 .entryFading {
   opacity: 0;
@@ -716,8 +755,7 @@
 .dropHint {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.56rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-faint);
 }
 .entryErr {
@@ -728,21 +766,22 @@
   padding: 12px 16px;
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   color: var(--usp-ink);
   line-height: 1.7;
-  text-transform: uppercase;
 }
 .skip {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   background: none;
   border: 0;
   cursor: pointer;
-  font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: var(--usp-fs-xs);
+  letter-spacing: var(--usp-tracking-normal);
   color: var(--usp-ink-faint);
-  padding: 6px 4px;
+  padding: 6px 10px;
 }
 .skip:hover {
   color: var(--usp-ink);
@@ -750,8 +789,7 @@
 .fileName {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-faint);
   max-width: 100%;
   overflow: hidden;
@@ -790,7 +828,7 @@
 .beatLabel {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.76rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
   color: var(--usp-ink);
 }
 .beatDetail {
@@ -825,8 +863,7 @@
 .centerBody {
   font-family: var(--usp-font-mono, ui-monospace, Menlo, monospace);
   font-size: 0.62rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--usp-ink-muted);
   max-width: 420px;
   line-height: 1.7;
@@ -892,4 +929,23 @@
   .spinner {
     animation: none;
   }
+}
+
+/* the ranked list's long tail — a quiet disclosure, not a button */
+.moreConns {
+  display: block;
+  width: 100%;
+  margin: 4px 0 2px;
+  padding: 8px 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--usp-border);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--usp-fs-xs);
+  color: var(--usp-ink-faint);
+  text-align: left;
+}
+.moreConns:hover {
+  color: var(--usp-ink-muted);
 }
