@@ -236,3 +236,102 @@ caption, changes to Teri's existing token values (additions only, flagged for he
 - Route name: `/graph` (default) — rename freely.
 - `storyline` copy tone: worth a pass with Teri once the golden sample exists.
 - Tab names (THE WEB / CURRENTS / THE EXCHANGE) are placeholders for the same review.
+
+---
+
+## As built — v1 departure report (usp-v1 law e)
+
+Certified by the v1 gate chain, all green on the real 312-guest sheet: `check-graph-ontology` ·
+`check-guests` · `check-conformance` · `check-graph-emit` · `audit-graph` · `tsc --noEmit` ·
+`STATIC_EXPORT=1` build · `check-graph-e2e` (the served end-to-end flow). Every line below is
+`[good|neutral|bad] where — what + why`.
+
+### Contract & ontology
+
+- **[neutral] ontology** — added `Place`/`Inspiration`/`SEEKS` + `ingest_guest_v2`/`write_seek_edge`
+  beyond usp-v1's pinned set; the v2 guest data carries hometowns, inspirations, and directed seeking
+  that the party surfaces traverse.
+- **[good] identity** — v2 `personId`s are name-slug + first 4 hex of `sha256(guest_id)`, not email
+  localparts (the passports' rule); the guest sheet carries real emails, and an artifact URL must never
+  be able to reconstruct one.
+- **[good] privacy** — v2 `:Person` nodes intentionally omit the `email`/`handles` props that
+  `OBJECT_SCHEMAS.Person` declares as *required*; contact PII never enters the graph or the artifacts.
+  Verified live: 0 of the 312 v2 Person nodes carry an `email` property.
+- **[neutral] artifacts** — `public/graph/*` is committed (313 files: `graph.json` + 312 person
+  records), carrying names/titles/schools/companies/answers only — the same fields the party surface
+  shows.
+
+### Enrichment & extraction
+
+- **[neutral] enrichment** — seek/doppel vectors are lexical TF-IDF (provenance `match:tfidf-v1`), not
+  neural embeddings: the Butterbase gateway removed all embedding models post-hackathon (verified
+  exhaustively); the gateway path is retained behind `EMBED_PROVIDER` for when the platform restores
+  them. Consequence honestly parked: two known semantic-but-not-lexical matches (TJ↔Michael,
+  Kayla↔Tyler) fall below lexical detectability — measured, TJ→Michael shares only `{director}`
+  (score 0.0253, rank 63/311), and no constant closes that gap.
+- **[neutral] extraction** — convictions run on `CONVICTION_MODEL=anthropic/claude-haiku-4.5` with a
+  golden-calibrated 25-word quote cap (`MAX_QUOTE_WORDS` 15 → 25); the default `openai/gpt-4o-mini`
+  under-performed on the golden sample at 40% guard-failure (4/10 guests thrown away on the cap alone).
+  The prompt still asks for ≤12 words — the cap is a backstop for a 2x overshoot, and the
+  verbatim-substring check never bends.
+- **[good] `lib/matches.ts`** — an evidence floor (`score > 0`) plus deterministic plural folding in the
+  tokenizer; measured 910 → 962 seek edges, sought-by-nobody 78 → 70. Uniform, never pair-specific.
+- **[good] `lib/matches.ts`** — `assertUsableVectors` + the named `EmbeddingsDegenerate` error, beyond
+  the brief: `openai@5.23.2` requests `encoding_format: "base64"` unless told otherwise and decodes
+  unconditionally, so a gateway answering with plain floats silently decodes to denormal zeros (a
+  32-float answer became `[0,0]`). Cosines over that are meaningless — exactly the "never a fake
+  answer" failure. Every batch is now guarded before it reaches the cache.
+- **[neutral] `lib/conviction.ts`** — optional `flags?: string[]` added to `Conviction`; a twice-failed
+  guest's flag had nowhere to live in the pinned shape, so the failure would have been invisible to
+  anyone reading the artifact.
+- **[good] `lib/guests.ts`** — `place()` names a Place from the leading locality
+  (`hometown.split(/[\/,]/)[0]`) rather than the raw cell, so `"Torrance, CA"` and `"Torrance"` merge
+  onto one node and a punctuation-only hometown cannot fail `Place.name.min(1)` and kill a good guest.
+
+### Emit & receipts
+
+- **[good] receipts** — school/company receipts quote the RAW sheet cell (stronger evidence than the
+  canonical value: «UCLA ‘28» rather than «UCLA»); every quote is byte-literal by construction
+  (snap-to-source). 6076 receipts resolve, 100%.
+- **[neutral] receipts** — a seek edge's offer side is a composite `title — goal` in one `title` field;
+  the audit and the E2E gate split on the joiner and check each half against its own source field.
+- **[neutral] emit** — doppelgängers are a highlight, not a fifth edge type: the route's badge maps are
+  keyed to the four contract types, so a fifth would render `MATCH · undefined` inside the receipt
+  modal — a visible provenance lie.
+- **[neutral] emit** — `direction` is emitted on seek edges only; school/company/why edges carry no
+  direction because the route renders `mutual: true` as a badge suffix.
+- **[neutral] emit** — why-edge "nearest-2" is deterministic shared-token overlap within a mission/impact
+  group, not embeddings (offline, stable, no gateway). 222 why-edges.
+- **[neutral] emit** — a documented fallback tier sits under the dignity floor: 4 guests had no
+  school-mate, colleague, seeker or shared mission/impact tag and get a why-edge on the tag they do
+  have; `DignityFloorUnreachable` fails the emit loudly if that ever runs out.
+- **[bad→necessary] `lib/layout.ts`** — a per-tick step clamp (`MAX_STEP = 16`) added to the `simTick`
+  port: the prototype's distance-growing spring impulse is stable at ~40 nodes and **divergent at 312**
+  (positions hit 1e72 by tick 20, NaN by tick 40). The clamp only bites during the first chaotic ticks;
+  without it there is no web lens at all.
+
+### Frontend & verification
+
+- **[neutral] `app/graph/page.tsx`** — the header/tabs/search/legend live in `GraphLab.tsx`, not
+  `page.tsx`: all four are bound to canvas state, and splitting them across the `ssr:false` boundary
+  would mean lifting selection/lens state up and pushing it back through refs.
+- **[neutral] `scripts/check-graph-e2e.ts`** — the drop-zone assertion could NOT be made against
+  `graph.html` as specified: `page.tsx` mounts GraphLab with `ssr:false`, so the HTML ships only the
+  boot shell and the Step-0 markup lives in a lazily-loaded chunk. Grepping the HTML would have been a
+  lie by omission, so the gate walks the real load path over HTTP instead (graph.html → its webpack
+  runtime chunk-id→hash map + the graph page chunk → the lazy chunk it requires) and asserts the Step-0
+  strings are genuinely served to the browser.
+- **[neutral] verification** — §8.4 above names `scripts/audit-graph-receipts.ts`; the as-built script
+  is `scripts/audit-graph.ts` (same job — receipts, counts, and a live Neo4j reconciliation).
+- **[neutral] graph hygiene** — the v1 synthetic population (193 `:Person`, `_src csv:test-party`,
+  synthetic `@guests.usp.party` emails) still shares the database with the 312 real guests; no delete
+  action exists in the manifest, per law (a). It is inert for the party surfaces — 0 SEEKS of any kind,
+  0 cross-population pair edges, absent from every artifact — but it does co-occupy one shared School
+  node (USC), which is why the live graph shows 71 `STUDIES_AT`→USC against the sheet's 70. The emitted
+  counts are re-derived from the CSV and are correct (audit: 1877 counts, 0 violations); a *future*
+  traversal that counted school-mates live in Cypher rather than from the artifacts would over-count
+  USC by one.
+- **[correction]** the previously-recorded "one stale School node (`USC ‘24`)" did **not** reproduce:
+  the live graph holds 144 School nodes and the only USC-containing names are `USC` (71), `Stark
+  program USC` (1) and `University of Oregon ‘26 , MA USC Annenberg starting August` (1) — all
+  `_src csv:la-intern-party`, all guest-written. The real residue is the 193-node v1 population above.
