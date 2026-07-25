@@ -53,6 +53,15 @@ export const DEFAULTS = {
   // monet — weave is gone (it read as scan lines at any period); grain
   // is drawn by the DOM veil so it covers the widgets too
   kuwahara: 0.85, kuwaKernel: 2.4, grade: 0.65, impasto: 0.4, grain: 0.16,
+  // scale — north-star Addendum 5: "the scale of the actual card items can be
+  // scaled to be slightly larger and the bubble as well". Two live handles
+  // behind the hidden 0-key menu, and 1 is the room exactly as designed, so
+  // they are inert until someone drags them. Each multiplies ONE existing
+  // number and nothing else: cardScale raises the stamp burst's intrinsic
+  // ceiling (the viewport-fit terms still bind — see the burst transform),
+  // bubbleScale multiplies the lens radius (pre-pop clamped, see
+  // MAX_LENS_RADIUS). Sliders stop at 1.6; "slightly larger" is ~1.1–1.3.
+  cardScale: 1, bubbleScale: 1,
 };
 
 export type Params = typeof DEFAULTS & {
@@ -69,6 +78,11 @@ const SCENE_ZOOM_PERSON = 2.2;
 /* after the first click pops the bubble it returns at this ABSOLUTE radius
    (mn units) — a toy, no longer the room's container. 0.135 is Teri's call. */
 const POPPED_RADIUS = 0.135;
+/* the ceiling on the UNPOPPED lens. That default radius already IS the
+   max-size room container (it is the radius slider's max as well), so
+   bubbleScale may only grow the popped toy past it — a pre-pop bubble wider
+   than this stops holding the room and starts overflowing its framing. */
+const MAX_LENS_RADIUS = DEFAULTS.radius;
 /* movement (shader units) past which a press is a PAN, not a click/pop */
 const PAN_START = 0.02;
 
@@ -169,10 +183,17 @@ const PANEL_GROUPS: {
   name: string;
   items: { key: keyof typeof DEFAULTS; label: string; min: number; max: number; step: number; unit?: string }[];
 }[] = [
+  /* first group on purpose: this is the menu Addendum 5 asked for, and the
+     0 key opens the panel onto it without a scroll. Floor is 1 — the ask was
+     "slightly larger", and below 1 is just the shipped design made worse. */
+  { name: "scale", items: [
+    { key: "cardScale", label: "cards", min: 1, max: 1.6, step: 0.01 },
+    { key: "bubbleScale", label: "bubble", min: 1, max: 1.6, step: 0.01 },
+  ]},
   { name: "lens", items: [
     { key: "zoom", label: "magnify", min: 1, max: 3.5, step: 0.05 },
     { key: "warp", label: "fisheye", min: 0, max: 1.2, step: 0.01 },
-    { key: "radius", label: "radius", min: 0.12, max: 0.46, step: 0.005 },
+    { key: "radius", label: "radius", min: 0.12, max: MAX_LENS_RADIUS, step: 0.005 },
   ]},
   { name: "morph", items: [
     { key: "morphDur", label: "duration", min: 200, max: 2400, step: 20, unit: "ms" },
@@ -340,8 +361,45 @@ export default function PeplGraph() {
   const [indexOpen, setIndexOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   /* the tune panel is a design tool, not a party surface — hidden unless
-     the URL opts in with ?tune=1 */
+     the URL opts in with ?tune=1, or the 0 key asks for it (below) */
   const [tuneVisible, setTuneVisible] = useState(false);
+
+  /* ---- the hidden 0-key menu (north-star Addendum 5: "if we have a hidden
+     command when we press 0 it should open this new menu") ----------------
+     One window listener, no affordance: the panel a guest can never find is
+     the one with nothing on screen pointing at it, so pressing 0 has to raise
+     BOTH the pill and the panel, and closing has to put both back down. The
+     one exception is ?tune=1 — that opt-in owns the pill for the session, so
+     a close leaves the pill where the URL asked for it.
+
+     The guards are the whole risk here. This fires on window, and the search
+     box is one Tab away: a 0 typed into any field, or committed by an IME, is
+     text and never a command. Meta/ctrl/alt are held for the browser's own
+     shortcuts. Shift needs no test — shift+0 arrives as ")". Range inputs are
+     the one exception to the field rule, and they are exactly the sliders in
+     this panel: they take no text, so 0 has to keep closing the menu for
+     someone who just finished dragging one. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "0" || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.isComposing || e.keyCode === 229) return;
+      const el = e.target as HTMLElement | null;
+      const typing =
+        !!el &&
+        (el.tagName === "TEXTAREA" ||
+          el.isContentEditable ||
+          (el.tagName === "INPUT" && (el as HTMLInputElement).type !== "range"));
+      if (typing) return;
+      e.preventDefault();
+      const opening = !panelOpen;
+      setPanelOpen(opening);
+      setTuneVisible(
+        opening || new URLSearchParams(window.location.search).get("tune") === "1"
+      );
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [panelOpen]);
 
   /* the focused person's baked record — their ranked relationships with
      receipts, for the threads widget */
@@ -1101,7 +1159,14 @@ export default function PeplGraph() {
       }
 
       /* --- lens radius: pop burst, then ease to the state's size --- */
-      const targetR = poppedRef.current ? POPPED_RADIUS : P.radius;
+      /* bubbleScale is one handle over both states (Addendum 5), but only the
+         popped toy has room to grow: the unpopped lens is the room's container
+         and is already at its ceiling, so that product is clamped. Everything
+         downstream — the clarity lens, the grab radius, the pop burst — reads
+         lensR, so this one multiply carries the whole bubble. */
+      const targetR = poppedRef.current
+        ? POPPED_RADIUS * P.bubbleScale
+        : Math.min(P.radius * P.bubbleScale, MAX_LENS_RADIUS);
       if (reduced) {
         popAt = -1;
         radiusCur = targetR;
@@ -1362,7 +1427,12 @@ export default function PeplGraph() {
           /* scale the burst down on small viewports; bounds derived
              from the scaled extents so the clamps can never invert */
           /* extents mirror Stamps.tsx SLOTS (tightened 2026-07-25) */
-          const k = Math.min(1, (w - 32) / 444, (h - 62) / 240);
+          /* cardScale (Addendum 5) raises the INTRINSIC ceiling — the 1 that
+             used to cap a roomy viewport — and is deliberately not a factor on
+             the result: the two viewport-fit terms must keep winning, both so
+             a phone still gets a burst that fits and so k <= (w-32)/444 holds,
+             which is exactly what stops the bounds below from inverting. */
+          const k = Math.min(P.cardScale, (w - 32) / 444, (h - 62) / 240);
           const ax2 = Math.min(Math.max(ds.x, 218 * k + 14), w - 226 * k - 18);
           const ay2 = Math.min(Math.max(ds.y, 158 * k + 18), h - 44);
           stampsRef.current.style.transform = `translate(${ax2.toFixed(1)}px, ${ay2.toFixed(1)}px) scale(${k.toFixed(3)})`;
