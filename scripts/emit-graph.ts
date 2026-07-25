@@ -4,6 +4,7 @@
  *   public/graph/graph.json          nodes + edges + per-lens positions + meta
  *   public/graph/people/<id>.json    one record per guest: their own words, their ranked
  *                                    connections with receipts, and their highlights
+ *   data/graph-enriched.csv          THE ENRICHMENT SHEET (below) — emitted every run
  *
  * Laws honoured here:
  *  - READ-ONLY against Neo4j. Nothing in this file writes to the graph; the traversal
@@ -25,11 +26,14 @@
  *   npx tsx scripts/check-graph-emit.ts                                    # the gate
  *
  * Env:
- *   GUESTS_CSV   (required) the Luma guest export — answers, raw cells and guest_ids
- *   FIXTURE=1    (optional) OFFLINE FALLBACK: skip Neo4j and derive the structural edges
- *                from the CSV groupings instead. Same sampling, same output shape; the
- *                artifact records `meta.source: "fixture-csv"` so nobody can mistake a
- *                fixture bake for a graph bake.
+ *   GUESTS_CSV      (required) the Luma guest export — answers, raw cells and guest_ids
+ *   FIXTURE=1       (optional) OFFLINE FALLBACK: skip Neo4j and derive the structural edges
+ *                   from the CSV groupings instead. Same sampling, same output shape; the
+ *                   artifact records `meta.source: "fixture-csv"` so nobody can mistake a
+ *                   fixture bake for a graph bake.
+ *   OVERRIDES_PATH  (optional) the enrichment overrides CSV, default `data/graph-overrides.csv`.
+ *                   Point it at a temp file to test the override layer without touching the
+ *                   committed baseline.
  */
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -39,6 +43,7 @@ import { loadGuests, type Guest } from "../lib/guests";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { webLayout, ringLayout, type Vec2 } from "../lib/layout";
 import { vectorProvider } from "../lib/matches";
+import { MOTIVES, MISSIONS, IMPACTS, ASPIRATIONS, convictionModel } from "../lib/conviction";
 
 /* ────────────────────────────── inputs + shapes ────────────────────────────── */
 
@@ -46,6 +51,106 @@ const OUT_DIR = "public/graph";
 const PEOPLE_DIR = join(OUT_DIR, "people");
 const CONVICTIONS = "data/graph-private/convictions.json";
 const MATCHES = "data/graph-private/matches.json";
+
+/* ═════════════════════════ THE ENRICHMENT SHEET LOOP ═════════════════════════
+ *
+ * A managed, human-editable station between the computed pipeline and the baked
+ * artifacts — the v2 twin of v1's `data/party.csv` + `data/real-overrides.json`
+ * (scripts/precache.ts). Two files, opposite jobs:
+ *
+ *   data/graph-enriched.csv   WRITTEN by this script on every run. One row per person who
+ *                             actually shipped, in emitted (CSV) order, columns pinned to
+ *                             SHEET_COLUMNS. It is the read-only proof sheet: everything the
+ *                             bake decided about a guest on one line, so a human can SEE the
+ *                             tags, the receipts, the ranked matches and the group sizes
+ *                             without opening 312 JSON files. Committed like party.csv.
+ *                             Never an input — re-deriving it from itself would let a typo
+ *                             become data.
+ *
+ *   data/graph-overrides.csv  READ by this script (or OVERRIDES_PATH). Sparse and
+ *                             hand-managed: a header row plus ONLY the people a human had to
+ *                             correct. It survives every re-run of the pipeline, because it
+ *                             is never regenerated. Columns:
+ *
+ *       person_id      REQUIRED. Must resolve against the CSV population, or the run FAILS
+ *                      (`OverrideSubjectUnknown`) — an override that binds to nobody is a
+ *                      silent no-op, and silent is the one thing an override may never be.
+ *       motive         one of lib/conviction MOTIVES
+ *       mission        one of lib/conviction MISSIONS
+ *       impact         one of lib/conviction IMPACTS
+ *       aspiration     one of lib/conviction ASPIRATIONS
+ *                      → the four tag columns REPLACE the extracted tag. Validated by zod
+ *                        against the CLOSED vocabularies: an off-vocabulary value is a named
+ *                        error and exit 1, never a coerced near-miss (law b, fail loud).
+ *                        A replaced tag then flows through the ONE existing code path —
+ *                        tag groups, why-edges, node fields, caucus/motive/craft highlights —
+ *                        so an override cannot produce a state the normal bake could not.
+ *       pinned_match   a person_id. Moves that person's EXISTING edge to rank 1 of their
+ *                      person-record `edges` list. If no such edge exists it is a named
+ *                      WARNING, not an error, and nothing is written: this layer reorders
+ *                      claims, it never fabricates one (law c — an edge with no traversal
+ *                      behind it has no receipt).
+ *       hide           true|false. `true` removes the person from EVERY emitted artifact —
+ *                      node, edges touching them, other people's match lists, every count.
+ *                      Applied BEFORE the graph read, so counts and highlights are derived
+ *                      from the surviving population and stay consistent by construction.
+ *                      NOTE: hide genuinely changes the population, so the pinned population
+ *                      constants fire — `EXPECTED_PEOPLE` in scripts/check-graph-emit.ts and
+ *                      the CSV-derived population in scripts/audit-graph.ts. That is the
+ *                      gates working: removing a guest is a decision that must be declared,
+ *                      not absorbed.
+ *       host_notes     free text. Echo-through only — never read by any renderer.
+ *
+ *   QUOTES ARE NOT OVERRIDABLE. A receipt is byte-verbatim from the guest's own answer or it
+ *   is not a receipt (law c), and nothing typed into a spreadsheet is verbatim by
+ *   construction. When a tag is replaced, the quote that stood behind the OLD tag stops being
+ *   evidence for the new one, so it is DROPPED — from the sheet column, and from the
+ *   conviction the bake reads, unless a tag we did not touch still cites that same answer
+ *   field. A tag with no quote is a supported downstream state; a tag with the wrong quote is
+ *   a fabricated receipt.
+ *
+ *   Every applied override is stamped `_overridden: ["mission", …]` on the person record and
+ *   on the graph node, and summarized on stdout. "Why does it say that?" stays answerable
+ *   from the artifact alone (law d).
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+const ENRICHED_SHEET = "data/graph-enriched.csv";
+const OVERRIDES_PATH = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.csv";
+
+/** The pinned column order of data/graph-enriched.csv. check-graph-emit.ts asserts it exactly. */
+const SHEET_COLUMNS = [
+  "person_id", "guest_id", "name", "title", "company", "is_freelance", "school", "class_year",
+  "hometown", "instagram",
+  "motive", "mission", "impact", "aspiration", "open_seeker",
+  "motive_quote", "mission_quote", "impact_quote",
+  "school_node", "company_node", "craft_node",
+  "conviction_groups",
+  "match_1", "match_2", "match_3", "match_4", "match_5",
+  "inbound_count", "mutual_with", "doppelganger", "doppelganger_score",
+  "pinned_match", "hide", "host_notes",
+  "flags", "extraction_model", "match_provider",
+] as const;
+
+/** The pinned column order of data/graph-overrides.csv (its header row, and nothing else). */
+const OVERRIDE_COLUMNS = [
+  "person_id", "motive", "mission", "impact", "aspiration", "pinned_match", "hide", "host_notes",
+] as const;
+
+const OVERRIDABLE_TAGS = ["motive", "mission", "impact", "aspiration"] as const;
+type OverridableTag = (typeof OVERRIDABLE_TAGS)[number];
+
+/**
+ * The answer field each tag's receipt is drawn from — mirrors the extraction prompt in
+ * lib/conviction.ts ("motive … mostly from `drew`"; mission/impact/aspiration are read off
+ * `goal`). It is what makes "drop the quote behind a replaced tag" a precise operation
+ * instead of a guess: conviction quotes are keyed by ANSWER FIELD, tags are not.
+ */
+const TAG_QUOTE_FIELD: Record<OverridableTag, string> = {
+  motive: "drew",
+  mission: "goal",
+  impact: "goal",
+  aspiration: "goal",
+};
 
 /** mirrors the two raw columns lib/guests.ts canonicalizes — receipts quote the RAW cell */
 const RAW_COL = {
@@ -60,6 +165,8 @@ const ConvictionSchema = z.object({
   aspiration: z.string().nullable(),
   quotes: z.record(z.string(), z.string()),
   openSeeker: z.boolean(),
+  /** present only when the conviction post-guard failed twice — surfaced in the sheet's `flags` */
+  flags: z.array(z.string()).optional(),
 });
 const ConvictionsSchema = z.record(z.string(), ConvictionSchema);
 const MatchesSchema = z.object({
@@ -105,6 +212,22 @@ interface Highlight {
   text: string;
   targets?: string[];
 }
+/** an emitted graph.json node — `_overridden` appears only when a human moved one of its tags */
+interface GraphNodeOut {
+  id: string;
+  name: string;
+  title: string;
+  school: string | null;
+  company: string | null;
+  free: boolean;
+  motive: string | null;
+  mission: string | null;
+  impact: string | null;
+  asp: string | null;
+  deg: number;
+  pos: { web: Vec2; why: Vec2; seek: Vec2 };
+  _overridden?: string[];
+}
 /** a person as the SOURCE says they are (the graph in the default path, the CSV in FIXTURE) */
 interface SourcePerson {
   id: string;
@@ -119,6 +242,108 @@ class EmitError extends Error {
     super(`${name}: ${message}`);
     this.name = name;
   }
+}
+
+/* ─────────────────────────── the overrides layer ─────────────────────────── */
+
+/**
+ * The four tag columns are `z.enum`s over the SAME closed vocabularies the extraction is
+ * bounded by (lib/conviction.ts), so an off-vocabulary override is UNREPRESENTABLE — the
+ * same grounding-by-construction trick as the ontology gate, applied to a spreadsheet.
+ */
+const OverrideRowSchema = z.object({
+  person_id: z.string().min(1),
+  motive: z.enum(MOTIVES).optional(),
+  mission: z.enum(MISSIONS).optional(),
+  impact: z.enum(IMPACTS).optional(),
+  aspiration: z.enum(ASPIRATIONS).optional(),
+  pinned_match: z.string().min(1).optional(),
+  hide: z.boolean().optional(),
+  host_notes: z.string().optional(),
+});
+type OverrideRow = z.infer<typeof OverrideRowSchema>;
+
+const TRUE_WORDS = new Set(["true", "1", "yes", "y"]);
+const FALSE_WORDS = new Set(["false", "0", "no", "n"]);
+
+/**
+ * Read + validate data/graph-overrides.csv. Absent file → empty layer (the sheet loop is
+ * optional). Present but malformed → a NAMED error, never a partially-applied override set:
+ * half an override is worse than none, because nobody can tell which half landed.
+ */
+function loadOverrides(path: string): Map<string, OverrideRow> {
+  const rows = new Map<string, OverrideRow>();
+  if (!existsSync(path)) return rows;
+
+  let text = readFileSync(path, "utf8");
+  if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+  const parsed = Papa.parse<Record<string, string>>(text, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (h) => (h.charCodeAt(0) === 0xfeff ? h.slice(1) : h).trim(),
+  });
+  if (parsed.errors.length > 0) {
+    const sample = parsed.errors.slice(0, 3).map((e) => `row ${e.row}: ${e.message}`).join(" | ");
+    throw new EmitError("OverridesUnparseable", `${path}: ${parsed.errors.length} CSV error(s) — ${sample}`);
+  }
+
+  // A misspelled column is a silent no-op in every CSV reader ever written. Not here.
+  const headers = (parsed.meta.fields ?? []).filter((h) => h !== "");
+  const unknown = headers.filter((h) => !(OVERRIDE_COLUMNS as readonly string[]).includes(h));
+  if (unknown.length > 0) {
+    throw new EmitError(
+      "OverrideColumnUnknown",
+      `${path} has column(s) outside the contract: ${unknown.join(", ")} — allowed: ${OVERRIDE_COLUMNS.join(", ")}`,
+    );
+  }
+  if (headers.length > 0 && !headers.includes("person_id")) {
+    throw new EmitError("OverrideColumnUnknown", `${path} has no person_id column — every override names its subject`);
+  }
+
+  for (const [i, raw] of parsed.data.entries()) {
+    const line = i + 2; // 1-based, past the header — the number the editor's cursor is on
+    const cells: Record<string, string> = {};
+    for (const k of OVERRIDE_COLUMNS) {
+      const v = (raw[k] ?? "").trim();
+      if (v !== "") cells[k] = v;
+    }
+    if (Object.keys(cells).length === 0) continue; // a blank line is not an override
+    if (!cells.person_id) {
+      throw new EmitError("OverrideSubjectMissing", `${path} line ${line} sets values but names no person_id`);
+    }
+
+    const candidate: Record<string, unknown> = { ...cells };
+    if (cells.hide !== undefined) {
+      const h = cells.hide.toLowerCase();
+      if (TRUE_WORDS.has(h)) candidate.hide = true;
+      else if (FALSE_WORDS.has(h)) candidate.hide = false;
+      else {
+        throw new EmitError(
+          "OverrideValueInvalid",
+          `${path} line ${line}: hide=${JSON.stringify(cells.hide)} is neither true nor false`,
+        );
+      }
+    }
+
+    const res = OverrideRowSchema.safeParse(candidate);
+    if (!res.success) {
+      const issues = res.error.issues
+        .map((is) => `${is.path.join(".") || "<row>"}: ${is.message}`)
+        .join(" | ");
+      throw new EmitError(
+        "OverrideValueInvalid",
+        `${path} line ${line} (${cells.person_id}) is off-vocabulary — ${issues}`,
+      );
+    }
+    if (rows.has(res.data.person_id)) {
+      throw new EmitError(
+        "OverrideDuplicateSubject",
+        `${path}: ${res.data.person_id} appears twice — one row per person, or nobody can say which one won`,
+      );
+    }
+    rows.set(res.data.person_id, res.data);
+  }
+  return rows;
 }
 
 /* ─────────────────────────── tag vocabulary → English ─────────────────────────── */
@@ -192,6 +417,18 @@ function phraseOf(map: Record<string, string>, tag: string, kind: string): strin
 }
 
 /* ───────────────────────────────── small helpers ───────────────────────────────── */
+
+/**
+ * The class year a guest wrote INSIDE their school cell ("USC '27" → "27") — the exact token
+ * `canonSchool` strips to reach the School node name, mirrored here so the sheet can show
+ * both halves of that split. Empty when they wrote no year. Digits verbatim, never widened
+ * to a four-digit year we were not given.
+ */
+function classYearOf(rawSchool: string): string {
+  const first = (rawSchool.includes("/") ? rawSchool.split("/")[0] : rawSchool).trim();
+  const m = /[’'`‘]?\s*(\d{2,4})\s*[’'‘]?\s*$/u.exec(first);
+  return m ? m[1] : "";
+}
 
 /** a prefix of the guest's own words — never an ellipsis, so it stays a verbatim substring */
 function clip(s: string, max = 240): string {
@@ -382,9 +619,26 @@ async function main(): Promise<number> {
   }
 
   /* ---- 1. the inputs ---- */
-  const guests = loadGuests(csvPath);
+  const allGuests = loadGuests(csvPath);
+
+  /* ---- 1b. the enrichment overrides, applied BEFORE anything is assembled ----
+   * hide has to land before the graph read (the traversal is scoped to the population we
+   * emit), and the tag replacements have to land before the tag groups are built, so that
+   * an override travels the ONE code path a computed tag travels. */
+  const overrides = loadOverrides(OVERRIDES_PATH);
+  const strangers = [...overrides.keys()].filter((id) => !allGuests.some((g) => g.personId === id));
+  if (strangers.length > 0) {
+    throw new EmitError(
+      "OverrideSubjectUnknown",
+      `${OVERRIDES_PATH} names ${strangers.length} person_id(s) absent from the CSV population: ${strangers.slice(0, 5).join(", ")}`,
+    );
+  }
+  const hiddenIds = new Set([...overrides.values()].filter((r) => r.hide === true).map((r) => r.person_id));
+
+  const guests = hiddenIds.size > 0 ? allGuests.filter((g) => !hiddenIds.has(g.personId)) : allGuests;
   const byGuestId = new Map(guests.map((g) => [g.personId, g] as const));
   const ids = guests.map((g) => g.personId);
+  if (ids.length === 0) throw new EmitError("PopulationEmpty", `every guest is hidden by ${OVERRIDES_PATH}`);
 
   // raw CSV cells (school/company receipts quote the cell, not the canonical name) +
   // the stage counts the entry theatre narrates
@@ -418,6 +672,44 @@ async function main(): Promise<number> {
   );
   const matches = MatchesSchema.parse(JSON.parse(readFileSync(MATCHES, "utf8")));
   const convOf = (id: string): Conviction | null => convictions[id] ?? null;
+
+  /* ---- 1c. tag overrides replace the extracted tag, and drop its orphaned receipt ---- */
+  const overriddenFields = new Map<string, string[]>(); // personId -> the fields a human changed
+  let noopOverrides = 0;
+  for (const [pid, row] of overrides) {
+    if (hiddenIds.has(pid)) continue; // hidden people are not emitted; nothing to override
+    const base = convOf(pid);
+    const next: Conviction = base
+      ? { ...base, quotes: { ...base.quotes } }
+      : { motive: null, mission: null, impact: null, aspiration: null, quotes: {}, openSeeker: false };
+
+    const applied: OverridableTag[] = [];
+    for (const tag of OVERRIDABLE_TAGS) {
+      const want = row[tag];
+      if (want === undefined) continue;
+      if (next[tag] === want) {
+        noopOverrides += 1; // the sheet already said this — not a change, so not a claim
+        continue;
+      }
+      next[tag] = want;
+      applied.push(tag);
+    }
+    if (applied.length === 0) continue;
+
+    // Quotes are NOT overridable. The quote behind a replaced tag is no longer evidence for
+    // it, so drop it — unless an UNTOUCHED tag still cites that same answer field, in which
+    // case the quote is still somebody's receipt and stays.
+    const stillCited = new Set(
+      OVERRIDABLE_TAGS.filter((t) => next[t] !== null && !applied.includes(t)).map((t) => TAG_QUOTE_FIELD[t]),
+    );
+    for (const t of applied) {
+      const field = TAG_QUOTE_FIELD[t];
+      if (!stillCited.has(field)) delete next.quotes[field];
+    }
+
+    convictions[pid] = next;
+    overriddenFields.set(pid, applied);
+  }
 
   /* ---- 2. the source: the graph by default, the CSV only as a labelled fallback ---- */
   const fixture = process.env.FIXTURE === "1";
@@ -567,7 +859,7 @@ async function main(): Promise<number> {
     deg.set(e.s, (deg.get(e.s) ?? 0) + 1);
     deg.set(e.t, (deg.get(e.t) ?? 0) + 1);
   }
-  const nodes = people.map((p) => {
+  const nodes: GraphNodeOut[] = people.map((p) => {
     const c = convOf(p.id);
     const g = byGuestId.get(p.id);
     return {
@@ -653,6 +945,10 @@ async function main(): Promise<number> {
   let records = 0;
   const highlightHist = new Map<string, number>();
   const edgeCounts: number[] = [];
+  const pinMisses: string[] = [];
+  const sheetRows: Record<string, string>[] = [];
+  const extractionModel = convictionModel();
+  const matchProvider = vectorProvider();
 
   if (existsSync(PEOPLE_DIR)) rmSync(PEOPLE_DIR, { recursive: true });
   mkdirSync(PEOPLE_DIR, { recursive: true });
@@ -722,6 +1018,23 @@ async function main(): Promise<number> {
     const towardMe = scored.filter((s) => s.e.direction === "mutual" || s.e.direction === "inbound").slice(0, INBOUND_CAP);
     const rest = scored.filter((s) => !(s.e.direction === "mutual" || s.e.direction === "inbound")).slice(0, OTHER_CAP);
     const personEdges = [...towardMe, ...rest].map((s) => s.e);
+
+    /* ---- the pin: reorder an EXISTING edge, never mint one ---- */
+    const stamped = [...(overriddenFields.get(me.id) ?? [])];
+    const pin = overrides.get(me.id)?.pinned_match;
+    if (pin) {
+      const at = personEdges.findIndex((e) => e.targetId === pin);
+      if (at < 0) {
+        pinMisses.push(
+          `${me.id} → ${pin}${byGuestId.has(pin) ? "" : " (not in the emitted population)"}`,
+        );
+      } else if (at > 0) {
+        personEdges.unshift(...personEdges.splice(at, 1));
+        stamped.push("pinned_match");
+      } else {
+        stamped.push("pinned_match"); // already rank 1 — the pin still governs the order
+      }
+    }
 
     /* ---- highlights: every one of them positive-or-neutral, none of them zero ---- */
     const hl: Highlight[] = [];
@@ -804,10 +1117,80 @@ async function main(): Promise<number> {
         answers: g.answers,
         edges: personEdges,
         highlights,
+        // honest provenance (law d): the artifact itself says which fields a human moved
+        ...(stamped.length > 0 ? { _overridden: stamped } : {}),
       })}\n`,
     );
+    if (stamped.length > 0) me._overridden = stamped;
     records += 1;
+
+    /* ---- the enrichment sheet row: everything this bake decided, on one line ---- */
+    const ov = overrides.get(me.id);
+    const quoteFor = (tag: OverridableTag): string => {
+      if (!c || c[tag] === null) return "";
+      // an overridden tag's receipt was dropped with the tag — never re-attach it here
+      if (overriddenFields.get(me.id)?.includes(tag)) return "";
+      return c.quotes[TAG_QUOTE_FIELD[tag]] ?? "";
+    };
+    const groups: string[] = [];
+    if (c?.mission) {
+      const n = missionGroups.get(c.mission)?.length ?? 0;
+      if (n >= 3) groups.push(`${c.mission}(${n})`);
+    }
+    if (c?.impact) {
+      const n = impactGroups.get(c.impact)?.length ?? 0;
+      if (n >= 3) groups.push(`${c.impact}(${n})`);
+    }
+    const dopp = doppelOf.get(me.id);
+    const row: Record<string, string> = {
+      person_id: me.id,
+      guest_id: g.guestId,
+      name: me.name,
+      title: me.title,
+      company: rawCell(g, "company"),
+      is_freelance: String(g.isFreelance),
+      school: rawCell(g, "school"),
+      class_year: classYearOf(rawCell(g, "school")),
+      hometown: g.hometown ?? "",
+      instagram: g.instagram ?? "",
+      motive: c?.motive ?? "",
+      mission: c?.mission ?? "",
+      impact: c?.impact ?? "",
+      aspiration: c?.aspiration ?? "",
+      open_seeker: String(Boolean(c?.openSeeker)),
+      motive_quote: quoteFor("motive"),
+      mission_quote: quoteFor("mission"),
+      impact_quote: quoteFor("impact"),
+      school_node: me.school ?? "",
+      company_node: me.company ?? "",
+      craft_node: c?.aspiration ? phraseOf(ASP_PHRASE, c.aspiration, "aspiration") : "",
+      conviction_groups: groups.join("; "),
+      inbound_count: String(mine.in.length),
+      mutual_with: mutualIds.join("; "),
+      doppelganger: dopp?.other ?? "",
+      doppelganger_score: dopp ? String(Number(dopp.score.toFixed(4))) : "",
+      pinned_match: ov?.pinned_match ?? "",
+      // `hide` is a one-way door: a hidden guest has no row at all, so this column is the
+      // echo of an override that could only ever read false here.
+      hide: ov?.hide === true ? "true" : "",
+      host_notes: ov?.host_notes ?? "",
+      flags: [...g.flags, ...(c?.flags ?? [])].join("; "),
+      extraction_model: extractionModel,
+      match_provider: matchProvider,
+    };
+    for (let i = 0; i < 5; i++) {
+      const e = personEdges[i];
+      row[`match_${i + 1}`] = e ? `${e.targetId}|${e.strength ?? ""}|${e.via}` : "";
+    }
+    sheetRows.push(row);
   }
+
+  /* ---- 8b. write the sheet ---- */
+  writeFileSync(
+    ENRICHED_SHEET,
+    `${Papa.unparse(sheetRows, { columns: [...SHEET_COLUMNS], newline: "\n" })}\n`,
+    "utf8",
+  );
 
   /* ---- 9. graph.json ---- */
   const counts: Record<string, number> = {};
@@ -856,6 +1239,33 @@ async function main(): Promise<number> {
     `  person records ${records} · edges/record min ${Math.min(...edgeCounts)} avg ${avg.toFixed(1)} max ${Math.max(...edgeCounts)}`,
   );
   console.log(`  highlights: ${[...highlightHist].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(" · ")}`);
+  console.log(`  enrichment sheet → ${ENRICHED_SHEET} (${sheetRows.length} rows × ${SHEET_COLUMNS.length} columns)`);
+
+  /* the override summary — an override that nobody can see is an override nobody can undo */
+  if (overrides.size === 0) {
+    console.log(`  overrides: none (${existsSync(OVERRIDES_PATH) ? `${OVERRIDES_PATH} is header-only` : `no ${OVERRIDES_PATH}`})`);
+  } else {
+    const tagCount = [...overriddenFields.values()].reduce((a, b) => a + b.length, 0);
+    const pinned = ids.filter((id) => overrides.get(id)?.pinned_match).length;
+    console.log(
+      `  overrides [${OVERRIDES_PATH}]: ${overrides.size} row(s) → ${tagCount} tag replacement(s) on ` +
+        `${overriddenFields.size} person(s) · ${hiddenIds.size} hidden · ${pinned} pinned match(es)` +
+        (noopOverrides > 0 ? ` · ${noopOverrides} already agreed with the extraction (no-op)` : ""),
+    );
+    for (const [pid, fields] of overriddenFields) console.log(`    ${pid}: ${fields.join(", ")}`);
+    if (hiddenIds.size > 0) {
+      console.log(`    hidden (absent from every artifact): ${[...hiddenIds].join(", ")}`);
+      console.error(
+        `WARN: the emitted population is ${nodes.length}, not ${allGuests.length} — scripts/check-graph-emit.ts ` +
+          `(EXPECTED_PEOPLE) and scripts/audit-graph.ts (CSV-derived population) will report the difference ` +
+          `until the hidden guests are declared there too. That is the population gate working, not a bug.`,
+      );
+    }
+  }
+  if (pinMisses.length > 0) {
+    console.error(`WARN: ${pinMisses.length} pinned_match target(s) have no existing edge — NOT fabricated, order unchanged:`);
+    for (const m of pinMisses) console.error(`      ${m}`);
+  }
   if (rescued > 0) console.log(`  dignity floor: ${rescued} guest(s) linked on their motive/craft tag (no other thread existed)`);
   if (unknownTags.size > 0) console.error(`WARN: tags outside the phrase vocabulary, rendered as-is — ${[...unknownTags].join(", ")}`);
   if (src.traversedPairs) {

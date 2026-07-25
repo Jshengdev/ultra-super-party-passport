@@ -1,8 +1,9 @@
 /**
  * scripts/check-graph-emit.ts — the G-emit gate for the baked party artifacts.
  *
- * Reads ONLY what shipped (public/graph/**) — never the private inputs — because the
- * question this answers is "is the thing we are about to serve safe and honest?".
+ * Reads ONLY what shipped — `public/graph/**` plus the two COMMITTED sheet files
+ * (`data/graph-enriched.csv`, `data/graph-overrides.csv`) — never the private inputs,
+ * because the question this answers is "is the thing we are about to serve safe and honest?".
  *
  * It FAILS (exit 1) on:
  *   · the wrong population (nodes / person files !== the emitted people count, or !== 312)
@@ -19,11 +20,50 @@
  *   · meta.stages / meta.guestIds missing (the entry drop-zone reads both)
  *   · meta.matchProvider missing or outside {gateway, tfidf} (the artifact must name which
  *     vector provider produced the SEEKS matches, not just the DB's per-rel `_src`)
+ *   · the enrichment sheet (`data/graph-enriched.csv`): absent, a header that is not EXACTLY
+ *     the pinned column list, a row count that disagrees with the node count, or contact PII
+ *     of any shape — including wallet addresses, which no other tripwire in this repo covers
+ *   · the overrides sheet (`data/graph-overrides.csv`): a person_id that resolves to nobody
+ *     (a hidden person is the one legitimate absence), or a tag outside the CLOSED conviction
+ *     vocabularies. An override nobody can bind is an edit that silently did nothing.
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
+import Papa from "papaparse";
+import { MOTIVES, MISSIONS, IMPACTS, ASPIRATIONS } from "../lib/conviction";
 
 const GRAPH = "public/graph/graph.json";
 const PEOPLE_DIR = "public/graph/people";
+const SHEET = "data/graph-enriched.csv";
+/** SAME resolution the emitter uses, so the gate always inspects the file that produced the artifacts. */
+const OVERRIDES = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.csv";
+
+/**
+ * The pinned sheet contract, re-declared here on purpose (same reasoning as
+ * scripts/audit-graph.ts's TAG_PHRASE table): a gate that imports the subject's own constant
+ * proves only that the subject agrees with itself. If emit-graph.ts moves a column, this
+ * fails loudly instead of silently ratifying the move.
+ */
+const SHEET_COLUMNS = [
+  "person_id", "guest_id", "name", "title", "company", "is_freelance", "school", "class_year",
+  "hometown", "instagram",
+  "motive", "mission", "impact", "aspiration", "open_seeker",
+  "motive_quote", "mission_quote", "impact_quote",
+  "school_node", "company_node", "craft_node",
+  "conviction_groups",
+  "match_1", "match_2", "match_3", "match_4", "match_5",
+  "inbound_count", "mutual_with", "doppelganger", "doppelganger_score",
+  "pinned_match", "hide", "host_notes",
+  "flags", "extraction_model", "match_provider",
+];
+const OVERRIDE_COLUMNS = [
+  "person_id", "motive", "mission", "impact", "aspiration", "pinned_match", "hide", "host_notes",
+];
+const OVERRIDE_VOCAB: Record<string, readonly string[]> = {
+  motive: MOTIVES,
+  mission: MISSIONS,
+  impact: IMPACTS,
+  aspiration: ASPIRATIONS,
+};
 
 const fail = (m: string) => {
   console.error("FAIL:", m);
@@ -248,11 +288,108 @@ for (const f of files) {
   }
 }
 
+/* ---- the enrichment sheet: the human-editable station between pipeline and artifacts ---- */
+if (!existsSync(SHEET)) fail(`${SHEET} does not exist — run scripts/emit-graph.ts first`);
+const sheetRaw = readFileSync(SHEET, "utf8");
+
+/**
+ * The sheet is a working document that gets opened in a spreadsheet, mailed around and
+ * pasted into chat threads. Everything the artifacts are forbidden to carry, it is forbidden
+ * to carry — plus wallet addresses, which are contact-shaped in exactly the way that matters
+ * and which no other tripwire in this repo covers.
+ */
+const SHEET_PII: [string, RegExp][] = [
+  ...CONTACT_PII,
+  ["evm wallet", /\b0x[a-fA-F0-9]{40}\b/],
+  ["btc wallet", /\bbc1[ac-hj-np-z02-9]{11,71}\b/],
+  ["btc wallet", /\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b/],
+];
+for (const [label, re] of SHEET_PII) {
+  const hit = re.exec(sheetRaw);
+  if (hit) fail(`PII tripwire hit in ${SHEET}: ${label} at byte ${hit.index} — value withheld`);
+}
+
+const sheet = Papa.parse<Record<string, string>>(sheetRaw, { header: true, skipEmptyLines: true });
+if (sheet.errors.length > 0) {
+  fail(`${SHEET} is unparseable: row ${sheet.errors[0].row} — ${sheet.errors[0].message}`);
+}
+const sheetHeader = sheet.meta.fields ?? [];
+if (sheetHeader.join(",") !== SHEET_COLUMNS.join(",")) {
+  const missing = SHEET_COLUMNS.filter((c) => !sheetHeader.includes(c));
+  const extra = sheetHeader.filter((c) => !SHEET_COLUMNS.includes(c));
+  fail(
+    `${SHEET} header is not the pinned column list` +
+      (missing.length ? ` — missing [${missing.join(", ")}]` : "") +
+      (extra.length ? ` — unexpected [${extra.join(", ")}]` : "") +
+      (missing.length || extra.length ? "" : " — same columns, wrong order"),
+  );
+}
+if (sheet.data.length !== g.nodes.length) {
+  fail(`${SHEET} has ${sheet.data.length} row(s) but the graph has ${g.nodes.length} node(s)`);
+}
+const sheetIds = new Set<string>();
+for (const [i, r] of sheet.data.entries()) {
+  const id = (r.person_id ?? "").trim();
+  if (!id) fail(`${SHEET} row ${i + 2} has no person_id`);
+  if (sheetIds.has(id)) fail(`${SHEET} row ${i + 2}: duplicate person_id "${id}"`);
+  sheetIds.add(id);
+  if (!ids.has(id)) fail(`${SHEET} row ${i + 2}: person_id "${id}" is not a node in graph.json`);
+}
+
+/* ---- the overrides sheet: sparse, hand-managed, and never allowed to bind to nobody ---- */
+let overrideRows = 0;
+if (existsSync(OVERRIDES)) {
+  const ovRaw = readFileSync(OVERRIDES, "utf8");
+  for (const [label, re] of SHEET_PII) {
+    const hit = re.exec(ovRaw);
+    if (hit) fail(`PII tripwire hit in ${OVERRIDES}: ${label} at byte ${hit.index} — value withheld`);
+  }
+  const ov = Papa.parse<Record<string, string>>(ovRaw, { header: true, skipEmptyLines: true });
+  if (ov.errors.length > 0) {
+    fail(`${OVERRIDES} is unparseable: row ${ov.errors[0].row} — ${ov.errors[0].message}`);
+  }
+  const ovHeader = (ov.meta.fields ?? []).filter((h) => h !== "");
+  const badCols = ovHeader.filter((c) => !OVERRIDE_COLUMNS.includes(c));
+  if (badCols.length > 0) fail(`${OVERRIDES} has column(s) outside the contract: ${badCols.join(", ")}`);
+
+  for (const [i, r] of ov.data.entries()) {
+    const line = i + 2;
+    const id = (r.person_id ?? "").trim();
+    const hidden = ["true", "1", "yes", "y"].includes((r.hide ?? "").trim().toLowerCase());
+    if (!id) {
+      if (OVERRIDE_COLUMNS.some((c) => (r[c] ?? "").trim() !== "")) fail(`${OVERRIDES} line ${line} sets values but names no person_id`);
+      continue;
+    }
+    overrideRows += 1;
+    // A hidden person is legitimately absent from every artifact; anyone else must resolve.
+    if (!ids.has(id) && !hidden) {
+      fail(`${OVERRIDES} line ${line}: person_id "${id}" resolves to no node in graph.json (and is not hidden)`);
+    }
+    if (ids.has(id) && hidden) {
+      fail(`${OVERRIDES} line ${line}: "${id}" is marked hide=true but still shipped as a node`);
+    }
+    for (const [col, vocab] of Object.entries(OVERRIDE_VOCAB)) {
+      const v = (r[col] ?? "").trim();
+      if (v !== "" && !vocab.includes(v)) {
+        fail(`${OVERRIDES} line ${line}: ${col}="${v}" is outside the closed vocabulary (${vocab.length} allowed values)`);
+      }
+    }
+    const pin = (r.pinned_match ?? "").trim();
+    if (pin !== "" && !ids.has(pin)) {
+      fail(`${OVERRIDES} line ${line}: pinned_match "${pin}" is not a node in graph.json`);
+    }
+  }
+}
+
 console.log(
   `emit OK: ${g.nodes.length} nodes, ${g.edges.length} edges, ${files.length} person files ` +
     `(graph.json ${(raw.length / 1024).toFixed(0)}KB · edges/record min ${minEdges} avg ${(edgeTotal / files.length).toFixed(1)} · ` +
     `highlights/record min ${minHighlights} avg ${(highlightTotal / files.length).toFixed(1)} · ` +
     `${numericClaims} numeric claims, none zero, no group of one)`,
+);
+console.log(
+  `sheet OK: ${SHEET} ${sheet.data.length} rows × ${sheetHeader.length} pinned columns, no contact PII · ` +
+    `${OVERRIDES} ${overrideRows === 0 ? "header-only (no overrides in force)" : `${overrideRows} override row(s), all resolved and in-vocabulary`}`,
 );
 if (handleMentions > 0) {
   console.log(
