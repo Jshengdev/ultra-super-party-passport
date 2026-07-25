@@ -7,9 +7,10 @@
  * they are its backend, and ours is richer: 312 guests with convictions, seek
  * matches and receipts, baked to `public/graph/*` by the v2 pipeline.
  *
- * Group = creative motive. That is what this room already colours by, and it is
+ * Group = creative motive. That is what this room already clusters by, and it is
  * the value-cloud the product is actually about — school buckets would be a
- * shallower cut of the same people.
+ * shallower cut of the same people. The field itself is swappable in exactly
+ * one place: THE GROUPING SEAM, below the RoomNode shape.
  */
 
 export type Person = {
@@ -73,6 +74,44 @@ export interface RoomNode {
   favorite?: string | null;
 }
 
+/* ===========================================================================
+ * THE GROUPING SEAM — the ONE place that decides what clusters the room.
+ *
+ * Change `GROUP_BY` here and the whole room re-routes with it: group ids and
+ * names (derived from the answer text), the cluster layout and radii
+ * (sheetLayout buckets people by `groupId` and sizes each cloud by its share),
+ * the boards under each cloud, the folding rule below, and the name-label
+ * tints — sheet.ts keys those off the CLUSTER INDEX, never off a field name,
+ * precisely so a swap here carries them along. Nowhere else in the scene names
+ * the grouping field.
+ *
+ * What must NOT follow this seam:
+ *  · `GuestDetails.group` — that is a CLAIM about what a person answered, not
+ *    about where the layout put them. It reads `motive` directly and must keep
+ *    doing so, so that a folded person's stamp still claims nothing (below).
+ *  · `Person.subId` — the craft subsection is the person's OWN `asp` tag, and a
+ *    labelled sub-cluster is its own separate claim.
+ *
+ * `FOLD_BY` is the second answer used to PLACE people who left `GROUP_BY`
+ * blank (26 of the 312 never answered the motive question): they join the cloud
+ * that people sharing their `FOLD_BY` answer most often chose. It has to name a
+ * DIFFERENT field from `GROUP_BY` — folding a field onto itself is a no-op, and
+ * every unanswered person would land in `biggest` instead.
+ * ======================================================================== */
+
+/** The free-text answers a person carries — any one of them could group a room. */
+type GroupingField = "motive" | "mission" | "asp" | "school" | "company" | "hometown";
+
+/** THE grouping field. This is the swap. */
+const GROUP_BY: GroupingField = "motive";
+/** The layout fallback for people who left GROUP_BY blank. Must differ from it. */
+const FOLD_BY: GroupingField = "mission";
+
+/** the answer that decides which cloud a person belongs to ("" = never answered) */
+const groupKey = (n: RoomNode): string => (n[GROUP_BY] ?? "").trim();
+/** the answer that decides where an unanswered person is FOLDED ("" = none) */
+const foldKey = (n: RoomNode): string => (n[FOLD_BY] ?? "").trim();
+
 /* Group names ship FULL — no character cap. The sheet wraps an inscription
    onto whole-word lines (GraphSheet.bakeNames), and the boards only ever
    render the focused PERSON's name, so nothing needs the old 16-char clamp. */
@@ -87,47 +126,48 @@ export class RoomAdapter implements GraphAdapter {
   private _details: Record<string, Partial<GuestDetails>> = {};
 
   constructor(nodes: RoomNode[]) {
-    /* 26 guests never answered the motive question. A cloud of "unplaced" is
-     * both ugly and uninformative, so they are FOLDED into the room by their
-     * aspiration — placed beside the people doing the same kind of work.
+    /* 26 guests never answered the motive question (whatever GROUP_BY names, a
+     * blank answer is possible). A cloud of "unplaced" is both ugly and
+     * uninformative, so they are FOLDED into the room by their FOLD_BY answer —
+     * placed beside the people doing the same kind of work.
      *
      * This is a LAYOUT placement, not a claim: nothing renders "their motive is
      * X" for these people, because we do not know it. If a surface ever wants to
      * assert a motive, it must read `motive` itself and find it empty. */
-    const motiveByAsp = new Map<string, Map<string, number>>();
+    const groupByFold = new Map<string, Map<string, number>>();
     for (const n of nodes) {
-      const m = (n.motive ?? "").trim();
-      const a = (n.mission ?? "").trim();
-      if (!m || !a) continue;
-      const row = motiveByAsp.get(a) ?? new Map<string, number>();
-      row.set(m, (row.get(m) ?? 0) + 1);
-      motiveByAsp.set(a, row);
+      const g = groupKey(n);
+      const f = foldKey(n);
+      if (!g || !f) continue;
+      const row = groupByFold.get(f) ?? new Map<string, number>();
+      row.set(g, (row.get(g) ?? 0) + 1);
+      groupByFold.set(f, row);
     }
-    const commonest = (a: string): string | null => {
-      const row = motiveByAsp.get(a);
+    const commonest = (f: string): string | null => {
+      const row = groupByFold.get(f);
       if (!row) return null;
       return [...row.entries()].sort((x, y) => y[1] - x[1])[0]?.[0] ?? null;
     };
-    // the largest motive, used as the last resort so nobody is left stranded
-    const tallyMotive = new Map<string, number>();
+    // the largest cloud, used as the last resort so nobody is left stranded
+    const tallyGroup = new Map<string, number>();
     for (const n of nodes) {
-      const m = (n.motive ?? "").trim();
-      if (m) tallyMotive.set(m, (tallyMotive.get(m) ?? 0) + 1);
+      const g = groupKey(n);
+      if (g) tallyGroup.set(g, (tallyGroup.get(g) ?? 0) + 1);
     }
-    const biggest = [...tallyMotive.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "the room";
+    const biggest = [...tallyGroup.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "the room";
 
-    const byMotive = new Map<string, RoomNode[]>();
+    const byKey = new Map<string, RoomNode[]>();
     for (const n of nodes) {
-      const own = (n.motive ?? "").trim();
-      const key = own || commonest((n.mission ?? "").trim()) || biggest;
-      const list = byMotive.get(key);
+      const own = groupKey(n);
+      const key = own || commonest(foldKey(n)) || biggest;
+      const list = byKey.get(key);
       if (list) list.push(n);
-      else byMotive.set(key, [n]);
+      else byKey.set(key, [n]);
     }
 
     const total = Math.max(1, nodes.length);
     // biggest cloud first, so the largest inscription lands nearest the centre
-    const ordered = [...byMotive.entries()].sort((a, b) => b[1].length - a[1].length);
+    const ordered = [...byKey.entries()].sort((a, b) => b[1].length - a[1].length);
 
     for (const [key, members] of ordered) {
       const id = key.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "unplaced";

@@ -9,9 +9,46 @@ import type { GraphAdapter, RoomEdge, RoomEdgeType } from "./adapter";
 
 const CREAM = "#f7f6f4";
 const INK = "26,25,24";
+const INK_RGB = INK.split(",").map(Number); // the same charcoal, as channels
 const SEG_OFF = `rgba(${INK},0.02)`; // --seg-off, exactly as tokened
 const GLOW_SCALE = 0.34;
 const GLOW_PAD = 26; // board-space px of bleed around the glow blit
+
+/* ---- name-label tints ----------------------------------------------------
+   Every dot's name is painted in ink that leans toward its CLUSTER's film hue:
+   enough colour to read the groupings from across the room, never enough to
+   read as coloured text. The hues are Teri's --usp-spectrum-* scale, handed in
+   at runtime by PeplGraph (canvas 2D can't follow var(), same story as the
+   fonts and the thread hues) — nothing here invents a hex, and an unresolvable
+   palette simply leaves every label at pure ink.
+
+   DEEPEN first, then MIX toward the ink: the spectrum is high-lightness by
+   design (it has to read as glass on the cream), so mixing it in raw would lift
+   the label off the ground and cost contrast that 8.5px type cannot spare.
+
+   Measured on the cream at full label alpha: plain ink reads 3.83:1, a tinted
+   label 3.10–3.26:1 — the cost of leaning charcoal toward a pastel, and the
+   budget these two numbers are tuned against. Raising either one starts to
+   read as coloured text; lowering them loses the grouping at a glance. */
+const TINT_DEEPEN = 0.55; // the pastel token, taken down to its deep end
+const TINT_MIX = 0.3; // how far the label ink leans off charcoal toward it
+
+/** #rgb / #rrggbb / rgb() / rgba() → channels; null when it is not a colour we
+    can read, so the caller keeps pure ink instead of guessing one. */
+function parseRgb(c: string): [number, number, number] | null {
+  const s = c.trim();
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(s)?.[1];
+  if (hex) {
+    const h = hex.length === 3 ? hex.replace(/./g, (d) => d + d) : hex;
+    return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
+  }
+  const fn = /^rgba?\(([^)]+)\)$/i.exec(s)?.[1];
+  if (fn) {
+    const p = fn.split(/[,\s/]+/).map((v) => parseFloat(v));
+    if (p.length >= 3 && p.slice(0, 3).every((v) => Number.isFinite(v))) return [p[0], p[1], p[2]];
+  }
+  return null;
+}
 
 export type SheetFrame = {
   t: number;
@@ -55,6 +92,11 @@ export class GraphSheet {
       (canvas can't follow var(), same story as the fonts). Empty string =
       token missing → that type simply doesn't draw. Never invent a hex. */
   edgeHues: Record<RoomEdgeType, string> = { school: "", company: "", seek: "", why: "" };
+  /** The spectrum the name labels are tinted from — set by PeplGraph from the
+      live tokens. Empty (or unparseable) → every label stays pure ink. */
+  labelSpectrum: string[] = [];
+  /** per-cluster "r,g,b" label ink, baked with the layout — see bakeLabelTints */
+  private labelTints: string[] = [];
 
   constructor(private adapter: GraphAdapter, private edges: RoomEdge[] = []) {
     this.canvas = document.createElement("canvas");
@@ -125,7 +167,42 @@ export class GraphSheet {
       return c;
     });
     this.bakeNames();
+    this.bakeLabelTints();
     return true;
+  }
+
+  /* Per-CLUSTER label ink, baked once with the layout — the draw loop only
+     indexes a string, so 312 names cost no more than they did.
+
+     Keyed on the cluster INDEX and never on a data field, so it follows the
+     grouping seam (adapter.ts GROUP_BY) wherever that points: regroup the room
+     and the tints regroup with it. Folded people — the ones who answered
+     nothing and were placed by the layout — take the tint of the cloud they
+     stand in, exactly as they take its position. It is an affordance for
+     reading the room, not a claim about them; the claim surfaces still read
+     `motive` and still find it empty. */
+  bakeLabelTints() {
+    const L = this.layout;
+    if (!L) return;
+    const pal: [number, number, number][] = [];
+    for (const c of this.labelSpectrum) {
+      const p = parseRgb(c);
+      if (p) pal.push(p);
+    }
+    if (!pal.length) {
+      this.labelTints = [];
+      return;
+    }
+    /* walk the film ring in thirds: clusters sit on a ring in index order, so
+       neighbours must not land on neighbouring hues. (A palette divisible by 3
+       would cycle after two steps — walk it one at a time instead.) */
+    const stride = pal.length % 3 === 0 ? 1 : 3;
+    this.labelTints = L.clusters.map((_, ci) => {
+      const hue = pal[(ci * stride) % pal.length];
+      const ch = (k: number) =>
+        Math.round(INK_RGB[k] * (1 - TINT_MIX) + hue[k] * TINT_DEEPEN * TINT_MIX);
+      return `${ch(0)},${ch(1)},${ch(2)}`;
+    });
   }
 
   /* click targets for the serif group names, in sheet px */
@@ -325,11 +402,14 @@ export class GraphSheet {
       }
 
       /* person-name label — placed at layout time so rest labels
-         don't collide; culled ones return on hover/focus */
+         don't collide; culled ones return on hover/focus. The ink carries
+         its cluster's tint at every alpha (rest, lens, hover, focus all ride
+         the same `la`), so a name never changes colour when it brightens. */
       const la = f.labelFor(i);
       if (la > 0.01) {
         ctx.textAlign = d.labelSide === 1 ? "left" : "right";
-        ctx.fillStyle = `rgba(${INK},${(0.55 * la).toFixed(3)})`;
+        const tint = this.labelTints[d.clusterIndex] ?? INK;
+        ctx.fillStyle = `rgba(${tint},${(0.55 * la).toFixed(3)})`;
         const lx =
           d.labelSide === 1 ? x + d.baseR * s * 1.8 + 5 : x - d.baseR * s * 1.8 - 5;
         ctx.fillText(d.person.name, lx, y + d.labelDy + 0.5);
