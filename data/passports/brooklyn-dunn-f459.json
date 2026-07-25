@@ -1,0 +1,69 @@
+{
+  "personId": "brooklyn-dunn-f459",
+  "name": "Brooklyn Dunn",
+  "line2": "University of Oregon ‘26 , MA USC Annenberg starting August",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You and Grace Carr share a passion for design that could spark inspiring conversations and creative collaboration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Brooklyn Dunn",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam because you both share a lifelong passion for film and television as a medium of connection and creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Brooklyn Dunn",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Oregon ‘26 , MA USC Annenberg starting August",
+    "major": "",
+    "grad_year": "",
+    "position": "Art direction",
+    "company": "",
+    "belief": "I love being creative and telling stories. As a child I was always fascinated with TV and film, I am passionate about it and consider it to be one of my top hobbies. I watch everything from reality television to foreign films and can’t wait to help tell more stories.",
+    "working_on": "I graduated in Advertising and PR and want to pursue and art direction roll weather that be through marketing, graphic design, or social media."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to weave creativity into narratives, transforming your childhood fascination into impactful storytelling through visual arts.",
+  "gradient": {
+    "seed": 2235466556,
+    "stops": [
+      {
+        "color": "hsl(206 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(130 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

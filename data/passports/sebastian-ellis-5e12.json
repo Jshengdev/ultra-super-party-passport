@@ -1,0 +1,73 @@
+{
+  "personId": "sebastian-ellis-5e12",
+  "name": "Sebastian Ellis",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "debora-soegiarto-b009",
+      "name": "Debora Soegiarto",
+      "why": "You should meet Debora Soegiarto because she shares your passion for Paramount and has some fascinating insights about its latest projects.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Debora Soegiarto",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "dlency-zheng-93dc",
+      "name": "Dlency Zheng",
+      "why": "You should meet Dlency Zheng, as you both share a connection to Paramount and could exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Dlency Zheng",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UGA",
+    "major": "",
+    "grad_year": "",
+    "position": "Post Production Intern",
+    "company": "Paramount",
+    "belief": "The thrill of getting a picture and story out of my head and onto a silver screen - the basic fun of filmmaking.",
+    "working_on": "To be a director-writer-actor (the full Clint Eastwood)"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform your imaginative visions into shared experiences, finding joy in the creative process of storytelling.",
+  "gradient": {
+    "seed": 619492319,
+    "stops": [
+      {
+        "color": "hsl(52 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(173 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

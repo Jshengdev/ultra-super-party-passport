@@ -1,0 +1,73 @@
+{
+  "personId": "rafa-padilla-9c7e",
+  "name": "Rafa Padilla",
+  "line2": "DreamWorks",
+  "find": [
+    {
+      "personId": "george-7247",
+      "name": "George",
+      "why": "You’ll really enjoy meeting George; he has fascinating insights about DreamWorks that align perfectly with your experiences.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "George",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    },
+    {
+      "personId": "alexandra-donsky-ed6c",
+      "name": "Alexandra Donsky",
+      "why": "You should meet Alexandra Donsky because her insights from DreamWorks could spark some exciting conversations about our favorite films and projects.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Alexandra Donsky",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UofU",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Software Intern",
+    "company": "DreamWorks",
+    "belief": "Computer Graphics",
+    "working_on": "Technical Supervisor/CTO, and founding a studio."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for innovation in computer graphics, seeking to shape the future of visual storytelling through technology.",
+  "gradient": {
+    "seed": 3369643966,
+    "stops": [
+      {
+        "color": "hsl(292 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(93 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

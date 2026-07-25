@@ -1,0 +1,73 @@
+{
+  "personId": "ethan-buhain-4a1a",
+  "name": "Ethan Buhain",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "sebastian-ellis-5e12",
+      "name": "Sebastian Ellis",
+      "why": "You should meet Sebastian Ellis, as you both have a connection to Paramount that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Ethan Buhain",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "debora-soegiarto-b009",
+      "name": "Debora Soegiarto",
+      "why": "You should meet Debora Soegiarto because you both share a connection to Paramount, which could spark some fascinating conversations and insights.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Ethan Buhain",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Debora Soegiarto",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cal Poly Pomona",
+    "major": "",
+    "grad_year": "",
+    "position": "Product Designer",
+    "company": "Paramount",
+    "belief": "My love for existing properties and animation.",
+    "working_on": "Creative director or VP of design"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to breathe new life into familiar narratives, transforming them through your unique artistic vision and passion.",
+  "gradient": {
+    "seed": 636970515,
+    "stops": [
+      {
+        "color": "hsl(113 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(308 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

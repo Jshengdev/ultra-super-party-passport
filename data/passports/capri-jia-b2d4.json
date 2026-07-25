@@ -1,0 +1,69 @@
+{
+  "personId": "capri-jia-b2d4",
+  "name": "Capri Jia",
+  "line2": "Tiktok inc",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Capri Jia",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You would love to meet Connor James, as both of you share a strong conviction in the power of bringing joy to others.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "watching movies",
+      "path_receipt": [
+        {
+          "from": "Capri Jia",
+          "rel": "SHARES_VALUE",
+          "to": "Connor James"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creator manager",
+    "company": "Tiktok inc",
+    "belief": "I’ve been a movie/show lover since I was little and I learned broadcasting, acting and facing growing up and was a constant on tv shows. I was drawn to short video platforms in undergrad and worked in TikTok since graduating masters!",
+    "working_on": "Being able to spread positivity thru content"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to share joy and connection, using your passion for storytelling to uplift others through engaging content.",
+  "gradient": {
+    "seed": 3775689478,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(340 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

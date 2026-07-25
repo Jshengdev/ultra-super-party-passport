@@ -1,0 +1,73 @@
+{
+  "personId": "morgan-seftel-e035",
+  "name": "Morgan Seftel",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You would really enjoy meeting Junior Contreras, as you both share a passion for acting that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Morgan Seftel",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share a connection to USC and can reminisce about your experiences there together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Morgan Seftel",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Actor",
+    "company": "",
+    "belief": "Acting since I was a child",
+    "working_on": "Oscar"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling, seeking connection through the transformative power of performance that has shaped your identity.",
+  "gradient": {
+    "seed": 3850103059,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(167 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

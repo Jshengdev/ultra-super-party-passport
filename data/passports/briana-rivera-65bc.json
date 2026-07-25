@@ -1,0 +1,69 @@
+{
+  "personId": "briana-rivera-65bc",
+  "name": "Briana Rivera",
+  "line2": "Warner Bros Discovery",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel, as you both share a connection to Warner Bros Discovery and can exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Warner Bros Discovery",
+      "path_receipt": [
+        {
+          "from": "Briana Rivera",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for connecting people aligns perfectly with your own conviction on the impact of genuine relationships.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-connect-people",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Briana Rivera",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Florida",
+    "major": "",
+    "grad_year": "",
+    "position": "Current Programming Intern",
+    "company": "Warner Bros Discovery",
+    "belief": "Had grown up around the arts, but also had a lot of struggles growing up and wanted to tell those experiences in stories to connect to others.",
+    "working_on": "I would love to pursue more creative roles as a director writer producer or actor, while also increasing my experiences on the studio side as an executive."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to transform personal struggles into compelling narratives, seeking connection and understanding through the art of storytelling.",
+  "gradient": {
+    "seed": 3441099237,
+    "stops": [
+      {
+        "color": "hsl(339 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(29 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(263 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "scott-eller-da52",
+  "name": "Scott Eller",
+  "line2": "Temple University",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi because you both share an interest in the undecided and can exchange valuable insights on navigating that experience.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Scott Eller",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-macilvaine-195f",
+      "name": "Aidan MacIlvaine",
+      "why": "You should meet Aidan MacIlvaine because he has fascinating insights about Temple University that I think you'll both enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "Temple University",
+      "path_receipt": [
+        {
+          "from": "Scott Eller",
+          "rel": "STUDIES_AT",
+          "to": "Temple University"
+        },
+        {
+          "from": "Aidan MacIlvaine",
+          "rel": "STUDIES_AT",
+          "to": "Temple University"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Temple University",
+    "major": "",
+    "grad_year": "",
+    "position": "Social media and production",
+    "company": "",
+    "belief": "Just the excitement and what goes into making something successful and seeing your work come to life",
+    "working_on": "Scale my own business and be my own boss"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire for autonomy and fulfillment, seeking to manifest your vision and celebrate the fruits of your creativity.",
+  "gradient": {
+    "seed": 309245348,
+    "stops": [
+      {
+        "color": "hsl(332 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(218 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

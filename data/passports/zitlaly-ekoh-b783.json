@@ -1,0 +1,69 @@
+{
+  "personId": "zitlaly-ekoh-b783",
+  "name": "Zitlaly Ekoh",
+  "line2": "Warner brothers",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You would enjoy meeting YU-SHENG CHIEN because you both share a passion for composing music and can exchange creative ideas.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Zitlaly Ekoh",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "harshini-kaparaju-51e6",
+      "name": "Harshini Kaparaju",
+      "why": "You'd enjoy meeting Harshini because she shares your passion for collaboration in creative projects and has some inspiring ideas to spark your imagination.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "The ability to be creative and collaborate with other creative minded people. It is exciting to work on something that will be digested and interpreted by all kinds of people.",
+      "path_receipt": [
+        {
+          "from": "Harshini Kaparaju",
+          "rel": "SHARES_VALUE",
+          "to": "Zitlaly Ekoh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSUN",
+    "major": "",
+    "grad_year": "",
+    "position": "Sound design intern",
+    "company": "Warner brothers",
+    "belief": "How it’s a collaborative creative art form",
+    "working_on": "Be a sound designer on a feature"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize diverse talents, crafting an immersive experience that resonates deeply with audiences and creators alike.",
+  "gradient": {
+    "seed": 3200992721,
+    "stops": [
+      {
+        "color": "hsl(268 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(7 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

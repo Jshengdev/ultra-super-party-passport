@@ -1,0 +1,69 @@
+{
+  "personId": "ezequiel-castaneda-00c0",
+  "name": "Ezequiel Castaneda",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "maryam-rahimie-cac2",
+      "name": "Maryam Rahimie",
+      "why": "You would love to meet Maryam, as she shares your passion for photography and has some incredible insights to share.",
+      "basis_kind": "same_work",
+      "via": "photographer",
+      "path_receipt": [
+        {
+          "from": "Ezequiel Castaneda",
+          "rel": "DOES",
+          "to": "photographer"
+        },
+        {
+          "from": "Maryam Rahimie",
+          "rel": "DOES",
+          "to": "photographer"
+        }
+      ]
+    },
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You’d enjoy meeting Madilyn Palosi because her passion for elevating underdogs aligns perfectly with your shared mission and commitment to meaningful change.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-elevate-underdogs",
+      "match_belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+      "path_receipt": [
+        {
+          "from": "Ezequiel Castaneda",
+          "rel": "SHARES_VALUE",
+          "to": "Madilyn Palosi"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Photographer",
+    "company": "",
+    "belief": "The people who contribute behind the scenes that aren’t always in the spotlight.",
+    "working_on": "To make Mexican music/artists mainstream outside of the Latino music industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to amplify hidden talents, ensuring their rich contributions are celebrated and recognized on a broader stage.",
+  "gradient": {
+    "seed": 877294834,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(147 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(49 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

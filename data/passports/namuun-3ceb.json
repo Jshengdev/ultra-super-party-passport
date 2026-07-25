@@ -1,0 +1,69 @@
+{
+  "personId": "namuun-3ceb",
+  "name": "Namuun",
+  "line2": "The Gotham Group",
+  "find": [
+    {
+      "personId": "jason-dement-309a",
+      "name": "Jason Dement",
+      "why": "You should meet Jason Dement because you both have exciting insights to share from your experiences with The Gotham Group.",
+      "basis_kind": "same_work",
+      "via": "The Gotham Group",
+      "path_receipt": [
+        {
+          "from": "Namuun",
+          "rel": "WORKS_AT",
+          "to": "The Gotham Group"
+        },
+        {
+          "from": "Jason Dement",
+          "rel": "WORKS_AT",
+          "to": "The Gotham Group"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava because her insights on how entertainment connects diverse cultures could spark a fascinating conversation between you both.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Namuun",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Vanderbilt",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "The Gotham Group",
+    "belief": "Growing up in Mongolia, global entertainment, especially movies and TV, was one of the main ways I learned English and discovered the world beyond my own. At first, I simply loved watching stories, but over time I became curious about what happens behind the scenes: how ideas become films and shows that connect with people. That curiosity is what drew me to the entertainment industry.\n\nThis summer at The Gotham Group, I've been reading script coverage, which has completely changed the way I watch films, and I've also had the chance to work on an independent web UX design project. It made me realize that whether you're designing a digital product or developing a film, you're ultimately thinking about how people experience something—what captures their attention, what makes them feel connected, and what stays with them. I really enjoy being around that mix of storytelling, psychology, creativity, and collaboration, and that's what keeps pulling me toward entertainment.",
+    "working_on": "As a Cognitive Studies and Cinema & Media Arts major, I'm fascinated by both how people think and how stories are created and told. That's why I'm currently exploring UX/UI and product design within the entertainment industry. My goal is to create digital experiences that help people discover, enjoy, and connect with any sorts of entertainment, whether that's through streaming platforms, creative tools, or other entertainment products. I'm still early in my journey, but I know I want to work at the intersection of storytelling, technology, and human-centered design."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to bridge cultural gaps through storytelling, crafting meaningful connections that enrich people's experiences with entertainment.",
+  "gradient": {
+    "seed": 2839886881,
+    "stops": [
+      {
+        "color": "hsl(148 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(63 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

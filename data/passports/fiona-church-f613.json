@@ -1,0 +1,73 @@
+{
+  "personId": "fiona-church-f613",
+  "name": "fiona church",
+  "line2": "Sturdy Music Group",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet Yu-Sheng Chien, as you both share a passion for composing music that could lead to inspiring collaborations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "fiona church",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share a connection to USC and could have a great conversation about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "fiona church",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Label Coordinator",
+    "company": "Sturdy Music Group",
+    "belief": "Growing up playing music",
+    "working_on": "Getting to be involved in all areas of the music industry: Live, recordings, creative, etc."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep desire to weave together the diverse threads of your musical experiences, creating a holistic connection to your passion.",
+  "gradient": {
+    "seed": 1977772659,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(190 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

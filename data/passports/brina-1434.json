@@ -1,0 +1,73 @@
+{
+  "personId": "brina-1434",
+  "name": "brina",
+  "line2": "Cecred by Beyonce",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights on market-brand could spark some innovative ideas for your own projects.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "brina",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "joy-bae-76da",
+      "name": "Joy Bae",
+      "why": "You should meet Joy Bae because you both share a connection to UC Irvine and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UC Irvine",
+      "path_receipt": [
+        {
+          "from": "brina",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        },
+        {
+          "from": "Joy Bae",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Irvine",
+    "major": "",
+    "grad_year": "",
+    "position": "Influencer Marketing Intern",
+    "company": "Cecred by Beyonce",
+    "belief": "I love getting to connect with people!",
+    "working_on": "I would love to connect my work in partnerships within the entertainment industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to create meaningful relationships, believing that genuine connections can transform the entertainment landscape.",
+  "gradient": {
+    "seed": 2538806562,
+    "stops": [
+      {
+        "color": "hsl(140 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(73 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

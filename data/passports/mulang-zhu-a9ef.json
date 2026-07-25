@@ -1,0 +1,69 @@
+{
+  "personId": "mulang-zhu-a9ef",
+  "name": "Mulang Zhu",
+  "line2": "Netflix",
+  "find": [
+    {
+      "personId": "jessie-b-evans-35fa",
+      "name": "Jessie B. Evans",
+      "why": "You should meet Jessie B. Evans because she has fascinating insights about Netflix that you both will enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Mulang Zhu",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Jessie B. Evans",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    },
+    {
+      "personId": "tj-jalloh-8649",
+      "name": "TJ Jalloh",
+      "why": "You should meet TJ Jalloh because you both share a passionate conviction to preserve stories, making for a deeply enriching conversation.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-preserve-stories",
+      "match_belief": "Ever since middle school i’ve always been drawn to the arts and being able to artistically express myself. In middle school I had all the lead / supporting male roles in performing arts, whether it’s Seymore from Little Shop of Horrors, Benny from In the Heights, or Tin man from the Wiz. I was also a stepper. After Covid into highschool I stopped pursuing the arts and chased a path my parents wanted for me, engineering. I never felt truly free there honestly. As an artist i’m always looking for a means to express myself because when I don’t I feel like a caged bird. So I started expressing myself through poetry. I wrote my first poem for my English class to get some extra credit and it was probably the best decision i’ve ever made. I started writing more and more. Going into college still trying to pursue engineering I took my first chemistry class with a mix of engineering classes, and one acting class: THTR Fundamentals of Acting in order to fill up my credit hours. This was also another one of my greatest decisions I’ve ever made. In the midst of me failing chemistry and not enjoying engineering this class became my outlet, my source of happiness. I made the hard decision of switching out of the school of engineering, losing a scholarship to chase that dream. And now I am a poet, an actor, and a content creator because of that.",
+      "path_receipt": [
+        {
+          "from": "Mulang Zhu",
+          "rel": "SHARES_VALUE",
+          "to": "TJ Jalloh"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "NYU’ 26, Peabody Institute",
+    "major": "",
+    "grad_year": "",
+    "position": "Composer",
+    "company": "Netflix",
+    "belief": "To be able to create music for the purpose of contributing to a fuller story and tangible audience experience, and being able to work with so many creatives.",
+    "working_on": "Being a composer for film/TV."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to weave emotional depth into narratives, fostering connections between stories and audiences through your music.",
+  "gradient": {
+    "seed": 2263379819,
+    "stops": [
+      {
+        "color": "hsl(319 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(47 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(61 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "josie-fontana-e240",
+  "name": "Josie Fontana",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "sebastian-ellis-5e12",
+      "name": "Sebastian Ellis",
+      "why": "You should meet Sebastian Ellis because he shares your connection to Paramount and has some fascinating insights about the industry that you’d both enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Josie Fontana",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "jake-stalvey-935e",
+      "name": "Jake Stalvey",
+      "why": "You should meet Jake Stalvey because he shares your Emerson connection and has some fantastic stories from his time there.",
+      "basis_kind": "shared_context",
+      "via": "Emerson",
+      "path_receipt": [
+        {
+          "from": "Josie Fontana",
+          "rel": "STUDIES_AT",
+          "to": "Emerson"
+        },
+        {
+          "from": "Jake Stalvey",
+          "rel": "STUDIES_AT",
+          "to": "Emerson"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emerson",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Paramount",
+    "belief": "Chaos and the collaboration of creatives to build something new. It’s incredibly contagious.",
+    "working_on": "Writer/Director"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for the transformative power of collective creativity, finding joy in the unpredictable beauty of artistic collaboration.",
+  "gradient": {
+    "seed": 346043715,
+    "stops": [
+      {
+        "color": "hsl(240 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(347 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

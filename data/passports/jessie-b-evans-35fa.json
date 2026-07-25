@@ -1,0 +1,73 @@
+{
+  "personId": "jessie-b-evans-35fa",
+  "name": "Jessie B. Evans",
+  "line2": "Netflix",
+  "find": [
+    {
+      "personId": "mulang-zhu-a9ef",
+      "name": "Mulang Zhu",
+      "why": "You should meet Mulang Zhu because they have great insights on Netflix shows that you both love.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Jessie B. Evans",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Mulang Zhu",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    },
+    {
+      "personId": "natasha-do-valle-df2f",
+      "name": "Natasha do Valle",
+      "why": "You would enjoy meeting Natasha do Valle because you both share a connection to Northwestern and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Northwestern",
+      "path_receipt": [
+        {
+          "from": "Jessie B. Evans",
+          "rel": "STUDIES_AT",
+          "to": "Northwestern"
+        },
+        {
+          "from": "Natasha do Valle",
+          "rel": "STUDIES_AT",
+          "to": "Northwestern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Northwestern",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Netflix",
+    "belief": "Has always been a dream of mine since I was a little boy.",
+    "working_on": "To be a Media Mogul. Seriously. That’s always been the goal, since I was a little boy. I have video proof."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling and influence, seeking to shape narratives that resonate with others.",
+  "gradient": {
+    "seed": 1355024347,
+    "stops": [
+      {
+        "color": "hsl(186 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(218 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

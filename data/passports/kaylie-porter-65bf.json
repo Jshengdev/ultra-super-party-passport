@@ -1,0 +1,69 @@
+{
+  "personId": "kaylie-porter-65bf",
+  "name": "Kaylie Porter",
+  "line2": "UCSD",
+  "find": [
+    {
+      "personId": "roy-ding-e700",
+      "name": "Roy Ding",
+      "why": "You and Roy Ding both connect to a passion for environmental sustainability, making for an inspiring conversation about your shared commitment to our planet's future.",
+      "basis_kind": "same_work",
+      "via": "-",
+      "path_receipt": [
+        {
+          "from": "Kaylie Porter",
+          "rel": "DOES",
+          "to": "-"
+        },
+        {
+          "from": "Roy Ding",
+          "rel": "WORKING_ON",
+          "to": "-"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN, as both of you are passionate about making people feel seen, which could lead to an inspiring conversation.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Kaylie Porter",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "-",
+    "company": "",
+    "belief": "The way it involves almost every aspect of a persons life. We seek entertainment everywhere and there are people making and creating all of it. It’s such an impactful experience and career.",
+    "working_on": "I love film and TV in the most typical standard way and while loving it, noticed the lack of Black Americans in it. While it’s not the main thing on my mind everytime I watch something, it’s definitely a factor. I want to join my peers to bring more representation to people of color who are in this sector but also viewers."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to reshape narratives, ensuring that every viewer sees themselves reflected in the stories that shape culture.",
+  "gradient": {
+    "seed": 250311209,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(9 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

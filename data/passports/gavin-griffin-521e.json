@@ -1,0 +1,73 @@
+{
+  "personId": "gavin-griffin-521e",
+  "name": "Gavin Griffin",
+  "line2": "Coco Robotics",
+  "find": [
+    {
+      "personId": "dina-hashash-6fbe",
+      "name": "Dina Hashash",
+      "why": "You should meet Dina Hashash because you both share a Stanford connection and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Stanford",
+      "path_receipt": [
+        {
+          "from": "Gavin Griffin",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        },
+        {
+          "from": "Dina Hashash",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        }
+      ]
+    },
+    {
+      "personId": "maia-pak-9b28",
+      "name": "Maia Pak",
+      "why": "You should definitely meet Maia Pak; her insights from Stanford will resonate with your own experiences there, and you'll find common ground immediately.",
+      "basis_kind": "shared_context",
+      "via": "Stanford",
+      "path_receipt": [
+        {
+          "from": "Gavin Griffin",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        },
+        {
+          "from": "Maia Pak",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Stanford",
+    "major": "",
+    "grad_year": "",
+    "position": "Hardware Engineering Intern",
+    "company": "Coco Robotics",
+    "belief": "I’m ngl I work in robotics but my roomie told me abt this and it seems cool",
+    "working_on": "^^^"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your curiosity about new possibilities in robotics reflects a desire to explore and innovate, embracing the excitement of uncharted territories.",
+  "gradient": {
+    "seed": 336391138,
+    "stops": [
+      {
+        "color": "hsl(92 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(57 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

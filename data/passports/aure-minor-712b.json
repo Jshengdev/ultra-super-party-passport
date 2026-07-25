@@ -1,0 +1,73 @@
+{
+  "personId": "aure-minor-712b",
+  "name": "Aure Minor",
+  "line2": "LMU",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should definitely meet Saamya Patel, as you both share a passion for produce that could spark some delicious conversations.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Aure Minor",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You should meet Kate Honsik because you both share a connection to LMU and can exchange valuable experiences and insights from your time there.",
+      "basis_kind": "shared_context",
+      "via": "LMU",
+      "path_receipt": [
+        {
+          "from": "Aure Minor",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Producer",
+    "company": "",
+    "belief": "Love of stories with black peope",
+    "working_on": "Producing"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to amplify voices and narratives that resonate with your understanding of identity and community.",
+  "gradient": {
+    "seed": 4051030033,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(304 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

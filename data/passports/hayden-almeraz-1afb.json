@@ -1,0 +1,69 @@
+{
+  "personId": "hayden-almeraz-1afb",
+  "name": "Hayden Almeraz",
+  "line2": "The Gotham Group & IW Group",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both share the experience of being interns and can swap valuable insights and stories.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Hayden Almeraz",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because you both share a deep conviction in making people feel seen and valued in every interaction.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Hayden Almeraz",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cornell",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "The Gotham Group & IW Group",
+    "belief": "I have always been drawn to the relationship-driven and creative sides of storytelling, as well as the power of art to affect people and create meaningful change. I am especially interested in representation and in helping artists develop their voices, build their careers, and bring important stories to audiences.",
+    "working_on": "My ultimate goal is to work in talent representation as an agent or manager, building lasting relationships with artists and helping guide their careers across film, television, and other media."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are motivated by a deep desire to nurture creativity and foster connections, seeking to amplify voices that can inspire and transform.",
+  "gradient": {
+    "seed": 1199204662,
+    "stops": [
+      {
+        "color": "hsl(90 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(191 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

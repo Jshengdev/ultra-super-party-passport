@@ -1,0 +1,69 @@
+{
+  "personId": "emma-choy-17e5",
+  "name": "Emma Choy",
+  "line2": "Honua Music Group",
+  "find": [
+    {
+      "personId": "sanjna-kolli-49b6",
+      "name": "Sanjna Kolli",
+      "why": "You and Sanjna Kolli both share a passion for Honua Music Group, making it a perfect opportunity to exchange insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "Honua Music Group",
+      "path_receipt": [
+        {
+          "from": "Emma Choy",
+          "rel": "WORKS_AT",
+          "to": "Honua Music Group"
+        },
+        {
+          "from": "Sanjna Kolli",
+          "rel": "WORKS_AT",
+          "to": "Honua Music Group"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You should meet Isabel Soliman because her passion for keeping stories alive aligns beautifully with your own commitment to preserving meaningful narratives.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-keep-stories-alive",
+      "match_belief": "A passion for working with and advocating for artists! Storytelling is incredibly empowering, and I want to be a part of the teams that share great stories and make other people passionate about the arts.",
+      "path_receipt": [
+        {
+          "from": "Emma Choy",
+          "rel": "SHARES_VALUE",
+          "to": "Isabel Soliman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Pomona",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Honua Music Group",
+    "belief": "I am a multi-passionate with faith in the continuing impact made by creatives. With a strong desire to connect and be among the world's leading inspirators, I take to my camera, pen, and paint to develop my means of communication and contribute to this ever-evolving space. In growing my experiences–from volunteering at Sundance Film Festival to interning in music A&R–I understand the power of a creative community and would love to share in it with you!",
+    "working_on": "Through creative direction, development, or management, I hope to contribute to the production of untold narratives."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound belief in the transformative power of storytelling and the connections it fosters within a creative community.",
+  "gradient": {
+    "seed": 3434262380,
+    "stops": [
+      {
+        "color": "hsl(9 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(190 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(9 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

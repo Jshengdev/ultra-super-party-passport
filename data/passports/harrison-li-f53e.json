@@ -1,0 +1,69 @@
+{
+  "personId": "harrison-li-f53e",
+  "name": "Harrison Li",
+  "line2": "WIRL Management (Roster include producer like London on da track, GENT!, etc)",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi because you both share the experience of being undecided, which could lead to an inspiring conversation about your journeys.",
+      "basis_kind": "same_work",
+      "via": "undecided",
+      "path_receipt": [
+        {
+          "from": "Harrison Li",
+          "rel": "DOES",
+          "to": "undecided"
+        },
+        {
+          "from": "Amishi",
+          "rel": "DOES",
+          "to": "undecided"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share a strong conviction for building community and can inspire each other with your ideas.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Harrison Li",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Berklee College of Music",
+    "major": "",
+    "grad_year": "",
+    "position": "A&R",
+    "company": "WIRL Management (Roster include producer like London on da track, GENT!, etc)",
+    "belief": "My passion",
+    "working_on": "Bridge the gap between different cultures"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep yearning for connection and understanding, seeking to foster harmony and enrich lives through cultural exchange.",
+  "gradient": {
+    "seed": 4216747377,
+    "stops": [
+      {
+        "color": "hsl(208 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(97 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

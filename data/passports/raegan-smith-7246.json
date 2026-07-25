@@ -1,0 +1,69 @@
+{
+  "personId": "raegan-smith-7246",
+  "name": "Raegan smith",
+  "line2": "Baylor",
+  "find": [
+    {
+      "personId": "faith-codallos-f72f",
+      "name": "Faith Codallos",
+      "why": "You should meet Faith Codallos because her passion for cinematography aligns perfectly with yours, and you could exchange inspiring ideas about your favorite films.",
+      "basis_kind": "same_work",
+      "via": "cinematography",
+      "path_receipt": [
+        {
+          "from": "Raegan smith",
+          "rel": "DOES",
+          "to": "cinematography"
+        },
+        {
+          "from": "Faith Codallos",
+          "rel": "DOES",
+          "to": "cinematography"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam because her passion for inspiring action aligns perfectly with your shared conviction to create impactful change.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-inspire-action",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Raegan smith",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Baylor",
+    "major": "",
+    "grad_year": "",
+    "position": "Director and Cinematographer",
+    "company": "",
+    "belief": "I have always been captivated by movies and stories. I started as a child actor when I was 9, but quickly found a passion for the creatives behind the camera. There’s something that pulls me to the industry and I can’t explain it. \nI decided I was going to pursue biomedical engineering in college, but two weeks before I left I received a time capsule letter from myself when I was in my first ever video class in middle school. I wrote about how by graduation I hoped to be doing so many big movie things and that’s when I realized I almost gave up on a dream. That letter reminded me just how badly I want to be apart of the industry, and since then I have never given up on my dream. I went through school and received a dual degree in math and film, as my parents wanted me to get a “real” degree but I was determined to do film as well.",
+    "working_on": "I would love to direct and do the cinematography for feature films. There is something about creating a visual story that calls to me."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to shape narratives and evoke emotions, reflecting an unwavering commitment to your artistic vision and childhood dreams.",
+  "gradient": {
+    "seed": 1387915527,
+    "stops": [
+      {
+        "color": "hsl(144 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(208 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(64 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

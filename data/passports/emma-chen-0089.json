@@ -1,0 +1,73 @@
+{
+  "personId": "emma-chen-0089",
+  "name": "Emma Chen",
+  "line2": "NKSFB LLC",
+  "find": [
+    {
+      "personId": "eliza-arnold-2264",
+      "name": "Eliza Arnold",
+      "why": "You should meet Eliza Arnold, as her insights into entertainment law could spark engaging conversations and inspire new ideas for your work.",
+      "basis_kind": "same_work",
+      "via": "entertainment-law",
+      "path_receipt": [
+        {
+          "from": "Emma Chen",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        },
+        {
+          "from": "Eliza Arnold",
+          "rel": "DOES",
+          "to": "entertainment-law"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she shares your USC background and has some fascinating stories about her time there that you'll both enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Emma Chen",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Business Management Intern",
+    "company": "NKSFB LLC",
+    "belief": "I wrote film reviews through high school and joined the BCA program at USC to learn as much as I can about entertainment.",
+    "working_on": "Entertainment Attorney"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reveals a deep passion for storytelling and advocacy, driven by the desire to empower creators and shape the entertainment landscape.",
+  "gradient": {
+    "seed": 3832364776,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(5 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

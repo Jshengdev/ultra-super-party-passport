@@ -1,0 +1,73 @@
+{
+  "personId": "jessica-thompson-5294",
+  "name": "jessica thompson",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You and Brandon share a love for Disney, making it easy to bond over favorite movies and magical experiences.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "jessica thompson",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "emily-zhang-4b7a",
+      "name": "Emily Zhang",
+      "why": "You should meet Emily Zhang; she has fascinating insights about Columbia that I think you'll both enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "Columbia",
+      "path_receipt": [
+        {
+          "from": "jessica thompson",
+          "rel": "STUDIES_AT",
+          "to": "Columbia"
+        },
+        {
+          "from": "Emily Zhang",
+          "rel": "STUDIES_AT",
+          "to": "Columbia"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Columbia",
+    "major": "",
+    "grad_year": "",
+    "position": "Partnerships Marketing Intern",
+    "company": "Disney",
+    "belief": "The people initially drew me in and have kept me there ever since!",
+    "working_on": "My ultimate goal would probably be to work in a high level Marketing / Publicity role for a production company or music label."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for connecting with people and amplifying their stories through impactful marketing and publicity.",
+  "gradient": {
+    "seed": 3156868733,
+    "stops": [
+      {
+        "color": "hsl(357 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(16 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

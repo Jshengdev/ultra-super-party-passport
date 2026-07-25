@@ -1,0 +1,73 @@
+{
+  "personId": "michela-wallach-3373",
+  "name": "Michela Wallach",
+  "line2": "The Arlook Group",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman, as you both share experiences as development interns and can exchange valuable insights about your journeys.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Michela Wallach",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "maya-lockwood-6f6d",
+      "name": "Maya Lockwood",
+      "why": "You should meet Maya Lockwood because you both share a connection to Syracuse and might enjoy reminiscing about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Syracuse",
+      "path_receipt": [
+        {
+          "from": "Michela Wallach",
+          "rel": "STUDIES_AT",
+          "to": "Syracuse"
+        },
+        {
+          "from": "Maya Lockwood",
+          "rel": "STUDIES_AT",
+          "to": "Syracuse"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Syracuse",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "The Arlook Group",
+    "belief": "I grew up a theater kid and have always loved everything entertainment; music, tv, film, theater, comedy. I was surrounded by it all in my childhood and knew I needed to have a career in it.",
+    "working_on": "I would love to be a writer/director. I love being in creative jobs and spaces."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling and creativity, longing to share the joy and connection you found in the arts.",
+  "gradient": {
+    "seed": 3375071424,
+    "stops": [
+      {
+        "color": "hsl(16 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(32 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

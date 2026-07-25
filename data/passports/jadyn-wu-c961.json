@@ -1,0 +1,73 @@
+{
+  "personId": "jadyn-wu-c961",
+  "name": "Jadyn Wu",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share a strong connection to CAA and can exchange valuable experiences and insights.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Jadyn Wu",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "pragya-bhatt-6eed",
+      "name": "Pragya Bhatt",
+      "why": "You should meet Pragya Bhatt, as you both share a connection to USC and could exchange great stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Jadyn Wu",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Pragya Bhatt",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Mailroom Clerk",
+    "company": "CAA",
+    "belief": "Growing up with creative pursuits but the industry through seeing BTS and Friends: The Reunion",
+    "working_on": "Brand partnerships/producing/representation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to connect creativity with community, inspired by the transformative power of storytelling and collaboration in entertainment.",
+  "gradient": {
+    "seed": 3527238452,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(237 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

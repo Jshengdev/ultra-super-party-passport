@@ -1,0 +1,73 @@
+{
+  "personId": "tyler-bumgarner-2bd0",
+  "name": "Tyler Bumgarner",
+  "line2": "Sony Music",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You should meet Grace Carr because her innovative approach to design complements your own, and I think you'll both inspire each other.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Tyler Bumgarner",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "jawaan-1cbd",
+      "name": "Jawaan",
+      "why": "You'd really enjoy meeting Jawaan, as you both share a passion for design and can exchange creative ideas and inspirations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Tyler Bumgarner",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "Jawaan",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LCAD",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Intern",
+    "company": "Sony Music",
+    "belief": "Music was the reason why I ever started doing graphic design (my major)!",
+    "working_on": "Working directly with artists to direct their creatives and make their graphics like album covers, music videos, etc."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound connection to music, seeking to amplify its emotional impact through your artistic vision and creativity.",
+  "gradient": {
+    "seed": 3882491834,
+    "stops": [
+      {
+        "color": "hsl(341 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(213 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

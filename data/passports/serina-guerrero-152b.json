@@ -1,0 +1,73 @@
+{
+  "personId": "serina-guerrero-152b",
+  "name": "Serina Guerrero",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; her experiences as an intern could offer you valuable insights and inspire your own journey.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Serina Guerrero",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You would enjoy meeting Brandon Liu, as you both share a connection to UCLA and could swap stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Serina Guerrero",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "",
+    "belief": "Growing up as an only child, one can imagine the extent of time spent alone, only with your mind to keep you occupied. This made a deeply self-reflective and innovative young girl— creating ideas, images, and poetry to make sense of the world around her. The entertainment industry is a place where creatives like myself take a concept, an idea, and make reality out of it. Through my internships with Cambro, Bloom, and other start-ups, I’ve only grown more in my creativity, and want to apply it across more industries.",
+    "working_on": "Becoming a creative/communications director, my goal is to break into the film industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to transform your introspective imagination into shared experiences, seeking connection through the collaborative magic of storytelling.",
+  "gradient": {
+    "seed": 3407341186,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(89 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

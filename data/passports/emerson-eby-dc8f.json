@@ -1,0 +1,73 @@
+{
+  "personId": "emerson-eby-dc8f",
+  "name": "Emerson Eby",
+  "line2": "Rideback",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both share a connection to Rideback and can exchange great insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Rideback",
+      "path_receipt": [
+        {
+          "from": "Emerson Eby",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        }
+      ]
+    },
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You should meet Kate Honsik because she shares your LMU background and has some fascinating stories about her time there.",
+      "basis_kind": "shared_context",
+      "via": "LMU",
+      "path_receipt": [
+        {
+          "from": "Emerson Eby",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Development intern",
+    "company": "Rideback",
+    "belief": "I love writing and storytelling",
+    "working_on": "Director, writer, and producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to connect with others through the transformative power of stories, revealing the depths of shared human experience.",
+  "gradient": {
+    "seed": 3269318001,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(351 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

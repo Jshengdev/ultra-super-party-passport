@@ -1,0 +1,69 @@
+{
+  "personId": "faith-codallos-f72f",
+  "name": "Faith Codallos",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "raegan-smith-7246",
+      "name": "Raegan smith",
+      "why": "You would enjoy meeting Raegan Smith because you both share a passion for cinematography and can exchange inspiring ideas and experiences.",
+      "basis_kind": "same_work",
+      "via": "cinematography",
+      "path_receipt": [
+        {
+          "from": "Faith Codallos",
+          "rel": "DOES",
+          "to": "cinematography"
+        },
+        {
+          "from": "Raegan smith",
+          "rel": "DOES",
+          "to": "cinematography"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your own vision for fostering connections and collaboration.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Faith Codallos",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Cinematographer",
+    "company": "",
+    "belief": "I’ve always had a passion for photography and have always been curious as to how movies were made. One day I tried videography and quickly realized how much more emotion and meaning can be conveyed through moving images versus still photographs. From that moment on, I wanted to learn everything I could about filmmaking. I’ve worked on every set I can, and I am addicted to the energy of being on set, and bringing stories to life behind the camera.",
+    "working_on": "The ultimate goal for me is to establish myself as a cinematographer. I want to create visuals that make audiences feel emotions that are difficult to put into words. Beyond that, I want to build a community of hardworking individuals who create for the love of the art not just for recognition."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect people through evocative storytelling, fostering a community where passion transcends mere recognition.",
+  "gradient": {
+    "seed": 393346039,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(1 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

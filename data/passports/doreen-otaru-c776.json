@@ -1,0 +1,73 @@
+{
+  "personId": "doreen-otaru-c776",
+  "name": "Doreen Otaru",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both share a connection to CAA and can exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Doreen Otaru",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "emmy-mercy-d50b",
+      "name": "Emmy Mercy",
+      "why": "You should meet Emmy Mercy because you both share a connection to CAA and can exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Doreen Otaru",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Emmy Mercy",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT-Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "CAA",
+    "belief": "I grew up with it and can’t imagine doing anything else.",
+    "working_on": "Agent"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion, where your lifelong connection fuels your commitment to create something meaningful and authentic.",
+  "gradient": {
+    "seed": 812288900,
+    "stops": [
+      {
+        "color": "hsl(161 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(350 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

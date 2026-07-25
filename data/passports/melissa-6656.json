@@ -1,0 +1,73 @@
+{
+  "personId": "melissa-6656",
+  "name": "Melissa",
+  "line2": "Creative Artists Agency",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because he shares your passion for executive-pm and can offer valuable insights from his experiences.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Melissa",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    },
+    {
+      "personId": "ethan-schwesinger-2879",
+      "name": "Ethan Schwesinger",
+      "why": "You and Ethan Schwesinger both have a connection to Chapman, making it a great opportunity for you to share experiences and stories.",
+      "basis_kind": "shared_context",
+      "via": "Chapman",
+      "path_receipt": [
+        {
+          "from": "Melissa",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        },
+        {
+          "from": "Ethan Schwesinger",
+          "rel": "STUDIES_AT",
+          "to": "Chapman"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chapman",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Brand Partnerships Intern",
+    "company": "Creative Artists Agency",
+    "belief": "I grew up as a musician and music producer, then started working in the industry at 15.",
+    "working_on": "Become an A&R Admin executive or Business Manager, but I'm open to wherever this industry takes me and prioritizing continued learning!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep-rooted passion for music and an unwavering commitment to growth, driven by a desire to nurture talent and creativity.",
+  "gradient": {
+    "seed": 374460687,
+    "stops": [
+      {
+        "color": "hsl(129 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(19 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

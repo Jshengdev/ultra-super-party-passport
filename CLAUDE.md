@@ -38,17 +38,53 @@ Vision: Johnny. Design: Teri. Distribution + DNA-gradient: Sarah. Built live by 
 
 ---
 
-## Window ownership map
+## Code map (current — the hackathon window split is retired)
 
-| Window | Owns | Goals |
+| Area | Files | What it is |
 |---|---|---|
-| **build-loop** | `ontology/manifest.ts`, `lib/ontology-gate.ts`, `lib/neo4j.ts`, `lib/gateway.ts`, `scripts/gen-test-csv.ts`, `scripts/ingest.ts`, `scripts/check-conformance.ts`, `scripts/check-values.ts`, `pipeline/*.pipe`, `data/test-party.csv` | G3 values · G4 ingest · G5 check-in action |
-| **passport** | `passport/schema.ts`, `passport/*.ts` (generator), `scripts/generate-passports.ts`, `scripts/audit-receipts.ts`, `data/passports/` | G1 passport |
-| **frontend** | `app/universe/`, `app/api/*`, `app/page.tsx`, `app/globals.css`, `passport/tokens.css`, `scripts/check-universe.ts`, `scripts/check-checkin.ts` | G2 universe · G5 check-in UI |
-| **story** (this window) | `CLAUDE.md`, `README.md`, `docs/DEMO-SCRIPT.md`, `docs/SUBMISSION.md`, `scripts/check-ship.ts` | G6 ship |
+| **Laws' machinery** | `ontology/manifest.ts` (labels/links/ACTIONS + Cypher), `lib/ontology-gate.ts` (`dispatch()` — the ONLY write path), `lib/neo4j.ts`, `lib/gateway.ts` (guarded `chat`/`embed`) | shared surface — change with extreme care |
+| **v1 pipeline** | `lib/ingest.ts`, `scripts/precache.ts`, `scripts/ingest.ts`, `lib/cluster.ts`, `scripts/extract-interests.ts`, `pipeline/*.pipe` | hackathon population (193) → passports |
+| **Passports** | `passport/schema.ts`, `lib/passport.ts`, `lib/traverse.ts`, `scripts/generate-passports.ts`, `scripts/audit-receipts.ts`, `data/passports/` | per-person receipted JSON |
+| **v2 pipeline** | `lib/guests.ts` → `scripts/ingest-guests.ts` → `lib/conviction.ts`/`scripts/enrich-convictions.ts` → `lib/matches.ts`/`scripts/enrich-matches.ts` → `lib/layout.ts`/`scripts/emit-graph.ts` → `public/graph/*` | real guest list (312) → baked graph artifacts |
+| **Surfaces** | `app/page.tsx` (CSV-drop landing), `app/universe/` (the room), `app/graph/` (the room re-fed: drag-in entry via `app/graph/verify.ts`, panel, receipts), `app/passport/[id]/`, `app/deck/`; `passport/tokens.css` = design's handle (canvas reads tokens live, never invents a hex) | what people see |
+| **Gates** | `scripts/check-conformance.ts` · `check-guests.ts` · `check-graph-{ontology,emit,entry,e2e}.ts` · `audit-graph.ts` (fail-able receipts audit) · `check-universe/checkin/values/ship.ts` · `verify-goal.sh` | what green means |
 
-Shared shapes (code against these EXACTLY): see `gx/goals/usp-v1.md`. CSV columns, ontology object
-types, link-type allowlist, passport JSON, and ACTION types are all pinned there.
+Pinned shapes: `gx/goals/usp-v1.md` (v1 contract) + the as-built departure report at the end of
+`docs/superpowers/specs/2026-07-25-party-graph-design.md` (where v2 deviates, and why).
+
+## Docs (routing only — each exists to save search time; the code is the understanding)
+
+`README.md` story + architecture · `docs/SUBMISSION.md` hackathon entry (ship-gate required) ·
+`docs/DEMO-SCRIPT.md` 60-second demo runbook (v1-era; refresh with the real-party numbers) ·
+`docs/POSITIONING.md` shareable hand-off copy · `docs/BUTTERBASE.md` hosting/gateway operator
+runbook · `docs/ROCKETRIDE.md` pipe deploy runbook · the spec above = v2 as-built record.
+Nothing else; new knowledge goes into code comments or a line here.
+
+## The dataset schema + optimization loop (the node-tuning workflow)
+
+- **Graph nodes/edges**: `ontology/manifest.ts` is the schema — labels, links, and every write's
+  Cypher live there; nothing off-manifest can exist.
+- **The sheet**: `data/graph-enriched.csv` — one row per person, every computed field visible
+  (identity · conviction tags + verbatim quotes · hubs/groups · top-5 matches · doppelgänger).
+  Column contract + override rules are documented where they execute: the header comment in
+  `scripts/emit-graph.ts`.
+- **The loop**: edit `data/graph-overrides.csv` (sparse: person_id + any of motive/mission/impact/
+  aspiration/pinned_match/hide/host_notes) → re-run emit + gates (commands above) → refresh the
+  room. Off-vocabulary tags fail loud; quotes are never overridable; overridden fields carry
+  `_overridden` provenance. A real `hide` must update `EXPECTED_PEOPLE` in the same commit.
+
+## Working here with an agent
+
+1. Read this file; the laws above bind every change. Rationale lives in constraint comments at the
+   source — read the code, don't look for side docs (and don't write new ones; a few lines HERE at most).
+2. Branch off `master`; small diffs; `git add` only your files (never `package.json`, `.env*`, `out/`,
+   `public/graph/` unless you re-baked it through the pipeline).
+3. Every change keeps its gates green (table above + `npx tsc --noEmit`); data/copy changes re-run
+   `emit-graph` → `check-graph-emit` → `audit-graph` — the audit re-derives every count and quote, and
+   a red audit is a real defect, not a flaky test.
+4. LLM work: through `lib/gateway.ts` only, zod-guarded, retry once, fail loud; new node/edge types
+   enter through `ontology/manifest.ts` or they are unrepresentable.
+5. PR against `master`; report departures from pinned shapes as `[good|neutral|bad] where — what + why`.
 
 ---
 
@@ -86,6 +122,15 @@ npm run verify:goal  # the usp-v1 goal gate (per-leg: ingest values passport uni
 npx tsx scripts/check-ship.ts   # the G6 ship checklist (submission + repo + live URL + .pipe + passports)
 npx tsc --noEmit     # TypeScript strict — fix YOUR files' errors before finishing
 ```
+
+**Graph v2 (/graph, real guest list)** — the surface reads committed `public/graph/*`, so
+`npm run dev` + design work need NO creds; `passport/tokens.css` hot-recolors both rooms.
+Pipeline/gates (tsx does NOT autoload .env — `set -a; source .env; set +a` first):
+`GUESTS_CSV=<luma export path>` `EMBED_PROVIDER=tfidf` (gateway has no embedding models
+anymore) `CONVICTION_MODEL=anthropic/claude-haiku-4.5`; then `scripts/ingest-guests.ts` →
+`enrich-convictions.ts` → `enrich-matches.ts` → `emit-graph.ts`, gated by
+`check-graph-{ontology,emit,entry,e2e}.ts` + `audit-graph.ts` (receipts audit — can FAIL).
+Aura auto-pauses when idle ("no routing servers" = asleep). Everything else: read the code.
 
 **House rules:** TS strict; zod at every boundary; fail loud with named errors; deterministic guard
 around every LLM call. Deps are installed — do NOT touch `package.json`, `.env*`, or `.git`.

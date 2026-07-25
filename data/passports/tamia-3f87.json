@@ -1,0 +1,69 @@
+{
+  "personId": "tamia-3f87",
+  "name": "Tamia",
+  "line2": "Steve Stark's Toluca Pictures and Lilly Singh's Unicorn Island Productions",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because he has insightful experiences as a development intern that I think you'll both find inspiring and relatable.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Tamia",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "varleine-coq-af04",
+      "name": "Varleine Coq",
+      "why": "You would love to meet Varleine Coq because both of you share a deep passion for expressing yourselves through various creative mediums.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "I’ve always loved storytelling and collaborating with others since I was young, and I want Connie to find creative way to tell stories.",
+      "path_receipt": [
+        {
+          "from": "Tamia",
+          "rel": "SHARES_VALUE",
+          "to": "Varleine Coq"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Steve Stark's Toluca Pictures and Lilly Singh's Unicorn Island Productions",
+    "belief": "I always loved to write, but when I lost an entire manuscript on a hard drive in 3rd grade. It took a personal challenge to shoot an ambitious 28 minute short film (for Pride Month in 6 weeks from concept to distribution), over a decade later, for me to fall back in love with writing again. And that, I did. I graduating with an MFA in Screenwriting from UT Austin in 3 weeks!",
+    "working_on": "Writer-Producer, Creator, Showrunner"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep resilience that transforms loss into creativity, using personal challenges as a catalyst for artistic rebirth.",
+  "gradient": {
+    "seed": 1494325286,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(254 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

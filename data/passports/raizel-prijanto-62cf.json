@@ -1,0 +1,69 @@
+{
+  "personId": "raizel-prijanto-62cf",
+  "name": "Raizel Prijanto",
+  "line2": "FIDM",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because you both share a passion for acting and can inspire each other with your experiences in the craft.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Raizel Prijanto",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava because you both share a deep conviction in the impact of connecting people meaningfully.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-connect-people",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Raizel Prijanto",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "FIDM",
+    "major": "",
+    "grad_year": "",
+    "position": "Designer",
+    "company": "",
+    "belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+    "working_on": "My ultimate goal is to be able to represent the art if movies as an actress and a face to inspire."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to evoke connection and inspire others through the transformative power of emotional storytelling in film.",
+  "gradient": {
+    "seed": 4163675660,
+    "stops": [
+      {
+        "color": "hsl(243 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(29 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(46 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

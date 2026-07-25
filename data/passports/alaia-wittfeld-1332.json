@@ -1,0 +1,69 @@
+{
+  "personId": "alaia-wittfeld-1332",
+  "name": "alaia wittfeld",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because you both share a connection to NBCUniversal and can exchange fascinating insights from your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "alaia wittfeld",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You would love to meet Tavishi Srivastava because of her passion for using entertainment to connect diverse cultures and communities, just like you.",
+      "basis_kind": "shared_value",
+      "via": "cluster-5",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "alaia wittfeld",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern, audience insights and analytics",
+    "company": "NBCUniversal",
+    "belief": "I love the aspect of getting to influence so many things around the world. Markets, experiences, feelings.",
+    "working_on": "Head of PR"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to shape perceptions and create connections, believing in the power of narrative to transform experiences globally.",
+  "gradient": {
+    "seed": 2177844061,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(103 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(314 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

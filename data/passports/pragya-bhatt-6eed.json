@@ -1,0 +1,73 @@
+{
+  "personId": "pragya-bhatt-6eed",
+  "name": "Pragya Bhatt",
+  "line2": "The Rosenzweig Group",
+  "find": [
+    {
+      "personId": "leona-4ffe",
+      "name": "Leona",
+      "why": "You would really enjoy meeting Leona, as she shares your passion for Representation and has some inspiring insights to share.",
+      "basis_kind": "same_work",
+      "via": "Representation",
+      "path_receipt": [
+        {
+          "from": "Pragya Bhatt",
+          "rel": "WORKING_ON",
+          "to": "Representation"
+        },
+        {
+          "from": "Leona",
+          "rel": "WORKING_ON",
+          "to": "Representation"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should definitely meet Maggie Lee, as you both share a strong connection to USC and can swap some great stories from your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Pragya Bhatt",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "The Rosenzweig Group",
+    "belief": "A passion for storytelling",
+    "working_on": "Representation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate diverse narratives, believing that every story enriches our shared human experience.",
+  "gradient": {
+    "seed": 2370977380,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(24 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

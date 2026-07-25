@@ -1,0 +1,73 @@
+{
+  "personId": "elyse-sierra-miller-e4be",
+  "name": "Elyse Sierra Miller",
+  "line2": "creative (And for a small production company Aterspace)",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because her passion for produce mirrors yours, and I think you'll enjoy sharing insights and ideas together.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Elyse Sierra Miller",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maya-labrache-ca7e",
+      "name": "Maya LaBrache",
+      "why": "You should meet Maya LaBrache, as you both share a connection to UC Berkeley and can exchange memorable experiences from your time there.",
+      "basis_kind": "shared_context",
+      "via": "UC Berkeley",
+      "path_receipt": [
+        {
+          "from": "Elyse Sierra Miller",
+          "rel": "STUDIES_AT",
+          "to": "UC Berkeley"
+        },
+        {
+          "from": "Maya LaBrache",
+          "rel": "STUDIES_AT",
+          "to": "UC Berkeley"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Project Production Manger",
+    "company": "creative (And for a small production company Aterspace)",
+    "belief": "I made Barbie stop-motion videos as a kid and just could not stop wanting to make films!",
+    "working_on": "I want to make nature documentaries."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling through nature documentaries reveals a deep desire to connect others with the beauty and stories of the natural world.",
+  "gradient": {
+    "seed": 4225310465,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(199 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

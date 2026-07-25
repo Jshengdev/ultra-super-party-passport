@@ -1,0 +1,69 @@
+{
+  "personId": "ajay-benmoin-4d94",
+  "name": "Ajay Benmoin",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights from Live Nation could spark some exciting conversations about the music industry you both love.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Ajay Benmoin",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You'd enjoy meeting YU-SHENG CHIEN, as both of you share a profound passion for music and performance as powerful forms of expression.",
+      "basis_kind": "shared_value",
+      "via": "cluster-3",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Ajay Benmoin",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Content Writer/Creator",
+    "company": "Live Nation",
+    "belief": "Passion for live music",
+    "working_on": "Concert Communication Manager"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect people to the transformative power of live music experiences.",
+  "gradient": {
+    "seed": 318236947,
+    "stops": [
+      {
+        "color": "hsl(358 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(105 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(302 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

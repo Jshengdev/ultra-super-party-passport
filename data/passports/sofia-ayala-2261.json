@@ -1,0 +1,73 @@
+{
+  "personId": "sofia-ayala-2261",
+  "name": "Sofia Ayala",
+  "line2": "Jet Management",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights into market-brand strategies could spark some exciting ideas for your own work.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Sofia Ayala",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "ruby-washio-dcf5",
+      "name": "ruby washio",
+      "why": "You should meet Ruby Washio, as you both have valuable insights to share about market-brand that could spark exciting ideas together.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Sofia Ayala",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "ruby washio",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "California State University, Fullerton",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Marketing Intern",
+    "company": "Jet Management",
+    "belief": "I used to run some fan accounts growing up and kind of just fell in love with entertainment in general. I was also a dancer so i’ve always been surrounded by music.",
+    "working_on": "I’d love to be a director of marketing or even a booking agent"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for connecting people with the art and energy of entertainment, seeking to amplify voices and experiences.",
+  "gradient": {
+    "seed": 3916797516,
+    "stops": [
+      {
+        "color": "hsl(17 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(281 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

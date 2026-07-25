@@ -1,0 +1,69 @@
+{
+  "personId": "talya-fleisher-67f0",
+  "name": "Talya Fleisher",
+  "line2": "MiddKid Productions (Netflix TV show!)",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has some fantastic insights about her internship experience that you might find really inspiring.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Talya Fleisher",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You should meet Connor James because his passion for bringing joy aligns beautifully with your shared conviction to create positive impact in the world.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "watching movies",
+      "path_receipt": [
+        {
+          "from": "Connor James",
+          "rel": "SHARES_VALUE",
+          "to": "Talya Fleisher"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "MiddKid Productions (Netflix TV show!)",
+    "belief": "I love writing :) and telling stories that move people and make them laugh",
+    "working_on": "TV writer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect with others, using humor and emotion to forge meaningful experiences through your storytelling.",
+  "gradient": {
+    "seed": 2541271727,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(74 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

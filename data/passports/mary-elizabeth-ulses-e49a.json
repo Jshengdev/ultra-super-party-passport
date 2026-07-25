@@ -1,0 +1,73 @@
+{
+  "personId": "mary-elizabeth-ulses-e49a",
+  "name": "Mary Elizabeth Ulses",
+  "line2": "Caliber Studio",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel, as you both share a deep passion for produce and can exchange insights and experiences in that vibrant field.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Mary Elizabeth Ulses",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "mylo-gumbs-3b08",
+      "name": "Mylo Gumbs",
+      "why": "You should meet Mylo Gumbs because you both share a connection to Drexel University and can exchange inspiring stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Drexel University",
+      "path_receipt": [
+        {
+          "from": "Mary Elizabeth Ulses",
+          "rel": "STUDIES_AT",
+          "to": "Drexel University"
+        },
+        {
+          "from": "Mylo Gumbs",
+          "rel": "STUDIES_AT",
+          "to": "Drexel University"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Drexel University",
+    "major": "",
+    "grad_year": "",
+    "position": "Development and Social Media Intern, incoming Assistant to Ben Haber",
+    "company": "Caliber Studio",
+    "belief": "I was always a storyteller as a kid, pursued theatre all throughout my life and got bit by the film bug one day and never looked back. Now I get to mesh what I love with my work and tell stories through writing, producing, and acting.",
+    "working_on": "My ultimate goal is to be a creative development executive and a producer to make more stories."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep-seated passion for storytelling, driven by a desire to connect, inspire, and create meaning through shared narratives.",
+  "gradient": {
+    "seed": 2599330100,
+    "stops": [
+      {
+        "color": "hsl(313 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(143 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

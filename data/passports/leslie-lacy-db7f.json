@@ -1,0 +1,73 @@
+{
+  "personId": "leslie-lacy-db7f",
+  "name": "Leslie Lacy",
+  "line2": "Def Jam Recordings",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as she has great insights about represent-agency that could spark inspiring conversations for both of you.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Leslie Lacy",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You would enjoy meeting Isabel Soliman because she shares your passion for represent-agency and has great insights on collaborating in that space.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Leslie Lacy",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Isabel Soliman",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Drexel",
+    "major": "",
+    "grad_year": "",
+    "position": "A&R Intern",
+    "company": "Def Jam Recordings",
+    "belief": "A passion for wanting to help artists in their beginnings",
+    "working_on": "The ultimate goal in pursuing entertainment is to become an A&R at major label or publishing company"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to nurture talent, believing in the transformative power of music to shape lives and careers.",
+  "gradient": {
+    "seed": 4039016427,
+    "stops": [
+      {
+        "color": "hsl(15 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(245 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

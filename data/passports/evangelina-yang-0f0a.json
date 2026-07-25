@@ -1,0 +1,73 @@
+{
+  "personId": "evangelina-yang-0f0a",
+  "name": "evangelina yang",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as you both share a connection to NBCUniversal and could exchange valuable insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "evangelina yang",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "alexi-haimes-9708",
+      "name": "Alexi Haimes",
+      "why": "You should meet Alexi Haimes, as you both share a connection to UT Austin and can exchange stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UT Austin",
+      "path_receipt": [
+        {
+          "from": "evangelina yang",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        },
+        {
+          "from": "Alexi Haimes",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "tv publicity intern",
+    "company": "NBCUniversal",
+    "belief": "love that it champions creativity and storytelling :)",
+    "working_on": "entertainment publicity/talent management"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for amplifying voices and fostering connection through the transformative power of creative narratives.",
+  "gradient": {
+    "seed": 1330008547,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(340 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

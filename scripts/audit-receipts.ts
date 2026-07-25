@@ -11,8 +11,28 @@ import { passportSchema } from "@/passport/schema";
 
 const DIR = path.resolve(process.cwd(), "data/passports");
 
+// Aura Free drops long-lived connections under sustained sequential load (SessionExpired /
+// ServiceUnavailable, both marked retriable by the driver). Retry the QUERY, never the assertion:
+// a receipt that truly isn't in the graph still fails after every retry.
+async function runReadResilient<T>(query: string, params: Record<string, unknown>): Promise<T[]> {
+  let lastErr: unknown;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      return await runRead<T>(query, params);
+    } catch (e) {
+      lastErr = e;
+      const code = (e as { code?: string }).code ?? "";
+      const retriable = (e as { retriable?: boolean }).retriable === true ||
+        code.includes("SessionExpired") || code.includes("ServiceUnavailable");
+      if (!retriable || attempt === 4) throw e;
+      await new Promise((r) => setTimeout(r, attempt * 1500));
+    }
+  }
+  throw lastErr;
+}
+
 async function edgeExists(from: string, rel: string, to: string): Promise<boolean> {
-  const rows = await runRead<{ ok: boolean }>(
+  const rows = await runReadResilient<{ ok: boolean }>(
     `
     MATCH (a)-[r]->(b)
     WHERE (a.name = $from OR a.id = $from) AND (b.name = $to OR b.id = $to) AND type(r) = $rel
@@ -24,7 +44,7 @@ async function edgeExists(from: string, rel: string, to: string): Promise<boolea
 }
 
 async function personExists(id: string): Promise<boolean> {
-  const rows = await runRead<{ ok: boolean }>(
+  const rows = await runReadResilient<{ ok: boolean }>(
     `MATCH (p:Person) WHERE p.id = $id OR p.name = $id RETURN count(p) > 0 AS ok`,
     { id },
   );

@@ -1,0 +1,73 @@
+{
+  "personId": "laetitia-110b",
+  "name": "Laetitia",
+  "line2": "The Benyamin Communications",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should definitely meet Caterina Terrizzi, as you both share a deep passion for market-brand strategies that could lead to inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Laetitia",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she has some fascinating insights about USC that I think you'll really enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Laetitia",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "VIP PR intern",
+    "company": "The Benyamin Communications",
+    "belief": "I was always very fascinated with all things Hollywood and entertainment. I used to go celebrity hunting in LA and kept up with all kinds of entertainment news, even having a celebrity fan account at some point. I'm not sure how I got into it other than the fact I started watching a lot of Youtubers and Disney Channel content, then realized a career in this field does exist beyond the creative field like being an actress, singer, producer, director, filmmaker etc",
+    "working_on": "Working in marketing in a film studio"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for storytelling and a desire to connect others with the magic of entertainment.",
+  "gradient": {
+    "seed": 83875339,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(29 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

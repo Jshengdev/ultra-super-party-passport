@@ -1,0 +1,73 @@
+{
+  "personId": "isabel-ramirez-52a0",
+  "name": "Isabel Ramirez",
+  "line2": "Capitol Records",
+  "find": [
+    {
+      "personId": "kyle-flora-08a2",
+      "name": "Kyle Flora",
+      "why": "You should meet Kyle Flora because he has fascinating insights about Capitol Records that I think you would both enjoy discussing.",
+      "basis_kind": "same_work",
+      "via": "Capitol Records",
+      "path_receipt": [
+        {
+          "from": "Isabel Ramirez",
+          "rel": "WORKS_AT",
+          "to": "Capitol Records"
+        },
+        {
+          "from": "Kyle Flora",
+          "rel": "WORKS_AT",
+          "to": "Capitol Records"
+        }
+      ]
+    },
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because you both share a passion for acting that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Isabel Ramirez",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "ASU",
+    "major": "",
+    "grad_year": "",
+    "position": "Pop Rock Marketing Intern",
+    "company": "Capitol Records",
+    "belief": "Theatre actually. Running fan accounts and performing in local plays",
+    "working_on": "Actress/director"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling and connection, seeking to create vibrant experiences that resonate within the community.",
+  "gradient": {
+    "seed": 3808791119,
+    "stops": [
+      {
+        "color": "hsl(216 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(273 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

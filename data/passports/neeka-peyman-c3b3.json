@@ -1,0 +1,73 @@
+{
+  "personId": "neeka-peyman-c3b3",
+  "name": "Neeka Peyman",
+  "line2": "RISE",
+  "find": [
+    {
+      "personId": "jessica-torres-2b0a",
+      "name": "Jessica Torres",
+      "why": "You would really enjoy meeting Jessica Torres, as both of you share a passion for creativity and insights from your experiences as creative directors.",
+      "basis_kind": "same_work",
+      "via": "creative director",
+      "path_receipt": [
+        {
+          "from": "Neeka Peyman",
+          "rel": "DOES",
+          "to": "creative director"
+        },
+        {
+          "from": "Jessica Torres",
+          "rel": "DOES",
+          "to": "creative director"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You and Maggie Lee both share a connection to USC, making it a great opportunity to bond over your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Neeka Peyman",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Director",
+    "company": "RISE",
+    "belief": "I am Jewish, it runs in my blood.",
+    "working_on": "Making my immigrant parents not feel like they raised a disappointment"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to honor your heritage and transform familial sacrifices into a source of pride and connection.",
+  "gradient": {
+    "seed": 1514358550,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(139 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

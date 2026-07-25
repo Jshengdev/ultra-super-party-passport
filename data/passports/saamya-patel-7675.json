@@ -1,0 +1,73 @@
+{
+  "personId": "saamya-patel-7675",
+  "name": "Saamya Patel",
+  "line2": "Warner Bros Discovery",
+  "find": [
+    {
+      "personId": "vianne-nguyen-313a",
+      "name": "Vianne Nguyen",
+      "why": "You should meet Vianne Nguyen, as you both share an exciting connection to Warner Bros Discovery that could spark some engaging conversations.",
+      "basis_kind": "same_work",
+      "via": "Warner Bros Discovery",
+      "path_receipt": [
+        {
+          "from": "Saamya Patel",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        },
+        {
+          "from": "Vianne Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Warner Bros Discovery"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; she has some incredible stories about your time at USC that you'll both enjoy reminiscing about.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Saamya Patel",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "HBO/HBO Max Originals Intern",
+    "company": "Warner Bros Discovery",
+    "belief": "Learning about the behind the scenes workings of the shows I love to watch",
+    "working_on": "Being a producer in current programming at a studio or network"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep curiosity to connect with the artistry behind storytelling, seeking to bring your favorite narratives to life.",
+  "gradient": {
+    "seed": 32920270,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(233 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

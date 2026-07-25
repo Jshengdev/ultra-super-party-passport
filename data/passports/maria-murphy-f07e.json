@@ -1,0 +1,73 @@
+{
+  "personId": "maria-murphy-f07e",
+  "name": "Maria Murphy",
+  "line2": "IAG",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share the experience of being interns, and I think you'll really connect over that journey.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Maria Murphy",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You should meet Kate Honsik because she shares your LMU experience and can offer great insights into your mutual passion for the university.",
+      "basis_kind": "shared_context",
+      "via": "LMU",
+      "path_receipt": [
+        {
+          "from": "Maria Murphy",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "STUDIES_AT",
+          "to": "LMU"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "IAG",
+    "belief": "Love of comedy and sitcoms like I Love Lucy!",
+    "working_on": "Development executive"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create joy and connection through laughter, seeking to bring light-heartedness into people's lives.",
+  "gradient": {
+    "seed": 166277888,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(344 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

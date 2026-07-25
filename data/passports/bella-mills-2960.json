@@ -1,0 +1,73 @@
+{
+  "personId": "bella-mills-2960",
+  "name": "Bella Mills",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both have a unique connection to direct that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Bella Mills",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as both of you share a connection to USC and can swap some great stories from your time there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Bella Mills",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Dancer/Director/Choreographer",
+    "company": "",
+    "belief": "Honestly, performing - but once I started learning how the camera worked behind the scenes I was drawn to the creative production aspect of entertainment!",
+    "working_on": "Being a director and choreographer for dance media of all kinds - ads, TV, film, etc!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend movement and storytelling, finding joy in shaping how performance is captured and shared with the world.",
+  "gradient": {
+    "seed": 3289736027,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(230 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

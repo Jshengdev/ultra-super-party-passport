@@ -1,0 +1,73 @@
+{
+  "personId": "jason-drucker-24ee",
+  "name": "Jason drucker",
+  "line2": "PictureStart",
+  "find": [
+    {
+      "personId": "william-tseng-d7ff",
+      "name": "William Tseng",
+      "why": "You should meet William Tseng because you both share a passion for production, and I think you'll have a lot to discuss.",
+      "basis_kind": "same_work",
+      "via": "Producer",
+      "path_receipt": [
+        {
+          "from": "Jason drucker",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        },
+        {
+          "from": "William Tseng",
+          "rel": "WORKING_ON",
+          "to": "Producer"
+        }
+      ]
+    },
+    {
+      "personId": "mia-oklin-88bf",
+      "name": "Mia Oklin",
+      "why": "You should meet Mia Oklin because you both share a connection to UF and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UF",
+      "path_receipt": [
+        {
+          "from": "Jason drucker",
+          "rel": "STUDIES_AT",
+          "to": "UF"
+        },
+        {
+          "from": "Mia Oklin",
+          "rel": "STUDIES_AT",
+          "to": "UF"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UF",
+    "major": "",
+    "grad_year": "",
+    "position": "Student",
+    "company": "PictureStart",
+    "belief": "Being a child actor exposed me to the magic of film and I’ve been chasing it ever since",
+    "working_on": "Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep yearning to recreate and share the enchantment you experienced, transforming your childhood wonder into captivating stories for others.",
+  "gradient": {
+    "seed": 2982802300,
+    "stops": [
+      {
+        "color": "hsl(18 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(199 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

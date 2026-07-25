@@ -1,0 +1,73 @@
+{
+  "personId": "reid-davis-b107",
+  "name": "Reid Davis",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would enjoy meeting Maggie Lee because she shares your connection to CAA and has fascinating insights about the organization's recent developments.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Reid Davis",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "joy-bae-76da",
+      "name": "Joy Bae",
+      "why": "You should meet Joy Bae because you both share a connection to UC Irvine and could have some great conversations about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UC Irvine",
+      "path_receipt": [
+        {
+          "from": "Reid Davis",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        },
+        {
+          "from": "Joy Bae",
+          "rel": "STUDIES_AT",
+          "to": "UC Irvine"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Irvine",
+    "major": "",
+    "grad_year": "",
+    "position": "Previous intern, now starting in their mailroom in Sept",
+    "company": "CAA",
+    "belief": "Always been a writer and storyteller, got into talent management after representing a few of my friends who were professional esports players, which got me into influencer management.",
+    "working_on": "Still currently split, I write a lot on the side but I’ve done talent management for years now at this point and am quite happy with it."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You’re driven by a deep connection to storytelling, seeking to amplify voices while navigating the thrill of creative collaboration in talent management.",
+  "gradient": {
+    "seed": 265964894,
+    "stops": [
+      {
+        "color": "hsl(140 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(197 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

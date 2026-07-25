@@ -1,0 +1,73 @@
+{
+  "personId": "raphael-postl-e7a7",
+  "name": "Raphael Postl",
+  "line2": "red bull",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce that could lead to some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Raphael Postl",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "ines-villarreal-c08b",
+      "name": "Ines Villarreal",
+      "why": "You should meet Ines Villarreal because her innovative approach to produce aligns perfectly with your passion for fresh, sustainable ingredients.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Raphael Postl",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Ines Villarreal",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "project associate",
+    "company": "red bull",
+    "belief": "chris nolan’s batman trilogy",
+    "working_on": "producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to craft narratives that resonate deeply, much like the complex worlds created in Nolan’s Batman trilogy.",
+  "gradient": {
+    "seed": 505448724,
+    "stops": [
+      {
+        "color": "hsl(112 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(167 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

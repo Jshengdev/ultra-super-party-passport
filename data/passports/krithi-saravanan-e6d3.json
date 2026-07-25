@@ -1,0 +1,69 @@
+{
+  "personId": "krithi-saravanan-e6d3",
+  "name": "Krithi Saravanan",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as you both share a connection to NBCUniversal that could spark some fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Krithi Saravanan",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your own vision and can spark inspiring conversations.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Krithi Saravanan",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSB",
+    "major": "",
+    "grad_year": "",
+    "position": "Data Engineering Intern",
+    "company": "NBCUniversal",
+    "belief": "I am drawn to the entertainment industry because of how it demonstrates, time and again, that the ability to move people with art requires a massive concerted effort. Movies, television, and music touch people all throughout their lives, and the prospect of joining an industry that makes creative media more accessible to audiences has always thrilled me.",
+    "working_on": "I would like to keep pursuing data-oriented roles in entertainment (specifically content and audience analytics) but would also like to explore, in parallel, more creative roles (specifically in screenwriting or novel writing) somewhere down the line."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to blend analytical insight with creative expression, believing that meaningful art can profoundly connect and uplift audiences.",
+  "gradient": {
+    "seed": 2658205623,
+    "stops": [
+      {
+        "color": "hsl(188 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(263 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

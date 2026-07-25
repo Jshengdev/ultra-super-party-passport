@@ -1,0 +1,69 @@
+{
+  "personId": "martine-kolderup-lane-6ebe",
+  "name": "Martine Kolderup-Lane",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You would really enjoy connecting with Grace Carr, as you both share a passion for design that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Martine Kolderup-Lane",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You should meet Tavishi Srivastava, as both of you are passionate about building community and can inspire each other with your shared convictions.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Martine Kolderup-Lane",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "graphic designer / creative director",
+    "company": "",
+    "belief": "I have always loved music art, new and old. i’ve found myself obsessed with music and art history and how it informs what is created in our modern world. Growing up in San Francisco, in the Haight Ashbury at the center of the Summer of Love hippie movement has deeply inspired my expansive way of thinking about music and art, and influenced what I create. I love that my creativity can collaborate and build upon an artists music, creating a visual representation of their work through my album/single covers, concert posters, lyric videos, set design, etc.",
+    "working_on": "I want to continue making art for musicians and working in creative direction, along with my experiences in putting together live music events. This is all in an effort to one day open an independent live music venue back home in San Francisco, dedicated to the history and culture of the city, creating a central community space for artists to be discovered and heard."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to honor your roots and foster a vibrant creative community, blending history and artistry to inspire future generations.",
+  "gradient": {
+    "seed": 2927646692,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(261 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

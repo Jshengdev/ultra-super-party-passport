@@ -1,0 +1,73 @@
+{
+  "personId": "cole-dubrow-423e",
+  "name": "Cole Dubrow",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because you both share a passion for Live Nation and could exchange great insights about the music industry.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Cole Dubrow",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should definitely meet Maggie Lee; she has some amazing insights about USC that I think you'll both appreciate and enjoy discussing.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Cole Dubrow",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Legal Summer Associate",
+    "company": "Live Nation",
+    "belief": "Grew up singing but had an interest in law and want to work on entertainment contracts and transactions.",
+    "working_on": "General counsel of a record label"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to harmonize your passion for music with a commitment to protect artists' rights and creative integrity.",
+  "gradient": {
+    "seed": 2568858063,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(265 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

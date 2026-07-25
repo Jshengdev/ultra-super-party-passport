@@ -1,0 +1,69 @@
+{
+  "personId": "judah-adkins-8cb0",
+  "name": "Judah Adkins",
+  "line2": "The Powder Room LA",
+  "find": [
+    {
+      "personId": "arianna-love-cristobal-d856",
+      "name": "Arianna Love Cristobal",
+      "why": "You would really enjoy meeting Arianna Love Cristobal because she has fascinating insights about working with assistants that you both share.",
+      "basis_kind": "same_work",
+      "via": "assistant",
+      "path_receipt": [
+        {
+          "from": "Judah Adkins",
+          "rel": "DOES",
+          "to": "assistant"
+        },
+        {
+          "from": "Arianna Love Cristobal",
+          "rel": "DOES",
+          "to": "assistant"
+        }
+      ]
+    },
+    {
+      "personId": "sunny-mccall-a0cf",
+      "name": "Sunny McCall",
+      "why": "You should meet Sunny McCall because both of you share a passion for the excitement and importance of collaborating on creative projects.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "I love the collaboration within the entertainment industry, and all the work people do in order to bring stories to life. No matter the kinds of projects, dramas, comedies or even superhero films it is always amazing to see how others view the world and the ways they come up with to express their interests.",
+      "path_receipt": [
+        {
+          "from": "Judah Adkins",
+          "rel": "SHARES_VALUE",
+          "to": "Sunny McCall"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Assistant",
+    "company": "The Powder Room LA",
+    "belief": "It’s been my passion since my child and the reason I wanted to go to USC",
+    "working_on": "Talent Agency"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for nurturing talent, seeking to create opportunities that inspire and uplift others in their journeys.",
+  "gradient": {
+    "seed": 1284867854,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(238 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

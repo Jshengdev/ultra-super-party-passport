@@ -1,0 +1,69 @@
+{
+  "personId": "benjamin-gamson-4924",
+  "name": "Benjamin Gamson",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling because you both share a unique connection to NBCUniversal that could spark a fascinating conversation.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Benjamin Gamson",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam, as you both share a deep commitment to truth-inform, and your insights could spark meaningful discussions.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-truth-inform",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Benjamin Gamson",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Politics Intern",
+    "company": "NBCUniversal",
+    "belief": "Watching The Dropout on Hulu showed me the intersection between journalism and television through the dramatic telling of fraud and corruption in what was thought of as one of the most forward looking healthcare companies. As a journalist, I think storytelling is so critical in all forms whether that be on a news channel, via social media, or through a docudrama.",
+    "working_on": "My ultimate goal is to be a political reporter covering Congress or the White House for a television station."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to illuminate truths through powerful storytelling, revealing the complexities of politics and its impact on society.",
+  "gradient": {
+    "seed": 1783631917,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(162 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(60 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

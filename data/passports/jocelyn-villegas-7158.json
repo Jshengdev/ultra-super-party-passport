@@ -1,0 +1,73 @@
+{
+  "personId": "jocelyn-villegas-7158",
+  "name": "Jocelyn Villegas",
+  "line2": "Netflix",
+  "find": [
+    {
+      "personId": "mulang-zhu-a9ef",
+      "name": "Mulang Zhu",
+      "why": "You should meet Mulang Zhu because you both share a passion for Netflix and can exchange recommendations for your favorite shows and movies.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Jocelyn Villegas",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Mulang Zhu",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    },
+    {
+      "personId": "jessie-b-evans-35fa",
+      "name": "Jessie B. Evans",
+      "why": "You and Jessie B. Evans both connect to Netflix, so you could share favorite shows and discover new recommendations together.",
+      "basis_kind": "same_work",
+      "via": "Netflix",
+      "path_receipt": [
+        {
+          "from": "Jocelyn Villegas",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        },
+        {
+          "from": "Jessie B. Evans",
+          "rel": "WORKS_AT",
+          "to": "Netflix"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Colorado State University",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Netflix",
+    "belief": "I needed a job.",
+    "working_on": "I would like to work in security engineering or any technical role in a creative field!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend your technical skills with creativity, seeking fulfillment beyond mere necessity in your work.",
+  "gradient": {
+    "seed": 1535026425,
+    "stops": [
+      {
+        "color": "hsl(281 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(66 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

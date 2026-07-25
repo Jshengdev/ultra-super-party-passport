@@ -1,0 +1,69 @@
+{
+  "personId": "matt-dimaandal-d738",
+  "name": "Matt Dimaandal",
+  "line2": "Live Nation Entertainment",
+  "find": [
+    {
+      "personId": "jordan-stahl-6a56",
+      "name": "Jordan Stahl",
+      "why": "You should meet Jordan Stahl because both of you share a passion for Live Nation Entertainment that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "Live Nation Entertainment",
+      "path_receipt": [
+        {
+          "from": "Matt Dimaandal",
+          "rel": "WORKS_AT",
+          "to": "Live Nation Entertainment"
+        },
+        {
+          "from": "Jordan Stahl",
+          "rel": "WORKS_AT",
+          "to": "Live Nation Entertainment"
+        }
+      ]
+    },
+    {
+      "personId": "raizel-prijanto-62cf",
+      "name": "Raizel Prijanto",
+      "why": "You should meet Raizel Prijanto because you both share a passionate conviction to inspire the next generation through meaningful and grounded conversations.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+      "path_receipt": [
+        {
+          "from": "Matt Dimaandal",
+          "rel": "SHARES_VALUE",
+          "to": "Raizel Prijanto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCR",
+    "major": "",
+    "grad_year": "",
+    "position": "Tour Marketing Analytics Intern",
+    "company": "Live Nation Entertainment",
+    "belief": "I’ve been a musician at a young age and it helped me connect to other people in music. It really started when I started hosting artist showcases at my college and then I started meeting other people in music.",
+    "working_on": "To become a music executive that helps artists become the best version of themselves."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to empower others, reflecting your own transformative experiences in music and connection.",
+  "gradient": {
+    "seed": 2400501666,
+    "stops": [
+      {
+        "color": "hsl(97 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(247 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "jj-lee-d6f2",
+  "name": "JJ Lee",
+  "line2": "UNLV",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce and could exchange ideas on fresh, innovative approaches.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "JJ Lee",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "ines-villarreal-c08b",
+      "name": "Ines Villarreal",
+      "why": "You should meet Ines Villarreal because her insights on produce could spark some exciting ideas for your next culinary adventure.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "JJ Lee",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Ines Villarreal",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UNLV",
+    "major": "",
+    "grad_year": "",
+    "position": "AI Interactive Film Producer/ Director",
+    "company": "",
+    "belief": "I've been a storyteller for as long as I can remember. Ever since I was a kid, I've naturally seen stories in a visual way. That passion eventually led me to become a film producer.",
+    "working_on": "Develop my IP"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to bring your unique vision to life, transforming your vivid imagination into compelling narratives that resonate.",
+  "gradient": {
+    "seed": 3966631307,
+    "stops": [
+      {
+        "color": "hsl(100 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(257 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

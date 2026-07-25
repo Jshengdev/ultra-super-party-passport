@@ -1,0 +1,73 @@
+{
+  "personId": "arianna-love-cristobal-d856",
+  "name": "Arianna Love Cristobal",
+  "line2": "CSUN",
+  "find": [
+    {
+      "personId": "charlie-hsieh-3192",
+      "name": "Charlie Hsieh",
+      "why": "You should meet Charlie Hsieh because you both share a unique connection through your experience with assistants, sparking fascinating conversations.",
+      "basis_kind": "same_work",
+      "via": "assistant",
+      "path_receipt": [
+        {
+          "from": "Arianna Love Cristobal",
+          "rel": "DOES",
+          "to": "assistant"
+        },
+        {
+          "from": "Charlie Hsieh",
+          "rel": "DOES",
+          "to": "assistant"
+        }
+      ]
+    },
+    {
+      "personId": "kelly-r-3837",
+      "name": "Kelly R",
+      "why": "You should meet Kelly R because your shared connection to CSUN could spark some inspiring conversations about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "CSUN",
+      "path_receipt": [
+        {
+          "from": "Arianna Love Cristobal",
+          "rel": "STUDIES_AT",
+          "to": "CSUN"
+        },
+        {
+          "from": "Kelly R",
+          "rel": "STUDIES_AT",
+          "to": "CSUN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSUN",
+    "major": "",
+    "grad_year": "",
+    "position": "Assistant",
+    "company": "",
+    "belief": "Throughout my years at CSUN, I gained a love for the Cinema Television Vision Arts department while participating in multiple projects as well as starting some of my own.",
+    "working_on": "Becoming a representative or producer, someone with influence to create visions and instigate great creative projects."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to shape narratives and foster creativity, seeking to inspire others through the power of visual storytelling.",
+  "gradient": {
+    "seed": 4216526220,
+    "stops": [
+      {
+        "color": "hsl(268 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(26 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

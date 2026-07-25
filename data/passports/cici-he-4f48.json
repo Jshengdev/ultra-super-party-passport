@@ -1,0 +1,73 @@
+{
+  "personId": "cici-he-4f48",
+  "name": "Cici He",
+  "line2": "Precisely",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Cici He",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would really enjoy meeting Maggie Lee, as you both share a strong connection to USC and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Cici He",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "AI Marketing Campaigns Intern",
+    "company": "Precisely",
+    "belief": "Having grown up wanting to be a YouTuber, I always loved how the entertainment industry brings excitement to people's daily lives. I'm specifically interested in the entertainment tech space, such as Spotify, Netflix, YouTube (under Google), Pinterest, etc. I'd love to bring my marketing expertise to this space.",
+    "working_on": "My goal as of now is to become an APMM/product marketer within this space, and I want to experience working in big tech as well as continuing to push startups to grow."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to blend creativity and technology, aiming to enhance everyday experiences through innovative marketing in entertainment.",
+  "gradient": {
+    "seed": 3531245300,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(141 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

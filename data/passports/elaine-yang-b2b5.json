@@ -1,0 +1,73 @@
+{
+  "personId": "elaine-yang-b2b5",
+  "name": "Elaine Yang",
+  "line2": "UCSD",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman, as you both have a unique perspective on direct that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Elaine Yang",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should meet Kalen Kang, as both of you share a connection to UCSD and could swap inspiring stories from your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCSD",
+      "path_receipt": [
+        {
+          "from": "Elaine Yang",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        },
+        {
+          "from": "Kalen Kang",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "director",
+    "company": "",
+    "belief": "Liking and seeing how things work behind the scene",
+    "working_on": "Planning events and behind the scenes"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep curiosity to orchestrate experiences, finding joy in the intricate dance of elements that create meaningful moments.",
+  "gradient": {
+    "seed": 3234338855,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(48 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

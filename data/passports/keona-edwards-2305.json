@@ -1,0 +1,73 @@
+{
+  "personId": "keona-edwards-2305",
+  "name": "Keona Edwards",
+  "line2": "NBCUniversal",
+  "find": [
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as you both share a connection to NBCUniversal and could exchange fascinating insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Keona Edwards",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    },
+    {
+      "personId": "amelia-kosmal-5ad8",
+      "name": "Amelia Kosmal",
+      "why": "You should meet Amelia Kosmal because she shares your passion for storytelling at NBCUniversal and could inspire new creative ideas.",
+      "basis_kind": "same_work",
+      "via": "NBCUniversal",
+      "path_receipt": [
+        {
+          "from": "Keona Edwards",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        },
+        {
+          "from": "Amelia Kosmal",
+          "rel": "WORKS_AT",
+          "to": "NBCUniversal"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Smith",
+    "major": "",
+    "grad_year": "",
+    "position": "Project Controls Intern",
+    "company": "NBCUniversal",
+    "belief": "The people who are passionate about creating great experiences for others.",
+    "working_on": "I’d like to eventually become project manager."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep desire to shape meaningful connections, ensuring that every project resonates with the joy and needs of others.",
+  "gradient": {
+    "seed": 1952165133,
+    "stops": [
+      {
+        "color": "hsl(48 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(293 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

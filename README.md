@@ -135,6 +135,19 @@ an **interest distillation** (what people SAY → 164 canonical tags, 48 shared 
 Every derived field is marked derived in provenance; founder rows carry real data via
 `data/real-overrides.json`.
 
+### 8 · Graph v2 — the real room (`/graph`, branch `feat/party-graph-v2`)
+The July guest export (364 rows → 312 unique approved people, real emails/phones NEVER emitted)
+flows through the same laws into the same graph: `lib/guests.ts` (dedupe + canonicalize +
+non-PII personIds) → `scripts/ingest-guests.ts` (gate-dispatched: School/Company/Place/Inspiration)
+→ `scripts/enrich-convictions.ts` (guarded closed-vocab extraction; quotes snapped to byte-literal
+sheet spans) → `scripts/enrich-matches.ts` (seek matrix + doppelgängers; `SEEKS` edges written
+through the gate) → `scripts/emit-graph.ts` (baked `public/graph/*`: 312 person records with
+receipted, ranked matches and a dignity floor). Audited by `scripts/audit-graph.ts` — every count
+re-derived, every quote byte-checked, both-way Neo4j reconciliation — and `scripts/check-graph-e2e.ts`
+traces a rendered receipt back to the CSV cell it came from. The surface: drag the guest CSV onto
+`/graph` (parsed in-browser, verified against the baked room) → the Universe's own visual grammar,
+re-fed — select a person and the warm edges are people looking for them.
+
 **Bonus integrations (status kept honest):**
 
 - **Cognee** — agent memory (OSS, Neo4j-backed). Planned; wired only after the three mandatories are
@@ -160,6 +173,11 @@ npx tsx scripts/check-ship.ts   # the ship checklist (submission · README · pi
 Every credential is read from `process.env` and **never hardcoded**. With a cred missing, the app
 boots in **DEGRADED mode** and the first gateway call throws a *named* error telling you which env is
 absent — fail loud, no silent fake answers.
+
+**Changing this repo (human or agent): `CLAUDE.md` is the source of truth.** It carries the
+non-negotiable laws, the code map, the graph-v2 command chain, and the gates a change must keep
+green. Everything else is meant to be learned by reading the code — rationale lives in constraint
+comments at the source, not in side documents.
 
 ## AI disclosure
 

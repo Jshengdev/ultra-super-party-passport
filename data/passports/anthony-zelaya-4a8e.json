@@ -1,0 +1,69 @@
+{
+  "personId": "anthony-zelaya-4a8e",
+  "name": "Anthony Zelaya",
+  "line2": "Daily belts",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You would really enjoy meeting Saamya Patel, as you both share a passion for produce that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Anthony Zelaya",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should meet Jenae Sperling because her passion for storytelling aligns perfectly with your own desire to connect and resonate with audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Telling meaningful stories that highlight other's humanity.",
+      "path_receipt": [
+        {
+          "from": "Anthony Zelaya",
+          "rel": "SHARES_VALUE",
+          "to": "Jenae Sperling"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSB",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Brand Marketing | Brand Strategy |",
+    "company": "Daily belts",
+    "belief": "I’ve always been drawn to storytelling and the way creative work can make people feel something. Whether it’s music, film, branding, or live experiences, I love bringing ideas to life and creating work that connects with people. That passion led me to study communication at UCSB while pursuing music, filmmaking, and creative marketing, and it’s what continues to drive me today.",
+    "working_on": "Long term, I’d love to build a career creating and producing meaningful projects across music, film, and branded content. I’m excited by opportunities to learn every side of the industry, collaborate with talented people."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are motivated by a deep desire to forge connections through storytelling, believing that your creative work can evoke genuine emotions in others.",
+  "gradient": {
+    "seed": 1759324064,
+    "stops": [
+      {
+        "color": "hsl(188 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(302 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

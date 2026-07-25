@@ -1,0 +1,49 @@
+{
+  "personId": "ishank-2586",
+  "name": "Ishank",
+  "line2": "stat arb startup",
+  "find": [
+    {
+      "personId": "jana-koci-8bfe",
+      "name": "Jana Koci",
+      "why": "You should meet Jana Koci because both of you share a passion for your craft and have expressed interest in connecting with someone like each other.",
+      "basis_kind": "shared_context",
+      "via": "their craft",
+      "path_receipt": [
+        {
+          "from": "Jana Koci",
+          "rel": "SEEKS",
+          "to": "Ishank"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "mit",
+    "major": "",
+    "grad_year": "",
+    "position": "quant researcher",
+    "company": "stat arb startup",
+    "belief": "I'm just here for vibes",
+    "working_on": "being entertained"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You seek connection and joy, craving experiences that uplift your spirit and foster a sense of belonging in the moment.",
+  "gradient": {
+    "seed": 3788563295,
+    "stops": [
+      {
+        "color": "hsl(205 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(327 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

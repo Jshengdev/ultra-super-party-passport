@@ -1,0 +1,73 @@
+{
+  "personId": "stephanie-lee-b659",
+  "name": "Stephanie Lee",
+  "line2": "Good News Only Agency",
+  "find": [
+    {
+      "personId": "michael-vainshtein-7d79",
+      "name": "Michael Vainshtein",
+      "why": "You should meet Michael Vainshtein, as he has fascinating insights into casting that could inspire your own creative projects.",
+      "basis_kind": "same_work",
+      "via": "casting",
+      "path_receipt": [
+        {
+          "from": "Stephanie Lee",
+          "rel": "DOES",
+          "to": "casting"
+        },
+        {
+          "from": "Michael Vainshtein",
+          "rel": "DOES",
+          "to": "casting"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would love to meet Maggie Lee because she has incredible insights from her internship experience that could really resonate with yours.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Stephanie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Pitzer",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Good News Only Agency",
+    "belief": "I love connecting with people! I was originally a political science major, but I realized that my favorite part of politics was talking to wolle at community events + helping with public perception.",
+    "working_on": "Either a talent manager or PR director! (casting director seems interesting to me too)"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to foster genuine connections, using your skills to amplify voices and build community through shared narratives.",
+  "gradient": {
+    "seed": 2527656172,
+    "stops": [
+      {
+        "color": "hsl(279 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(86 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

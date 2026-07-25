@@ -1,0 +1,73 @@
+{
+  "personId": "kemp-connelly-a0ca",
+  "name": "Kemp Connelly",
+  "line2": "NFMLA",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman, as you both have a strong connection to direct and could share valuable insights with each other.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Kemp Connelly",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has incredible insights about USC that you both will enjoy discussing together.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Kemp Connelly",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Editor",
+    "company": "NFMLA",
+    "belief": "Was obsessed with movies my whole life. My older sisters began sneaking me into R-rated comedies as early as 6 and I've wanted to make comedies ever since.",
+    "working_on": "I would love to eventually be able to write, direct and edit my own projects."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling, fueled by cherished memories that ignited your creative spark from a young age.",
+  "gradient": {
+    "seed": 1861420391,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(6 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

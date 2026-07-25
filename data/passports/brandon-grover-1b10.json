@@ -1,0 +1,73 @@
+{
+  "personId": "brandon-grover-1b10",
+  "name": "Brandon Grover",
+  "line2": "NFL",
+  "find": [
+    {
+      "personId": "rachel-smith-7a5a",
+      "name": "Rachel Smith",
+      "why": "You should meet Rachel Smith, as you both share a passion for the NFL and can swap stories about your favorite teams.",
+      "basis_kind": "same_work",
+      "via": "NFL",
+      "path_receipt": [
+        {
+          "from": "Brandon Grover",
+          "rel": "WORKS_AT",
+          "to": "NFL"
+        },
+        {
+          "from": "Rachel Smith",
+          "rel": "WORKS_AT",
+          "to": "NFL"
+        }
+      ]
+    },
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You should meet Grace Carr, as her innovative approach to design aligns perfectly with your creative vision.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Brandon Grover",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UVU",
+    "major": "",
+    "grad_year": "",
+    "position": "Graphics",
+    "company": "NFL",
+    "belief": "It has been my favorite industry since I was little, and with the amount of creative roles available I couldn’t help but find myself drawn to entertainment!",
+    "working_on": "I would love to be the art director of a video game someday!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated passion for creativity and storytelling, yearning to shape immersive worlds that inspire and entertain others.",
+  "gradient": {
+    "seed": 1787103766,
+    "stops": [
+      {
+        "color": "hsl(317 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(121 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

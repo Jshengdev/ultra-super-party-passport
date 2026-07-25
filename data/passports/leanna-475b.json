@@ -1,0 +1,73 @@
+{
+  "personId": "leanna-475b",
+  "name": "Leanna",
+  "line2": "Paramount",
+  "find": [
+    {
+      "personId": "sebastian-ellis-5e12",
+      "name": "Sebastian Ellis",
+      "why": "You should meet Sebastian Ellis because he shares your connection to Paramount and has some fascinating insights about its projects.",
+      "basis_kind": "same_work",
+      "via": "Paramount",
+      "path_receipt": [
+        {
+          "from": "Leanna",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        },
+        {
+          "from": "Sebastian Ellis",
+          "rel": "WORKS_AT",
+          "to": "Paramount"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should meet Kalen Kang, as you both share a connection to UCSD and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCSD",
+      "path_receipt": [
+        {
+          "from": "Leanna",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        },
+        {
+          "from": "Kalen Kang",
+          "rel": "STUDIES_AT",
+          "to": "UCSD"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "Consumer Products and Licensing Intern",
+    "company": "Paramount",
+    "belief": "I've always loved the magic of media, and want to help connect stories to their audiences in any way possible.",
+    "working_on": "I'd love to work in creative strategy, softline partnership development, or brand strategy"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling reveals a deep desire to bridge connections, fostering meaningful relationships between brands and their audiences through creativity.",
+  "gradient": {
+    "seed": 2476137477,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(20 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

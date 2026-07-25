@@ -1,0 +1,69 @@
+{
+  "personId": "rachel-smith-7a5a",
+  "name": "Rachel Smith",
+  "line2": "NFL",
+  "find": [
+    {
+      "personId": "brandon-grover-1b10",
+      "name": "Brandon Grover",
+      "why": "You should meet Brandon Grover because he shares your passion for the NFL and has some great insights about the latest games.",
+      "basis_kind": "same_work",
+      "via": "NFL",
+      "path_receipt": [
+        {
+          "from": "Rachel Smith",
+          "rel": "WORKS_AT",
+          "to": "NFL"
+        },
+        {
+          "from": "Brandon Grover",
+          "rel": "WORKS_AT",
+          "to": "NFL"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because their passion for representation aligns beautifully with your shared conviction of making everyone feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Rachel Smith",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Northwestern",
+    "major": "",
+    "grad_year": "",
+    "position": "Strategy and Growth",
+    "company": "NFL",
+    "belief": "Love storytelling, always wanted to go to film school, decided to go into media business instead",
+    "working_on": "More representation in media business!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for storytelling that seeks to create a more inclusive narrative landscape, empowering diverse voices in media.",
+  "gradient": {
+    "seed": 1824708237,
+    "stops": [
+      {
+        "color": "hsl(186 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(177 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

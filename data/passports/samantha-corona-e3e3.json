@@ -1,0 +1,73 @@
+{
+  "personId": "samantha-corona-e3e3",
+  "name": "Samantha Corona",
+  "line2": "UCLA",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Samantha Corona",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You would enjoy meeting Brandon Liu because you both share a connection to UCLA and can swap stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCLA",
+      "path_receipt": [
+        {
+          "from": "Samantha Corona",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "STUDIES_AT",
+          "to": "UCLA"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern at PR agency, content social media intern for photography company, & Hostess at restaurant",
+    "company": "",
+    "belief": "The open space for so many niche jobs!!!",
+    "working_on": "Being represented/working bts in advertising/PR"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for inclusivity, striving to illuminate diverse voices and experiences within the dynamic world of advertising and PR.",
+  "gradient": {
+    "seed": 3046194148,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(310 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "dina-hashash-6fbe",
+  "name": "Dina Hashash",
+  "line2": "Netflix / Eyeline",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You and Brandon Liu both connect to executive-pm, making it a great opportunity to exchange insights and experiences in that field.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Dina Hashash",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    },
+    {
+      "personId": "gavin-griffin-521e",
+      "name": "Gavin Griffin",
+      "why": "You should meet Gavin Griffin because you both share a Stanford connection that could spark some fascinating conversations and insights.",
+      "basis_kind": "shared_context",
+      "via": "Stanford",
+      "path_receipt": [
+        {
+          "from": "Dina Hashash",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        },
+        {
+          "from": "Gavin Griffin",
+          "rel": "STUDIES_AT",
+          "to": "Stanford"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Stanford",
+    "major": "",
+    "grad_year": "",
+    "position": "Research Intern",
+    "company": "Netflix / Eyeline",
+    "belief": "This industry has an extremely unique intersection of technology and creativity that I love to be a part of.",
+    "working_on": "Exec/have my own company."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for blending innovation with artistry, seeking to create impactful solutions that inspire and elevate your industry.",
+  "gradient": {
+    "seed": 3013313292,
+    "stops": [
+      {
+        "color": "hsl(92 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(106 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

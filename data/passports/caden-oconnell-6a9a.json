@@ -1,0 +1,73 @@
+{
+  "personId": "caden-oconnell-6a9a",
+  "name": "Caden O'Connell",
+  "line2": "Sugar Studios Post Production",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because you both share a passion for executive-pm and can exchange valuable insights and experiences in that field.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Caden O'Connell",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You should meet Aidan Teeling, as you both share a passion for executive-pm that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Caden O'Connell",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UNC Chapel Hill",
+    "major": "",
+    "grad_year": "",
+    "position": "Post Production Intern",
+    "company": "Sugar Studios Post Production",
+    "belief": "My grandfather opened a two-screen cinema grill in Raleigh, NC in the early 90s and I spent so much time there before COVID. Along with falling in love with classics that my Dad would show me, Rocky included, it’s what inspired me to pursue a career in film/tv.",
+    "working_on": "While I currently have the mindset of being open to any opportunity, I eventually hope to be able to work as an executive at a major studio."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-rooted passion for storytelling and a desire to honor your family's legacy in the film industry.",
+  "gradient": {
+    "seed": 2210158479,
+    "stops": [
+      {
+        "color": "hsl(281 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(118 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

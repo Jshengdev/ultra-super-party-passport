@@ -1,0 +1,69 @@
+{
+  "personId": "molly-mclean-ca87",
+  "name": "Molly McLean",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You and Maggie Lee both connect to CAA, so you'll have a lot of shared experiences and stories to discuss.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Molly McLean",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "tavishi-srivastava-1a18",
+      "name": "Tavishi Srivastava",
+      "why": "You would enjoy meeting Tavishi Srivastava, as you both share a deep commitment to building community and creating lasting connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "What initially drew me to the entertainment industry was my love for K-pop. I’ve always been fascinated by how K-pop goes beyond music. It combines storytelling, visuals, fashion, and community to create such a strong connection between artists and fans. That interest grew into wanting to understand the business and creative work behind the industry and how entertainment can bring people from different cultures together.",
+      "path_receipt": [
+        {
+          "from": "Molly McLean",
+          "rel": "SHARES_VALUE",
+          "to": "Tavishi Srivastava"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCSD",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Touring Intern",
+    "company": "CAA",
+    "belief": "Going to so many concerts in high school/college and falling in love with live music and how it brings people together.",
+    "working_on": "Being a music agent."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to create connections and shared experiences, harnessing the power of music to unite and inspire others.",
+  "gradient": {
+    "seed": 2581584691,
+    "stops": [
+      {
+        "color": "hsl(190 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(61 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

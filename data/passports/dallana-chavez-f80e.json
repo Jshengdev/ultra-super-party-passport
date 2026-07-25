@@ -1,0 +1,73 @@
+{
+  "personId": "dallana-chavez-f80e",
+  "name": "Dallana Chavez",
+  "line2": "Freelance creator",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because he has incredible insights into executive-pm that could really enhance your perspective.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Dallana Chavez",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    },
+    {
+      "personId": "aidan-teeling-4160",
+      "name": "Aidan Teeling",
+      "why": "You would enjoy meeting Aidan Teeling, as you both connect to executive-pm and can share valuable insights from your experiences.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "Dallana Chavez",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Aidan Teeling",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CalStateLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Operation Coordinator",
+    "company": "Freelance creator",
+    "belief": "I have always art and the entertainment industry captured my eye to potential work in the film industry",
+    "working_on": "I would love to work in the administration in film because I love to\nOrganize and look forward into working new projects."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a desire to harmonize creativity and organization, creating spaces where artistic visions can flourish and thrive in the film industry.",
+  "gradient": {
+    "seed": 15297898,
+    "stops": [
+      {
+        "color": "hsl(79 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(73 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

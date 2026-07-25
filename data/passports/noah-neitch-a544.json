@@ -1,0 +1,69 @@
+{
+  "personId": "noah-neitch-a544",
+  "name": "Noah Neitch",
+  "line2": "Walt Disney Company",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Noah Neitch",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN because both of you share a deep conviction in the importance of representation and making others feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Noah Neitch",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Public Relations",
+    "company": "Walt Disney Company",
+    "belief": "Working actor and content creator",
+    "working_on": "Shape stories being told to the upcoming generation and fill a gap for LGBTQ+ portrayal in media."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You seek to empower the next generation by weaving authentic narratives that celebrate diversity, ensuring every voice finds its rightful place in media.",
+  "gradient": {
+    "seed": 880907586,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(219 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

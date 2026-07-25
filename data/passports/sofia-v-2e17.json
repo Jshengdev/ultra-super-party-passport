@@ -1,0 +1,69 @@
+{
+  "personId": "sofia-v-2e17",
+  "name": "Sofia V",
+  "line2": "Valhalla Entertainment",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because he has fascinating insights about his experience as a development intern that you might find inspiring and relatable.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Sofia V",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "sunny-mccall-a0cf",
+      "name": "Sunny McCall",
+      "why": "You should meet Sunny McCall because both of you share a passion for collaborating on creative projects, which could spark some amazing ideas together.",
+      "basis_kind": "shared_value",
+      "via": "cluster-4",
+      "match_belief": "I love the collaboration within the entertainment industry, and all the work people do in order to bring stories to life. No matter the kinds of projects, dramas, comedies or even superhero films it is always amazing to see how others view the world and the ways they come up with to express their interests.",
+      "path_receipt": [
+        {
+          "from": "Sofia V",
+          "rel": "SHARES_VALUE",
+          "to": "Sunny McCall"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UNCSA",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Valhalla Entertainment",
+    "belief": "The collaboration to create stories bigger than ourselves together.",
+    "working_on": "First Assistant Director or Live Show Stage Management work"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to unite diverse voices, crafting shared narratives that transcend individual experiences and resonate with audiences.",
+  "gradient": {
+    "seed": 479508772,
+    "stops": [
+      {
+        "color": "hsl(243 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(284 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(265 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

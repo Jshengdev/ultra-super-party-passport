@@ -1,0 +1,73 @@
+{
+  "personId": "junior-contreras-9444",
+  "name": "Junior Contreras",
+  "line2": "ESPN LA",
+  "find": [
+    {
+      "personId": "chloe-osmers-1fa4",
+      "name": "Chloe Osmers",
+      "why": "You should meet Chloe Osmers because her insights on ESPN LA will resonate with your own experiences in the sports media landscape.",
+      "basis_kind": "same_work",
+      "via": "ESPN LA",
+      "path_receipt": [
+        {
+          "from": "Junior Contreras",
+          "rel": "WORKS_AT",
+          "to": "ESPN LA"
+        },
+        {
+          "from": "Chloe Osmers",
+          "rel": "WORKS_AT",
+          "to": "ESPN LA"
+        }
+      ]
+    },
+    {
+      "personId": "brooke-byrd-c91e",
+      "name": "Brooke Byrd",
+      "why": "You should meet Brooke Byrd because you both share a connection to CSULB and might have some great stories to exchange.",
+      "basis_kind": "shared_context",
+      "via": "CSULB",
+      "path_receipt": [
+        {
+          "from": "Junior Contreras",
+          "rel": "STUDIES_AT",
+          "to": "CSULB"
+        },
+        {
+          "from": "Brooke Byrd",
+          "rel": "STUDIES_AT",
+          "to": "CSULB"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "CSULB",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing/Entertainment Intern",
+    "company": "ESPN LA",
+    "belief": "I watched ESPN my entire life and always wanted to be a sports anchor/host/analyst!",
+    "working_on": "Being on-air talent"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for sports broadcasting reveals a deep desire to connect with others through shared enthusiasm, channeling your lifelong admiration into authentic expression.",
+  "gradient": {
+    "seed": 213504274,
+    "stops": [
+      {
+        "color": "hsl(16 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(70 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

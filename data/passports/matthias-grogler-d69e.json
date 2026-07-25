@@ -1,0 +1,73 @@
+{
+  "personId": "matthias-grogler-d69e",
+  "name": "Matthias GROGLER",
+  "line2": "Gotham Group/ Studiocanal",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You would enjoy meeting Jonah Einisman, as you both share experiences as development interns and can exchange valuable insights from your journeys.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Matthias GROGLER",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    },
+    {
+      "personId": "isabel-soliman-96c6",
+      "name": "Isabel Soliman",
+      "why": "You should meet Isabel Soliman because you both share experiences as development interns, making for a great conversation about your journeys and insights.",
+      "basis_kind": "same_work",
+      "via": "development intern",
+      "path_receipt": [
+        {
+          "from": "Matthias GROGLER",
+          "rel": "DOES",
+          "to": "development intern"
+        },
+        {
+          "from": "Isabel Soliman",
+          "rel": "DOES",
+          "to": "development intern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Stark program USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern",
+    "company": "Gotham Group/ Studiocanal",
+    "belief": "Want to work between the American and European films industries.",
+    "working_on": "Creative producer/executive"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to bridge cultures, using storytelling to connect diverse audiences and enrich the cinematic experience.",
+  "gradient": {
+    "seed": 3170831066,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(159 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

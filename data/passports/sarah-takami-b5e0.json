@@ -1,0 +1,73 @@
+{
+  "personId": "sarah-takami-b5e0",
+  "name": "Sarah Takami",
+  "line2": "AMC Networks",
+  "find": [
+    {
+      "personId": "daniel-pan-aa50",
+      "name": "Daniel Pan",
+      "why": "You should meet Daniel Pan because he shares your passion for storytelling at AMC Networks and has some fascinating insights to share.",
+      "basis_kind": "same_work",
+      "via": "AMC Networks",
+      "path_receipt": [
+        {
+          "from": "Sarah Takami",
+          "rel": "WORKS_AT",
+          "to": "AMC Networks"
+        },
+        {
+          "from": "Daniel Pan",
+          "rel": "WORKS_AT",
+          "to": "AMC Networks"
+        }
+      ]
+    },
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi, as you both share a passion for market-brand strategies that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Sarah Takami",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "San Diego State University",
+    "major": "",
+    "grad_year": "",
+    "position": "Theatrical Sales and Distribution Intern",
+    "company": "AMC Networks",
+    "belief": "The intersection between culture and art!",
+    "working_on": "Still trying to figure that out! But more recently I’ve been hopeful to land somewhere within marketing or event planning - some department where I can explore my interest of the intersection between history, culture, and how what we make is a reflection of everything in between!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep curiosity to connect people with their stories, believing that culture and history shape our shared experiences.",
+  "gradient": {
+    "seed": 164551805,
+    "stops": [
+      {
+        "color": "hsl(264 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(309 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "val-gutierrez-4847",
+  "name": "Val Gutierrez",
+  "line2": "Legendary Entertainment",
+  "find": [
+    {
+      "personId": "raegan-smith-7246",
+      "name": "Raegan smith",
+      "why": "You and Raegan Smith share a passion for cinematography, and I think you’ll both enjoy exchanging ideas and experiences in the field.",
+      "basis_kind": "same_work",
+      "via": "cinematography",
+      "path_receipt": [
+        {
+          "from": "Val Gutierrez",
+          "rel": "DOES",
+          "to": "cinematography"
+        },
+        {
+          "from": "Raegan smith",
+          "rel": "DOES",
+          "to": "cinematography"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN, as you both share a deep conviction in the importance of representation and making others feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Val Gutierrez",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "COORDINATOR, TV LEGAL & BUSINESS AFFAIRS",
+    "company": "Legendary Entertainment",
+    "belief": "The technical aspect of making films. The Odyssey right now has me geeking. I need to see the new IMAX cameras in person and I would die if I got to see the blimp. Although The Odyssey is an amazing story, literal epic, I am more excited and engaged at all the technical advancements they have made for this film. That and I just love how shots alone can say so much within a story without ever stating a single word.",
+    "working_on": "I would love to be a cinematographer. Genuinely my life would be complete if I could just do that for the rest of my life. But I also love producing, working on the legal and business affairs of it all because negotiating is unfortunately too much fun. But like Guillermo and Autumn, I want someone like me and someone with a similar name to be on the big screen at the end of the credits."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for storytelling's visual power, seeking to blend artistry with technical mastery to leave your unique mark.",
+  "gradient": {
+    "seed": 835034102,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(109 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

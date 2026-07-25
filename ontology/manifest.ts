@@ -40,6 +40,8 @@ export const OBJECT_SCHEMAS = {
   }),
   Party: z.object({ id: z.string().min(1), name: z.string().min(1), date: z.string().min(1) }),
   Interest: z.object({ name: z.string().min(1) }), // canonical lowercase 1-3 word semantic tag
+  Place: z.object({ name: z.string().min(1), lat: z.number(), lng: z.number() }),
+  Inspiration: z.object({ name: z.string().min(1) }),
 } as const;
 
 export type ObjectLabel = keyof typeof OBJECT_SCHEMAS;
@@ -65,6 +67,9 @@ export const LINKS: readonly LinkPattern[] = [
   { from: "Person", rel: "SHARES_VALUE", to: "Person", props: ["cluster", "basis"] },
   { from: "Person", rel: "SIGNED_UP", to: "Party", props: ["checked_in", "checked_in_at"] },
   { from: "Person", rel: "INTERESTED_IN", to: "Interest" },
+  { from: "Person", rel: "FROM", to: "Place" },
+  { from: "Person", rel: "INSPIRED_BY", to: "Inspiration" },
+  { from: "Person", rel: "SEEKS", to: "Person", props: ["score", "mutual", "via"] },
 ] as const;
 
 export const REL_TYPES = Array.from(new Set(LINKS.map((l) => l.rel)));
@@ -220,6 +225,121 @@ SET su.checked_in = $checkedIn,
 RETURN collect(p.id) AS writtenIds
 `.trim();
 
+/* ---- ingest_guest_v2: one guest + place/inspiration edges, one idempotent transaction ----
+ * The belief/does/workingOn triple is the v1 SHAPE the original product reads: lib/cluster.ts
+ * clusters Belief nodes (MERGEd on personId, exactly as ingest_person does, so
+ * write_value_cluster's `MATCH (bel:Belief {personId})` resolves), and lib/traverse.ts walks
+ * DOES/WORKING_ON→Activity for same-work finds. Conventions are copied from ingest_person
+ * verbatim — `does` arrives lowercased from the caller, `workingOn` keeps its case. */
+export const IngestGuestV2Params = z.object({
+  person: z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    position: z.string().default(""),
+  }),
+  school: z.string().nullable(),
+  company: z.string().nullable(),
+  place: OBJECT_SCHEMAS.Place.nullable(),
+  inspiration: z.string().nullable(),
+  /** what-you-do Activity names, lowercased by the caller (ingest_person convention) */
+  does: z.array(z.string().min(1)),
+  /** working-on Activity names, case preserved (ingest_person convention) */
+  workingOn: z.array(z.string().min(1)),
+  belief: z.string().nullable(),
+  party: OBJECT_SCHEMAS.Party,
+});
+export type IngestGuestV2Params = z.infer<typeof IngestGuestV2Params>;
+
+const INGEST_GUEST_V2_CYPHER = `
+MERGE (p:Person {id: $person.id})
+SET p.name = $person.name, p.position = $person.position,
+    p._src = $_src, p._ts = $_ts, p._actor = $_actor
+MERGE (party:Party {id: $party.id})
+SET party.name = $party.name, party.date = $party.date,
+    party._src = $_src, party._ts = $_ts, party._actor = $_actor
+MERGE (p)-[su:SIGNED_UP]->(party)
+  ON CREATE SET su.checked_in = false, su.checked_in_at = null
+SET su._src = $_src, su._ts = $_ts, su._actor = $_actor
+FOREACH (s IN CASE WHEN $school IS NULL THEN [] ELSE [$school] END |
+  MERGE (sch:School {name: s})
+  SET sch._src = $_src, sch._ts = $_ts, sch._actor = $_actor
+  MERGE (p)-[r:STUDIES_AT]->(sch)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (c IN CASE WHEN $company IS NULL THEN [] ELSE [$company] END |
+  MERGE (co:Company {name: c})
+  SET co._src = $_src, co._ts = $_ts, co._actor = $_actor
+  MERGE (p)-[r:WORKS_AT]->(co)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (pl IN CASE WHEN $place IS NULL THEN [] ELSE [$place] END |
+  MERGE (plc:Place {name: pl.name})
+  SET plc.lat = pl.lat, plc.lng = pl.lng,
+      plc._src = $_src, plc._ts = $_ts, plc._actor = $_actor
+  MERGE (p)-[r:FROM]->(plc)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (ins IN CASE WHEN $inspiration IS NULL THEN [] ELSE [$inspiration] END |
+  MERGE (insp:Inspiration {name: ins})
+  SET insp._src = $_src, insp._ts = $_ts, insp._actor = $_actor
+  MERGE (p)-[r:INSPIRED_BY]->(insp)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (a IN $does |
+  MERGE (act:Activity {name: a})
+  SET act._src = $_src, act._ts = $_ts, act._actor = $_actor
+  MERGE (p)-[r:DOES]->(act)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (a IN $workingOn |
+  MERGE (act:Activity {name: a})
+  SET act._src = $_src, act._ts = $_ts, act._actor = $_actor
+  MERGE (p)-[r:WORKING_ON]->(act)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+FOREACH (b IN CASE WHEN $belief IS NULL THEN [] ELSE [$belief] END |
+  MERGE (bel:Belief {personId: $person.id})
+  SET bel.text = b, bel._src = $_src, bel._ts = $_ts, bel._actor = $_actor
+  MERGE (p)-[r:BELIEVES]->(bel)
+  SET r._src = $_src, r._ts = $_ts, r._actor = $_actor)
+RETURN [$person.id] AS writtenIds
+`.trim();
+
+/* ---- write_seek_edge: SEEKS scavenger-hunt target between two people ---- */
+export const WriteSeekEdgeParams = z.object({
+  from: z.string().min(1),
+  to: z.string().min(1),
+  score: z.number().min(0).max(1),
+  mutual: z.boolean(),
+  via: z.string().min(1),
+});
+export type WriteSeekEdgeParams = z.infer<typeof WriteSeekEdgeParams>;
+
+const WRITE_SEEK_EDGE_CYPHER = `
+MATCH (a:Person {id: $from}), (b:Person {id: $to})
+MERGE (a)-[s:SEEKS]->(b)
+SET s.score = $score, s.mutual = $mutual, s.via = $via,
+    s._src = $_src, s._ts = $_ts, s._actor = $_actor
+RETURN [$from] AS writtenIds
+`.trim();
+
+/* ---- reset_graph: the DESTRUCTIVE dev action — wipes every node and relationship ----
+ *
+ * Deliberately hard to fire: the only param is the literal string "RESET-EVERYTHING", so an
+ * empty/typo'd/defaulted call is rejected by zod at the gate before any Cypher runs, and the
+ * Cypher re-checks the same literal (a leading WITH…WHERE) so a mis-wired caller deletes
+ * nothing rather than something. It is never invoked by any script in this repo — a human runs
+ * it explicitly. Scope is global, so it declares the WHOLE ontology as its write surface;
+ * that is the honest declaration, not a loophole (the gate still asserts every entry is
+ * on-ontology).
+ */
+export const ResetGraphParams = z.object({
+  confirm: z.literal("RESET-EVERYTHING"),
+});
+export type ResetGraphParams = z.infer<typeof ResetGraphParams>;
+
+const RESET_GRAPH_CYPHER = `
+WITH $confirm AS confirm
+WHERE confirm = 'RESET-EVERYTHING'
+MATCH (n)
+DETACH DELETE n
+RETURN [toString(count(*))] AS writtenIds
+`.trim();
+
 export const ACTIONS = {
   ingest_person: {
     name: "ingest_person",
@@ -268,6 +388,52 @@ export const ACTIONS = {
     defaultSrc: "action:check_in",
     defaultActor: "human",
   },
+  ingest_guest_v2: {
+    name: "ingest_guest_v2",
+    params: IngestGuestV2Params,
+    writesLabels: [
+      "Person",
+      "Party",
+      "School",
+      "Company",
+      "Place",
+      "Inspiration",
+      "Activity",
+      "Belief",
+    ],
+    writesPatterns: [
+      ["Person", "SIGNED_UP", "Party"],
+      ["Person", "STUDIES_AT", "School"],
+      ["Person", "WORKS_AT", "Company"],
+      ["Person", "FROM", "Place"],
+      ["Person", "INSPIRED_BY", "Inspiration"],
+      ["Person", "DOES", "Activity"],
+      ["Person", "WORKING_ON", "Activity"],
+      ["Person", "BELIEVES", "Belief"],
+    ],
+    cypher: INGEST_GUEST_V2_CYPHER,
+    defaultSrc: "csv:party-guest-v2",
+    defaultActor: "pipeline",
+  },
+  reset_graph: {
+    name: "reset_graph",
+    params: ResetGraphParams,
+    // global scope: everything the ontology can hold is in the blast radius, declared in full.
+    writesLabels: OBJECT_TYPES,
+    writesPatterns: LINKS.map((l) => [l.from, l.rel, l.to] as [string, string, string]),
+    cypher: RESET_GRAPH_CYPHER,
+    defaultSrc: "action:reset_graph",
+    defaultActor: "human",
+  },
+  write_seek_edge: {
+    name: "write_seek_edge",
+    params: WriteSeekEdgeParams,
+    writesLabels: ["Person"],
+    writesPatterns: [["Person", "SEEKS", "Person"]],
+    cypher: WRITE_SEEK_EDGE_CYPHER,
+    defaultSrc: "action:write_seek_edge",
+    defaultActor: "pipeline",
+  },
 } as const satisfies Record<string, ActionDef>;
 
 export type ActionName = keyof typeof ACTIONS;
@@ -297,6 +463,23 @@ MATCH (p:Person {id: $personId})-[sv:SHARES_VALUE]-(other:Person)
 RETURN other.id AS personId, other.name AS name, sv.cluster AS cluster, sv.basis AS basis,
        [{ from: $personId, rel: 'SHARES_VALUE', to: other.id }] AS path_receipt
 ORDER BY other.name
+LIMIT $limit`.trim(),
+    params: z.object({ personId: z.string(), limit: z.number().int().positive().default(10) }),
+  },
+  // LAST-RESORT find: a real SEEKS edge between $personId and another guest, either direction.
+  // Read ONLY when same-work / values / shared-context cannot fill two finds — a stated intent is
+  // a weaker anchor than a shared entity, but it is a real, auditable edge, which is the bar.
+  // Ordered inbound-first ("they're looking for someone like you"), then mutual, then outbound.
+  seeks_path: {
+    name: "seeks_path",
+    cypher: `
+MATCH (p:Person {id: $personId})-[s:SEEKS]-(other:Person)
+WHERE other.id <> $personId
+RETURN other.id AS personId, other.name AS name, s.via AS via,
+       coalesce(s.score, 0) AS score, coalesce(s.mutual, false) AS mutual,
+       startNode(s).id = $personId AS outbound,
+       [{ from: startNode(s).name, rel: 'SEEKS', to: endNode(s).name }] AS path_receipt
+ORDER BY outbound ASC, mutual DESC, score DESC, other.name
 LIMIT $limit`.trim(),
     params: z.object({ personId: z.string(), limit: z.number().int().positive().default(10) }),
   },

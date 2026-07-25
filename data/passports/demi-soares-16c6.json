@@ -1,0 +1,69 @@
+{
+  "personId": "demi-soares-16c6",
+  "name": "Demi Soares",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because you both share a passion for Live Nation and could exchange exciting insights from your experiences.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Demi Soares",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your shared conviction and could spark some inspiring ideas together.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Demi Soares",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Paid Search Marketing",
+    "company": "Live Nation",
+    "belief": "Honestly, I found connections through the sports industry and working at Wasserman, and realized everything I loved about sports was also present in entertainment.",
+    "working_on": "I'm still trying to figure it out and find what makes me passionate in this industry, but I love creating spaces where differences and creativity is celebrated."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep yearning to cultivate inclusive environments where diverse voices can thrive, merging your passions for sports and creativity.",
+  "gradient": {
+    "seed": 805828411,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

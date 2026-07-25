@@ -1,0 +1,73 @@
+{
+  "personId": "jamee-bynum-3c3a",
+  "name": "Jamee Bynum",
+  "line2": "JUCCEE Shorts",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You would really enjoy meeting Saamya Patel, as you both share a passion for produce and can exchange great insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Jamee Bynum",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as you both share a connection to USC and might enjoy reminiscing about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Jamee Bynum",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing and Publicity Intern",
+    "company": "JUCCEE Shorts",
+    "belief": "Grew up watching movies and tv with my mother.  Always been passionate about it ever since. It's my safe space.",
+    "working_on": "I want to work in film/tv marketing and eventually produce."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep connection to storytelling and a desire to create spaces where others can find comfort and inspiration.",
+  "gradient": {
+    "seed": 1516527688,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(182 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

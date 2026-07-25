@@ -1,0 +1,69 @@
+{
+  "personId": "jana-koci-8bfe",
+  "name": "Jana Koci",
+  "line2": "www.uniwellsity.com",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because her passion for produce will resonate with your own, sparking delightful conversations about fresh ideas and flavors.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Jana Koci",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "kalen-kang-f68e",
+      "name": "Kalen Kang",
+      "why": "You should meet Kalen Kang, as both of you share a deep conviction to inspire the next generation in impactful ways.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "I was drawn to the entertainment industry because of its crossover with tech and business. Good ideas become experiences that genuinely connect with people! I love being part of the work behind the scenes that brings those moments to life, and I believe entertainment has a unique ability to inspire and add something meaningful to everyday life.",
+      "path_receipt": [
+        {
+          "from": "Jana Koci",
+          "rel": "SHARES_VALUE",
+          "to": "Kalen Kang"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Charles University",
+    "major": "",
+    "grad_year": "",
+    "position": "CEO",
+    "company": "www.uniwellsity.com",
+    "belief": "I'm passionate about using storytelling, education, and technology to improve well-being, which is what drew me to the entertainment industry.",
+    "working_on": "To create evidence-based educational content that reaches millions of people, using storytelling, technology, and media to make well-being education engaging, accessible, and impactful."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect and uplift others through engaging narratives, believing that knowledge can transform lives.",
+  "gradient": {
+    "seed": 4025410998,
+    "stops": [
+      {
+        "color": "hsl(53 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(258 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

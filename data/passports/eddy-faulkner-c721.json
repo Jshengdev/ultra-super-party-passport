@@ -1,0 +1,69 @@
+{
+  "personId": "eddy-faulkner-c721",
+  "name": "Eddy Faulkner",
+  "line2": "Eddy Faulkner Enterprises. Learn more: Eddyfaulkner.com",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce that could spark some delicious conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Eddy Faulkner",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because her passion for building community aligns perfectly with your shared conviction and vision for creating meaningful connections.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Eddy Faulkner",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Lynchburg",
+    "major": "",
+    "grad_year": "",
+    "position": "CEO/Founder",
+    "company": "Eddy Faulkner Enterprises. Learn more: Eddyfaulkner.com",
+    "belief": "I've always been drawn to entertainment because of its ability to bring people together and create lasting impact. I started as an independent artist and discovered that music could open doors far beyond a song itself. Today, my work sits at the intersection of music, live experiences, film, hospitality, and community building. I'm most energized by creating platforms that connect artists, fans, brands, and institutions in meaningful ways.",
+    "working_on": "My goal is to build globally recognized entertainment properties that create opportunities for others. Whether that's through live experiences, film, music, or strategic partnerships, I'm interested in building things that last. Personally, I want to continue growing as an artist, producer, and entrepreneur while developing platforms that elevate emerging talent and create meaningful cultural experiences around the world."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to foster connection and elevate others, believing that lasting impact stems from collaborative cultural experiences.",
+  "gradient": {
+    "seed": 2955031248,
+    "stops": [
+      {
+        "color": "hsl(148 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(172 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

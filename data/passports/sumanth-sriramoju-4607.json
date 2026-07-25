@@ -1,0 +1,73 @@
+{
+  "personId": "sumanth-sriramoju-4607",
+  "name": "Sumanth Sriramoju",
+  "line2": "LAAMP",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet YU-SHENG CHIEN, as you both share a passion for composing music that could lead to some inspiring collaborations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Sumanth Sriramoju",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "kayla-mcintyre-5388",
+      "name": "Kayla McIntyre",
+      "why": "You would enjoy meeting Kayla McIntyre, as you both share a passion for composing music that could lead to inspiring collaborations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Sumanth Sriramoju",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "Kayla McIntyre",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LAAMP",
+    "major": "",
+    "grad_year": "",
+    "position": "Musician",
+    "company": "",
+    "belief": "I'm an amazing",
+    "working_on": "Creating amazing art"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive to create amazing art stems from a deep-seated belief in your own potential and a desire to share that brilliance with others.",
+  "gradient": {
+    "seed": 2125024550,
+    "stops": [
+      {
+        "color": "hsl(96 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(184 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

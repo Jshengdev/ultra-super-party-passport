@@ -1,0 +1,73 @@
+{
+  "personId": "tiggy-agok-65de",
+  "name": "Tiggy Agok",
+  "line2": "Rideback",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because he shares your passion for Rideback and has some fascinating insights about its future.",
+      "basis_kind": "same_work",
+      "via": "Rideback",
+      "path_receipt": [
+        {
+          "from": "Tiggy Agok",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        }
+      ]
+    },
+    {
+      "personId": "desmond-chua-c199",
+      "name": "Desmond Chua",
+      "why": "You should meet Desmond Chua because you both share a connection to UCD and can exchange valuable insights about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "UCD",
+      "path_receipt": [
+        {
+          "from": "Tiggy Agok",
+          "rel": "STUDIES_AT",
+          "to": "UCD"
+        },
+        {
+          "from": "Desmond Chua",
+          "rel": "STUDIES_AT",
+          "to": "UCD"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCD",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Rideback",
+    "belief": "I have always loved writing stories and that intersected with my love of film as I got older.",
+    "working_on": "I hope to become a screenwriter"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to weave your passion for storytelling into the visual tapestry of cinema, creating shared experiences.",
+  "gradient": {
+    "seed": 191767565,
+    "stops": [
+      {
+        "color": "hsl(111 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(166 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

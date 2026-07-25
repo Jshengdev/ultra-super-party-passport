@@ -1,0 +1,69 @@
+{
+  "personId": "kehara-edirisinghe-8f1f",
+  "name": "Kehara Edirisinghe",
+  "line2": "Fox / USC",
+  "find": [
+    {
+      "personId": "morgan-seftel-e035",
+      "name": "Morgan Seftel",
+      "why": "You should definitely meet Morgan Seftel, as you both share a deep passion for acting that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "actor",
+      "path_receipt": [
+        {
+          "from": "Kehara Edirisinghe",
+          "rel": "DOES",
+          "to": "actor"
+        },
+        {
+          "from": "Morgan Seftel",
+          "rel": "DOES",
+          "to": "actor"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam because you both share a deep commitment to truth-inform, which could spark an enriching conversation and collaboration.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-truth-inform",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Kehara Edirisinghe",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Actor",
+    "company": "Fox / USC",
+    "belief": "The ability to present a perspective or circumstance that gets the audience thinking",
+    "working_on": "Eventual producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You’re driven by a desire to spark curiosity and deeper understanding in others, transforming moments into meaningful reflections and conversations.",
+  "gradient": {
+    "seed": 2678525223,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(162 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(211 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

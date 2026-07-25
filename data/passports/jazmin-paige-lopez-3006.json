@@ -1,0 +1,69 @@
+{
+  "personId": "jazmin-paige-lopez-3006",
+  "name": "Jazmin Paige Lopez",
+  "line2": "OBB MEDIA",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You would love to meet Caterina Terrizzi because she has fascinating insights about market-brand that could spark some great conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Jazmin Paige Lopez",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You and Yu-Sheng Chien both share a deep commitment to making people feel seen, which could lead to a truly inspiring conversation.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-make-people-feel-seen",
+      "match_belief": "My main passion for music is sharing catharsis and resonating with the audience through live shows. Besides, I also enjoy blending or exploring different genres and sounds in my music.",
+      "path_receipt": [
+        {
+          "from": "Jazmin Paige Lopez",
+          "rel": "SHARES_VALUE",
+          "to": "YU-SHENG CHIEN"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC Berkeley",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern!",
+    "company": "OBB MEDIA",
+    "belief": "I’ve always been obsessed with how entertainment connects people, it’s a reminder of how refreshing humanity can be when it portrays itself. I always spent my downtime watching pop culture, keeping up with what’s entertaining, the commentary, and fan edits, so diving into this world was natural. Having a strong background in  photography, event management, and editing has connected to so many other people. And I realized I wanted to be a part of that impact, of making people feel.",
+    "working_on": "Representation! Access! \n\n I just want people of all kinds to finally see themselves represented in the media and on the screen.  At the end of the day, media is a tool and one of its impacts should build empathy. Would love to help with creating paths for overlooked voices, and create fun and memorable campaigns for talents!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep-seated desire to foster connection and understanding through authentic representation, believing in the transformative power of shared narratives.",
+  "gradient": {
+    "seed": 2508755818,
+    "stops": [
+      {
+        "color": "hsl(242 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(166 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(79 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

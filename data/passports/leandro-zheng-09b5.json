@@ -1,0 +1,73 @@
+{
+  "personId": "leandro-zheng-09b5",
+  "name": "Leandro Zheng",
+  "line2": "National Football League (NFL)",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because she has valuable insights into market-brand strategies that could resonate with your experiences and ideas.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Leandro Zheng",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "ruby-washio-dcf5",
+      "name": "ruby washio",
+      "why": "You should meet Ruby Washio because you both share a passion for market-brand strategies that could spark some exciting conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Leandro Zheng",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "ruby washio",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UC San Diego",
+    "major": "",
+    "grad_year": "",
+    "position": "Product Operations & Design Intern",
+    "company": "National Football League (NFL)",
+    "belief": "Working on fun products and making a real impact on people like me - the fan/consumer!",
+    "working_on": "Being a director in marketing / content in sports"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to connect deeply with others, transforming enjoyment into meaningful experiences that resonate with fans and consumers alike.",
+  "gradient": {
+    "seed": 2992691112,
+    "stops": [
+      {
+        "color": "hsl(271 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(86 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

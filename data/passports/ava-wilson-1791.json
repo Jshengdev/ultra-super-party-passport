@@ -1,0 +1,73 @@
+{
+  "personId": "ava-wilson-1791",
+  "name": "Ava Wilson",
+  "line2": "Fremantle",
+  "find": [
+    {
+      "personId": "phong-nguyen-6b26",
+      "name": "Phong Nguyen",
+      "why": "You should meet Phong Nguyen because you both share a deep connection to Fremantle and can exchange stories about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Fremantle",
+      "path_receipt": [
+        {
+          "from": "Ava Wilson",
+          "rel": "WORKS_AT",
+          "to": "Fremantle"
+        },
+        {
+          "from": "Phong Nguyen",
+          "rel": "WORKS_AT",
+          "to": "Fremantle"
+        }
+      ]
+    },
+    {
+      "personId": "alexi-haimes-9708",
+      "name": "Alexi Haimes",
+      "why": "You should meet Alexi Haimes, as you both share a connection to UT Austin and can exchange some great experiences from your time there.",
+      "basis_kind": "shared_context",
+      "via": "UT Austin",
+      "path_receipt": [
+        {
+          "from": "Ava Wilson",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        },
+        {
+          "from": "Alexi Haimes",
+          "rel": "STUDIES_AT",
+          "to": "UT Austin"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Unscripted Development Intern",
+    "company": "Fremantle",
+    "belief": "I like moovies",
+    "working_on": "Being a Producer"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for movies reflects a deep desire to shape narratives that resonate with others, inviting them into shared experiences and emotions.",
+  "gradient": {
+    "seed": 2622539069,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(171 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "eze-baum-c17e",
+  "name": "Eze Baum",
+  "line2": "Future Vintage",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You and Jonah share a strong connection to direct, making it a great opportunity for you both to exchange insights and ideas.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Eze Baum",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "crystal-qianhui-xu-1989",
+      "name": "Crystal Qianhui Xu",
+      "why": "You should meet Crystal Qianhui Xu because you both share a passion for direct connections that can lead to exciting collaborations.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Eze Baum",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Crystal Qianhui Xu",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Filmmaker",
+    "company": "Future Vintage",
+    "belief": "Lifelong love of movies",
+    "working_on": "To write/direct feature films"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to create immersive experiences that reflect your lifelong connection to the magic of cinema.",
+  "gradient": {
+    "seed": 1667108546,
+    "stops": [
+      {
+        "color": "hsl(76 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(300 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

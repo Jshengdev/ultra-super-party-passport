@@ -1,0 +1,69 @@
+{
+  "personId": "aiden-miller-296a",
+  "name": "Aiden Miller",
+  "line2": "PAE Studios",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because you both share the experience of being interns, which could lead to a great conversation and valuable insights.",
+      "basis_kind": "same_work",
+      "via": "intern",
+      "path_receipt": [
+        {
+          "from": "Aiden Miller",
+          "rel": "DOES",
+          "to": "intern"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "intern"
+        }
+      ]
+    },
+    {
+      "personId": "amelia-kosmal-5ad8",
+      "name": "Amelia Kosmal",
+      "why": "You’ll enjoy meeting Amelia Kosmal, as she shares your passion for storytelling that truly connects and resonates with audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "I want to be involved in impacting people's lives through storytelling as someone who has been personally influenced by all the stories I've seen through media.",
+      "path_receipt": [
+        {
+          "from": "Aiden Miller",
+          "rel": "SHARES_VALUE",
+          "to": "Amelia Kosmal"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "LMU",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "PAE Studios",
+    "belief": "The idea of telling stories and giving your own perspective is what drew me to the entertainment industry. Also allowing yourself to be exposed to different work styles and being able to meet people from all around the world.",
+    "working_on": "I am pursuing to be an agent or a producer. Both of these positions interest me because of my minor in business. I have a interest in working in the business side of the film industry."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for storytelling and connection, seeking to blend your business acumen with a vibrant, global creative community.",
+  "gradient": {
+    "seed": 1376365195,
+    "stops": [
+      {
+        "color": "hsl(21 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(242 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

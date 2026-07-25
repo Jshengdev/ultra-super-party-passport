@@ -1,0 +1,69 @@
+{
+  "personId": "bj-hardy-8d7c",
+  "name": "BJ Hardy",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both share a unique perspective on direct that could spark an engaging conversation.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "BJ Hardy",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should definitely meet Jenae Sperling, as both of you share a passion for storytelling that truly connects with and resonates among audiences.",
+      "basis_kind": "shared_value",
+      "via": "cluster-1",
+      "match_belief": "Telling meaningful stories that highlight other's humanity.",
+      "path_receipt": [
+        {
+          "from": "BJ Hardy",
+          "rel": "SHARES_VALUE",
+          "to": "Jenae Sperling"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Director/Producer",
+    "company": "",
+    "belief": "Storytelling",
+    "working_on": "Directing/Acting"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to connect with others, using storytelling as a bridge to evoke shared emotions and understanding.",
+  "gradient": {
+    "seed": 427167169,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(107 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(145 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

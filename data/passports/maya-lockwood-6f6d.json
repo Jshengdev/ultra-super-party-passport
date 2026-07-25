@@ -1,0 +1,73 @@
+{
+  "personId": "maya-lockwood-6f6d",
+  "name": "Maya Lockwood",
+  "line2": "Nice Life Recording",
+  "find": [
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You should meet Madilyn Palosi because she has some amazing insights from her experience as a marketing intern that I think you'll both appreciate.",
+      "basis_kind": "same_work",
+      "via": "marketing intern",
+      "path_receipt": [
+        {
+          "from": "Maya Lockwood",
+          "rel": "DOES",
+          "to": "marketing intern"
+        },
+        {
+          "from": "Madilyn Palosi",
+          "rel": "DOES",
+          "to": "marketing intern"
+        }
+      ]
+    },
+    {
+      "personId": "michela-wallach-3373",
+      "name": "Michela Wallach",
+      "why": "You should meet Michela Wallach, as you both share a strong connection to Syracuse and could bond over your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Syracuse",
+      "path_receipt": [
+        {
+          "from": "Maya Lockwood",
+          "rel": "STUDIES_AT",
+          "to": "Syracuse"
+        },
+        {
+          "from": "Michela Wallach",
+          "rel": "STUDIES_AT",
+          "to": "Syracuse"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Syracuse",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing Intern",
+    "company": "Nice Life Recording",
+    "belief": "I have a background in photography, specifically in the live music and event space! I love being surrounded by the energy of live music, which is what drew me to the music industry in particular. I love the creative and strategic side that goes into the whole process.",
+    "working_on": "I would love to work in creative marketing, artist development, and maybe creative direction down the line. The ultimate dream job one day would be to tour with an artist and do their socials/concert photography."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for capturing the vibrant energy of live music, blending creativity with strategy to amplify artists' voices.",
+  "gradient": {
+    "seed": 2937659779,
+    "stops": [
+      {
+        "color": "hsl(16 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(0 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

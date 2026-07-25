@@ -1,0 +1,69 @@
+{
+  "personId": "jason-dement-309a",
+  "name": "Jason Dement",
+  "line2": "The Gotham Group",
+  "find": [
+    {
+      "personId": "namuun-3ceb",
+      "name": "Namuun",
+      "why": "You should meet Namuun because you both share a connection to The Gotham Group, which could lead to some exciting conversations and collaborations.",
+      "basis_kind": "same_work",
+      "via": "The Gotham Group",
+      "path_receipt": [
+        {
+          "from": "Jason Dement",
+          "rel": "WORKS_AT",
+          "to": "The Gotham Group"
+        },
+        {
+          "from": "Namuun",
+          "rel": "WORKS_AT",
+          "to": "The Gotham Group"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam because both of you share a lifelong passion for film and television as a powerful medium of connection and creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Jason Dement",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emory",
+    "major": "",
+    "grad_year": "",
+    "position": "Creative Development Intern",
+    "company": "The Gotham Group",
+    "belief": "I love movies",
+    "working_on": "Being in the film industry"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling through film reveals a deep desire to connect and inspire others, enriching their lives through shared experiences.",
+  "gradient": {
+    "seed": 467050794,
+    "stops": [
+      {
+        "color": "hsl(77 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(64 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

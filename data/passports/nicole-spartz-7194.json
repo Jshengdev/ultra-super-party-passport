@@ -1,0 +1,73 @@
+{
+  "personId": "nicole-spartz-7194",
+  "name": "Nicole Spartz",
+  "line2": "Television Academy",
+  "find": [
+    {
+      "personId": "grace-carr-8f6e",
+      "name": "grace carr",
+      "why": "You and Grace Carr both share a passion for design, making it a perfect opportunity to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Nicole Spartz",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "tyler-bumgarner-2bd0",
+      "name": "Tyler Bumgarner",
+      "why": "You should definitely meet Tyler Bumgarner; his innovative approach to design aligns perfectly with your creative vision and could spark some exciting collaboration.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "Nicole Spartz",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "Tyler Bumgarner",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "DePaul",
+    "major": "",
+    "grad_year": "",
+    "position": "VFX Intern",
+    "company": "Television Academy",
+    "belief": "Watching movies! And wanting to help make cool looking movies!!",
+    "working_on": "I’d love to lead my own team of VFX artists one day (either a VFX supervisor or art lead)"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling through stunning visuals reflects a deep desire to create experiences that inspire and captivate audiences worldwide.",
+  "gradient": {
+    "seed": 2803521836,
+    "stops": [
+      {
+        "color": "hsl(220 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(77 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

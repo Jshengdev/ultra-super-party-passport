@@ -1,0 +1,73 @@
+{
+  "personId": "mae-4fd9",
+  "name": "Mae",
+  "line2": "",
+  "find": [
+    {
+      "personId": "arianna-love-cristobal-d856",
+      "name": "Arianna Love Cristobal",
+      "why": "You and Arianna Love Cristobal share a passion for assisting others, making it a great opportunity for you both to exchange ideas and inspiration.",
+      "basis_kind": "same_work",
+      "via": "assistant",
+      "path_receipt": [
+        {
+          "from": "Mae",
+          "rel": "DOES",
+          "to": "assistant"
+        },
+        {
+          "from": "Arianna Love Cristobal",
+          "rel": "DOES",
+          "to": "assistant"
+        }
+      ]
+    },
+    {
+      "personId": "charlie-hsieh-3192",
+      "name": "Charlie Hsieh",
+      "why": "You should meet Charlie Hsieh because you both share a passion for exploring innovative ways to enhance the capabilities of assistants.",
+      "basis_kind": "same_work",
+      "via": "assistant",
+      "path_receipt": [
+        {
+          "from": "Mae",
+          "rel": "DOES",
+          "to": "assistant"
+        },
+        {
+          "from": "Charlie Hsieh",
+          "rel": "DOES",
+          "to": "assistant"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "",
+    "major": "",
+    "grad_year": "",
+    "position": "Assistant",
+    "company": "",
+    "belief": "The hustle",
+    "working_on": "I want to work behind the scenes"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep appreciation for the unseen efforts that fuel success, finding fulfillment in supporting others' journeys.",
+  "gradient": {
+    "seed": 815992792,
+    "stops": [
+      {
+        "color": "hsl(162 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(204 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

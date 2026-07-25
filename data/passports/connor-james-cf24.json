@@ -1,0 +1,69 @@
+{
+  "personId": "connor-james-cf24",
+  "name": "Connor James",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because you both share a deep love for Disney that will spark some fantastic conversations.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Connor James",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "kornelia-welmso-ed35",
+      "name": "Kornelia Welmsö",
+      "why": "You’ll connect with Kornelia Welmsö over your shared conviction to bring joy, and I think you’ll inspire each other deeply.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "It’s the reason why I moved here, combined with the dance and performance industry. I’m a big fan of hiphop dance as well. Los Angeles is also an amazing place to network, especially in this industry. My passion is within it, and therefore I want to do my best to fill my life with as much joy and experiences as possible here. Big focus on the career as well, and how I can come forward with my creativity.",
+      "path_receipt": [
+        {
+          "from": "Connor James",
+          "rel": "SHARES_VALUE",
+          "to": "Kornelia Welmsö"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emory",
+    "major": "",
+    "grad_year": "",
+    "position": "Strategy Intern",
+    "company": "Disney",
+    "belief": "watching movies",
+    "working_on": "make people laugh"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for laughter reveals a deep desire to connect and uplift others, finding joy in shared experiences and moments of lightness.",
+  "gradient": {
+    "seed": 2406714717,
+    "stops": [
+      {
+        "color": "hsl(77 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(155 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

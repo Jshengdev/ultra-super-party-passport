@@ -1,0 +1,69 @@
+{
+  "personId": "caterina-terrizzi-85cc",
+  "name": "Caterina Terrizzi",
+  "line2": "Live Nation",
+  "find": [
+    {
+      "personId": "amishi-6a12",
+      "name": "Amishi",
+      "why": "You should meet Amishi because you both share a strong connection to Live Nation and could exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "Live Nation",
+      "path_receipt": [
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        },
+        {
+          "from": "Amishi",
+          "rel": "WORKS_AT",
+          "to": "Live Nation"
+        }
+      ]
+    },
+    {
+      "personId": "connor-james-cf24",
+      "name": "Connor James",
+      "why": "You should meet Connor James because his passion for bringing joy aligns perfectly with your shared conviction, creating a delightful connection.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-bring-joy",
+      "match_belief": "watching movies",
+      "path_receipt": [
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "SHARES_VALUE",
+          "to": "Connor James"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Boston University",
+    "major": "",
+    "grad_year": "",
+    "position": "Regional Music Marketing Intern",
+    "company": "Live Nation",
+    "belief": "I used to dance professionally and wanted to continue in the arts but on the business side. For music, I've always been such a big fan and love going to concerts, and pursuing a job where I get to enhance the fan experience.",
+    "working_on": "To create unforgettable fan experiences through live music, ideally in the VIP space."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for connection, transforming your love for music into enriching moments that elevate others’ experiences.",
+  "gradient": {
+    "seed": 1947061310,
+    "stops": [
+      {
+        "color": "hsl(308 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(86 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

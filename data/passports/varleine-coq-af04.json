@@ -1,0 +1,69 @@
+{
+  "personId": "varleine-coq-af04",
+  "name": "Varleine Coq",
+  "line2": "Tiny Hero",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You should meet Jonah Einisman because you both share a strong connection to direct, and I think you'll find a lot to discuss.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Varleine Coq",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "genae-horst-be9a",
+      "name": "Genae Horst",
+      "why": "You would enjoy meeting Genae Horst, as both of you share a passion for expressing yourselves through various creative mediums.",
+      "basis_kind": "shared_value",
+      "via": "cluster-6",
+      "match_belief": "Creativity",
+      "path_receipt": [
+        {
+          "from": "Genae Horst",
+          "rel": "SHARES_VALUE",
+          "to": "Varleine Coq"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UNC",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Tiny Hero",
+    "belief": "I’ve always loved storytelling and collaborating with others since I was young, and I want Connie to find creative way to tell stories.",
+    "working_on": "Commercial/Music Video Direction, acting, entertainment marketing"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your passion for storytelling and collaboration reveals a deep desire to connect with others, sharing experiences that resonate and inspire.",
+  "gradient": {
+    "seed": 895781783,
+    "stops": [
+      {
+        "color": "hsl(315 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(282 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

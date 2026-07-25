@@ -1,0 +1,73 @@
+{
+  "personId": "ines-villarreal-c08b",
+  "name": "Ines Villarreal",
+  "line2": "Warner Bros",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel, as you both share a passion for produce that could spark some exciting conversations and ideas.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Ines Villarreal",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "chloe-osmers-1fa4",
+      "name": "Chloe Osmers",
+      "why": "You should meet Chloe Osmers because you both share a connection to Pepperdine and may have wonderful stories to exchange.",
+      "basis_kind": "shared_context",
+      "via": "Pepperdine",
+      "path_receipt": [
+        {
+          "from": "Ines Villarreal",
+          "rel": "STUDIES_AT",
+          "to": "Pepperdine"
+        },
+        {
+          "from": "Chloe Osmers",
+          "rel": "STUDIES_AT",
+          "to": "Pepperdine"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Pepperdine",
+    "major": "",
+    "grad_year": "",
+    "position": "Hbo/Hbo Max Talent Relations and Events",
+    "company": "Warner Bros",
+    "belief": "I love films, creating, and jobs that aren’t the same 9-5 forever",
+    "working_on": "I ultimately would love to get into film production and being part of creating films"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire for creative freedom and the thrill of storytelling, seeking a life filled with passionate exploration.",
+  "gradient": {
+    "seed": 2504529731,
+    "stops": [
+      {
+        "color": "hsl(323 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(353 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "jeremiah-baker-404e",
+  "name": "Jeremiah Baker",
+  "line2": "Morehouse College",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce and can exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Jeremiah Baker",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "ines-villarreal-c08b",
+      "name": "Ines Villarreal",
+      "why": "You should meet Ines Villarreal; she has some incredible insights into produce that would complement your passion for fresh, quality ingredients.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Jeremiah Baker",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Ines Villarreal",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Morehouse College",
+    "major": "",
+    "grad_year": "",
+    "position": "Entertainment Content Producer",
+    "company": "",
+    "belief": "Watching movies & tv shows with my parents but also getting more invested in behind the scenes storytelling in High School / College.",
+    "working_on": "I am going to continue creating content but now studying how to write / produce my own projects."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to weave personal connections into narratives, transforming shared experiences into compelling stories that resonate deeply with others.",
+  "gradient": {
+    "seed": 1353265094,
+    "stops": [
+      {
+        "color": "hsl(205 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(351 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

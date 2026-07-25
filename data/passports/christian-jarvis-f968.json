@@ -1,0 +1,65 @@
+{
+  "personId": "christian-jarvis-f968",
+  "name": "Christia'n Jarvis",
+  "line2": "The Recording Academy",
+  "find": [
+    {
+      "personId": "madilyn-palosi-5d19",
+      "name": "Madilyn Palosi",
+      "why": "You should meet Madilyn Palosi, as her passion for inspiring action aligns perfectly with your shared conviction in making a meaningful impact.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-inspire-action",
+      "match_belief": "I’ve always wanted to be on screen and have my work be shown, specifically sports media.",
+      "path_receipt": [
+        {
+          "from": "Christia'n Jarvis",
+          "rel": "SHARES_VALUE",
+          "to": "Madilyn Palosi"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You should meet Rimi Bhoopalam because both of you are passionate about inspiring action and can share impactful ideas grounded in your convictions.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-inspire-action",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Christia'n Jarvis",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Texas Southern University",
+    "major": "",
+    "grad_year": "",
+    "position": "Mentee",
+    "company": "The Recording Academy",
+    "belief": "I miraculously fumbled into the entertainment industry due to my love of seeing the next generation thrive.",
+    "working_on": "My ultimate goal is to inspire the next generation to do more, see more, and be more."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your journey reflects a deep desire to empower others, revealing a belief that inspiration can spark transformative growth in future generations.",
+  "gradient": {
+    "seed": 1245451394,
+    "stops": [
+      {
+        "color": "hsl(310 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(208 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(232 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

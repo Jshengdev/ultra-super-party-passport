@@ -1,0 +1,73 @@
+{
+  "personId": "grace-carr-8f6e",
+  "name": "grace carr",
+  "line2": "TikTok - USDS",
+  "find": [
+    {
+      "personId": "tyler-bumgarner-2bd0",
+      "name": "Tyler Bumgarner",
+      "why": "You should meet Tyler Bumgarner, as your shared passion for design could spark some truly inspiring conversations and creative collaborations.",
+      "basis_kind": "same_work",
+      "via": "design",
+      "path_receipt": [
+        {
+          "from": "grace carr",
+          "rel": "DOES",
+          "to": "design"
+        },
+        {
+          "from": "Tyler Bumgarner",
+          "rel": "DOES",
+          "to": "design"
+        }
+      ]
+    },
+    {
+      "personId": "crystal-qianhui-xu-1989",
+      "name": "Crystal Qianhui Xu",
+      "why": "You and Crystal Qianhui Xu both share a connection to ArtCenter, so you'll have a lot of inspiring creative experiences to discuss together.",
+      "basis_kind": "shared_context",
+      "via": "ArtCenter",
+      "path_receipt": [
+        {
+          "from": "grace carr",
+          "rel": "STUDIES_AT",
+          "to": "ArtCenter"
+        },
+        {
+          "from": "Crystal Qianhui Xu",
+          "rel": "STUDIES_AT",
+          "to": "ArtCenter"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "ArtCenter",
+    "major": "",
+    "grad_year": "",
+    "position": "Visual & Campaign Design",
+    "company": "TikTok - USDS",
+    "belief": "I love video games!!",
+    "working_on": "Being a creative for a game I love!!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for creativity and connection, wanting to bring joy and imagination to others through gaming.",
+  "gradient": {
+    "seed": 3004228878,
+    "stops": [
+      {
+        "color": "hsl(303 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(13 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

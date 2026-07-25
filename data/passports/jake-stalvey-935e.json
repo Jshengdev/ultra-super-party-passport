@@ -1,0 +1,69 @@
+{
+  "personId": "jake-stalvey-935e",
+  "name": "Jake Stalvey",
+  "line2": "Partizan Entertainment",
+  "find": [
+    {
+      "personId": "jenae-sperling-0217",
+      "name": "Jenae Sperling",
+      "why": "You should meet Jenae Sperling, as you both share experiences as production interns and can exchange valuable insights from your journeys.",
+      "basis_kind": "same_work",
+      "via": "production intern",
+      "path_receipt": [
+        {
+          "from": "Jake Stalvey",
+          "rel": "DOES",
+          "to": "production intern"
+        },
+        {
+          "from": "Jenae Sperling",
+          "rel": "DOES",
+          "to": "production intern"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee, as both of you share a deep conviction in building community and can inspire each other with your ideas.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-build-community",
+      "match_belief": "The ability to bring people together through creativity and storytelling and how brands and talent work together to create meaningful connections with audiences.",
+      "path_receipt": [
+        {
+          "from": "Jake Stalvey",
+          "rel": "SHARES_VALUE",
+          "to": "Maggie Lee"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emerson",
+    "major": "",
+    "grad_year": "",
+    "position": "Production Intern",
+    "company": "Partizan Entertainment",
+    "belief": "Ability for creative expression and to connect with people",
+    "working_on": "Being a content creator"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to forge meaningful connections through your creativity, transforming personal expression into shared experiences.",
+  "gradient": {
+    "seed": 2781662248,
+    "stops": [
+      {
+        "color": "hsl(240 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(85 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(294 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

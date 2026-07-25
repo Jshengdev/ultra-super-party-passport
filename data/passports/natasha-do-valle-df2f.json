@@ -1,0 +1,73 @@
+{
+  "personId": "natasha-do-valle-df2f",
+  "name": "Natasha do Valle",
+  "line2": "Gloria Sanchez Productions",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You should meet Junior Contreras because both of you share a passion for acting that could spark an inspiring conversation.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Natasha do Valle",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "juno-azuz-zacher-1767",
+      "name": "Juno Azuz Zacher",
+      "why": "You should meet Juno Azuz Zacher, as you both share a connection to Northwestern that could spark some great conversations and memories.",
+      "basis_kind": "shared_context",
+      "via": "Northwestern",
+      "path_receipt": [
+        {
+          "from": "Natasha do Valle",
+          "rel": "STUDIES_AT",
+          "to": "Northwestern"
+        },
+        {
+          "from": "Juno Azuz Zacher",
+          "rel": "STUDIES_AT",
+          "to": "Northwestern"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Northwestern",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Gloria Sanchez Productions",
+    "belief": "My love of movies, TV, and theatre!",
+    "working_on": "Acting, writing, and development"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to connect with others through storytelling, igniting shared emotions and experiences in the audience.",
+  "gradient": {
+    "seed": 113908831,
+    "stops": [
+      {
+        "color": "hsl(186 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(337 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

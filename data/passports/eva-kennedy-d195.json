@@ -1,0 +1,69 @@
+{
+  "personId": "eva-kennedy-d195",
+  "name": "Eva Kennedy",
+  "line2": "UTA Extern",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she shares your passion for represent-agency and has some inspiring insights about its impact on creativity.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Eva Kennedy",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "sanjna-kolli-49b6",
+      "name": "Sanjna Kolli",
+      "why": "You should meet Sanjna Kolli, as her passion for championing artists aligns perfectly with your own conviction and mission in this vital area.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-champion-artists",
+      "match_belief": "Music has been a part of my life since I was 4 but only as a hobby. Being able to do it as a career has been a dream. Waking up to never hate my job is probably the only thing I can ask for. Music is something everyone listens to no matter what, being able to be at the forefront of that is definitely what drew me to it.",
+      "path_receipt": [
+        {
+          "from": "Eva Kennedy",
+          "rel": "SHARES_VALUE",
+          "to": "Sanjna Kolli"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UofSC",
+    "major": "",
+    "grad_year": "",
+    "position": "Talent management (aspiring)",
+    "company": "UTA Extern",
+    "belief": "Growing up in LA i was always curious, but it wasn’t until I was removed from it at college that I realized it was a passion that ran deep. My favorite thing is working with people, especially people who create cool art. What better job than one that combines both?",
+    "working_on": "I would love to represent athletes, specifically female athletes. The WNBA or PWHL would be my dream. As a woman, I would love to support women in the fastest growing industry as of now! I am also open to taking myself where the opportunities grow, whoever that may be :)"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to uplift and empower women, merging your passion for connection with your commitment to supporting their success.",
+  "gradient": {
+    "seed": 1549836254,
+    "stops": [
+      {
+        "color": "hsl(23 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(237 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(143 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

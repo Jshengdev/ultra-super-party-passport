@@ -82,6 +82,7 @@ export interface AdaptedPassport {
 }
 
 export function fromUspPassport(passport: Passport): AdaptedPassport {
+  // find[] is 1–2 entries: a true structural singleton ships one honest find (schema contract).
   const [sameWork, valuesAligned] = passport.find
 
   const connections: DocConnection[] = [
@@ -92,13 +93,17 @@ export function fromUspPassport(passport: Passport): AdaptedPassport {
       relation: 'same type of work',
       headerLabel: 'SAME TYPE OF WORK',
     },
-    {
-      id: `${passport.personId}-values`,
-      kind: 'beliefStamp',
-      person: { name: valuesAligned.name.toLowerCase() },
-      relation: 'you both believe',
-      sharedBelief: beliefFromReceipt(valuesAligned, passport.name),
-    },
+    ...(valuesAligned
+      ? [
+          {
+            id: `${passport.personId}-values`,
+            kind: 'beliefStamp',
+            person: { name: valuesAligned.name.toLowerCase() },
+            relation: 'you both believe',
+            sharedBelief: beliefFromReceipt(valuesAligned, passport.name),
+          } as DocConnection,
+        ]
+      : []),
     {
       id: `${passport.personId}-issued`,
       kind: 'roundStamp',

@@ -1,0 +1,69 @@
+{
+  "personId": "richard-zhang-99e3",
+  "name": "Richard Zhang",
+  "line2": "USC",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet Yu-Sheng Chien because you both share a passion for composing music and might inspire each other with your creative ideas.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Richard Zhang",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "ruby-washio-dcf5",
+      "name": "ruby washio",
+      "why": "You should meet Ruby Washio because her passion for representation aligns perfectly with your shared mission of helping others feel seen.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-representation-feel-seen",
+      "match_belief": "I've always loved creative problem-solving whether it was colouring books or how to solve a problem on my family's chicken farm or making YT videos! I love the business side but absolutely must be working to make something creative and beautiful.",
+      "path_receipt": [
+        {
+          "from": "Richard Zhang",
+          "rel": "SHARES_VALUE",
+          "to": "ruby washio"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Composer",
+    "company": "",
+    "belief": "I’ve written music for a long time, loved film soundtracks, and wanted to write music for films especially as I was going to school in Los Angeles",
+    "working_on": "Representation in terms of telling cross-cultural stories, but also just making really cool art!"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to bridge cultures through art, using music as a universal language to connect and inspire.",
+  "gradient": {
+    "seed": 3839724088,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(343 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(99 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

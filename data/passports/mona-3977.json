@@ -1,0 +1,69 @@
+{
+  "personId": "mona-3977",
+  "name": "Mona",
+  "line2": "Anomaly",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You would enjoy meeting Jonah Einisman because you both have a strong connection to direct, and he has great insights to share.",
+      "basis_kind": "same_work",
+      "via": "direct",
+      "path_receipt": [
+        {
+          "from": "Mona",
+          "rel": "DOES",
+          "to": "direct"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "DOES",
+          "to": "direct"
+        }
+      ]
+    },
+    {
+      "personId": "raizel-prijanto-62cf",
+      "name": "Raizel Prijanto",
+      "why": "You should meet Raizel Prijanto because her passion for connecting people aligns beautifully with your shared conviction in making meaningful impacts.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-connect-people",
+      "match_belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+      "path_receipt": [
+        {
+          "from": "Mona",
+          "rel": "SHARES_VALUE",
+          "to": "Raizel Prijanto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Design Intern",
+    "company": "Anomaly",
+    "belief": "As someone with a huge passion for, and background in, Sports Entertainment- I find the connection between a team/ show/ any production and the audience as something really endearing and personal. I love to bring people together through these creative experiences, and am excited to continue doing so within the entertainment industry.",
+    "working_on": "Definitely still figuring this out! As I mentioned, I love bringing people together through creative experiences, and have mainly done this through design and live event production. I see my ultimate goal as being a director or project manager in roles that combine and build on these interests, while connecting to communities that are largely misrepresented and undervalued in entertainment."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to elevate underrepresented voices, believing in the transformative power of connection through shared creative experiences.",
+  "gradient": {
+    "seed": 2279119725,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(29 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(141 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

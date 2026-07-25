@@ -1,0 +1,73 @@
+{
+  "personId": "sydney-relkin-2b49",
+  "name": "Sydney Relkin",
+  "line2": "DreamWorks",
+  "find": [
+    {
+      "personId": "rafa-padilla-9c7e",
+      "name": "Rafa Padilla",
+      "why": "You would love to meet Rafa Padilla because you both share a passion for DreamWorks and could swap fascinating stories about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Sydney Relkin",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "Rafa Padilla",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    },
+    {
+      "personId": "george-7247",
+      "name": "George",
+      "why": "You should meet George, as you both share a passion for DreamWorks that could spark some truly inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "DreamWorks",
+      "path_receipt": [
+        {
+          "from": "Sydney Relkin",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        },
+        {
+          "from": "George",
+          "rel": "WORKS_AT",
+          "to": "DreamWorks"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "SCAD",
+    "major": "",
+    "grad_year": "",
+    "position": "Image Finaling Intern",
+    "company": "DreamWorks",
+    "belief": "My love of photography, and solving problems",
+    "working_on": "A visual effects supervisor"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to capture beauty and transform challenges into creativity, merging your passions into a compelling artistic vision.",
+  "gradient": {
+    "seed": 409567785,
+    "stops": [
+      {
+        "color": "hsl(14 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(340 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "hari-mistry-60e4",
+  "name": "Hari Mistry",
+  "line2": "CAA",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee; her insights on CAA will resonate with your experiences and spark an engaging conversation.",
+      "basis_kind": "same_work",
+      "via": "CAA",
+      "path_receipt": [
+        {
+          "from": "Hari Mistry",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "WORKS_AT",
+          "to": "CAA"
+        }
+      ]
+    },
+    {
+      "personId": "kyle-flora-08a2",
+      "name": "Kyle Flora",
+      "why": "You should meet Kyle Flora, as you both share a connection to Cal Poly and could exchange some great stories about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "Cal Poly",
+      "path_receipt": [
+        {
+          "from": "Hari Mistry",
+          "rel": "STUDIES_AT",
+          "to": "Cal Poly"
+        },
+        {
+          "from": "Kyle Flora",
+          "rel": "STUDIES_AT",
+          "to": "Cal Poly"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Cal Poly",
+    "major": "",
+    "grad_year": "",
+    "position": "Music Touring Intern",
+    "company": "CAA",
+    "belief": "Representing artists that can build amazing touring careers",
+    "working_on": "Music Agent"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for amplifying artistic voices, nurturing their potential to create unforgettable experiences that resonate far and wide.",
+  "gradient": {
+    "seed": 2467387390,
+    "stops": [
+      {
+        "color": "hsl(247 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(245 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

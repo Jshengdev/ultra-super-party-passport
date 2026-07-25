@@ -1,0 +1,69 @@
+{
+  "personId": "john-dorian-59b1",
+  "name": "John Dorian",
+  "line2": "Indigo Ethylene",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You should meet Brandon Liu because you both share a deep connection to executive-pm and can exchange valuable insights and experiences.",
+      "basis_kind": "same_work",
+      "via": "executive-pm",
+      "path_receipt": [
+        {
+          "from": "John Dorian",
+          "rel": "DOES",
+          "to": "executive-pm"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "DOES",
+          "to": "executive-pm"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You would really enjoy meeting Rimi Bhoopalam, as you both share a deep conviction in truth-inform and its importance in communication.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-truth-inform",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "John Dorian",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UCLA",
+    "major": "",
+    "grad_year": "",
+    "position": "Oil & Gas Business Developer",
+    "company": "Indigo Ethylene",
+    "belief": "I’ve always been drawn to stories, especially stories that promote inherent underlying moral truths and beliefs. As someone who’s in hard tech, I want to transition out of the oil and gas business and use my money to allow the most talented and brilliant creative minds to tell their stories",
+    "working_on": "My ultimate goal is to be a financier. I want to provide the necessary capital to talented and creative minds to construct movies that promote the good, true, and beautiful."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to elevate meaningful narratives, believing that storytelling can inspire and transform individual lives and society.",
+  "gradient": {
+    "seed": 3398976624,
+    "stops": [
+      {
+        "color": "hsl(298 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(162 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(115 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

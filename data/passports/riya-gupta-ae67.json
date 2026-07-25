@@ -1,0 +1,69 @@
+{
+  "personId": "riya-gupta-ae67",
+  "name": "Riya Gupta",
+  "line2": "Paramount (former Warner. Bros)",
+  "find": [
+    {
+      "personId": "saamya-patel-7675",
+      "name": "Saamya Patel",
+      "why": "You should meet Saamya Patel because you both share a passion for produce and can exchange great ideas and experiences in that area.",
+      "basis_kind": "same_work",
+      "via": "produce",
+      "path_receipt": [
+        {
+          "from": "Riya Gupta",
+          "rel": "DOES",
+          "to": "produce"
+        },
+        {
+          "from": "Saamya Patel",
+          "rel": "DOES",
+          "to": "produce"
+        }
+      ]
+    },
+    {
+      "personId": "sam-1722",
+      "name": "Sam",
+      "why": "You would love to meet Sam, as both of you are passionate about inspiring the next generation through your shared mission.",
+      "basis_kind": "shared_value",
+      "via": "conv-mission-inspire-next-gen",
+      "match_belief": "Being able to create things that help people and can turn your entire mood around.",
+      "path_receipt": [
+        {
+          "from": "Riya Gupta",
+          "rel": "SHARES_VALUE",
+          "to": "Sam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Development Intern/Production Assistant",
+    "company": "Paramount (former Warner. Bros)",
+    "belief": "I’ve always loved reading and watching movies and television, and I would typically imagine myself working behind-the-scenes of my favorite projects. Movies and TV shows positively impacted my life, and I want to give it forward by helping others feel seen and heard and inspiring the next generation of storytellers.",
+    "working_on": "Creative Executive at a studio, specifically on the TV side"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a profound desire to transform your passion for storytelling into a platform that empowers others to express their voices.",
+  "gradient": {
+    "seed": 2885829022,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(232 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(67 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -76,9 +76,14 @@ export type Candidate = {
   personId: string;
   name: string;
   via: string; // the shared thing (Activity/Company/School/Major/ValueCluster name)
-  viaKind: string; // node label of the shared thing, or "ValueCluster"
+  viaKind: string; // node label of the shared thing, or "ValueCluster", or "SEEKS"
   basis: string; // short human phrase describing the connection (fed to the why-line prompt)
   path_receipt: ReceiptEdge[]; // real directed edges — audit-verifiable
+  /**
+   * Set ONLY by seeksPath(). A SEEKS edge has no shared node, so the why depends on which way
+   * the edge points — undefined on every other candidate source, which leaves them untouched.
+   */
+  seeks?: { inbound: boolean; mutual: boolean; score: number };
 };
 
 export type Neighborhood = {
@@ -217,6 +222,57 @@ export async function sharedContextPath(personId: string): Promise<Candidate[]> 
       { from: row.name, rel: row.rel2, to: row.via },
     ],
   }));
+}
+
+/**
+ * SEEKS path — LAST-RESORT find source, read only when same-work/values/shared-context cannot
+ * fill the finds. A stated intent is a weaker anchor than a shared entity, but the SEEKS edge is
+ * real and auditable (written through the gate by the match pipeline), which is the bar (law c).
+ * Ordered inbound-first ("they're looking for someone like you"), then mutual, then by score.
+ */
+export async function seeksPath(personId: string): Promise<Candidate[]> {
+  const rows = await runRead<{
+    personId: string;
+    name: string;
+    meName: string;
+    via: string | null;
+    score: number;
+    mutual: boolean;
+    outbound: boolean;
+  }>(
+    `
+    MATCH (me:Person {id:$personId})-[s:SEEKS]-(other:Person)
+    WHERE other.id <> me.id
+    RETURN other.id AS personId, other.name AS name, me.name AS meName,
+           s.via AS via, coalesce(s.score, 0.0) AS score, coalesce(s.mutual, false) AS mutual,
+           startNode(s).id = me.id AS outbound
+    ORDER BY outbound ASC, mutual DESC, score DESC, other.name
+    `,
+    { personId },
+  );
+  return rows.map((row) => {
+    // s.via is stored as "seeks <craft>" — surface the craft word as the shared thing.
+    const craft = (row.via ?? "").replace(/^seeks\s+/, "").trim();
+    const basis = row.mutual
+      ? `you and ${row.name} each told the party sheet you're looking for someone like the other`
+      : row.outbound
+        ? `you told the party sheet you're looking to meet ${craft ? `a ${craft} person` : "someone like them"}`
+        : `they told the party sheet they're looking to meet someone like you${craft ? ` (${craft})` : ""}`;
+    return {
+      personId: row.personId,
+      name: row.name,
+      via: craft,
+      viaKind: "SEEKS",
+      basis,
+      // Receipt = the real directed SEEKS edge, in its stored direction (name display keys).
+      path_receipt: [
+        row.outbound
+          ? { from: row.meName, rel: "SEEKS", to: row.name }
+          : { from: row.name, rel: "SEEKS", to: row.meName },
+      ],
+      seeks: { inbound: !row.outbound, mutual: row.mutual, score: row.score },
+    };
+  });
 }
 
 /** The holder's immediate graph — for line2, gradient hues, and the magic-inference source text. */

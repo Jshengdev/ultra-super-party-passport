@@ -1,0 +1,69 @@
+{
+  "personId": "rachelle-tran-d554",
+  "name": "Rachelle Tran",
+  "line2": "TikTok",
+  "find": [
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You should meet Maggie Lee because she has great insights into represent-agency that could really resonate with your experiences.",
+      "basis_kind": "same_work",
+      "via": "represent-agency",
+      "path_receipt": [
+        {
+          "from": "Rachelle Tran",
+          "rel": "DOES",
+          "to": "represent-agency"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "DOES",
+          "to": "represent-agency"
+        }
+      ]
+    },
+    {
+      "personId": "raizel-prijanto-62cf",
+      "name": "Raizel Prijanto",
+      "why": "You should meet Raizel Prijanto, as both of you share a deep conviction in connecting people meaningfully and creating impactful relationships.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-connect-people",
+      "match_belief": "What drew me most to the entertainment industry is the art of emotions and creativity being translated in a way where it can connect all.",
+      "path_receipt": [
+        {
+          "from": "Rachelle Tran",
+          "rel": "SHARES_VALUE",
+          "to": "Raizel Prijanto"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Entertainment Partnerships",
+    "company": "TikTok",
+    "belief": "I’ve always been drawn to the way entertainment brings stories to life and creates meaningful connections with people.",
+    "working_on": "Being a manager of creatives while also pursuing acting."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to weave narratives that resonate, fostering connections while nurturing creativity in yourself and others.",
+  "gradient": {
+    "seed": 4010926590,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(29 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(200 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "grace-an-dad6",
+  "name": "Grace An",
+  "line2": "The A List and The Honeyman Agency",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You and Caterina Terrizzi share a strong passion for market-brand strategies, and I think you'll both find each other's insights incredibly valuable.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Grace An",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "maggie-lee-3183",
+      "name": "Maggie Lee",
+      "why": "You would enjoy meeting Maggie Lee, as you both share a strong connection to USC and can reminisce about your experiences there.",
+      "basis_kind": "shared_context",
+      "via": "USC",
+      "path_receipt": [
+        {
+          "from": "Grace An",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        },
+        {
+          "from": "Maggie Lee",
+          "rel": "STUDIES_AT",
+          "to": "USC"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "USC",
+    "major": "",
+    "grad_year": "",
+    "position": "Showroom Intern",
+    "company": "The A List and The Honeyman Agency",
+    "belief": "I’ve always been super drawn to anything pop culture or celebrity since I was a kid. I’ve absolutely adored everything from how creative ideas are brought to life through visual or audio mediums. I have especially adored the concept of a celebrity or talent and their image or how they interact with the public.",
+    "working_on": "I want to work in publicity for shows/movies or anything to do with live entertainment like touring."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling and connection, seeking to weave creativity and celebrity into experiences that resonate with audiences.",
+  "gradient": {
+    "seed": 2894205477,
+    "stops": [
+      {
+        "color": "hsl(158 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(169 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "personId": "mia-oklin-88bf",
+  "name": "Mia Oklin",
+  "line2": "Visit Anaheim",
+  "find": [
+    {
+      "personId": "caterina-terrizzi-85cc",
+      "name": "Caterina Terrizzi",
+      "why": "You should meet Caterina Terrizzi because her insights on market-brand strategies align perfectly with your interests and could spark inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "market-brand",
+      "path_receipt": [
+        {
+          "from": "Mia Oklin",
+          "rel": "DOES",
+          "to": "market-brand"
+        },
+        {
+          "from": "Caterina Terrizzi",
+          "rel": "DOES",
+          "to": "market-brand"
+        }
+      ]
+    },
+    {
+      "personId": "jason-drucker-24ee",
+      "name": "Jason drucker",
+      "why": "You and Jason Drucker share a connection to UF, making it a great opportunity to share experiences and insights about your time there.",
+      "basis_kind": "shared_context",
+      "via": "UF",
+      "path_receipt": [
+        {
+          "from": "Mia Oklin",
+          "rel": "STUDIES_AT",
+          "to": "UF"
+        },
+        {
+          "from": "Jason drucker",
+          "rel": "STUDIES_AT",
+          "to": "UF"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UF",
+    "major": "",
+    "grad_year": "",
+    "position": "Marketing and Communications Intern",
+    "company": "Visit Anaheim",
+    "belief": "My love for film and creating campaigns.",
+    "working_on": "Working in creative marketing."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a passion for storytelling, seeking to connect emotions and ideas through the art of creative expression.",
+  "gradient": {
+    "seed": 567839365,
+    "stops": [
+      {
+        "color": "hsl(18 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(82 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

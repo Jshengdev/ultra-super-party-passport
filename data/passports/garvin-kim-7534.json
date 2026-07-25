@@ -1,0 +1,73 @@
+{
+  "personId": "garvin-kim-7534",
+  "name": "Garvin Kim",
+  "line2": "Disney",
+  "find": [
+    {
+      "personId": "brandon-liu-7636",
+      "name": "Brandon Liu",
+      "why": "You’ll really enjoy meeting Brandon Liu; he shares your passion for Disney and has some fascinating stories about his experiences there.",
+      "basis_kind": "same_work",
+      "via": "Disney",
+      "path_receipt": [
+        {
+          "from": "Garvin Kim",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        },
+        {
+          "from": "Brandon Liu",
+          "rel": "WORKS_AT",
+          "to": "Disney"
+        }
+      ]
+    },
+    {
+      "personId": "madelinekarita-fleming-c50d",
+      "name": "Madelinekarita Fleming",
+      "why": "You’d enjoy meeting Madelinekarita Fleming, as you both share a connection to Harvard and can exchange fascinating experiences from your time there.",
+      "basis_kind": "shared_context",
+      "via": "Harvard",
+      "path_receipt": [
+        {
+          "from": "Garvin Kim",
+          "rel": "STUDIES_AT",
+          "to": "Harvard"
+        },
+        {
+          "from": "Madelinekarita Fleming",
+          "rel": "STUDIES_AT",
+          "to": "Harvard"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Harvard",
+    "major": "",
+    "grad_year": "",
+    "position": "Distribution Intern",
+    "company": "Disney",
+    "belief": "was always huge fan of cinema!",
+    "working_on": "not sure"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling and the magic of cinema, seeking to connect with others through shared experiences.",
+  "gradient": {
+    "seed": 209790980,
+    "stops": [
+      {
+        "color": "hsl(199 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(315 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

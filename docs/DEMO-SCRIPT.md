@@ -1,6 +1,6 @@
 # Demo script — the <60s run
 
-> Source: `docs/STORY-AMMO.md` (c). Judges decide in ~15s and remember the first and last thing
+> Judges decide in ~15s and remember the first and last thing
 > (primacy + recency). The **wow fires before 30s**. No setup, no "so what we built is…" — open cold
 > on the artifact. Total: ~60 seconds.
 

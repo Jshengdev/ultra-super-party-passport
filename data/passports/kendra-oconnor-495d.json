@@ -1,0 +1,73 @@
+{
+  "personId": "kendra-oconnor-495d",
+  "name": "Kendra OConnor",
+  "line2": "Chico State",
+  "find": [
+    {
+      "personId": "yu-sheng-chien-5f5a",
+      "name": "YU-SHENG CHIEN",
+      "why": "You should meet Yu-Sheng Chien because you both share a passion for composing music that could spark some inspiring conversations.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Kendra OConnor",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "YU-SHENG CHIEN",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    },
+    {
+      "personId": "kayla-mcintyre-5388",
+      "name": "Kayla McIntyre",
+      "why": "You should meet Kayla McIntyre because you both share a passion for composing music and could inspire each other creatively.",
+      "basis_kind": "same_work",
+      "via": "compose-music",
+      "path_receipt": [
+        {
+          "from": "Kendra OConnor",
+          "rel": "DOES",
+          "to": "compose-music"
+        },
+        {
+          "from": "Kayla McIntyre",
+          "rel": "DOES",
+          "to": "compose-music"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Chico State",
+    "major": "",
+    "grad_year": "",
+    "position": "Designer",
+    "company": "",
+    "belief": "It’s a world to escape to from real life. I love to daydream and create my own worlds.",
+    "working_on": "I want to be a film composer."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a desire to craft immersive experiences that transport both yourself and others beyond the confines of reality.",
+  "gradient": {
+    "seed": 2418907826,
+    "stops": [
+      {
+        "color": "hsl(214 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(107 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

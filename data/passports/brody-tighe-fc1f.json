@@ -1,0 +1,69 @@
+{
+  "personId": "brody-tighe-fc1f",
+  "name": "Brody Tighe",
+  "line2": "Rotten Science Productions",
+  "find": [
+    {
+      "personId": "kate-honsik-c42c",
+      "name": "Kate Honsik",
+      "why": "You should meet Kate Honsik because her passion for writing aligns perfectly with yours, and I think you'll inspire each other creatively.",
+      "basis_kind": "same_work",
+      "via": "write",
+      "path_receipt": [
+        {
+          "from": "Brody Tighe",
+          "rel": "DOES",
+          "to": "write"
+        },
+        {
+          "from": "Kate Honsik",
+          "rel": "DOES",
+          "to": "write"
+        }
+      ]
+    },
+    {
+      "personId": "rimi-bhoopalam-3176",
+      "name": "Rimi Bhoopalam",
+      "why": "You'd enjoy meeting Rimi Bhoopalam, as both of you share a lifelong passion for film and television as powerful mediums of connection and creativity.",
+      "basis_kind": "shared_value",
+      "via": "cluster-2",
+      "match_belief": "The power film/tv has to influence and improve people’s lives!",
+      "path_receipt": [
+        {
+          "from": "Brody Tighe",
+          "rel": "SHARES_VALUE",
+          "to": "Rimi Bhoopalam"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "University of Texas",
+    "major": "",
+    "grad_year": "",
+    "position": "Production and Development Assistant",
+    "company": "Rotten Science Productions",
+    "belief": "I have been in love with movies and TV shows since I was a kid!",
+    "working_on": "I want to be a screenwriter."
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep passion for storytelling, seeking to create the cinematic magic that captured your heart in childhood.",
+  "gradient": {
+    "seed": 783279426,
+    "stops": [
+      {
+        "color": "hsl(347 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(286 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(200 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -15,6 +15,7 @@ import { runInference } from "../pipeline/client";
 import {
   personNeighborhood,
   sameWorkPath,
+  seeksPath,
   valuesPath,
   sharedContextPath,
   standoutFacts,
@@ -324,27 +325,31 @@ export async function buildPassport(personId: string, partyId?: string | null): 
   const sc = dedupeCandidates(await sharedContextPath(personId), personId);
 
   // rec1 = same-work first (contract), else shared context, else a value connection.
-  const rec1 = sw[0] ?? sc[0] ?? vp[0];
-  if (!rec1) {
-    throw new Error(
-      `[passport] No receipted connection for ${personId} (${me.name}) — the graph has no shared work/context/value edge to anchor a find (fail-loud).`,
-    );
-  }
+  let rec1 = sw[0] ?? sc[0] ?? vp[0];
 
   // rec2 = values-aligned first, and MUST differ from rec1; else a different context/work connection.
-  const rec2 =
-    vp.find((c) => c.personId !== rec1.personId) ??
-    sc.find((c) => c.personId !== rec1.personId) ??
-    sw.find((c) => c.personId !== rec1.personId);
-  if (!rec2) {
+  let rec2 = rec1
+    ? (vp.find((c) => c.personId !== rec1!.personId) ??
+       sc.find((c) => c.personId !== rec1!.personId) ??
+       sw.find((c) => c.personId !== rec1!.personId))
+    : undefined;
+
+  // LAST RESORT — only on shortage: anchor remaining find(s) on real SEEKS edges (inert otherwise).
+  if (!rec1 || !rec2) {
+    const sk = dedupeCandidates(await seeksPath(personId), personId);
+    if (!rec1) rec1 = sk[0];
+    if (rec1 && !rec2) rec2 = sk.find((c) => c.personId !== rec1!.personId);
+  }
+  if (!rec1) {
     throw new Error(
-      `[passport] Only one distinct connection for ${personId} (${me.name}); cannot fill two receipted finds (fail-loud).`,
+      `[passport] No receipted connection for ${personId} (${me.name}) — the graph has no shared work/context/value/seeks edge to anchor a find (fail-loud).`,
     );
   }
+  // A true structural singleton (one connection in the whole graph) ships ONE honest find.
 
   const [find1, find2, hidden_prompt, magic_inference] = await Promise.all([
     candidateToFind(me, rec1),
-    candidateToFind(me, rec2),
+    rec2 ? candidateToFind(me, rec2) : Promise.resolve(undefined),
     buildHiddenPrompt(personId, partyId),
     buildMagicInference(me, vp[0] ?? sc[0] ?? sw[0]),
   ]);
@@ -362,7 +367,7 @@ export async function buildPassport(personId: string, partyId?: string | null): 
       belief: me.beliefs[0] ?? "",
       working_on: me.workingOn[0] ?? "",
     },
-    find: [find1, find2],
+    find: find2 ? [find1, find2] : [find1],
     hidden_prompt,
     magic_inference,
     gradient: buildGradient(me, vp[0]),

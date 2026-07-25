@@ -1,0 +1,73 @@
+{
+  "personId": "kit-zenga-545e",
+  "name": "Kit Zenga",
+  "line2": "Rideback",
+  "find": [
+    {
+      "personId": "jonah-einisman-06d2",
+      "name": "Jonah Einisman",
+      "why": "You would enjoy meeting Jonah Einisman, as you both share a connection to Rideback and can exchange insights about your experiences there.",
+      "basis_kind": "same_work",
+      "via": "Rideback",
+      "path_receipt": [
+        {
+          "from": "Kit Zenga",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        },
+        {
+          "from": "Jonah Einisman",
+          "rel": "WORKS_AT",
+          "to": "Rideback"
+        }
+      ]
+    },
+    {
+      "personId": "jake-stalvey-935e",
+      "name": "Jake Stalvey",
+      "why": "You should meet Jake Stalvey because you both share a connection to Emerson that could spark some great conversations and memories.",
+      "basis_kind": "shared_context",
+      "via": "Emerson",
+      "path_receipt": [
+        {
+          "from": "Kit Zenga",
+          "rel": "STUDIES_AT",
+          "to": "Emerson"
+        },
+        {
+          "from": "Jake Stalvey",
+          "rel": "STUDIES_AT",
+          "to": "Emerson"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "Emerson",
+    "major": "",
+    "grad_year": "",
+    "position": "Intern",
+    "company": "Rideback",
+    "belief": "Being surrounded by it my entire life",
+    "working_on": "Talent Representation"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "Your drive stems from a deep-rooted appreciation for the transformative power of talent, shaped by lifelong exposure and a desire to uplift others.",
+  "gradient": {
+    "seed": 2041019477,
+    "stops": [
+      {
+        "color": "hsl(240 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(258 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(92 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "personId": "vicki-vargas-4f80",
+  "name": "Vicki Vargas",
+  "line2": "UT Austin",
+  "find": [
+    {
+      "personId": "junior-contreras-9444",
+      "name": "Junior Contreras",
+      "why": "You would really enjoy meeting Junior Contreras because you both share a passion for acting that could spark engaging conversations and collaboration.",
+      "basis_kind": "same_work",
+      "via": "act",
+      "path_receipt": [
+        {
+          "from": "Vicki Vargas",
+          "rel": "DOES",
+          "to": "act"
+        },
+        {
+          "from": "Junior Contreras",
+          "rel": "DOES",
+          "to": "act"
+        }
+      ]
+    },
+    {
+      "personId": "jordan-geiger-800f",
+      "name": "Jordan Geiger",
+      "why": "You should meet Jordan Geiger, as both of you share a powerful conviction in provoking thought and making impactful conversations.",
+      "basis_kind": "shared_value",
+      "via": "conv-impact-provoke-thought",
+      "match_belief": "telling stores that make people feel something",
+      "path_receipt": [
+        {
+          "from": "Jordan Geiger",
+          "rel": "SHARES_VALUE",
+          "to": "Vicki Vargas"
+        }
+      ]
+    }
+  ],
+  "profile": {
+    "school": "UT Austin",
+    "major": "",
+    "grad_year": "",
+    "position": "Actor",
+    "company": "",
+    "belief": "I’ve been drawn to theatre and music for as long as I can remember. I want to tell stories that move other people and make us reflect on our lives and what it means to be alive",
+    "working_on": "representation and becoming an accomplished actor in film and theatre"
+  },
+  "hidden_prompt": "Somewhere in this room is the person behind \"-.\" Go find them.",
+  "magic_inference": "You are driven by a deep desire to connect and evoke emotions, seeking to transform personal experiences into shared reflections through your artistry.",
+  "gradient": {
+    "seed": 2177671891,
+    "stops": [
+      {
+        "color": "hsl(234 70% 62%)",
+        "at": 0
+      },
+      {
+        "color": "hsl(337 65% 55%)",
+        "at": 0.5
+      },
+      {
+        "color": "hsl(178 72% 48%)",
+        "at": 1
+      }
+    ]
+  }
+}
