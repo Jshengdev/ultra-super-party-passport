@@ -3,7 +3,9 @@
  *
  *   public/graph/graph.json          nodes + edges + per-lens positions + meta
  *   public/graph/people/<id>.json    one record per guest: their own words, their ranked
- *                                    connections with receipts, and their highlights
+ *                                    connections with receipts, their highlights, and the
+ *                                    display half of their passport (joined from
+ *                                    data/passports/<id>.json — see THE PASSPORT JOIN below)
  *   data/graph-enriched.csv          THE ENRICHMENT SHEET (below) — emitted every run
  *
  * Laws honoured here:
@@ -40,6 +42,7 @@ import { join } from "node:path";
 import Papa from "papaparse";
 import { z } from "zod";
 import { loadGuests, type Guest } from "../lib/guests";
+import { passportSchema } from "../passport/schema";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { webLayout, ringLayout, type Vec2 } from "../lib/layout";
 import { vectorProvider } from "../lib/matches";
@@ -116,6 +119,58 @@ const MATCHES = "data/graph-private/matches.json";
 
 const ENRICHED_SHEET = "data/graph-enriched.csv";
 const OVERRIDES_PATH = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.csv";
+
+/* ═════════════════════════════ THE PASSPORT JOIN ═════════════════════════════
+ *
+ * `scripts/generate-passports.ts` writes one `data/passports/<personId>.json` per guest —
+ * the agent's traversal of the graph, validated by `passport/schema.ts`. The scene reads
+ * `public/graph/people/<personId>.json`. Both are keyed by the SAME personId, so the display
+ * half of the passport is joined onto the person record here and the room needs exactly one
+ * fetch to render a selected person's finds, hidden prompt, magic inference and gradient.
+ *
+ * WHAT IS JOINED — display fields only:
+ *   find[]           { personId, name, why, via?, basis_kind?, path_receipt }
+ *   hidden_prompt    the scavenger line (about someone ELSE, never the holder)
+ *   magic_inference  the interpretive read of the holder's own text
+ *   gradient         { stops }
+ *
+ * THREE DECISIONS, all of them departures worth naming:
+ *
+ *  1. `path_receipt` IS KEPT, on every find. The brief allowed dropping it where the record's
+ *     own `edges` already carry a receipt for that person — but measured against the shipped
+ *     artifacts, only 177 of 623 finds (28.4%) have such an edge: the passport's finds come
+ *     from DOES / SHARES_VALUE traversals, the record's edges from school / company / why /
+ *     seek, and the two overlap only by accident. A conditional drop would therefore leave
+ *     ~72% of rendered why-lines with no proof anywhere in the record AND give the renderer a
+ *     non-uniform shape. Law (c) says a `why` with no edge behind it is a bug, so the
+ *     passport's own audited path travels with it — the same array `scripts/audit-receipts.ts`
+ *     re-resolves against Neo4j. Cost: ~235B of the ~1.1KB this join adds per record.
+ *
+ *  2. `gradient.seed` IS DROPPED; only `stops` are joined. The seed is `fnv1a(personId)`
+ *     (lib/passport.ts) — recomputable from the record's own personId, and never read by any
+ *     renderer (the three stop hues are hashed from school / cluster / activity, not from it).
+ *     Its 9–10 digit decimal run is PHONE-SHAPED: it trips the contact-PII tripwire in
+ *     `scripts/check-graph-emit.ts` in 236 of 312 records. The tripwire is right and the field
+ *     is worthless here, so the field goes. Weakening a PII gate to admit a decorative number
+ *     is the trade we never make.
+ *
+ *  3. `line2`, `profile` and `match_belief` are NOT joined. They are either already on the
+ *     record/node (school, company, title) or outside the brief's field list; `profile` in
+ *     particular carries school text, and the record has no need of a second copy.
+ *
+ * A find whose target is not in the emitted population is DROPPED with a named warning (the
+ * same law `hide` already obeys: a hidden guest leaves every artifact, including other
+ * people's match lists) — never rewritten to point at somebody else.
+ *
+ * A missing passport file → `passport: null` on that record plus a loud per-person warning.
+ * Above PASSPORT_MISSING_MAX of the population the run FAILS: a handful of gaps is a sparse
+ * dir, 5%+ is a STALE one, and a stale passports dir silently under-renders the whole room.
+ * A passport that is present but off-schema is never "missing" — it is a named error (law b).
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+const PASSPORTS_DIR = "data/passports";
+/** share of the population allowed to ship without a passport before the dir is called stale */
+const PASSPORT_MISSING_MAX = 0.05;
 
 /** The pinned column order of data/graph-enriched.csv. check-graph-emit.ts asserts it exactly. */
 const SHEET_COLUMNS = [
@@ -212,6 +267,26 @@ interface Highlight {
   text: string;
   targets?: string[];
 }
+/** one directed edge of the real graph path a find stands on — verbatim from the passport */
+interface PathEdge {
+  from: string;
+  rel: string;
+  to: string;
+}
+/** the display half of a passport, joined onto the person record (see THE PASSPORT JOIN) */
+interface RecordPassport {
+  find: {
+    personId: string;
+    name: string;
+    why: string;
+    via?: string;
+    basis_kind?: string;
+    path_receipt: PathEdge[];
+  }[];
+  hidden_prompt: string;
+  magic_inference: string;
+  gradient: { stops: { color: string; at: number }[] };
+}
 /** an emitted graph.json node — `_overridden` appears only when a human moved one of its tags */
 interface GraphNodeOut {
   id: string;
@@ -220,6 +295,12 @@ interface GraphNodeOut {
   school: string | null;
   company: string | null;
   free: boolean;
+  /** the guest's own "Hometown?" cell, verbatim. A display-safe, non-contact field: it rides
+      on the node so a surface can say where someone is from WITHOUT waiting on (or being
+      silently truncated out of) the person record — `highlights` is capped at 6, so 117
+      people with a real hometown carry no hometown highlight. audit-graph checks it
+      byte-for-byte against the CSV like every other node field. */
+  hometown: string | null;
   motive: string | null;
   mission: string | null;
   impact: string | null;
@@ -344,6 +425,82 @@ function loadOverrides(path: string): Map<string, OverrideRow> {
     rows.set(res.data.person_id, res.data);
   }
   return rows;
+}
+
+/* ─────────────────────────── the passport join ─────────────────────────── */
+
+/**
+ * Read every emitted person's passport and project it down to the display fields.
+ *
+ * `passport/schema.ts` (a declared shared surface) is the boundary: a passport that does not
+ * satisfy it is a NAMED error, not a skipped file — an off-schema passport that quietly
+ * became a `null` would look exactly like an ungenerated one, and the 5% staleness gate would
+ * then be measuring the wrong thing. Absent files are the only tolerated gap, and they are
+ * returned so the caller can warn per person and decide.
+ */
+function loadPassports(ids: readonly string[]): {
+  joined: Map<string, RecordPassport>;
+  missing: string[];
+  droppedFinds: string[];
+} {
+  const joined = new Map<string, RecordPassport>();
+  const missing: string[] = [];
+  const droppedFinds: string[] = [];
+  const inPopulation = new Set(ids);
+
+  for (const id of ids) {
+    const path = join(PASSPORTS_DIR, `${id}.json`);
+    if (!existsSync(path)) {
+      missing.push(id);
+      continue;
+    }
+    let raw: unknown;
+    try {
+      raw = JSON.parse(readFileSync(path, "utf8"));
+    } catch (e) {
+      throw new EmitError("PassportUnparseable", `${path} is not valid JSON: ${(e as Error).message}`);
+    }
+    const res = passportSchema.safeParse(raw);
+    if (!res.success) {
+      const issues = res.error.issues
+        .slice(0, 3)
+        .map((is) => `${is.path.join(".") || "<root>"}: ${is.message}`)
+        .join(" | ");
+      throw new EmitError("PassportInvalid", `${path} does not satisfy passport/schema.ts — ${issues}`);
+    }
+    const p = res.data;
+    if (p.personId !== id) {
+      throw new EmitError(
+        "PassportSubjectMismatch",
+        `${path} carries personId "${p.personId}" — a passport joined onto the wrong person is a fabricated claim`,
+      );
+    }
+
+    const find = p.find
+      .filter((f) => {
+        if (inPopulation.has(f.personId)) return true;
+        droppedFinds.push(`${id} → ${f.personId}`);
+        return false;
+      })
+      .map((f) => ({
+        personId: f.personId,
+        name: f.name,
+        why: f.why,
+        ...(f.via ? { via: f.via } : {}),
+        ...(f.basis_kind ? { basis_kind: f.basis_kind } : {}),
+        // the receipt travels with the claim — see decision 1 in THE PASSPORT JOIN
+        path_receipt: f.path_receipt,
+      }));
+
+    joined.set(id, {
+      find,
+      hidden_prompt: p.hidden_prompt,
+      magic_inference: p.magic_inference,
+      // stops only — the seed is phone-shaped and recomputable (decision 2)
+      gradient: { stops: p.gradient.stops },
+    });
+  }
+  return { joined, missing, droppedFinds };
 }
 
 /* ─────────────────────────── tag vocabulary → English ─────────────────────────── */
@@ -711,6 +868,27 @@ async function main(): Promise<number> {
     overriddenFields.set(pid, applied);
   }
 
+  /* ---- 1d. the passport join, resolved BEFORE a single byte is written ----
+   * The staleness verdict is a property of the whole population, so it has to be reached
+   * before the write loop starts: failing half-way through would leave a people/ directory
+   * where some records carry a passport and some do not, and nothing on disk would say why. */
+  const { joined: passports, missing: passportMisses, droppedFinds } = loadPassports(ids);
+  for (const id of passportMisses) {
+    console.error(`WARN: no passport for ${id} — ${join(PASSPORTS_DIR, `${id}.json`)} is absent; the record ships passport: null`);
+  }
+  if (passportMisses.length > ids.length * PASSPORT_MISSING_MAX) {
+    throw new EmitError(
+      "PassportsStale",
+      `${passportMisses.length} of ${ids.length} guests (${((100 * passportMisses.length) / ids.length).toFixed(1)}%) ` +
+        `have no ${PASSPORTS_DIR}/<id>.json — above the ${(100 * PASSPORT_MISSING_MAX).toFixed(0)}% floor that separates ` +
+        `a sparse dir from a stale one. Re-run scripts/generate-passports.ts before emitting.`,
+    );
+  }
+  if (droppedFinds.length > 0) {
+    console.error(`WARN: ${droppedFinds.length} passport find(s) point outside the emitted population — dropped, never repointed:`);
+    for (const d of droppedFinds.slice(0, 8)) console.error(`      ${d}`);
+  }
+
   /* ---- 2. the source: the graph by default, the CSV only as a labelled fallback ---- */
   const fixture = process.env.FIXTURE === "1";
   if (fixture) {
@@ -869,6 +1047,7 @@ async function main(): Promise<number> {
       school: p.school,
       company: p.company,
       free: Boolean(g?.isFreelance), // a CSV-side fact: the ontology has no "freelance" node
+      hometown: g?.hometown ?? null, // CSV-side too — the graph has no Place node
       motive: c?.motive ?? null,
       mission: c?.mission ?? null,
       impact: c?.impact ?? null,

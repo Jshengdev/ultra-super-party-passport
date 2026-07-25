@@ -188,6 +188,7 @@ const NodeSchema = z
     school: z.string().nullable(),
     company: z.string().nullable(),
     free: z.boolean(),
+    hometown: z.string().nullable(),
     motive: z.string().nullable(),
     mission: z.string().nullable(),
     impact: z.string().nullable(),
@@ -621,6 +622,8 @@ function auditPopulation(g: GraphDoc, guests: Guest[], byId: Map<string, Guest>,
       ["school", n.school, guest.school],
       ["company", n.company, guest.company],
       ["free", n.free, guest.isFreelance],
+      // the room prints this on a stamp, so it gets the same byte-for-byte teeth
+      ["hometown", n.hometown, guest.hometown],
     ];
     for (const [field, got, want] of checks) {
       if (got !== want && fieldMismatches < 20) {
