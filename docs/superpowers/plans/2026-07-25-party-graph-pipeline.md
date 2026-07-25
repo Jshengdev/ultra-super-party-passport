@@ -410,7 +410,9 @@ console.log(`emit OK: 312 nodes, ${g.edges.length} edges, ${people.length} perso
 - [ ] **Step 5: Commit** — `git add scripts/emit-graph.ts lib/layout.ts scripts/check-graph-emit.ts public/graph && git commit -m "feat(graph): emit baked artifacts — per-lens positions, receipts, dignity floor, PII tripwire"`
   (public/graph is committed deliberately: names/titles/schools/companies/answers only — the same fields the party surface shows.)
 
----### Task 7: Audit leg — `scripts/audit-graph.ts` (must be able to FAIL)
+---
+
+### Task 7: Audit leg — `scripts/audit-graph.ts` (must be able to FAIL)
 
 **Files:**
 - Create: `scripts/audit-graph.ts`
