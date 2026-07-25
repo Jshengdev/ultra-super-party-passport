@@ -3,7 +3,8 @@
  *
  *   public/graph/graph.json          nodes + edges + per-lens positions + meta
  *   public/graph/people/<id>.json    one record per guest: their own words, their ranked
- *                                    connections with receipts, and their highlights
+ *                                    connections with receipts, their conviction (the computed
+ *                                    tags + the verbatim quotes behind them), and their highlights
  *   data/graph-enriched.csv          THE ENRICHMENT SHEET (below) — emitted every run
  *
  * Laws honoured here:
@@ -152,6 +153,14 @@ const TAG_QUOTE_FIELD: Record<OverridableTag, string> = {
   aspiration: "goal",
 };
 
+/**
+ * The tags that ship a receipt — the sheet's three quote columns, and the same three in the
+ * person record's `conviction.quotes`. `aspiration` reads off `goal` like mission/impact do, so
+ * a fourth column would only ever restate one of theirs; it has never carried one, and the
+ * record does not invent one.
+ */
+const QUOTED_TAGS: readonly OverridableTag[] = ["motive", "mission", "impact"];
+
 /** mirrors the two raw columns lib/guests.ts canonicalizes — receipts quote the RAW cell */
 const RAW_COL = {
   school: "School? (e.g. USC '27)",
@@ -211,6 +220,20 @@ interface Highlight {
   kind: string;
   text: string;
   targets?: string[];
+}
+/**
+ * The person record's copy of the conviction: the computed "who we think you are", in its
+ * POST-OVERRIDE state, so a card can render it (and its receipts) without a second fetch.
+ * Every key is optional and an empty one is OMITTED, never emitted blank — nothing zero
+ * renders. `quotes` is byte-verbatim from the guest's own answer; a tag a human overrode has
+ * no quote at all (the override law above: the old receipt stopped being evidence).
+ */
+interface ConvictionOut {
+  motive?: string;
+  mission?: string;
+  impact?: string;
+  aspiration?: string;
+  quotes?: Record<string, string>;
 }
 /** an emitted graph.json node — `_overridden` appears only when a human moved one of its tags */
 interface GraphNodeOut {
@@ -970,6 +993,8 @@ async function main(): Promise<number> {
   const OTHER_CAP = 12;
 
   let records = 0;
+  let convictionBlocks = 0;
+  let convictionReceipts = 0;
   const highlightHist = new Map<string, number>();
   const edgeCounts: number[] = [];
   const pinMisses: string[] = [];
@@ -1139,6 +1164,31 @@ async function main(): Promise<number> {
     for (const h of highlights) highlightHist.set(h.kind, (highlightHist.get(h.kind) ?? 0) + 1);
     edgeCounts.push(personEdges.length);
 
+    /* ---- the one receipt law, read by BOTH the record's conviction block and the sheet row:
+       a tag's quote survives only if a human did not move that tag. Defined once here so the
+       drop cannot be honoured in one artifact and forgotten in the other. ---- */
+    const quoteFor = (tag: OverridableTag): string => {
+      if (!c || c[tag] === null) return "";
+      // an overridden tag's receipt was dropped with the tag — never re-attach it here
+      if (overriddenFields.get(me.id)?.includes(tag)) return "";
+      return c.quotes[TAG_QUOTE_FIELD[tag]] ?? "";
+    };
+
+    /* ---- the conviction block: the computed identity, post-override, with its receipts ---- */
+    const conviction: ConvictionOut = {};
+    for (const t of OVERRIDABLE_TAGS) {
+      const tag = c?.[t];
+      if (tag) conviction[t] = tag;
+    }
+    const convQuotes: Record<string, string> = {};
+    for (const t of QUOTED_TAGS) {
+      const q = quoteFor(t);
+      if (q) convQuotes[t] = q;
+    }
+    if (Object.keys(convQuotes).length > 0) conviction.quotes = convQuotes;
+    if (Object.keys(conviction).length > 0) convictionBlocks += 1;
+    convictionReceipts += Object.keys(convQuotes).length;
+
     writeFileSync(
       join(PEOPLE_DIR, `${me.id}.json`),
       `${JSON.stringify({
@@ -1147,6 +1197,8 @@ async function main(): Promise<number> {
         answers: g.answers,
         edges: personEdges,
         highlights,
+        // omitted entirely for anyone the extraction had nothing to say about
+        ...(Object.keys(conviction).length > 0 ? { conviction } : {}),
         // honest provenance (law d): the artifact itself says which fields a human moved
         ...(stamped.length > 0 ? { _overridden: stamped } : {}),
       })}\n`,
@@ -1156,12 +1208,6 @@ async function main(): Promise<number> {
 
     /* ---- the enrichment sheet row: everything this bake decided, on one line ---- */
     const ov = overrides.get(me.id);
-    const quoteFor = (tag: OverridableTag): string => {
-      if (!c || c[tag] === null) return "";
-      // an overridden tag's receipt was dropped with the tag — never re-attach it here
-      if (overriddenFields.get(me.id)?.includes(tag)) return "";
-      return c.quotes[TAG_QUOTE_FIELD[tag]] ?? "";
-    };
     const groups: string[] = [];
     if (c?.mission) {
       const n = missionGroups.get(c.mission)?.length ?? 0;
@@ -1269,6 +1315,10 @@ async function main(): Promise<number> {
     `  person records ${records} · edges/record min ${Math.min(...edgeCounts)} avg ${avg.toFixed(1)} max ${Math.max(...edgeCounts)}`,
   );
   console.log(`  highlights: ${[...highlightHist].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(" · ")}`);
+  console.log(
+    `  conviction blocks ${convictionBlocks}/${records} · ${convictionReceipts} verbatim receipt(s) ` +
+      `(a tag a human moved ships without one)`,
+  );
   console.log(`  enrichment sheet → ${ENRICHED_SHEET} (${sheetRows.length} rows × ${SHEET_COLUMNS.length} columns)`);
 
   /* the override summary — an override that nobody can see is an override nobody can undo */

@@ -15,6 +15,11 @@
  *   · a receipt quote on an ANSWER field that is not a verbatim substring of that
  *     record's own answers (school/company receipts quote raw CSV cells — Task 7's
  *     audit checks those against the CSV)
+ *   · a person record's `conviction` block that carries a tag outside the CLOSED
+ *     vocabularies, disagrees with that person's node in graph.json, quotes anything that
+ *     is not byte-verbatim in the answer field the tag is read from, or still carries a
+ *     quote behind a tag a human overrode (`_overridden`) — the old quote stopped being
+ *     evidence when the tag moved, and a receipt for a claim nobody made is a fabrication
  *   · a `direction` outside the contract enum, an edge pointing at nobody, a
  *     zero-count fact rendered as text, or an internal `flags` value leaking into copy
  *   · meta.stages / meta.guestIds missing (the entry drop-zone reads both)
@@ -58,11 +63,27 @@ const SHEET_COLUMNS = [
 const OVERRIDE_COLUMNS = [
   "person_id", "motive", "mission", "impact", "aspiration", "pinned_match", "hide", "host_notes",
 ];
-const OVERRIDE_VOCAB: Record<string, readonly string[]> = {
+/** The four closed conviction vocabularies — checked in the overrides sheet AND, since the
+ *  person records carry a `conviction` block, where the tags actually SHIP. */
+const TAG_VOCAB: Record<string, readonly string[]> = {
   motive: MOTIVES,
   mission: MISSIONS,
   impact: IMPACTS,
   aspiration: ASPIRATIONS,
+};
+/**
+ * tag -> the answer field its receipt must be verbatim from. Re-declared here on purpose (same
+ * reasoning as SHEET_COLUMNS): emit-graph.ts's TAG_QUOTE_FIELD is the subject under test, and a
+ * gate that imports the subject's own table proves only that the subject agrees with itself.
+ * `aspiration` reads off `goal` like the others but ships no quote — the emitter's QUOTED_TAGS.
+ */
+const TAG_QUOTE_FIELD: Record<string, string> = { motive: "drew", mission: "goal", impact: "goal" };
+/** the graph.json node field each conviction tag must equal — same bake, one truth */
+const TAG_NODE_FIELD: Record<string, "motive" | "mission" | "impact" | "asp"> = {
+  motive: "motive",
+  mission: "mission",
+  impact: "impact",
+  aspiration: "asp",
 };
 
 const fail = (m: string) => {
@@ -119,6 +140,11 @@ interface PersonRecord {
   answers: Record<string, string>;
   edges: PersonEdge[];
   highlights: { kind: string; text: string; targets?: string[] }[];
+  /** the computed identity, post-override — every key optional, the whole block omitted
+      when the extraction had nothing to say (parsed as unknown: this gate types nothing
+      it has not checked) */
+  conviction?: Record<string, unknown>;
+  _overridden?: string[];
 }
 
 const EXPECTED_PEOPLE = 312;
@@ -233,6 +259,9 @@ if (!MATCH_PROVIDERS.has(g.meta?.matchProvider ?? "")) {
 const files = readdirSync(PEOPLE_DIR).filter((f) => f.endsWith(".json"));
 if (files.length !== EXPECTED_PEOPLE) fail(`people files ${files.length} !== ${EXPECTED_PEOPLE}`);
 
+const nodeById = new Map(g.nodes.map((n) => [n.id, n] as const));
+let convictionBlocks = 0;
+let convictionReceipts = 0;
 let edgeTotal = 0;
 let highlightTotal = 0;
 let minEdges = Infinity;
@@ -306,6 +335,71 @@ for (const f of files) {
     if (/missing-(school|answers)|\bflags?\b/i.test(h.text)) fail(`${f}: internal flag leaked into copy — "${h.text}"`);
     for (const t of h.targets ?? []) if (!ids.has(t)) fail(`${f}: highlight "${h.kind}" targets ${t}, who is not in the graph`);
   }
+
+  /* the conviction block: the computed "who we think you are", and the receipts under it.
+   * A card renders this as a claim about a person, so all four of its ways of being wrong
+   * are checked here: a tag no vocabulary contains, a tag that contradicts the same bake's
+   * node, a quote that is not the guest's own bytes, and a quote still standing behind a tag
+   * a human replaced (the override law drops it — an old receipt is not evidence for a new
+   * claim). Absent is always legal; blank is not. */
+  const conv = p.conviction;
+  if (conv !== undefined) {
+    if (conv === null || typeof conv !== "object" || Array.isArray(conv)) fail(`${f}: conviction is not an object`);
+    if (Object.keys(conv).length === 0) fail(`${f}: conviction is present but empty — omit it instead`);
+    convictionBlocks += 1;
+    const node = nodeById.get(p.personId);
+    const moved = new Set(p._overridden ?? []);
+    const quotes = conv.quotes;
+
+    for (const [tag, value] of Object.entries(conv)) {
+      if (tag === "quotes") continue;
+      const vocab = TAG_VOCAB[tag];
+      if (!vocab) fail(`${f}: conviction carries "${tag}", which is not a conviction tag`);
+      if (typeof value !== "string" || !vocab.includes(value)) {
+        fail(`${f}: conviction.${tag} = ${JSON.stringify(value)} is outside the closed vocabulary (${vocab.length} allowed values)`);
+      }
+      const onNode = node?.[TAG_NODE_FIELD[tag]] ?? null;
+      if (onNode !== value) fail(`${f}: conviction.${tag} "${value}" !== graph.json node's "${onNode}" — one bake, two answers`);
+    }
+    /* a tag on the node that never reached the record would render an empty card next to a
+       populated room; the block is a copy of the node's tags, not a subset of them */
+    for (const [tag, field] of Object.entries(TAG_NODE_FIELD)) {
+      const onNode = node?.[field] ?? null;
+      if (onNode !== null && conv[tag] === undefined) fail(`${f}: node carries ${tag} "${onNode}" but the conviction block dropped it`);
+    }
+
+    if (quotes !== undefined) {
+      if (quotes === null || typeof quotes !== "object" || Array.isArray(quotes)) fail(`${f}: conviction.quotes is not an object`);
+      const qs = quotes as Record<string, unknown>;
+      if (Object.keys(qs).length === 0) fail(`${f}: conviction.quotes is present but empty — omit it instead`);
+      for (const [tag, quote] of Object.entries(qs)) {
+        const field = TAG_QUOTE_FIELD[tag];
+        if (!field) fail(`${f}: conviction.quotes carries "${tag}" — receipts key on {motive, mission, impact}`);
+        if (typeof quote !== "string" || quote.length === 0) fail(`${f}: conviction.quotes.${tag} is empty`);
+        if (conv[tag] === undefined) fail(`${f}: conviction.quotes.${tag} is a receipt for a tag that is not there`);
+        if (moved.has(tag)) {
+          fail(`${f}: conviction.${tag} was overridden but still ships a quote — the old receipt is not evidence for the new tag`);
+        }
+        if (!(p.answers?.[field] ?? "").includes(quote as string)) {
+          fail(`conviction quote not verbatim in ${f} (${tag} ← ${field})`);
+        }
+        convictionReceipts += 1;
+      }
+    }
+  }
+}
+
+/* The block is absent for the handful the extraction could say nothing about, and a receipt
+   is legitimately dropped whenever a human moves a tag — so neither has a fixed count. What
+   is NOT survivable is the block or its receipts quietly emptying out for the whole room
+   (as baked 2026-07-25: 307 blocks, 276 receipts). Same reasoning as HOMETOWN_MIN. */
+const CONVICTION_MIN = 300;
+const RECEIPT_MIN = 200;
+if (convictionBlocks < CONVICTION_MIN) {
+  fail(`only ${convictionBlocks} of ${files.length} records carry a conviction block — below the ${CONVICTION_MIN} floor`);
+}
+if (convictionReceipts < RECEIPT_MIN) {
+  fail(`only ${convictionReceipts} verbatim conviction receipts across ${files.length} records — below the ${RECEIPT_MIN} floor`);
 }
 
 /* ---- the enrichment sheet: the human-editable station between pipeline and artifacts ---- */
@@ -388,7 +482,7 @@ if (existsSync(OVERRIDES)) {
     if (ids.has(id) && hidden) {
       fail(`${OVERRIDES} line ${line}: "${id}" is marked hide=true but still shipped as a node`);
     }
-    for (const [col, vocab] of Object.entries(OVERRIDE_VOCAB)) {
+    for (const [col, vocab] of Object.entries(TAG_VOCAB)) {
       const v = (r[col] ?? "").trim();
       if (v !== "" && !vocab.includes(v)) {
         fail(`${OVERRIDES} line ${line}: ${col}="${v}" is outside the closed vocabulary (${vocab.length} allowed values)`);
@@ -406,6 +500,11 @@ console.log(
     `(graph.json ${(raw.length / 1024).toFixed(0)}KB · edges/record min ${minEdges} avg ${(edgeTotal / files.length).toFixed(1)} · ` +
     `highlights/record min ${minHighlights} avg ${(highlightTotal / files.length).toFixed(1)} · ` +
     `${hometowns} hometowns · ${numericClaims} numeric claims, none zero, no group of one)`,
+);
+console.log(
+  `conviction OK: ${convictionBlocks} of ${files.length} records carry a block, all tags in the closed ` +
+    `vocabularies and equal to their node · ${convictionReceipts} receipts, every one byte-verbatim in the ` +
+    `guest's own answer, none behind an overridden tag`,
 );
 console.log(
   `sheet OK: ${SHEET} ${sheet.data.length} rows × ${sheetHeader.length} pinned columns, no contact PII · ` +
