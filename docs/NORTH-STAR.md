@@ -136,3 +136,16 @@
 Interpretation: /graph is THE product surface. /universe is frozen legacy — no work lands there,
 no parity obligations against it; it may serve as historical reference for effects/ideas only.
 — CONFIRMED BY QUOTE.
+
+## Addendum 3 (2026-07-25, verbatim)
+
+> for the blur, make sure whatever the bubble hovers on it converts that section into full clairty.
+> Also for each text item, is there a way to render it with more clarity? We need to ensure the text
+> is as clear as it can be
+
+Interpretation: (1) the popped bubble becomes a CLARITY LENS through the focus veil — wherever it
+hovers, that region renders fully sharp (a veil cutout tracking the bubble; this also answers the
+veil's open question (b): a sharp window YES, tracked by the bubble, not the dot). (2) A text-clarity
+pass across the scene: every rendered text item as crisp as achievable (DPR-aware canvas/WebGL label
+rendering, contrast/alpha, grain-veil interaction) — clarity outranks subtlety where they conflict.
+— CONFIRMED BY QUOTE.
