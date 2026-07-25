@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { defaultAdapter } from "./adapter";
+import { defaultAdapter, ROOM_EDGES, type RoomEdgeType } from "./adapter";
 import { GUEST_DETAILS } from "./adapter";
 import StampBurst, { type StampData } from "./Stamps";
 import HometownMap from "./HometownMap";
@@ -35,19 +35,22 @@ import type { FieldName } from "./segments";
    impasto+weave+grain. Layering order is fixed. */
 
 export const DEFAULTS = {
-  // lens — warp low: the rim should barely smear
+  // lens — warp low: the rim should barely smear. The radius is the
+  // UNPOPPED bubble (holding the whole room); after the first click pops
+  // it, it returns at POPPED_SCALE of this.
   zoom: 2.0, warp: 0.12,
   // film
   thick: 380, drain: 0.55, chroma: 1.0, edge: 0.62, turb: 0.3, flow: 0.35, back: 0.45,
   // form
-  radius: 0.26, wobble: 0.018, surface: 0.016,
+  radius: 0.34, wobble: 0.018, surface: 0.016,
   // motion — the bubble sits in the middle; wander is off by default
   gravity: 0.0, drag: 3.4, wander: 0,
   jiggle: 1.6, settle: 1.0, squish: -1.2, bounce: 0.30, grip: 0.25,
   // morph timing — the feel of the whole piece
   morphDur: 900, morphHold: 300, hopDur: 350, hopHold: 140,
-  // monet
-  kuwahara: 0.85, kuwaKernel: 2.4, grade: 0.65, impasto: 0.4, weave: 0.6, grain: 0.16,
+  // monet — weave is gone (it read as scan lines at any period); grain
+  // is drawn by the DOM veil so it covers the widgets too
+  kuwahara: 0.85, kuwaKernel: 2.4, grade: 0.65, impasto: 0.4, grain: 0.16,
 };
 
 export type Params = typeof DEFAULTS & {
@@ -61,6 +64,9 @@ const MAX_DEFORM = 0.3;
 /* the scene camera is the zoom; the bubble is a draggable lens toy
    that lives in the middle and never flies to targets */
 const SCENE_ZOOM_PERSON = 2.2;
+/* after the first click pops the bubble it returns at this fraction of
+   params.radius — a toy, no longer the room's container */
+const POPPED_SCALE = 0.42;
 
 /* ---- tune panel definition (Bubble.jsx style) ---- */
 const PANEL_GROUPS: {
@@ -83,7 +89,6 @@ const PANEL_GROUPS: {
     { key: "kuwaKernel", label: "kernel", min: 1, max: 3, step: 0.05 },
     { key: "grade", label: "grade", min: 0, max: 1, step: 0.01 },
     { key: "impasto", label: "impasto", min: 0, max: 1, step: 0.01 },
-    { key: "weave", label: "weave", min: 0, max: 1, step: 0.01 },
     { key: "grain", label: "grain", min: 0, max: 0.5, step: 0.005 },
   ]},
   { name: "film", items: [
@@ -110,6 +115,101 @@ const PANEL_GROUPS: {
     { key: "bounce", label: "bounce", min: 0, max: 0.9, step: 0.01 },
   ]},
 ];
+
+/* The grain veil — the film's last pass, moved OUT of the WebGL chain and into
+   the DOM. The ticker, map, pills and logo are DOM siblings the shader can
+   never touch; a fixed canvas as the LAST child of the shell grains all of
+   them and the scene alike. hard-light around exact 50% grey is an identity,
+   so the veil only ever adds the speckle, never a wash. Stepped ~12fps like
+   the shader grain was; pointer-events stay off so it can never eat a click. */
+function GrainVeil({ paramsRef }: { paramsRef: React.MutableRefObject<Params> }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+
+    /* a few pre-baked per-channel noise tiles, cycled with a drifting
+       anchor — regenerating full-viewport noise per step would be the
+       expensive way to draw the same thing */
+    const TILE = 224;
+    const rng = mulberry32(1913);
+    const tiles = Array.from({ length: 4 }, () => {
+      const t = document.createElement("canvas");
+      t.width = TILE;
+      t.height = TILE;
+      const tc = t.getContext("2d")!;
+      const img = tc.createImageData(TILE, TILE);
+      for (let p = 0; p < img.data.length; p += 4) {
+        img.data[p] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 1] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 2] = 128 + (rng() - 0.5) * 116;
+        img.data[p + 3] = 255;
+      }
+      tc.putImageData(img, 0, 0);
+      return t;
+    });
+
+    const resize = () => {
+      const r = canvas.parentElement?.getBoundingClientRect();
+      canvas.width = Math.max(2, Math.floor((r?.width ?? 2) * dpr));
+      canvas.height = Math.max(2, Math.floor((r?.height ?? 2) * dpr));
+      lastStep = -1; // repaint at the new size on the next frame
+    };
+    let lastStep = -1;
+    resize();
+    const ro = new ResizeObserver(resize);
+    if (canvas.parentElement) ro.observe(canvas.parentElement);
+
+    const paint = (step: number) => {
+      const pat = ctx.createPattern(tiles[step % tiles.length], "repeat");
+      if (!pat) return;
+      const ox = (step * 61) % TILE;
+      const oy = (step * 97) % TILE;
+      ctx.setTransform(1, 0, 0, 1, -ox, -oy);
+      ctx.fillStyle = pat;
+      ctx.fillRect(0, 0, canvas.width + TILE, canvas.height + TILE);
+    };
+
+    let raf = 0;
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const g = paramsRef.current.grain;
+      /* the slider stays live: it now drives the veil's opacity */
+      canvas.style.opacity = Math.min(1, g * 1.5).toFixed(3);
+      if (g <= 0) return;
+      /* frozen grain for reduced motion — texture without the flicker */
+      const step = reduced ? 0 : Math.floor(performance.now() * 0.012);
+      if (step === lastStep) return;
+      lastStep = step;
+      paint(step);
+    };
+    frame();
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [paramsRef]);
+
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        mixBlendMode: "hard-light",
+      }}
+    />
+  );
+}
 
 export default function PeplGraph() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -156,6 +256,21 @@ export default function PeplGraph() {
   useEffect(() => {
     paramsRef.current = params;
   }, [params]);
+
+  /* thread-legend toggles: which connection types flood the whole room.
+     A focused person's own threads always draw. `why` starts on — the
+     conviction web is the room's grammar; the denser structural types
+     are opt-in. */
+  const [edgeOn, setEdgeOn] = useState<Record<RoomEdgeType, boolean>>({
+    school: false,
+    company: false,
+    seek: false,
+    why: true,
+  });
+  const edgeOnRef = useRef(edgeOn);
+  useEffect(() => {
+    edgeOnRef.current = edgeOn;
+  }, [edgeOn]);
 
   /* URL overrides, e.g. ?kuwahara=0.4&grain=0 or ?perf=lite —
      handy for weak GPUs and shareable tunings */
@@ -228,7 +343,7 @@ export default function PeplGraph() {
     const UT = uniformMap(gl, tensorProg, ["uTex", "uRes"]);
     const UA = uniformMap(gl, anisoProg, ["uTex", "uTensor", "uRes", "uKernel"]);
     const UG = uniformMap(gl, gradeProg, ["uScene", "uKuwa", "uRes", "uKuwaAmt", "uGradeAmt", "uCenter", "uRadius"]);
-    const UF = uniformMap(gl, finishProg, ["uTex", "uRes", "uTime", "uImpasto", "uWeaveAmt", "uGrainAmt"]);
+    const UF = uniformMap(gl, finishProg, ["uTex", "uRes", "uImpasto"]);
 
     const buf = bindFullscreenTriangle(gl, [bubbleProg, kuwaProg, tensorProg, anisoProg, gradeProg, finishProg]);
 
@@ -276,7 +391,7 @@ export default function PeplGraph() {
       if (exportQ) rtT = makeTarget(gl, w, h);
     };
 
-    const sheet = new GraphSheet(defaultAdapter);
+    const sheet = new GraphSheet(defaultAdapter, ROOM_EDGES);
     let boards: BoardState[] = [];
     let choreo = new Choreography(defaultAdapter.groups().length);
     const breatheAt: number[] = [];
@@ -291,6 +406,14 @@ export default function PeplGraph() {
       const serif = css.getPropertyValue("--font-hedvig").trim();
       if (fam) sheet.fontFamily = fam;
       if (serif) sheet.serifFamily = `${serif}, Georgia, serif`;
+      /* thread hues ride the same runtime-token path as the type — the
+         canvas never invents a hex (law f) */
+      sheet.edgeHues = {
+        school: css.getPropertyValue("--film-blue").trim(),
+        company: css.getPropertyValue("--film-gold").trim(),
+        seek: css.getPropertyValue("--film-magenta").trim(),
+        why: css.getPropertyValue("--film-violet").trim(),
+      };
     };
     resolveFont();
     document.fonts?.ready?.then(() => {
@@ -307,6 +430,12 @@ export default function PeplGraph() {
     let focused: FocusedPerson | null = null;
     let selectedGroup: number | null = null;
     let zoomAnim = paramsRef.current.zoom;
+    /* the LIVE lens radius — every hit-test, mask and uniform reads this,
+       never params.radius directly, so the pop can animate it as one */
+    let lensR = paramsRef.current.radius;
+    let radiusCur = lensR;
+    let popAt = -1; // >= 0 while the burst animation is running
+    let popFromR = 0;
     /* scene camera: world point at view centre + scale, eased each frame */
     const cam = { s: 1, x: 0, y: 0, ts: 1, tx: 0, ty: 0 };
 
@@ -362,14 +491,14 @@ export default function PeplGraph() {
       const P = paramsRef.current;
       const dx = p.x - body.x, dy = p.y - body.y;
       const d = Math.hypot(dx, dy);
-      if (d < P.radius) {
+      if (d < lensR) {
         const z = Math.max(zoomAnim, 1);
-        const dn = Math.min(d / P.radius, 1);
+        const dn = Math.min(d / lensR, 1);
         const cosI = Math.sqrt(Math.max(0, 1 - dn * dn));
         const w = P.warp * Math.pow(1 - cosI, 1.5) * 0.55;
         return {
-          x: body.x + dx / z - (dx / P.radius) * w,
-          y: body.y + dy / z - (dy / P.radius) * w,
+          x: body.x + dx / z - (dx / lensR) * w,
+          y: body.y + dy / z - (dy / lensR) * w,
         };
       }
       return p;
@@ -491,11 +620,21 @@ export default function PeplGraph() {
       });
     };
 
+    /* one-way for the session: the burst runs, then the small toy returns */
+    const popBubble = () => {
+      if (poppedRef.current) return;
+      poppedRef.current = true;
+      setPopped(true);
+      popAt = performance.now();
+      popFromR = lensR;
+    };
+
     const select = (personId: string) => {
       const L = sheet.layout;
       if (!L) return;
       const d = L.dots.find((x) => x.person.id === personId);
       if (!d) return;
+      popBubble(); // the camera is about to enter the room — the room can't stay inside the lens
       selectedGroup = null;
       focused = { id: personId, name: d.person.name, clusterIndex: d.clusterIndex };
       /* the camera does the travel: the person lands left-of-centre so
@@ -506,7 +645,7 @@ export default function PeplGraph() {
       let ox = -0.17 * w, oy = -0.07 * h; // dot's screen offset from centre
       const bx = 0, by = -0.02 * mn; // bubble home, screen px from centre
       const dPx = Math.hypot(ox - bx, oy - by);
-      const clear = paramsRef.current.radius * mn * 1.15;
+      const clear = lensR * mn * 1.15;
       if (dPx < clear) {
         const k = clear / Math.max(dPx, 1e-3);
         ox = bx + (ox - bx) * k;
@@ -527,6 +666,7 @@ export default function PeplGraph() {
     const selectGroup = (ci: number) => {
       const L = sheet.layout;
       if (!L || !L.clusters[ci]) return;
+      popBubble();
       const cl = L.clusters[ci];
       const { w, h, mn } = dims();
       focused = null;
@@ -538,7 +678,7 @@ export default function PeplGraph() {
       const ny = cl.board.y + cl.board.h / 2;
       let ox = -0.16 * w, oy = 0.1 * h;
       const bx = 0, by = -0.02 * mn;
-      const clear = paramsRef.current.radius * mn * 1.15;
+      const clear = lensR * mn * 1.15;
       const nr = sheet.nameRects()[ci];
       const hw2 = nr ? (nr.w / 2) * cam.ts : 0;
       const hh2 = nr ? (nr.h / 2) * cam.ts : 0;
@@ -603,7 +743,7 @@ export default function PeplGraph() {
       ptr.x = q.x; ptr.y = q.y; ptr.down = true;
       ptr.downT = performance.now();
       ptr.dx0 = q.x; ptr.dy0 = q.y;
-      if (Math.hypot(q.x - body.x, q.y - body.y) < paramsRef.current.radius * 1.15) {
+      if (Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15) {
         ptr.grabbed = true;
         ptr.ox = body.x - q.x;
         ptr.oy = body.y - q.y;
@@ -633,6 +773,15 @@ export default function PeplGraph() {
       const moved = Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0);
 
       if (elapsed < 300 && moved < 0.012) {
+        /* the FIRST click on the unpopped bubble pops it: the room releases
+           to full size and the bubble returns as a small toy. Pre-pop, the
+           whole room lives inside the lens, so this must win over dot
+           selection or every first tap lands on somebody. */
+        if (!poppedRef.current && Math.hypot(q.x - body.x, q.y - body.y) < lensR) {
+          popBubble();
+          camHome(); // re-fit: popped home is the full-size room
+          return;
+        }
         const d = dotAt(q);
         if (d) {
           select(d.person.id);
@@ -654,6 +803,30 @@ export default function PeplGraph() {
     wrap.addEventListener("pointerleave", onLeave);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
+
+    /* Wheel is the SCENE's zoom, never the browser's. A trackpad pinch
+       arrives as ctrl+wheel, and without preventDefault the browser zooms
+       the whole site around the canvas. React's synthetic onWheel attaches
+       passively, so this must be a native non-passive listener — on the
+       route shell, so a pinch over the ticker or map is captured too.
+       Anchored to the cursor: the world point under it stays put. */
+    const rootEl = wrap.parentElement ?? wrap;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const r = wrap.getBoundingClientRect();
+      const sx = e.clientX - r.left;
+      const sy = e.clientY - r.top;
+      const anchor = screenToWorld(sx, sy);
+      const k = e.ctrlKey ? 0.008 : 0.0016; // pinch deltas are small + fast
+      const ns = Math.min(3.2, Math.max(0.1, cam.ts * Math.exp(-e.deltaY * k)));
+      cam.ts = ns;
+      cam.tx = anchor.x - (sx - r.width / 2) / ns;
+      cam.ty = anchor.y - (sy - r.height / 2) / ns;
+      if (reduced) {
+        cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
+      }
+    };
+    rootEl.addEventListener("wheel", onWheel, { passive: false });
 
     /* ---------- loop ---------- */
     let raf = 0;
@@ -706,6 +879,28 @@ export default function PeplGraph() {
         b.vx = b.vy = b.dx = b.dy = b.dvx = b.dvy = 0;
       }
 
+      /* --- lens radius: pop burst, then ease to the state's size --- */
+      const targetR = poppedRef.current ? P.radius * POPPED_SCALE : P.radius;
+      if (reduced) {
+        popAt = -1;
+        radiusCur = targetR;
+        lensR = targetR;
+      } else if (popAt >= 0) {
+        const el = now - popAt;
+        if (el < 160) {
+          lensR = popFromR * (1 - el / 160); // the burst
+        } else if (el < 460) {
+          lensR = 0; // a beat of absence before it comes back
+        } else {
+          popAt = -1;
+          radiusCur = 0; // regrow from nothing
+        }
+      }
+      if (popAt < 0 && !reduced) {
+        radiusCur += (targetR - radiusCur) * (1 - Math.exp(-dt * 3.2));
+        lensR = radiusCur;
+      }
+
       /* --- scene camera easing (snapped when reduced) --- */
       if (reduced) {
         cam.s = cam.ts; cam.x = cam.tx; cam.y = cam.ty;
@@ -725,7 +920,7 @@ export default function PeplGraph() {
         hover.id = hd ? hd.person.id : null;
         hover.group = hd ? null : groupNameAt(q);
         const overBubble =
-          Math.hypot(q.x - body.x, q.y - body.y) < P.radius * 1.15;
+          Math.hypot(q.x - body.x, q.y - body.y) < lensR * 1.15;
         wrap.style.cursor =
           hd || hover.group != null ? "pointer" : overBubble ? "grab" : "default";
       }
@@ -748,7 +943,7 @@ export default function PeplGraph() {
          * easing to the top-left corner so the sheet — and the stamps — own the
          * frame. Same spring either way, only the target moves. */
         const zoomedIn = cam.s > 1.25;
-        const R = P.radius;
+        const R = lensR;
         const hx = zoomedIn ? -(0.5 * (dims().w / mn)) + R + 0.03 : 0;
         const hy = zoomedIn ? 0.5 * (dims().h / mn) - R - 0.03 : 0.02;
         ax += (hx - b.x) * 6.0;
@@ -766,7 +961,7 @@ export default function PeplGraph() {
       b.vx += ax * dt; b.vy += ay * dt;
       b.x += b.vx * dt; b.y += b.vy * dt;
 
-      const R = P.radius;
+      const R = Math.max(lensR, 0.02); // popped-out zero must not wedge it in a wall
       const KICK = 1.2;
       if (b.x < -halfW + R) { b.x = -halfW + R; const s = Math.abs(b.vx); b.vx = s * P.bounce; b.dvy += s * KICK; }
       if (b.x > halfW - R) { b.x = halfW - R; const s = Math.abs(b.vx); b.vx = -s * P.bounce; b.dvy += s * KICK; }
@@ -841,7 +1036,7 @@ export default function PeplGraph() {
         return v + (target - v) * easeN;
       });
       const bubbleSheet = toSheet(b.x, b.y);
-      const lensPx = P.radius * mn;
+      const lensPx = lensR * mn;
       /* the focused dot anchors the label bloom; the bubble anchors
          only the genuine lens-proximity effects */
       const focusDot = focused
@@ -925,7 +1120,7 @@ export default function PeplGraph() {
       /* the bubble's disc cuts a hole in the stamp layer — the bubble
          reads as the top layer without leaving the GL pipeline */
       if (stampLayerRef.current) {
-        const Rm = P.radius * mn * 1.02;
+        const Rm = lensR * mn * 1.02;
         const cssMask = `radial-gradient(circle at ${bubbleSheet.x.toFixed(1)}px ${bubbleSheet.y.toFixed(1)}px, transparent ${(Rm - 1).toFixed(1)}px, black ${(Rm + 1).toFixed(1)}px)`;
         const st = stampLayerRef.current.style as CSSStyleDeclaration & {
           webkitMaskImage: string;
@@ -965,6 +1160,7 @@ export default function PeplGraph() {
         nameAlpha,
         labelFor,
         dotEmphasis,
+        edgeOn: edgeOnRef.current,
       });
 
       gl.activeTexture(gl.TEXTURE0);
@@ -995,7 +1191,7 @@ export default function PeplGraph() {
       gl.uniform1f(ub.uEdge, P.edge);
       gl.uniform1f(ub.uZoom, zoomAnim);
       gl.uniform1f(ub.uWarp, P.warp);
-      gl.uniform1f(ub.uRadius, P.radius);
+      gl.uniform1f(ub.uRadius, lensR);
       gl.uniform1f(ub.uBack, P.back);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -1045,20 +1241,17 @@ export default function PeplGraph() {
       gl.uniform1f(UG.uKuwaAmt as WebGLUniformLocation, P.kuwahara);
       gl.uniform1f(UG.uGradeAmt as WebGLUniformLocation, P.grade);
       gl.uniform2f(UG.uCenter as WebGLUniformLocation, b.x, b.y);
-      gl.uniform1f(UG.uRadius as WebGLUniformLocation, P.radius);
+      gl.uniform1f(UG.uRadius as WebGLUniformLocation, lensR);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-      /* ---- pass 4: impasto + weave + grain → screen ---- */
+      /* ---- pass 4: impasto → screen (grain rides the DOM veil) ---- */
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.useProgram(finishProg);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, rtB.tex);
       gl.uniform2f(UF.uRes as WebGLUniformLocation, canvas.width, canvas.height);
-      gl.uniform1f(UF.uTime as WebGLUniformLocation, t);
       gl.uniform1f(UF.uImpasto as WebGLUniformLocation, P.impasto);
-      gl.uniform1f(UF.uWeaveAmt as WebGLUniformLocation, P.weave);
-      gl.uniform1f(UF.uGrainAmt as WebGLUniformLocation, P.grain);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     frame();
@@ -1067,6 +1260,7 @@ export default function PeplGraph() {
       cancelAnimationFrame(raf);
       ro.disconnect();
       document.removeEventListener("visibilitychange", onVis);
+      rootEl.removeEventListener("wheel", onWheel);
       wrap.removeEventListener("pointermove", onMove);
       wrap.removeEventListener("pointerdown", onDown);
       wrap.removeEventListener("pointerleave", onLeave);
@@ -1246,6 +1440,96 @@ export default function PeplGraph() {
       {/* widgets — on top of everything */}
       <TagTicker />
       <HometownMap />
+
+      {/* thread legend — square corners, sentence case, film hues. Each row
+          toggles that connection type across the whole room; a focused
+          person's own threads draw regardless. */}
+      <div
+        style={{
+          position: "absolute",
+          left: 20,
+          bottom: 128,
+          width: 172,
+          padding: "10px 14px 12px",
+          borderRadius: 0,
+          background: "rgba(255,253,251,0.78)",
+          backdropFilter: "blur(12px)",
+          boxShadow:
+            "inset 0 0 0 1px rgba(255,255,255,0.55), 0 0 0 1px rgba(38,36,44,0.045)",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "var(--font-hedvig), Georgia, serif",
+            fontSize: 15,
+            letterSpacing: "0.01em",
+            color: "rgba(38,36,44,0.6)",
+            marginBottom: 7,
+          }}
+        >
+          connections
+        </div>
+        {(
+          [
+            { type: "why", label: "Shared conviction", hue: "var(--film-violet)" },
+            { type: "seek", label: "Seeking match", hue: "var(--film-magenta)" },
+            { type: "school", label: "Same school", hue: "var(--film-blue)" },
+            { type: "company", label: "Same company", hue: "var(--film-gold)" },
+          ] as { type: RoomEdgeType; label: string; hue: string }[]
+        ).map((row) => {
+          const on = edgeOn[row.type];
+          const n = ROOM_EDGES.filter((e) => e.type === row.type).length;
+          return (
+            <button
+              key={row.type}
+              className="pepl-item"
+              onClick={() => setEdgeOn((s) => ({ ...s, [row.type]: !s[row.type] }))}
+              aria-pressed={on}
+              style={{
+                ...ui,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                width: "100%",
+                textAlign: "left",
+                padding: "4px 4px",
+                border: "none",
+                borderRadius: 0,
+                background: "transparent",
+                color: on ? "rgba(26,25,24,0.72)" : "rgba(26,25,24,0.34)",
+                fontSize: 10.5,
+                letterSpacing: "0.02em",
+                cursor: "pointer",
+              }}
+            >
+              <span
+                style={{
+                  width: 16,
+                  height: 2,
+                  background: row.hue,
+                  opacity: on ? 0.95 : 0.3,
+                  flex: "none",
+                }}
+              />
+              <span style={{ flex: 1 }}>{row.label}</span>
+              <span style={{ fontSize: 8.5, color: "rgba(26,25,24,0.32)" }}>{n}</span>
+            </button>
+          );
+        })}
+        <div
+          style={{
+            ...ui,
+            textTransform: "none",
+            fontSize: 8.5,
+            letterSpacing: "0.04em",
+            color: "rgba(26,25,24,0.30)",
+            marginTop: 6,
+          }}
+        >
+          click a person to trace theirs
+        </div>
+      </div>
 
       {/* reduced-motion teleport fade */}
       <div
@@ -1595,6 +1879,10 @@ export default function PeplGraph() {
         </div>
       )}
 
+      {/* LAST child on purpose: the veil grains everything below it —
+          scene, ticker, map, pills, logo — the shader could never reach
+          the DOM widgets (they are siblings of the canvas, not pixels) */}
+      <GrainVeil paramsRef={paramsRef} />
     </div>
   );
 }

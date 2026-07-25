@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { seedScene, type RoomNode } from "./pepl/adapter";
+import { seedScene, type RoomEdge, type RoomNode } from "./pepl/adapter";
 import styles from "./graph.module.css";
 
 /** Nodes as the v2 emitter bakes them. Display-safe fields only. */
@@ -43,14 +43,19 @@ export default function PartyScene() {
       try {
         const res = await fetch("/graph/graph.json", { cache: "force-cache" });
         if (!res.ok) throw new Error(`graph.json ${res.status}`);
-        const json = (await res.json()) as { nodes?: BakedNode[] };
+        const json = (await res.json()) as {
+          nodes?: BakedNode[];
+          edges?: { s: string; t: string; type: string; via?: string; m?: boolean }[];
+        };
         const people = (json.nodes ?? []).filter((n) => !n.kind || n.kind === "person");
         if (!people.length) throw new Error("the room has no people in it");
+        const kinds = new Set(["school", "company", "seek", "why"]);
+        const edges = (json.edges ?? []).filter((e) => kinds.has(e.type)) as RoomEdge[];
         if (cancelled) return;
 
         // seed BEFORE the scene module is evaluated: the scene reads the adapter
         // at module scope, so importing first would capture an empty room
-        seedScene(people as RoomNode[]);
+        seedScene(people as RoomNode[], edges);
         const mod = await import("./pepl/PeplGraph");
         if (cancelled) return;
         setScene(() => mod.default as React.ComponentType);

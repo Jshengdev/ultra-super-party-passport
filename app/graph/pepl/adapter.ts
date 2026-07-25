@@ -30,6 +30,19 @@ export type GuestDetails = {
   movie: string;
 };
 
+/** Person↔person threads as the v2 emitter bakes them — same vocabulary as
+    the old room: school / company / seek (who looks for whom) / why (nearest
+    neighbours inside a shared conviction tag). */
+export type RoomEdgeType = "school" | "company" | "seek" | "why";
+export interface RoomEdge {
+  s: string;
+  t: string;
+  type: RoomEdgeType;
+  via?: string;
+  /** seek only: the pull is mutual */
+  m?: boolean;
+}
+
 /** The shape our emitter bakes into public/graph/graph.json. */
 export interface RoomNode {
   id: string;
@@ -168,6 +181,7 @@ function tally(values: (string | null | undefined)[]): { name: string; n: number
 
 /** Mutable scene tables — the route seeds these once the room JSON lands. */
 export let defaultAdapter: GraphAdapter = new RoomAdapter([]);
+export let ROOM_EDGES: RoomEdge[] = [];
 export let GUEST_DETAILS: Record<string, Partial<GuestDetails>> = {};
 export let TICKER_SCHOOLS: TickerSchool[] = [];
 export let TICKER_COMPANIES: TickerCompany[] = [];
@@ -721,9 +735,12 @@ export const HOMETOWN_PINS: HometownPin[] = [
 export const UNPLACED_HOMETOWNS = 82;
 
 /** Seed the scene from the baked room. Call once, before mounting PeplGraph. */
-export function seedScene(nodes: RoomNode[]): GraphAdapter {
+export function seedScene(nodes: RoomNode[], edges: RoomEdge[] = []): GraphAdapter {
   const a = new RoomAdapter(nodes);
   defaultAdapter = a;
+  /* threads only between people who actually stand in the room */
+  const present = new Set(nodes.map((n) => n.id));
+  ROOM_EDGES = edges.filter((e) => present.has(e.s) && present.has(e.t));
   GUEST_DETAILS = a.details();
   TICKER_SCHOOLS = tally(nodes.map((n) => n.school));
   TICKER_COMPANIES = tally(nodes.map((n) => n.company)).map((c) => {

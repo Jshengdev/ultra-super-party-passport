@@ -5,7 +5,7 @@
 import { computeLayout, GraphLayout } from "./sheetLayout";
 import { CELL_SHAPES, CELL_W, CELL_GAP } from "./segments";
 import type { BoardState } from "./boards";
-import type { GraphAdapter } from "./adapter";
+import type { GraphAdapter, RoomEdge, RoomEdgeType } from "./adapter";
 
 const CREAM = "#f7f6f4";
 const INK = "26,25,24";
@@ -27,6 +27,9 @@ export type SheetFrame = {
   nameAlpha: number[]; // per cluster — serif group-name fade, 1 at rest
   labelFor: (dotIndex: number) => number; // microlabel alpha, 0..1
   dotEmphasis: (dotIndex: number) => number; // scale target, 1 = rest
+  /** legend toggles: draw this thread type across the WHOLE room at rest.
+      A focused/hovered person's own threads always draw, toggled or not. */
+  edgeOn: Record<RoomEdgeType, boolean>;
 };
 
 export class GraphSheet {
@@ -46,8 +49,14 @@ export class GraphSheet {
      become 350 drawImages */
   private dotSprites: HTMLCanvasElement[] = [];
   private spriteK = 2;
+  /* person↔person threads, resolved to dot indices at layout time */
+  private links: { a: number; b: number; type: RoomEdgeType }[] = [];
+  /** Film hues per thread type — resolved from the design tokens at runtime
+      (canvas can't follow var(), same story as the fonts). Empty string =
+      token missing → that type simply doesn't draw. Never invent a hex. */
+  edgeHues: Record<RoomEdgeType, string> = { school: "", company: "", seek: "", why: "" };
 
-  constructor(private adapter: GraphAdapter) {
+  constructor(private adapter: GraphAdapter, private edges: RoomEdge[] = []) {
     this.canvas = document.createElement("canvas");
     this.ctx = this.canvas.getContext("2d", { alpha: false })!;
   }
@@ -64,6 +73,13 @@ export class GraphSheet {
     this.dpr = dpr;
     this.layout = computeLayout(this.adapter.groups(), this.adapter.people(), w, h);
     this.scales = new Float32Array(this.layout.dots.length).fill(1);
+    const dotIdx = new Map(this.layout.dots.map((d, i) => [d.person.id, i]));
+    this.links = [];
+    for (const e of this.edges) {
+      const a = dotIdx.get(e.s);
+      const b = dotIdx.get(e.t);
+      if (a != null && b != null) this.links.push({ a, b, type: e.type });
+    }
     this.glowCanvases = this.layout.clusters.map((cl) => {
       const c = document.createElement("canvas");
       c.width = Math.max(2, Math.ceil((cl.board.w / cl.board.scale + GLOW_PAD * 2) * cl.board.scale * GLOW_SCALE));
@@ -232,6 +248,9 @@ export class GraphSheet {
       }
     });
 
+    /* ---- threads — under the dots, over the boards ---- */
+    if (this.links.length) this.drawLinks(ctx, f, cs);
+
     /* ---- dots ---- */
     const easeK = f.reduced ? 1 : 1 - Math.exp(-f.dt * 10);
     /* visible world rect under the camera, with margin for labels */
@@ -277,6 +296,65 @@ export class GraphSheet {
         ctx.fillText(d.person.name, lx, y + d.labelDy + 0.5);
       }
     });
+  }
+
+  /* Person↔person threads. Batched into one Path2D per (type, emphasis)
+     pair so a flooded room is a handful of strokes, not 1600. Each thread
+     bows slightly perpendicular to its chord — a thread, not a wire. */
+  private drawLinks(ctx: CanvasRenderingContext2D, f: SheetFrame, cs: number) {
+    const L = this.layout!;
+    const focusId = f.focusedId ?? f.hoveredId;
+    const paths = new Map<string, Path2D>();
+    const trace = (key: string, ax: number, ay: number, bx: number, by: number) => {
+      let p = paths.get(key);
+      if (!p) {
+        p = new Path2D();
+        paths.set(key, p);
+      }
+      const mx = (ax + bx) / 2;
+      const my = (ay + by) / 2;
+      const dx = bx - ax;
+      const dy = by - ay;
+      const len = Math.hypot(dx, dy) || 1;
+      const bow = Math.min(18, len * 0.08);
+      p.moveTo(ax, ay);
+      p.quadraticCurveTo(mx - (dy / len) * bow, my + (dx / len) * bow, bx, by);
+    };
+
+    const anyFocus = !!focusId;
+    for (const lk of this.links) {
+      const A = L.dots[lk.a];
+      const B = L.dots[lk.b];
+      const ego = anyFocus && (A.person.id === focusId || B.person.id === focusId);
+      if (!ego && !f.edgeOn[lk.type]) continue;
+      trace(`${lk.type}:${ego ? "e" : "r"}`, A.x, A.y, B.x, B.y);
+    }
+
+    ctx.save();
+    ctx.lineCap = "round";
+    for (const [key, path] of paths) {
+      const [type, kind] = key.split(":") as [RoomEdgeType, "e" | "r"];
+      const hue = this.edgeHues[type];
+      if (!hue) continue; // token missing — stay silent rather than invent a hue
+      const ego = kind === "e";
+      const wpx = (ego ? 2 : 1) / cs;
+      if (ego) {
+        /* ink under-stroke: the film hues are pastels and sink into the
+           cream on their own — the ink gives the thread its spine, the
+           hue keeps its voice */
+        ctx.globalAlpha = f.focusedId ? 0.18 : 0.12;
+        ctx.strokeStyle = `rgba(${INK},1)`;
+        ctx.lineWidth = wpx + 0.8 / cs;
+        ctx.stroke(path);
+      }
+      /* a focused person's threads read at full voice; the room-wide flood
+         recedes further while someone is focused so the ego web pops */
+      ctx.globalAlpha = ego ? (f.focusedId ? 0.9 : 0.62) : anyFocus ? 0.06 : 0.16;
+      ctx.strokeStyle = hue;
+      ctx.lineWidth = wpx;
+      ctx.stroke(path);
+    }
+    ctx.restore();
   }
 
   private drawBoard(

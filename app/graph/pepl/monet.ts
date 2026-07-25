@@ -2,12 +2,12 @@
    composited scene (graph sheet + bubble), mirroring the
    threshold→blur→composite pattern in reference/ChromaticSheet.jsx.
 
-   Order is fixed: abstraction → grade → impasto → weave → grain.
+   Order is fixed: abstraction → grade → impasto.
    1. generalized Kuwahara (8-sector, Papari circular kernel), half res
    2. impressionist grade (no true black, violet shadows, warm lift)
-   3. impasto relight (height from luminance + canvas weave, one light)
-   4. canvas weave overlay, soft-light, ≤8%
-   5. per-channel grain stepped at ~12fps (from ChromaticSheet)         */
+   3. impasto relight (height from luminance, one light)
+   The film grain rides the DOM veil above the whole surface now — see
+   GrainVeil in PeplGraph.tsx — so it lands on the widgets too.        */
 
 /* ---- pass 1: generalized Kuwahara, runs at half (or quarter) res ----
    8 sectors around each pixel, gaussian radial weight (the Papari
@@ -253,57 +253,32 @@ void main() {
 }
 `;
 
-/* ---- pass 3: impasto relight + canvas weave + grain ----
-   Height field from luminance plus a sin·sin canvas-weave term,
-   normals via gradient, one directional light with a soft specular.
-   Very low strength — the board glow must still read as light, not
-   paint. Then the weave as a soft-light overlay (≤8%), and the
-   per-channel grain from ChromaticSheet, stepped at ~12fps, last. */
+/* ---- pass 3: impasto relight ----
+   Height field from luminance, normals via gradient, one directional
+   light with a soft specular. Very low strength — the board glow must
+   still read as light, not paint.
+
+   The canvas-weave term and overlay are GONE by decree: at any period
+   the lattice read as scan lines over the sheet, so the finish keeps
+   only the relight. Grain now lives in the DOM veil (GrainVeil in
+   PeplGraph.tsx), where it can also cover the widgets the shader can't
+   reach. */
 export const FINISH_FRAG = `
 precision highp float;
 uniform sampler2D uTex;
 uniform vec2 uRes;
-uniform float uTime;
 uniform float uImpasto;
-uniform float uWeaveAmt;
-uniform float uGrainAmt;
 
-float hash21(vec2 p) {
-  p = fract(p * vec2(123.34, 456.21));
-  p += dot(p, p + 45.32);
-  return fract(p.x * p.y);
-}
 float luma(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
-
-float weave(vec2 fc) {
-  /* procedural canvas: two thread directions rotated ~15° off-axis,
-     both at similar frequency — a woven lattice with no axis-aligned
-     banding (slow envelopes read as vertical scan lines).
-
-     FREQUENCY IS A CORRECTNESS CONSTRAINT, not taste. fc is in device
-     pixels, so a coefficient near 2.0 puts the thread period at ~3px —
-     essentially Nyquist. Once the dpr-scaled buffer is resampled to the
-     display that beats against the pixel grid and the whole frame fills
-     with fine vertical scan lines. Keep the period at roughly 10px so the
-     weave stays sub-pixel-safe at any dpr. */
-  vec2 u = vec2(fc.x * 0.966 + fc.y * 0.259, fc.y * 0.966 - fc.x * 0.259);
-  float wx = sin(u.x * 0.62) * sin(u.y * 0.58 + 1.7);
-  float wy = sin(u.y * 0.64 + 0.8) * sin(u.x * 0.56);
-  return (wx + wy) * 0.5;
-}
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uRes;
   vec2 px = 1.0 / uRes;
   vec3 col = texture2D(uTex, uv).rgb;
 
-  /* height = luminance + weave texture term (kept faint) */
-  float wC = weave(gl_FragCoord.xy);
-  float h = luma(col) + wC * 0.03;
-  float hx = luma(texture2D(uTex, uv + vec2(px.x, 0.0)).rgb)
-           + weave(gl_FragCoord.xy + vec2(1.0, 0.0)) * 0.03;
-  float hy = luma(texture2D(uTex, uv + vec2(0.0, px.y)).rgb)
-           + weave(gl_FragCoord.xy + vec2(0.0, 1.0)) * 0.03;
+  float h = luma(col);
+  float hx = luma(texture2D(uTex, uv + vec2(px.x, 0.0)).rgb);
+  float hy = luma(texture2D(uTex, uv + vec2(0.0, px.y)).rgb);
 
   vec3 n = normalize(vec3(-(hx - h) * 6.0, -(hy - h) * 6.0, 1.0));
   vec3 L = normalize(vec3(-0.42, 0.58, 0.72));
@@ -312,25 +287,6 @@ void main() {
 
   vec3 lit = col * (0.94 + 0.10 * diff) + spec * 0.08;
   col = mix(col, lit, uImpasto);
-
-  /* canvas weave overlay — soft-light, capped at 8% */
-  float wv = wC * 0.5 + 0.5;
-  vec3 soft = mix(
-    2.0 * col * wv + col * col * (1.0 - 2.0 * wv),
-    sqrt(col) * (2.0 * wv - 1.0) + 2.0 * col * (1.0 - wv),
-    step(0.5, wv)
-  );
-  col = mix(col, soft, uWeaveAmt * 0.08);
-
-  /* per-channel grain, stepped ~12fps like real film */
-  float gt = floor(uTime * 12.0);
-  vec2 sc = gl_FragCoord.xy;
-  vec3 g = vec3(
-    hash21(sc + gt * 7.1),
-    hash21(sc * 1.031 + gt * 13.7 + 31.0),
-    hash21(sc * 0.973 + gt * 3.3 + 71.0)
-  ) - 0.5;
-  col += g * uGrainAmt * (0.55 + 0.75 * luma(col));
 
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
