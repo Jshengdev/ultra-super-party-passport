@@ -76,6 +76,83 @@ const isAnswerField = (f: string): f is AnswerField =>
 const TAG_KEYS = ["motive", "mission", "impact", "asp"] as const;
 type TagKey = (typeof TAG_KEYS)[number];
 
+/**
+ * The emitter renders a closed-vocabulary tag as a phrase a guest would actually read, and
+ * MOST phrases do not contain their tag ("prove-its-possible" → "prove it is possible",
+ * "market-brand" → "build brands"). A count claim must be pinned to the group it NAMES, so
+ * the audit needs the same tag→phrase table.
+ *
+ * Replicated here rather than imported, deliberately: `scripts/emit-graph.ts` is a script,
+ * not a shared surface, and an audit that reads the subject's own constants proves nothing.
+ * The failure direction is safe — if the emitter's vocabulary grows and this table does not,
+ * the claim stops binding and the audit says `claim-names-wrong-group`, loudly. It never
+ * silently accepts. Mirrors emit-graph.ts:128-181 (tags: task-4 conviction vocabulary).
+ */
+const TAG_PHRASE: Record<TagKey, Record<string, string>> = {
+  motive: {
+    "craft-obsession": "an obsession with the craft",
+    "storytelling-urge": "the urge to tell stories",
+    "fandom-turned-maker": "fandom that turned into making",
+    "childhood-immersion": "growing up inside it",
+    "community-belonging": "wanting to find their people",
+    "music-first": "music first",
+    "performance-joy": "the joy of performing",
+    "representation-gap": "wanting to see themselves on screen",
+    "accident-pivot": "a happy accident",
+    "family-industry": "family already in the industry",
+    escape: "wanting somewhere to escape to",
+    "games-first": "games first",
+  },
+  mission: {
+    "build-community": "build community",
+    "representation-feel-seen": "put people like them on screen",
+    "inspire-next-gen": "inspire whoever comes next",
+    "joy-positivity": "put more joy into the world",
+    "elevate-underdogs": "elevate the underdogs",
+    "preserve-stories": "preserve stories",
+    "truth-inform": "tell the truth",
+    "prove-its-possible": "prove it is possible",
+    "champion-artists": "champion artists",
+    "wonder-escape": "build somewhere to escape to",
+    "craft-excellence": "get the craft right",
+  },
+  impact: {
+    "connect-people": "connect people",
+    "inspire-action": "make people act",
+    "make-people-feel-seen": "make people feel seen",
+    "bring-joy": "bring joy",
+    "create-escape-wonder": "create wonder",
+    "keep-stories-alive": "keep stories alive",
+    "provoke-thought": "provoke thought",
+    "inform-truth": "inform",
+  },
+  asp: {
+    direct: "direct",
+    produce: "produce",
+    "market-brand": "build brands",
+    "represent-agency": "represent talent",
+    design: "design",
+    "executive-pm": "run the projects",
+    write: "write",
+    "compose-music": "compose",
+    act: "act",
+    journalism: "report",
+    cinematography: "shoot",
+    "entertainment-law": "practise entertainment law",
+    photography: "shoot stills",
+    casting: "cast",
+    edit: "edit",
+    undecided: "figure out where they land",
+  },
+};
+
+/** Every spelling of a tag a claim is allowed to name it by (phrase, prettied, raw). */
+function phrasesFor(k: TagKey, tag: string): string[] {
+  const phrase = TAG_PHRASE[k][tag];
+  const pretty = tag.replace(/[_-]+/g, " "); // the emitter's fallback for an unmapped tag
+  return phrase ? [phrase, pretty, tag] : [pretty, tag];
+}
+
 /** Vocabulary that must never reach a guest's eyes. */
 const FLAG_TOKENS = ["missing-school", "missing-answers", GUARD_FAILED_FLAG] as const;
 const FLAG_PATTERNS: Array<[string, RegExp]> = [
@@ -87,13 +164,16 @@ const FLAG_PATTERNS: Array<[string, RegExp]> = [
 ];
 
 /** PII patterns. Matches are reported by offset only — never echoed. */
-const PII_PATTERNS: Array<[string, RegExp]> = [
-  ["email", /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g],
-  ["gmail", /gmail/gi],
-  ["edu-address", /\.edu\b/gi],
-  ["phone", /(?<!\d)(?:\+?1[ .\-]?)?(?:\(\d{3}\)|\d{3})[ .\-]\d{3}[ .\-]\d{4}(?!\d)/g],
-  ["luma-url", /luma\.com/gi],
+const PII_SOURCES: Array<[string, string, string]> = [
+  ["email", "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "g"],
+  ["gmail", "gmail", "gi"],
+  ["edu-address", "\\.edu\\b", "gi"],
+  ["phone", "(?<!\\d)(?:\\+?1[ .\\-]?)?(?:\\(\\d{3}\\)|\\d{3})[ .\\-]\\d{3}[ .\\-]\\d{4}(?!\\d)", "g"],
+  ["luma-url", "luma\\.com", "gi"],
 ];
+/** Fresh regexes per file — a /g pattern carries `lastIndex`, and sharing it across files is a trap. */
+const piiPatterns = (): Array<[string, RegExp]> =>
+  PII_SOURCES.map(([name, src, flags]) => [name, new RegExp(src, flags)] as [string, RegExp]);
 
 /* ───────────────────────────── shapes ───────────────────────────── */
 
@@ -270,8 +350,7 @@ function sourcesFor(g: Guest, field: string, raw?: RawCells): string[] | null {
       return [g.name];
     case "hometown":
       return g.hometown === null ? [] : [g.hometown];
-    case "title":
-      return [g.title]; // composites are handled by checkComposite, not by containment
+    // NOTE: "title" never reaches here — checkSide intercepts it for the composite rule.
     default:
       return null; // unknown field — the caller flags it
   }
@@ -329,26 +408,6 @@ function stripKnown(text: string, strings: Array<string | null | undefined>): st
 }
 
 const pairKey = (s: string, t: string): string => `${s} ${t}`;
-
-/**
- * Which of a person's own labels a highlight actually names — hyphenated tags matched both
- * as stored ("escape-hollywood") and as spelled out ("escape hollywood"), longest match first.
- * Short labels are substrings of long ones ("escape" ⊂ "escape hollywood", "USC" ⊂ "USC
- * Annenberg"), so blaming the first hit picks the wrong group and invents a mismatch.
- */
-function namedIn(
-  text: string,
-  labels: ReadonlyArray<readonly [what: string, label: string | null, size: number | undefined]>,
-): Array<{ what: string; label: string; size: number | undefined; len: number }> {
-  const hits: Array<{ what: string; label: string; size: number | undefined; len: number }> = [];
-  for (const [what, label, size] of labels) {
-    if (!label) continue;
-    const spelled = label.replace(/-/g, " ");
-    const len = text.includes(label) ? label.length : text.includes(spelled) ? spelled.length : 0;
-    if (len > 0) hits.push({ what, label, size, len });
-  }
-  return hits.sort((a, b) => b.len - a.len);
-}
 
 /* ───────────────────────── artifact loading ─────────────────────── */
 
@@ -480,9 +539,48 @@ async function csvStages(csvPath: string): Promise<CsvStage | null> {
       raw.set(id, { school: r[RAW_SCHOOL_COL] ?? "", company: r[RAW_COMPANY_COL] ?? "" });
     }
     return { rows, approved: approvedRows.length, raw };
-  } catch {
+  } catch (e) {
+    // Fail LOUD and correctly attributed: swallowing this silently downgrades every
+    // school/company receipt to canonical-only and reports ~1162 phantom quote violations.
+    add(path.basename(csvPath), "csv-reparse-failed", `independent CSV re-read failed: ${(e as Error).message}`);
     return null;
   }
+}
+
+/**
+ * The two private artifacts, read ONLY to corroborate claims the CSV and the graph cannot
+ * settle on their own (the recorded doppelganger pairing, the openSeeker flag, meta.stages).
+ * Absent (they are gitignored) → null, and the dependent checks say so in a note rather than
+ * pretending. No span/count/graph obligation depends on them.
+ */
+interface Private {
+  doppels: Set<string> | null;
+  openSeekers: Set<string> | null;
+  notes: string[];
+}
+
+function loadPrivate(): Private {
+  const notes: string[] = [];
+  let doppels: Set<string> | null = null;
+  let openSeekers: Set<string> | null = null;
+  if (existsSync(MATCHES_PATH)) {
+    try {
+      const m = JSON.parse(readFileSync(MATCHES_PATH, "utf8")) as { doppels?: Array<{ a: string; b: string }> };
+      doppels = new Set((m.doppels ?? []).flatMap((x) => [pairKey(x.a, x.b), pairKey(x.b, x.a)]));
+    } catch {
+      notes.push("matches.json unreadable — doppelganger claims uncorroborated");
+    }
+  } else notes.push("matches.json absent — doppelganger claims uncorroborated");
+  if (existsSync(CONVICTIONS_PATH)) {
+    try {
+      const raw = JSON.parse(readFileSync(CONVICTIONS_PATH, "utf8")) as Record<string, unknown>;
+      const src = (raw.convictions ?? raw) as Record<string, { openSeeker?: boolean }>;
+      openSeekers = new Set(Object.entries(src).filter(([, v]) => v && v.openSeeker === true).map(([k]) => k));
+    } catch {
+      notes.push("convictions.json unreadable — openSeeker claims uncorroborated");
+    }
+  } else notes.push("convictions.json absent — openSeeker claims uncorroborated");
+  return { doppels, openSeekers, notes };
 }
 
 function auditPopulation(g: GraphDoc, guests: Guest[], byId: Map<string, Guest>, peopleFiles: string[]): void {
@@ -534,12 +632,29 @@ function auditPopulation(g: GraphDoc, guests: Guest[], byId: Map<string, Guest>,
     }
   }
 
-  // edge endpoints resolve
+  // edge endpoints resolve, and each structural edge is corroborated by its own source
+  const nodeOf = new Map(g.nodes.map((n) => [n.id, n]));
   for (const [i, e] of g.edges.entries()) {
     if (!nodeIds.has(e.s) || !nodeIds.has(e.t)) {
       add(F, "dangling-edge", `edges[${i}] ${e.s}->${e.t} (${e.type}): endpoint not in nodes`);
+      continue;
     }
     if (e.s === e.t) add(F, "self-edge", `edges[${i}] ${e.s} points at itself (${e.type})`);
+    const a = byId.get(e.s);
+    const b = byId.get(e.t);
+    if (e.type === "school" && a && b && (a.school === null || a.school !== b.school)) {
+      add(F, "edge-not-corroborated", `edges[${i}] ${e.s}->${e.t} claims a school tie; CSV says ${JSON.stringify(a.school)} vs ${JSON.stringify(b.school)}`);
+    }
+    if (e.type === "company" && a && b && (a.company === null || a.company !== b.company)) {
+      add(F, "edge-not-corroborated", `edges[${i}] ${e.s}->${e.t} claims a company tie; CSV says ${JSON.stringify(a.company)} vs ${JSON.stringify(b.company)}`);
+    }
+    if (e.type === "why") {
+      const na = nodeOf.get(e.s);
+      const nb = nodeOf.get(e.t);
+      if (na && nb && TAG_KEYS.every((k) => na[k] === null || na[k] !== nb[k])) {
+        add(F, "edge-not-corroborated", `edges[${i}] ${e.s}->${e.t} claims a conviction tie, but they share no motive/mission/impact/aspiration tag`);
+      }
+    }
   }
 }
 
@@ -723,6 +838,8 @@ function auditPerson(
   d: Derived,
   totalPeople: number,
   rawCells: Map<string, RawCells>,
+  doppels: Set<string> | null,
+  openSeekers: Set<string> | null,
 ): PersonAudit {
   const out: PersonAudit = { receipts: 0, counts: 0, seekPairs: [] };
   const base = path.basename(file, ".json");
@@ -803,6 +920,10 @@ function auditPerson(
       add(file, "edge-type-unknown", `edges[${i}].type "${e.type}" is off-contract`);
     }
     if (e.via !== undefined && e.via.trim() === "") add(file, "edge-via-empty", `edges[${i}] has an empty via`);
+    // I2: an edge without a receipt is an unbacked claim — law (c) admits no receipt-exempt type
+    if (!e.receipt || (!e.receipt.yours && !e.receipt.theirs)) {
+      add(file, "edge-receipt-missing", `edges[${i}] (${e.type} → ${e.targetId}) carries no receipt — every edge must be provable`);
+    }
     if (e.strength !== undefined && (e.strength < 0 || e.strength > 1)) {
       add(file, "edge-strength-range", `edges[${i}].strength ${e.strength} outside 0..1`);
     }
@@ -814,6 +935,15 @@ function auditPerson(
       }
       if (e.type === "company" && (me.company === null || me.company !== target.company)) {
         add(file, "edge-not-corroborated", `edges[${i}] claims a company tie but CSV says ${JSON.stringify(me.company)} vs ${JSON.stringify(target.company)}`);
+      }
+      // I2: a why-edge asserts a shared conviction — the tags are on the nodes, so prove it
+      if (e.type === "why") {
+        const mineNode = node;
+        const theirs = nodeById.get(e.targetId);
+        const shared = mineNode && theirs ? TAG_KEYS.filter((k) => mineNode[k] !== null && mineNode[k] === theirs[k]) : [];
+        if (mineNode && theirs && shared.length === 0) {
+          add(file, "edge-not-corroborated", `edges[${i}] claims a conviction tie to ${e.targetId}, but they share no motive/mission/impact/aspiration tag`);
+        }
       }
     }
 
@@ -835,35 +965,27 @@ function auditPerson(
     checkSide(i, e, "theirs", target, e.targetId);
   }
 
-  /* --- obligation 2: count integrity --- */
-  const candidates = new Set<number>([totalPeople]);
-  const addCand = (n: number | undefined): void => {
-    if (n !== undefined) candidates.add(n);
-  };
-  const schoolN = me.school ? d.schoolGroup.get(me.school) : undefined;
-  const companyN = me.company ? d.companyGroup.get(me.company) : undefined;
-  const hometownN = me.hometown ? d.hometownGroup.get(me.hometown) : undefined;
-  addCand(schoolN);
-  addCand(companyN);
-  addCand(hometownN);
+  /* --- obligation 2: count integrity --- *
+   * Every claim BINDS to exactly one named group, re-derived here, or it fails. There is no
+   * "matches any of my group sizes" net: that let a cross-group substitution through
+   * ("One of 36 here to prove it is possible" when the true caucus was 6). Binding is by the
+   * emitter's own claim TEMPLATE — the sentence names its group, so the audit reads the name
+   * out of the sentence and checks that group and no other. A template this audit cannot
+   * recognise is `unbindable-claim`, never a pass. */
+  const schoolN = me.school ? d.schoolGroup.get(me.school) ?? 0 : undefined;
+  const companyN = me.company ? d.companyGroup.get(me.company) ?? 0 : undefined;
   const tagN: Partial<Record<TagKey, number>> = {};
   if (node) {
     for (const k of TAG_KEYS) {
       const v = node[k];
-      if (v) {
-        const n = d.tagGroup[k].get(v);
-        tagN[k] = n;
-        addCand(n);
-      }
+      if (v) tagN[k] = d.tagGroup[k].get(v) ?? 0;
     }
   }
   const inboundSet = d.inbound.get(rec.personId) ?? new Set<string>();
-  const outboundSet = d.outbound.get(rec.personId) ?? new Set<string>();
   const mutualSet = d.mutual.get(rec.personId) ?? new Set<string>();
-  addCand(inboundSet.size);
-  addCand(outboundSet.size);
-  addCand(mutualSet.size);
-  addCand(rec.edges.length);
+  const towardMeEdges = rec.edges.filter(
+    (e) => e.type === "seek" && /^(mut|in)/.test((e.direction ?? "").toLowerCase()),
+  ).length;
 
   for (let i = 0; i < rec.highlights.length; i++) {
     const h: Highlight = rec.highlights[i];
@@ -884,74 +1006,175 @@ function auditPerson(
     if (nums.includes(0) || /\bnobody\b|\bno one\b|\bzero\b/i.test(h.text)) {
       add(file, "zero-count-claim", `${where} makes a zero claim: ${q(h.text)}`);
     }
-    for (const t of h.targets ?? []) {
+    const targets = h.targets ?? [];
+    for (const t of targets) {
       if (!nodeById.has(t)) add(file, "highlight-target-dangling", `${where} targets "${t}", which has no node`);
+      if (t === rec.personId) add(file, "highlight-target-dangling", `${where} targets its own person`);
     }
 
     const kind = h.kind.toLowerCase();
-    const only = nums.length === 1 ? nums[0] : undefined;
+    /** M1: the CLAIM is the leading number; a trailing number is a separate assertion. */
+    const lead = nums.length > 0 ? nums[0] : undefined;
+    const bind = (group: string, want: number | undefined): void => {
+      out.counts++;
+      if (lead === undefined) {
+        add(file, "unbindable-claim", `${where} binds to ${group} but carries no number: ${q(h.text)}`);
+      } else if (want === undefined) {
+        add(file, "count-not-grounded", `${where} claims ${lead} for ${group}, which this person does not have: ${q(h.text)}`);
+      } else if (lead !== want) {
+        add(file, "count-mismatch", `${where} says ${lead} for ${group}; independent recount says ${want}: ${q(h.text)}`);
+      }
+    };
+    /** The claim must NAME the group it counts — a renamed label is a fabricated claim. */
+    const namesTag = (k: TagKey): boolean => {
+      const tag = node?.[k];
+      return tag ? phrasesFor(k, tag).some((ph) => h.text.includes(ph)) : false;
+    };
 
-    if (/sought|looking/.test(kind)) {
-      out.counts++;
-      const n = only ?? (nums.length ? Math.max(...nums) : undefined);
-      if (n === undefined) {
-        if (inboundSet.size === 0) add(file, "count-not-grounded", `${where} claims inbound interest but graph.json has none`);
-      } else if (n !== inboundSet.size) {
-        add(file, "count-mismatch", `${where} says ${n}, recount of graph.json seek edges into ${rec.personId} says ${inboundSet.size}: ${q(h.text)}`);
-      }
-      const targets = h.targets ?? [];
-      if (n !== undefined && targets.length > n) {
-        add(file, "count-mismatch", `${where} lists ${targets.length} target(s) but claims ${n}`);
-      }
-      for (const t of targets) {
-        if (!inboundSet.has(t)) add(file, "count-not-grounded", `${where} names ${t} as seeking this person, but no such seek edge exists`);
-      }
-    } else if (/one-of|one_of|only|cohort|classmates|colleagues/.test(kind)) {
-      out.counts++;
-      if (only === undefined && nums.length > 0) {
-        add(file, "count-not-grounded", `${where} carries ${nums.length} numbers; expected one group size: ${q(h.text)}`);
-      } else if (only !== undefined) {
-        const named = namedIn(h.text, [
-          ["school", me.school, schoolN],
-          ["company", me.company, companyN],
-          ["hometown", me.hometown, hometownN],
-        ]);
-        if (named.length > 0) {
-          // longest match wins the blame line ("USC" is a substring of "USC Annenberg")
-          if (!named.some((n) => n.size === only)) {
-            const best = named[0];
-            add(file, "count-mismatch", `${where} says ${only} for ${best.what} "${best.label}"; CSV recount says ${best.size ?? 0}`);
+    switch (kind) {
+      case "sought-by": {
+        bind(`inbound seek edges into ${rec.personId}`, inboundSet.size);
+        if (nums.length > 2) {
+          add(file, "unbindable-claim", `${where} carries ${nums.length} numbers; the template has at most 2: ${q(h.text)}`);
+        } else if (nums.length === 2) {
+          // "The closest N are listed above." — N is how many are actually listed
+          out.counts++;
+          if (nums[1] !== towardMeEdges) {
+            add(file, "count-mismatch", `${where} says ${nums[1]} are listed above; the record carries ${towardMeEdges} inbound/mutual edge(s)`);
           }
-        } else if (only !== schoolN && only !== companyN && only !== hometownN) {
-          add(file, "count-not-grounded", `${where} says ${only}; no CSV group of that size for this person (school ${schoolN ?? "-"}, company ${companyN ?? "-"}, hometown ${hometownN ?? "-"}): ${q(h.text)}`);
-        }
-      }
-    } else if (/caucus|conviction|mission|motive|impact|aspiration|asp\b/.test(kind)) {
-      out.counts++;
-      if (only !== undefined) {
-        const named = namedIn(
-          h.text,
-          TAG_KEYS.map((k) => [k, node?.[k] ?? null, tagN[k]] as const),
-        );
-        if (named.length > 0) {
-          if (!named.some((n) => n.size === only)) {
-            const best = named[0];
-            add(file, "count-mismatch", `${where} says ${only} sharing ${best.what} "${best.label}"; recount of graph.json nodes says ${best.size ?? 0}`);
-          }
-        } else {
-          const sizes = TAG_KEYS.map((k) => tagN[k]).filter((n): n is number => n !== undefined);
-          if (!sizes.includes(only)) {
-            add(file, "count-not-grounded", `${where} says ${only}; no conviction group of that size for this person (${sizes.join(", ") || "none"}): ${q(h.text)}`);
+          if (lead !== undefined && nums[1] >= lead) {
+            add(file, "count-not-grounded", `${where} lists ${nums[1]} of a claimed ${lead} — the tail is only true when the claim exceeds it`);
           }
         }
+        for (const t of targets) {
+          if (!inboundSet.has(t)) add(file, "count-not-grounded", `${where} names ${t} as seeking this person, but no such seek edge exists`);
+        }
+        if (lead !== undefined && targets.length > lead) {
+          add(file, "count-mismatch", `${where} lists ${targets.length} target(s) but claims ${lead}`);
+        }
+        break;
       }
-    } else {
-      // Unknown kind: every number must still resolve to something we recounted.
-      for (const n of nums) {
+      case "mutual": {
+        // "You are looking for each other:" (exactly 1) or "N people here are looking for you…"
         out.counts++;
-        if (!candidates.has(n)) {
-          add(file, "count-not-grounded", `${where} carries the number ${n}, which matches no independently recounted quantity: ${q(h.text)}`);
+        if (lead === undefined) {
+          if (mutualSet.size !== 1) {
+            add(file, "count-mismatch", `${where} uses the singular template; recount of mutual seek edges says ${mutualSet.size}`);
+          }
+        } else if (lead !== mutualSet.size) {
+          add(file, "count-mismatch", `${where} says ${lead}; recount of mutual seek edges says ${mutualSet.size}: ${q(h.text)}`);
         }
+        for (const t of targets) {
+          if (!mutualSet.has(t)) add(file, "count-not-grounded", `${where} names ${t} as mutual, but no mutual seek edge exists`);
+        }
+        break;
+      }
+      case "one-of-n": {
+        // `One of N from <school> in the room.` | `One of N at <company> tonight.`
+        const asSchool = /^One of \d[\d,]* from (.+) in the room\.$/.exec(h.text);
+        const asCompany = /^One of \d[\d,]* at (.+) tonight\.$/.exec(h.text);
+        if (asSchool) {
+          if (asSchool[1] !== me.school) {
+            add(file, "claim-names-wrong-group", `${where} names school ${q(asSchool[1], 40)}; the CSV says this person's school is ${q(me.school ?? "<none>", 40)}`);
+            out.counts++;
+          } else bind(`school "${me.school}"`, schoolN);
+        } else if (asCompany) {
+          if (asCompany[1] !== me.company) {
+            add(file, "claim-names-wrong-group", `${where} names company ${q(asCompany[1], 40)}; the CSV says this person's company is ${q(me.company ?? "<none>", 40)}`);
+            out.counts++;
+          } else bind(`company "${me.company}"`, companyN);
+        } else {
+          add(file, "unbindable-claim", `${where} matches neither one-of-n template, so its group cannot be named: ${q(h.text)}`);
+          out.counts++;
+        }
+        break;
+      }
+      case "conviction-caucus": {
+        // `One of N here to <mission>.` | `One of N who want the work to <impact>.`
+        const isMission = / here to /.test(h.text);
+        const isImpact = /who want the work to /.test(h.text);
+        const k: TagKey | null = isMission ? "mission" : isImpact ? "impact" : null;
+        if (k === null) {
+          add(file, "unbindable-claim", `${where} matches neither caucus template: ${q(h.text)}`);
+          out.counts++;
+        } else if (!node?.[k]) {
+          add(file, "count-not-grounded", `${where} claims a ${k} caucus, but this person has no ${k} tag: ${q(h.text)}`);
+          out.counts++;
+        } else if (!namesTag(k)) {
+          add(file, "claim-names-wrong-group", `${where} does not name this person's ${k} "${node[k]}" (${q(phrasesFor(k, node[k] as string)[0], 40)}): ${q(h.text)}`);
+          out.counts++;
+        } else bind(`${k} "${node[k]}"`, tagN[k]);
+        break;
+      }
+      case "motive": {
+        // `One of N who came to this through <motive>.`
+        if (!node?.motive) {
+          add(file, "count-not-grounded", `${where} claims a motive group, but this person has no motive tag: ${q(h.text)}`);
+          out.counts++;
+        } else if (!namesTag("motive")) {
+          add(file, "claim-names-wrong-group", `${where} does not name this person's motive "${node.motive}" (${q(phrasesFor("motive", node.motive)[0], 40)}): ${q(h.text)}`);
+          out.counts++;
+        } else bind(`motive "${node.motive}"`, tagN.motive);
+        break;
+      }
+      case "craft": {
+        // `One of N aiming to <asp>.` | `One of N still working out where they land.` (undecided)
+        const undecidedTemplate = /still working out where they land/.test(h.text);
+        if (!node?.asp) {
+          add(file, "count-not-grounded", `${where} claims a craft group, but this person has no aspiration tag: ${q(h.text)}`);
+          out.counts++;
+        } else if (node.asp === "undecided" ? !undecidedTemplate : !namesTag("asp")) {
+          add(file, "claim-names-wrong-group", `${where} does not name this person's aspiration "${node.asp}" (${q(phrasesFor("asp", node.asp)[0], 40)}): ${q(h.text)}`);
+          out.counts++;
+        } else if (node.asp !== "undecided" && undecidedTemplate) {
+          add(file, "claim-names-wrong-group", `${where} uses the undecided template but this person's aspiration is "${node.asp}"`);
+          out.counts++;
+        } else bind(`aspiration "${node.asp}"`, tagN.asp);
+        break;
+      }
+      case "room": {
+        bind("the room", totalPeople);
+        break;
+      }
+      case "hometown": {
+        // `Came from <hometown>.` — a factual assertion, checked like a receipt (I4)
+        out.counts++;
+        const said = /^Came from (.+)\.$/.exec(h.text);
+        if (me.hometown === null) {
+          add(file, "fact-not-grounded", `${where} asserts a hometown, but the CSV has none for this person: ${q(h.text)}`);
+        } else if (said) {
+          if (said[1] !== me.hometown) {
+            add(file, "fact-not-grounded", `${where} says ${q(said[1], 40)}; the CSV hometown is ${q(me.hometown, 40)}`);
+          }
+        } else if (!h.text.includes(me.hometown)) {
+          add(file, "fact-not-grounded", `${where} does not contain the CSV hometown ${q(me.hometown, 40)}: ${q(h.text)}`);
+        }
+        if (numbersIn(stripKnown(h.text, [me.hometown])).length > 0) {
+          add(file, "unbindable-claim", `${where} carries a number outside the hometown: ${q(h.text)}`);
+        }
+        break;
+      }
+      case "doppelganger": {
+        out.counts++;
+        if (targets.length !== 1) {
+          add(file, "fact-not-grounded", `${where} must name exactly one nearest person, names ${targets.length}`);
+        } else if (doppels !== null && !doppels.has(pairKey(rec.personId, targets[0])) && !doppels.has(pairKey(targets[0], rec.personId))) {
+          add(file, "fact-not-grounded", `${where} names ${targets[0]} as the closest answers, which is not the recorded doppelganger pair`);
+        }
+        if (nums.length > 0) add(file, "unbindable-claim", `${where} carries a number the template has no place for: ${q(h.text)}`);
+        break;
+      }
+      case "open": {
+        out.counts++;
+        if (openSeekers !== null && !openSeekers.has(rec.personId)) {
+          add(file, "fact-not-grounded", `${where} says this person is open to meeting anyone; the conviction pass did not mark them openSeeker`);
+        }
+        if (nums.length > 0) add(file, "unbindable-claim", `${where} carries a number the template has no place for: ${q(h.text)}`);
+        break;
+      }
+      default: {
+        add(file, "unbindable-claim", `${where} is a highlight kind this audit cannot bind to a group — it must be taught the template before it can ship: ${q(h.text)}`);
+        out.counts++;
       }
     }
   }
@@ -977,8 +1200,7 @@ function auditPerson(
 /* ─────────────── obligation 5: the PII tripwire ─────────────────── */
 
 function auditPii(file: string, raw: string): void {
-  for (const [name, re] of PII_PATTERNS) {
-    re.lastIndex = 0;
+  for (const [name, re] of piiPatterns()) {
     let hits = 0;
     let m: RegExpExecArray | null;
     while ((m = re.exec(raw)) !== null && hits < 3) {
@@ -1040,7 +1262,7 @@ interface SeekClaim {
   origins: Set<string>;
 }
 
-async function auditNeo4j(nodeIds: string[], claims: SeekClaim[]): Promise<{ nodes: number; rels: number }> {
+async function auditNeo4j(nodeIds: string[], claims: SeekClaim[]): Promise<{ nodes: number; rels: number; live: number }> {
   // every node id must be a :Person — id-scoped, never a global count (legacy population lives here too)
   let nodesSeen = 0;
   for (const batch of chunk(nodeIds, BATCH)) {
@@ -1092,7 +1314,42 @@ async function auditNeo4j(nodeIds: string[], claims: SeekClaim[]): Promise<{ nod
       }
     }
   }
-  return { nodes: nodesSeen, rels: relsSeen };
+  // I3 — the OTHER direction: a SEEKS rel the artifact omitted would make every recount
+  // derived from graph.json (sought-by, mutual) consistently wrong and pass unnoticed.
+  // $ids-scoped on BOTH endpoints so the legacy population is never in view.
+  const artifactPairs = new Set(claims.map((c) => pairKey(c.s, c.t)));
+  const live = new Set<string>();
+  const liveMutual = new Set<string>();
+  for (const batch of chunk(nodeIds, BATCH)) {
+    const res = await run(
+      `
+      MATCH (a:Person)-[r:SEEKS]->(b:Person)
+      WHERE a.id IN $from AND b.id IN $all
+      RETURN a.id AS s, b.id AS t, r.mutual AS mutual
+      `,
+      { from: batch, all: nodeIds },
+    );
+    for (const r of res.records) {
+      const k = pairKey(String(r.get("s")), String(r.get("t")));
+      live.add(k);
+      if (Boolean(r.get("mutual"))) liveMutual.add(k);
+    }
+  }
+  const omitted = [...live].filter((k) => !artifactPairs.has(k));
+  if (omitted.length > 0) {
+    add(
+      rel(GRAPH_PATH),
+      "seek-edge-omitted",
+      `Neo4j holds ${omitted.length} SEEKS rel(s) between audited people that no artifact claims — every graph.json recount (sought-by, mutual) is derived from the artifact set, so an omission passes silently: ${omitted.slice(0, 3).join(", ")}${omitted.length > 3 ? ", …" : ""}`,
+    );
+  }
+  const liveMutualCount = liveMutual.size;
+  const artifactMutual = claims.filter((c) => c.expectMutual === true).length;
+  if (liveMutualCount !== artifactMutual) {
+    add(rel(GRAPH_PATH), "seek-edge-omitted", `Neo4j holds ${liveMutualCount} mutual SEEKS rel(s) in scope, the artifacts claim ${artifactMutual}`);
+  }
+
+  return { nodes: nodesSeen, rels: relsSeen, live: live.size };
 }
 
 /* ─────────────────────────────── main ───────────────────────────── */
@@ -1162,12 +1419,13 @@ async function main(): Promise<void> {
     report([], `audit FAILED: artifacts under ${rel(AUDIT_DIR)} are missing or unparseable`);
   }
 
+  const priv = loadPrivate();
   const byId = new Map(guests.map((g) => [g.personId, g]));
   const nodeById = new Map(art.graph.nodes.map((n) => [n.id, n]));
   const stages = await csvStages(csvPath);
 
   auditPopulation(art.graph, guests, byId, art.people.map((p) => p.file));
-  const notes = auditMeta(art.graph, guests, stages);
+  const notes = [...priv.notes, ...auditMeta(art.graph, guests, stages)];
   if (art.badFiles > 0) notes.push(`${art.badFiles} person file(s) failed to parse and were not audited further`);
 
   const d = derive(art.graph, guests);
@@ -1209,7 +1467,7 @@ async function main(): Promise<void> {
     seenIds.add(p.rec.personId);
     auditPii(p.file, p.raw);
     auditBareAt(p.file, nonAnswerText(p.rec));
-    const res = auditPerson(p.file, p.rec, byId, nodeById, d, art.graph.nodes.length, stages?.raw ?? new Map());
+    const res = auditPerson(p.file, p.rec, byId, nodeById, d, art.graph.nodes.length, stages?.raw ?? new Map(), priv.doppels, priv.openSeekers);
     receipts += res.receipts;
     counts += res.counts;
     for (const sp of res.seekPairs) claim(sp.s, sp.t, sp.expectMutual, sp.origin);
@@ -1219,7 +1477,7 @@ async function main(): Promise<void> {
   }
 
   /* obligation 4 */
-  let live = { nodes: 0, rels: 0 };
+  let live = { nodes: 0, rels: 0, live: 0 };
   if (!SKIP_NEO4J) {
     try {
       live = await auditNeo4j(
@@ -1236,7 +1494,7 @@ async function main(): Promise<void> {
 
   const scope = SKIP_NEO4J
     ? "NEO4J PHASE SKIPPED (partial audit)"
-    : `${live.rels}/${claims.size} seek rels + ${live.nodes} :Person nodes verified live`;
+    : `${live.rels}/${claims.size} seek rels + ${live.nodes} :Person nodes verified live, ${live.live} live rels reconciled both ways`;
   const summary =
     violations.length === 0
       ? `audit OK: ${art.graph.nodes.length} nodes · ${art.people.length} records · ${art.graph.edges.length} edges · ${receipts} receipts resolved (100%) · ${counts} counts re-derived · 0 violations · ${scope}`
