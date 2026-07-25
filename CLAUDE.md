@@ -38,17 +38,32 @@ Vision: Johnny. Design: Teri. Distribution + DNA-gradient: Sarah. Built live by 
 
 ---
 
-## Window ownership map
+## Code map (current — the hackathon window split is retired)
 
-| Window | Owns | Goals |
+| Area | Files | What it is |
 |---|---|---|
-| **build-loop** | `ontology/manifest.ts`, `lib/ontology-gate.ts`, `lib/neo4j.ts`, `lib/gateway.ts`, `scripts/gen-test-csv.ts`, `scripts/ingest.ts`, `scripts/check-conformance.ts`, `scripts/check-values.ts`, `pipeline/*.pipe`, `data/test-party.csv` | G3 values · G4 ingest · G5 check-in action |
-| **passport** | `passport/schema.ts`, `passport/*.ts` (generator), `scripts/generate-passports.ts`, `scripts/audit-receipts.ts`, `data/passports/` | G1 passport |
-| **frontend** | `app/universe/`, `app/api/*`, `app/page.tsx`, `app/globals.css`, `passport/tokens.css`, `scripts/check-universe.ts`, `scripts/check-checkin.ts` | G2 universe · G5 check-in UI |
-| **story** (this window) | `CLAUDE.md`, `README.md`, `docs/DEMO-SCRIPT.md`, `docs/SUBMISSION.md`, `scripts/check-ship.ts` | G6 ship |
+| **Laws' machinery** | `ontology/manifest.ts` (labels/links/ACTIONS + Cypher), `lib/ontology-gate.ts` (`dispatch()` — the ONLY write path), `lib/neo4j.ts`, `lib/gateway.ts` (guarded `chat`/`embed`) | shared surface — change with extreme care |
+| **v1 pipeline** | `lib/ingest.ts`, `scripts/precache.ts`, `scripts/ingest.ts`, `lib/cluster.ts`, `scripts/extract-interests.ts`, `pipeline/*.pipe` | hackathon population (193) → passports |
+| **Passports** | `passport/schema.ts`, `lib/passport.ts`, `lib/traverse.ts`, `scripts/generate-passports.ts`, `scripts/audit-receipts.ts`, `data/passports/` | per-person receipted JSON |
+| **v2 pipeline** | `lib/guests.ts` → `scripts/ingest-guests.ts` → `lib/conviction.ts`/`scripts/enrich-convictions.ts` → `lib/matches.ts`/`scripts/enrich-matches.ts` → `lib/layout.ts`/`scripts/emit-graph.ts` → `public/graph/*` | real guest list (312) → baked graph artifacts |
+| **Surfaces** | `app/page.tsx` (CSV-drop landing), `app/universe/` (the room), `app/graph/` (the room re-fed: drag-in entry via `app/graph/verify.ts`, panel, receipts), `app/passport/[id]/`, `app/deck/`; `passport/tokens.css` = design's handle (canvas reads tokens live, never invents a hex) | what people see |
+| **Gates** | `scripts/check-conformance.ts` · `check-guests.ts` · `check-graph-{ontology,emit,entry,e2e}.ts` · `audit-graph.ts` (fail-able receipts audit) · `check-universe/checkin/values/ship.ts` · `verify-goal.sh` | what green means |
 
-Shared shapes (code against these EXACTLY): see `gx/goals/usp-v1.md`. CSV columns, ontology object
-types, link-type allowlist, passport JSON, and ACTION types are all pinned there.
+Pinned shapes: `gx/goals/usp-v1.md` (v1 contract) + the as-built departure report at the end of
+`docs/superpowers/specs/2026-07-25-party-graph-design.md` (where v2 deviates, and why).
+
+## Working here with an agent
+
+1. Read this file; the laws above bind every change. Rationale lives in constraint comments at the
+   source — read the code, don't look for side docs (and don't write new ones; a few lines HERE at most).
+2. Branch off `master`; small diffs; `git add` only your files (never `package.json`, `.env*`, `out/`,
+   `public/graph/` unless you re-baked it through the pipeline).
+3. Every change keeps its gates green (table above + `npx tsc --noEmit`); data/copy changes re-run
+   `emit-graph` → `check-graph-emit` → `audit-graph` — the audit re-derives every count and quote, and
+   a red audit is a real defect, not a flaky test.
+4. LLM work: through `lib/gateway.ts` only, zod-guarded, retry once, fail loud; new node/edge types
+   enter through `ontology/manifest.ts` or they are unrepresentable.
+5. PR against `master`; report departures from pinned shapes as `[good|neutral|bad] where — what + why`.
 
 ---
 
