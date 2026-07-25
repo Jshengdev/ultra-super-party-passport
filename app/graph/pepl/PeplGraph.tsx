@@ -1592,6 +1592,10 @@ export default function PeplGraph() {
 
   /* ---- relationships widget: rows from the fetched person record ---- */
   const relEdges = profile?.edges ?? [];
+  /* their own answer to "who are you looking for?" — the response the seek
+     matching ran against. Verbatim or nothing: a blank answer means the
+     framing line is simply absent, never a placeholder. */
+  const seeking = profile?.answers?.seeking?.trim();
   const sectionOf = (e: NonNullable<PersonRecord["edges"]>[number]) =>
     REL_SECTIONS.find((s) => s.match(e))?.key ?? "other";
   const personName = (id: string) =>
@@ -1780,8 +1784,28 @@ export default function PeplGraph() {
         ))}
       </div>
 
-      {/* relationships — who the focused person is threaded to. Rows open
-          the receipts: their own words on both sides of the tie. */}
+      {/* THEIR THREADS — the connect surface: what they said they are looking
+          for, then who exactly the room found for it. Rows open the receipt
+          (both sides, verbatim) and fly you to the person.
+
+          TWO SOURCES, both baked by scripts/emit-graph.ts into the person
+          record fetched on focus:
+          · `edges` — RANKED BY THE EMITTER (8 toward-you + 12 other, a human's
+            pinned_match first). Render that order; never re-rank here.
+          · `answers.seeking` — their verbatim answer to "who are you looking
+            for?", the response the seek matching ran against (the row `via`
+            labels derive from it). Introduced as THEIR answer, never as our
+            claim, and absent when they left it blank.
+
+          DIVISION OF LABOR: the connections box (bottom left) answers "how
+          many" and stays non-interactive; THIS widget answers "who exactly, in
+          their own words" and owns click-to-receipt; the receipt dialog owns
+          the quotes per tie. Do not blur those lines in either direction —
+          NORTH-STAR addendum 6 moves the named ties HERE for good.
+
+          A human corrects any of it at ONE station: data/graph-overrides.csv
+          (pinned_match reorders, hide removes) + a re-run of the emit — never
+          by hand-editing public/graph/*. */}
       {focusKey && !indexOpen && profile && relEdges.length > 0 && (
         <div
           style={{
@@ -1807,9 +1831,43 @@ export default function PeplGraph() {
           >
             their threads
           </div>
-          {/* the list keeps to ~80px and scrolls — the widget is a peek,
-              not a page */}
-          <div style={{ maxHeight: 84, overflowY: "auto" }}>
+          {/* how THEY said they want to connect — the question the sections
+              below are the room's answer to. Their words, labelled as theirs;
+              clamped to three lines because the widget is a peek. */}
+          {seeking && (
+            <div style={{ marginBottom: 8 }}>
+              <div
+                style={{
+                  ...ui,
+                  textTransform: "none",
+                  fontSize: 9,
+                  letterSpacing: "0.05em",
+                  color: "rgba(26,25,24,0.36)",
+                }}
+              >
+                Their answer · who they’re looking for
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-hedvig), Georgia, serif",
+                  fontSize: 12,
+                  lineHeight: 1.4,
+                  color: "rgba(26,25,24,0.7)",
+                  marginTop: 3,
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 3,
+                  overflow: "hidden",
+                }}
+              >
+                “{seeking}”
+              </div>
+            </div>
+          )}
+          {/* the list peeks at ~100px and scrolls — the same peek the index
+              dropdown shows, and one row deeper than it used to be now that
+              finding people is what this widget is for */}
+          <div style={{ maxHeight: 104, overflowY: "auto" }}>
           {REL_SECTIONS.map((sec) => {
             const rows = relEdges
               .map((e, i) => ({ e, i }))
