@@ -36,8 +36,9 @@ export function fixDoubledName(n: string): string {
   return t.length > 8 && t.length % 2 === 0 && t.slice(0, h).trim() === t.slice(h).trim() ? t.slice(0, h).trim() : t;
 }
 export function canonSchool(raw: string): string | null {
-  let s = raw.trim().replace(/[’'`‘]?\s*\d{2,4}\s*[’'‘]?\s*$/u, "").replace(/\s+/g, " ").replace(/[,.’'‘]+$/u, "").trim();
-  if (s.includes("/")) s = s.split("/")[0].trim();
+  let s = raw.trim();
+  if (s.includes("/")) s = s.split("/")[0].trim(); // dual-school entries ("USC ‘24 / NYU Law") — take the first, THEN strip its year
+  s = s.replace(/[’'`‘]?\s*\d{2,4}\s*[’'‘]?\s*$/u, "").replace(/\s+/g, " ").replace(/[,.’'‘]+$/u, "").trim();
   if (!s) return null;
   return SCHOOL_ALIAS[s.toLowerCase()] ?? s;
 }
