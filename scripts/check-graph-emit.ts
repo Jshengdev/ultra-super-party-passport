@@ -168,6 +168,7 @@ let highlightTotal = 0;
 let minEdges = Infinity;
 let minHighlights = Infinity;
 let handleMentions = 0;
+let numericClaims = 0;
 const handleSamples: string[] = [];
 const seenIds = new Set<string>();
 
@@ -218,10 +219,20 @@ for (const f of files) {
     }
   }
 
-  /* copy hygiene: no zero-counts, no internal flags in anything a guest reads */
+  /* copy hygiene: no zero-counts, no internal flags in anything a guest reads.
+   * Every integer in every template is checked, not the handful a pattern list would
+   * anticipate: a count that reached the copy is a claim, and a claim of 0 is a bug.
+   * "One of 1" is the same bug wearing a number — being the only one is its own fact,
+   * with its own sentence, never a group of one. */
   for (const h of p.highlights) {
     if (typeof h.text !== "string" || h.text.trim().length === 0) fail(`${f}: highlight "${h.kind}" has no text`);
-    if (/\b0 (people|person|of)\b/i.test(h.text)) fail(`${f}: zero-count fact rendered — "${h.text}"`);
+    for (const m of h.text.matchAll(/\d+/g)) {
+      if (Number(m[0]) === 0) fail(`${f}: zero-count fact rendered — "${h.text}"`);
+    }
+    for (const m of h.text.matchAll(/\bone of (\d+)\b/gi)) {
+      if (Number(m[1]) < 2) fail(`${f}: "one of ${m[1]}" is a zero-count in disguise — "${h.text}"`);
+    }
+    numericClaims += [...h.text.matchAll(/\d+/g)].length;
     if (/missing-(school|answers)|\bflags?\b/i.test(h.text)) fail(`${f}: internal flag leaked into copy — "${h.text}"`);
     for (const t of h.targets ?? []) if (!ids.has(t)) fail(`${f}: highlight "${h.kind}" targets ${t}, who is not in the graph`);
   }
@@ -230,7 +241,8 @@ for (const f of files) {
 console.log(
   `emit OK: ${g.nodes.length} nodes, ${g.edges.length} edges, ${files.length} person files ` +
     `(graph.json ${(raw.length / 1024).toFixed(0)}KB · edges/record min ${minEdges} avg ${(edgeTotal / files.length).toFixed(1)} · ` +
-    `highlights/record min ${minHighlights} avg ${(highlightTotal / files.length).toFixed(1)})`,
+    `highlights/record min ${minHighlights} avg ${(highlightTotal / files.length).toFixed(1)} · ` +
+    `${numericClaims} numeric claims, none zero, no group of one)`,
 );
 if (handleMentions > 0) {
   console.log(

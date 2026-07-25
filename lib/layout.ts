@@ -28,6 +28,14 @@ export const LAYOUT_H = 900;
  * first chaotic ticks. Without it there is no layout at all.
  */
 export const MAX_STEP = 16;
+/**
+ * Empty px demanded between any two rings in `ringLayout`. It is what makes "which group
+ * is this dot in?" answerable by eye: a group's spiral packs its members ~gr/√n apart
+ * (13–16px at these sizes), so 48px of clearance keeps every node's nearest neighbour
+ * inside its own tag. The ring radius grows to satisfy it; the camera fits per lens, so
+ * a bigger ring costs nothing on screen.
+ */
+export const RING_CLEARANCE = 48;
 
 export type Vec2 = [number, number];
 
@@ -174,15 +182,37 @@ export function ringLayout(nodes: readonly RingNode[], key: RingKey): Map<string
     return d !== 0 ? d : a.localeCompare(b);
   });
 
-  const out = new Map<string, Vec2>();
-  const R = Math.min(LAYOUT_W, LAYOUT_H) * 0.56;
-  keys.forEach((k, gi) => {
+  /* Where the group sits on the unit ring, and how far its spiral reaches. Both are
+   * fixed by the data; only the ring's RADIUS is free — so solve for it instead of
+   * trusting the prototype's constant. At 312 guests the two biggest craft groups
+   * (48 + 48) reach 104px each while the ring only gave them 185px between centres:
+   * the rings overlapped and 17 people sat closer to a NEIGHBOURING craft than to
+   * their own, which is the graph mis-filing them in the one lens that is about craft. */
+  const unit = keys.map((k, gi) => {
     const ang = (gi / keys.length) * Math.PI * 2 - Math.PI / 2;
     const push = k === "—" ? 1.28 : 1;
-    const gx = Math.cos(ang) * R * push;
-    const gy = Math.sin(ang) * R * push;
+    return [Math.cos(ang) * push, Math.sin(ang) * push] as Vec2;
+  });
+  const radii = keys.map((k) => 14 + Math.sqrt(groups.get(k)?.length ?? 0) * 13);
+
+  let R = Math.min(LAYOUT_W, LAYOUT_H) * 0.56;
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = i + 1; j < keys.length; j++) {
+      const u = Math.hypot(unit[i][0] - unit[j][0], unit[i][1] - unit[j][1]);
+      if (u <= 0) continue;
+      // centre distance scales linearly with R, group reach does not: solve for the
+      // smallest R that keeps RING_CLEARANCE of empty space between every two rings
+      const need = (radii[i] + radii[j] + RING_CLEARANCE) / u;
+      if (need > R) R = need;
+    }
+  }
+
+  const out = new Map<string, Vec2>();
+  keys.forEach((k, gi) => {
+    const gx = unit[gi][0] * R;
+    const gy = unit[gi][1] * R;
     const members = groups.get(k) ?? [];
-    const gr = 14 + Math.sqrt(members.length) * 13;
+    const gr = radii[gi];
     members.forEach((p, mi) => {
       const t = mi / Math.max(members.length - 1, 1);
       const a2 = mi * 2.39996; // golden angle
