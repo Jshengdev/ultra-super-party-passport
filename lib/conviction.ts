@@ -12,9 +12,11 @@
  *       1. SHAPE guard — `chat(..., BatchSchema)` (zod). The four vocabularies are
  *          `z.enum`s, so an off-vocabulary tag is unrepresentable: the model cannot
  *          invent a motive. Grounding-by-construction, same trick as the ontology gate.
- *       2. POST guard — `verifyQuotes()`. Every returned quote must be a
+ *       2. POST guard — `verifyQuotes()`. Every returned quote must be locatable as a
  *          whitespace-normalized VERBATIM substring of the answer field it is keyed to,
- *          and <=15 words. A quote the guest never wrote is a fabricated receipt.
+ *          and short. A quote the guest never wrote is a fabricated receipt. What gets
+ *          STORED is the matched span sliced back out of the guest's own answer (snap to
+ *          source), so a receipt is a literal substring of the CSV by construction.
  *       Violating guests get ONE retry (only the offenders are re-asked), then they get an
  *       all-null conviction carrying the `conviction-guard-failed` flag — visible on the
  *       Guest AND in the written artifact. Never a silent fallback.
@@ -104,7 +106,10 @@ export interface Conviction {
   mission: string | null;
   impact: string | null;
   aspiration: string | null;
-  /** field name (goal|drew|seeking|inspiration) -> verbatim span from that field. */
+  /**
+   * field name (goal|drew|seeking|inspiration) -> the span from that field, snapped to the
+   * source bytes: a LITERAL substring of the guest's CSV answer, safe for exact matching.
+   */
   quotes: Record<string, string>;
   openSeeker: boolean;
   /** Present ONLY when the post-guard failed twice — the failure must survive into the artifact. */
@@ -128,20 +133,80 @@ const BatchSchema = z.object({ items: z.array(ItemSchema) });
 // Deterministic helpers (pure — unit-testable without a gateway).
 // ---------------------------------------------------------------------------
 
+const APOSTROPHES = /[‘’ʼ′]/;
+const DOUBLE_QUOTES = /[“”″]/;
+const DASHES = /[‐-―−]/;
+const COMBINING = /\p{M}/u;
+
+/** One folded char + the [start, end) slice of the ORIGINAL string that produced it. */
+interface FoldMap {
+  folded: string;
+  start: number[];
+  end: number[];
+}
+
+/** NFKC + typographic quote/dash fold for one grapheme-ish unit (base char + combining marks). */
+function foldUnit(unit: string): string {
+  let out = "";
+  for (const c of unit.normalize("NFKC")) {
+    if (APOSTROPHES.test(c)) out += "'";
+    else if (DOUBLE_QUOTES.test(c)) out += '"';
+    else if (DASHES.test(c)) out += "-";
+    else out += c;
+  }
+  return out;
+}
+
 /**
- * Normalize for VERBATIM comparison: collapse all whitespace runs (the prompt renders
- * multi-line answers on one line, so a newline legitimately comes back as a space) and
- * fold the typographic quote/dash code points onto their ASCII twins (same characters,
- * different bytes — models re-encode them). Case is NOT folded: verbatim means verbatim.
+ * The tolerant fold, WITH an index map back to the source.
+ *
+ * Fold rules (same three as always): collapse whitespace runs to one space and trim (the prompt
+ * renders multi-line answers on one line, so a newline legitimately comes back as a space); fold
+ * typographic quotes/dashes onto their ASCII twins (same characters, different code points —
+ * models re-encode them); NFKC per grapheme cluster so a decomposed "e + ́" still matches a
+ * precomposed "é". Case is NOT folded: verbatim means verbatim.
+ *
+ * The map is what makes SNAP-TO-SOURCE possible: `start[i]`/`end[i]` bracket the original
+ * characters behind `folded[i]`, so a match located in folded space can be sliced back out of the
+ * untouched source. The fold is for LOCATING only — it never reaches storage.
+ */
+function foldWithMap(s: string): FoldMap {
+  const out: string[] = [];
+  const start: number[] = [];
+  const end: number[] = [];
+  let i = 0;
+
+  while (i < s.length) {
+    const first = String.fromCodePoint(s.codePointAt(i)!);
+    if (/\s/.test(first)) {
+      let j = i;
+      while (j < s.length && /\s/.test(s[j]!)) j++;
+      if (out.length > 0) { out.push(" "); start.push(i); end.push(j); } // leading run dropped = trim
+      i = j;
+      continue;
+    }
+    let unit = first;
+    let len = first.length;
+    while (i + len < s.length) {
+      const next = String.fromCodePoint(s.codePointAt(i + len)!);
+      if (!COMBINING.test(next)) break;
+      unit += next;
+      len += next.length;
+    }
+    for (const c of foldUnit(unit)) { out.push(c); start.push(i); end.push(i + len); }
+    i += len;
+  }
+  while (out.length && out[out.length - 1] === " ") { out.pop(); start.pop(); end.pop(); } // trailing trim
+
+  return { folded: out.join(""), start, end };
+}
+
+/**
+ * Normalize for VERBATIM comparison — the folded half of {@link foldWithMap}. Single definition,
+ * so the guard's comparison and the snap's index map can never drift apart.
  */
 export function normalizeForCompare(s: string): string {
-  return s
-    .normalize("NFKC")
-    .replace(/[‘’ʼ′]/g, "'")
-    .replace(/[“”″]/g, '"')
-    .replace(/[‐-―−]/g, "-")
-    .replace(/\s+/g, " ")
-    .trim();
+  return foldWithMap(s).folded;
 }
 
 /**
@@ -153,22 +218,34 @@ export function openSeekerBackstop(seeking: string): boolean {
 }
 
 /**
- * THE POST-GUARD. Every quote the model returned must be:
+ * THE POST-GUARD, and the SNAP. Every quote the model returned must be:
  *   - keyed to one of the four answer fields it was actually shown (`QUOTE_FIELDS`),
  *   - non-empty,
  *   - <= MAX_QUOTE_WORDS words,
- *   - a verbatim (whitespace-normalized) substring of THAT field's text for THIS guest.
+ *   - locatable as a verbatim substring of THAT field's text for THIS guest, under the tolerant
+ *     fold (whitespace collapse + typographic quote/dash fold + NFKC).
+ *
+ * SNAP-TO-SOURCE: the fold is how we LOCATE a quote, never what we STORE. Once located, the
+ * returned `snapped[field]` is sliced straight out of the guest's untouched answer, so it is a
+ * literal substring of the CSV by construction — byte-for-byte, curly apostrophes and double
+ * spaces included. Live golden 2026-07-25: the model handed back "i've" where TJ wrote "i’ve";
+ * the tolerant fold correctly accepted it, but storing the model's spelling would have broken
+ * every downstream consumer that does exact (whitespace-normalized-only) matching against the
+ * CSV — receipt-highlight spans, the Task 7 audit. Callers MUST store `snapped`, not the raw
+ * `item.quotes`.
  *
  * Pure + synchronous by design: the receipts audit and the golden assertions can re-run it
  * independently of the extraction that produced the item.
  *
- * @returns `{ ok, violations }` — `violations` is a human-readable list for the retry nudge.
+ * @returns `{ ok, violations, snapped }` — `violations` is a human-readable list for the retry
+ *          nudge; `snapped` holds every quote that passed, canonicalized to the source bytes.
  */
 export function verifyQuotes(
   guest: Guest,
   item: { quotes?: Record<string, string> | null },
-): { ok: boolean; violations: string[] } {
+): { ok: boolean; violations: string[]; snapped: Record<string, string> } {
   const violations: string[] = [];
+  const snapped: Record<string, string> = {};
   const quotes = item.quotes ?? {};
 
   for (const [field, quote] of Object.entries(quotes)) {
@@ -181,17 +258,26 @@ export function verifyQuotes(
       continue;
     }
     const q = normalizeForCompare(quote);
+    if (q === "") {
+      violations.push(`quote for "${field}" is empty after normalization: ${JSON.stringify(quote.slice(0, 80))}`);
+      continue;
+    }
     if (q.split(" ").length > MAX_QUOTE_WORDS) {
       violations.push(`quote for "${field}" is ${q.split(" ").length} words (max ${MAX_QUOTE_WORDS})`);
       continue;
     }
-    const source = normalizeForCompare(guest.answers[field as QuoteField] ?? "");
-    if (!source.includes(q)) {
+    const raw = guest.answers[field as QuoteField] ?? "";
+    const src = foldWithMap(raw);
+    const at = src.folded.indexOf(q);
+    if (at < 0) {
       violations.push(`quote for "${field}" is NOT verbatim: ${JSON.stringify(quote.slice(0, 80))}`);
+      continue;
     }
+    // Map the folded match back onto the original characters and store THOSE.
+    snapped[field] = raw.slice(src.start[at]!, src.end[at + q.length - 1]!);
   }
 
-  return { ok: violations.length === 0, violations };
+  return { ok: violations.length === 0, violations, snapped };
 }
 
 /** True when the guest wrote something in at least one of the four prompted fields. */
@@ -383,7 +469,9 @@ export async function extractConvictions(guests: Guest[]): Promise<Map<string, C
           mission: item.mission,
           impact: item.impact,
           aspiration: item.aspiration,
-          quotes: item.quotes,
+          // `check.snapped`, never `item.quotes` — stored receipts are source bytes, not the
+          // model's re-spelling of them.
+          quotes: check.snapped,
           openSeeker: item.openSeeker || openSeekerBackstop(guest.answers.seeking ?? ""),
         });
         pending.delete(guest.personId);
