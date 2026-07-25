@@ -552,6 +552,17 @@ export default function PeplGraph() {
         seek: css.getPropertyValue("--film-magenta").trim(),
         why: css.getPropertyValue("--film-violet").trim(),
       };
+      /* the name-label tints ride the same path: Teri's full spectrum scale,
+         read straight off :root (the --film-* aliases above are eight steps of
+         this same set). A missing token drops out of the palette rather than
+         being replaced — no hex is ever invented here. */
+      const spectrum: string[] = [];
+      for (let i = 0; i < 8; i++) {
+        const v = css.getPropertyValue(`--usp-spectrum-${i}`).trim();
+        if (v) spectrum.push(v);
+      }
+      sheet.labelSpectrum = spectrum;
+      sheet.bakeLabelTints(); // no-op until the layout exists; resize bakes it too
     };
     resolveFont();
     document.fonts?.ready?.then(() => {
