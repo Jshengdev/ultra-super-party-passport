@@ -77,6 +77,7 @@ interface GNode {
   school: string | null;
   company: string | null;
   free: boolean;
+  hometown?: string | null;
   motive: string | null;
   mission: string | null;
   impact: string | null;
@@ -152,17 +153,36 @@ if (raw.length > 900_000) fail(`graph.json too big: ${raw.length}`);
 
 /* ---- node shape + per-lens positions ---- */
 const ids = new Set<string>();
+let hometowns = 0;
 for (const n of g.nodes) {
   if (!n.id || ids.has(n.id)) fail(`bad or duplicate node id: ${n.id}`);
   ids.add(n.id);
   if (typeof n.name !== "string" || n.name.length === 0) fail(`node ${n.id} has no name`);
   if (typeof n.deg !== "number") fail(`node ${n.id} has no deg`);
+  /* the room prints this one on a stamp, so it is shape-checked here as well as
+     byte-for-byte in audit-graph — that audit needs Neo4j, and a DEGRADED run must
+     still catch a hometown that arrives as a number, an object, or an empty string
+     pretending to be an answer. (The contact-PII + bare-"@" tripwires above scan the
+     whole blob, so this field inherits them.) */
+  if ("hometown" in n && n.hometown !== null && n.hometown !== undefined) {
+    if (typeof n.hometown !== "string" || n.hometown.trim().length === 0) {
+      fail(`node ${n.id} has a non-string or empty hometown: ${JSON.stringify(n.hometown)}`);
+    }
+    hometowns += 1;
+  }
   for (const lens of ["web", "why", "seek"] as const) {
     const p = n.pos?.[lens];
     if (!Array.isArray(p) || p.length !== 2 || !Number.isFinite(p[0]) || !Number.isFinite(p[1])) {
       fail(`node ${n.id} has no finite ${lens} position`);
     }
   }
+}
+/* 311 of 312 guests answered the hometown question. A bake that drops below this floor
+   has lost the field somewhere between the CSV and the node — the stamps would go quiet
+   for the whole room and nothing else would say why. */
+const HOMETOWN_MIN = 300;
+if (hometowns < HOMETOWN_MIN) {
+  fail(`only ${hometowns} of ${g.nodes.length} nodes carry a hometown — below the ${HOMETOWN_MIN} floor`);
 }
 
 /* ---- edges resolve, types are in the contract ---- */
@@ -385,7 +405,7 @@ console.log(
   `emit OK: ${g.nodes.length} nodes, ${g.edges.length} edges, ${files.length} person files ` +
     `(graph.json ${(raw.length / 1024).toFixed(0)}KB · edges/record min ${minEdges} avg ${(edgeTotal / files.length).toFixed(1)} · ` +
     `highlights/record min ${minHighlights} avg ${(highlightTotal / files.length).toFixed(1)} · ` +
-    `${numericClaims} numeric claims, none zero, no group of one)`,
+    `${hometowns} hometowns · ${numericClaims} numeric claims, none zero, no group of one)`,
 );
 console.log(
   `sheet OK: ${SHEET} ${sheet.data.length} rows × ${sheetHeader.length} pinned columns, no contact PII · ` +
