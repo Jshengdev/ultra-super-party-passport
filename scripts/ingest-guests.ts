@@ -14,13 +14,17 @@
  * and exit 1 — never swallowed, never a silent partial success.
  *
  * Env:
- *   GUESTS_CSV     (required) path to the Luma guest export
+ *   GUESTS_CSV       (required) path to the Luma guest export
+ *   CONVICTIONS_JSON (optional) conviction pass output; defaults to lib/conviction's
+ *                    CONVICTIONS_PATH. Absent → craft-tag activities are skipped with a note.
  *   GUESTS_FILTER  (optional) comma-separated guest_ids — the golden-sample run
  *   DRY_RUN=1      (optional) print the exact dispatch params for the first 3 selected
  *                  guests as JSONL on stdout, validate ALL selected guests against the
  *                  manifest's IngestGuestV2Params, and exit without touching the driver
  */
+import { existsSync, readFileSync } from "node:fs";
 import { loadGuests, type Guest } from "../lib/guests";
+import { CONVICTIONS_PATH, type Conviction } from "../lib/conviction";
 import { dispatch } from "../lib/ontology-gate";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { DEFAULT_PARTY, IngestGuestV2Params } from "../ontology/manifest";
@@ -64,32 +68,75 @@ function place(hometown: string | null): { name: string; lat: number; lng: numbe
 }
 
 /**
+ * personId → craft tag, read from the conviction pass (`aspiration`, a CLOSED-vocabulary tag
+ * like "direct" / "market-brand" — see lib/conviction.ts).
+ *
+ * WHY: free-text job titles are ~unique (229 distinct across 312 guests, only 101 people on a
+ * shared one), so DOES→Activity alone starves same-work traversal. The craft tag is the coarse
+ * axis titles can't provide: ~14 groups of 13-48 people, all quote-grounded by the extraction's
+ * post-guard. It is ADDITIVE — the lowercased title stays.
+ *
+ * Missing file is NOT an error: ingest must run standalone before the enrichment pass exists.
+ * A corrupt file IS an error (JSON.parse throws → main's catch → exit 1): "the file is there but
+ * unreadable" is a real failure, not an absence. The note goes to stderr so DRY_RUN's stdout
+ * stays clean JSONL.
+ */
+function loadCraftTags(): Map<string, string> {
+  const path = process.env.CONVICTIONS_JSON || CONVICTIONS_PATH;
+  if (!existsSync(path)) {
+    console.error(
+      `convictions: ${path} not found — ingesting job titles only, no craft-tag activities ` +
+        `(run scripts/enrich-convictions.ts, then re-run this ingest to add them).`,
+    );
+    return new Map();
+  }
+  const raw = JSON.parse(readFileSync(path, "utf8")) as Record<string, Conviction>;
+  const out = new Map<string, string>();
+  for (const [personId, c] of Object.entries(raw)) {
+    const tag = c?.aspiration?.trim().toLowerCase();
+    if (tag) out.set(personId, tag);
+  }
+  console.error(`convictions: ${out.size} craft tag(s) loaded from ${path}`);
+  return out;
+}
+
+/**
  * The v1 graph shape the ORIGINAL surfaces read, mapped out of the v2 guest answers:
  *   belief     → what drew them to the industry (falls back to their goal) — the text
  *                lib/cluster.ts embeds into ValueClusters, so SHARES_VALUE/passport
  *                values-paths exist for these guests too.
  *   does       → job title, LOWERCASED (ingest_person's normActivity convention) so two
- *                guests who both wrote "Director" MERGE onto one Activity node.
+ *                guests who both wrote "Director" MERGE onto one Activity node, PLUS their
+ *                craft tag when the conviction pass has one (see loadCraftTags).
  *   workingOn  → their stated goal, case preserved (ingest_person's convention).
  * Empty answers map to null / [] — never a Belief{text:""} or an Activity{name:""}.
  */
-function v1Shape(g: Guest): { belief: string | null; does: string[]; workingOn: string[] } {
+function v1Shape(g: Guest, craft: Map<string, string>): {
+  belief: string | null;
+  does: string[];
+  workingOn: string[];
+} {
+  const does: string[] = [];
+  if (g.title) does.push(g.title.toLowerCase());
+  const tag = craft.get(g.personId);
+  // dedupe: a guest whose title IS the tag (title "design") must not MERGE the same Activity twice
+  if (tag && !does.includes(tag)) does.push(tag);
   return {
     belief: g.answers.drew || g.answers.goal || null,
-    does: g.title ? [g.title.toLowerCase()] : [],
+    does,
     workingOn: g.answers.goal ? [g.answers.goal] : [],
   };
 }
 
 /** The exact params object handed to the gate — shared by the live path and DRY_RUN. */
-function paramsFor(g: Guest) {
+function paramsFor(g: Guest, craft: Map<string, string>) {
   return {
     person: { id: g.personId, name: g.name, position: g.title },
     school: g.school,
     company: g.company,
     place: place(g.hometown),
     inspiration: g.answers.inspiration ? g.answers.inspiration.slice(0, 80) : null,
-    ...v1Shape(g),
+    ...v1Shape(g, craft),
     party: DEFAULT_PARTY,
   };
 }
@@ -127,13 +174,19 @@ async function main(): Promise<number> {
     return 1;
   }
 
+  const craft = loadCraftTags();
+  if (craft.size) {
+    const tagged = guests.filter((g) => craft.has(g.personId)).length;
+    console.error(`convictions: ${tagged}/${guests.length} selected guest(s) carry a craft tag`);
+  }
+
   if (dryRun) {
-    for (const g of guests.slice(0, 3)) console.log(JSON.stringify(paramsFor(g)));
+    for (const g of guests.slice(0, 3)) console.log(JSON.stringify(paramsFor(g, craft)));
     // Same zod the gate will run, minus the driver: proves the whole selection is
     // representable before a single write is attempted.
     const invalid: string[] = [];
     for (const g of guests) {
-      const parsed = IngestGuestV2Params.safeParse(paramsFor(g));
+      const parsed = IngestGuestV2Params.safeParse(paramsFor(g, craft));
       if (!parsed.success) {
         invalid.push(`${g.personId} (${g.guestId}): ${parsed.error.issues.map((i) => `${i.path.join(".") || "<root>"}: ${i.message}`).join("; ")}`);
       }
@@ -153,7 +206,7 @@ async function main(): Promise<number> {
   let ok = 0;
   for (const g of guests) {
     try {
-      await dispatch("ingest_guest_v2", paramsFor(g), PROV);
+      await dispatch("ingest_guest_v2", paramsFor(g, craft), PROV);
       ok++;
       if (ok % 50 === 0) console.log(`  …${ok}/${guests.length}`);
     } catch (e) {
