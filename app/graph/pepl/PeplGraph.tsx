@@ -939,22 +939,22 @@ export default function PeplGraph() {
          it out. This runs before the pan so a carried dot never drags the
          camera as well (the slop is under PAN_START, so the return always
          wins the race). */
-      if (ptr.down && ptr.dot >= 0 && !ptr.grabbed) {
-        const L = sheet.layout;
+      const carried = ptr.down && ptr.dot >= 0 && !ptr.grabbed ? sheet.layout : null;
+      if (carried) {
+        const d = carried.dots[ptr.dot];
         if (!ptr.dragging && Math.hypot(q.x - ptr.dx0, q.y - ptr.dy0) > CLICK_SLOP) {
           ptr.dragging = true;
           wrap.style.cursor = "grabbing";
           /* hover IS the "this one is in hand" channel: it swells the dot and
              surfaces its name, including labels the placement pass culled */
-          if (L) hover.id = L.dots[ptr.dot].person.id;
+          hover.id = d.person.id;
           hover.group = null;
           try {
             wrap.setPointerCapture(e.pointerId);
           } catch {}
         }
-        if (ptr.dragging && L) {
+        if (ptr.dragging) {
           const wpt = pointerWorld(q);
-          const d = L.dots[ptr.dot];
           d.x = wpt.x + ptr.dotOX;
           d.y = wpt.y + ptr.dotOY;
           return;
@@ -1010,13 +1010,13 @@ export default function PeplGraph() {
       }
       /* remember what the press landed on; whether it is a click or a carry
          is only decided once the pointer moves (see onMove) */
-      const L = sheet.layout;
-      const di = L ? dotAt(q) : -1;
-      if (L && di >= 0) {
+      const di = dotAt(q);
+      const dot = di >= 0 ? sheet.layout?.dots[di] : null;
+      if (dot) {
         ptr.dot = di;
         const wpt = pointerWorld(q);
-        ptr.dotOX = L.dots[di].x - wpt.x;
-        ptr.dotOY = L.dots[di].y - wpt.y;
+        ptr.dotOX = dot.x - wpt.x;
+        ptr.dotOY = dot.y - wpt.y;
       }
     };
 
@@ -1063,9 +1063,9 @@ export default function PeplGraph() {
 
       if (elapsed < 300 && moved < CLICK_SLOP) {
         const di = dotAt(q);
-        const L = sheet.layout;
-        if (L && di >= 0) {
-          select(L.dots[di].person.id);
+        const dot = di >= 0 ? sheet.layout?.dots[di] : null;
+        if (dot) {
+          select(dot.person.id);
           return;
         }
         const gi = groupNameAt(q);

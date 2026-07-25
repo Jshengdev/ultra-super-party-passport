@@ -274,10 +274,7 @@ export class GraphSheet {
       if (reach <= base) continue;
       const half = Math.acos(base / reach); // the tangent cone's half-angle
       const th = Math.atan2(dy, dx);
-      const c0 = Math.round(((th + Math.PI) / TAU) * OUT_BINS - 0.5);
-      const span = Math.ceil((half / TAU) * OUT_BINS);
-      for (let j = -span; j <= span; j++) {
-        const k = (((c0 + j) % OUT_BINS) + OUT_BINS) % OUT_BINS;
+      for (let k = 0; k < OUT_BINS; k++) {
         let dth = OUT_ANG[k] - th;
         if (dth > Math.PI) dth -= TAU;
         else if (dth < -Math.PI) dth += TAU;
