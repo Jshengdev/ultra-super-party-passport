@@ -161,3 +161,14 @@ room is crystal clear; the bubble contributes ONLY its refractive edge effect �
 outside it is blurred/distorted by the bubble. (2) ON SELECTING AN INDIVIDUAL: the focus veil
 softens the room, and whatever sits inside the bubble receives full clarity (the lens cutout) —
 the bubble becomes the reading glass for the softened room. — CONFIRMED BY QUOTE.
+
+## Addendum 5 (2026-07-25, verbatim)
+
+> for one of the adgents make it so the scale of the actual card items can be scaled to be slightly
+> larger and the bubble as well. if we have a hidden command when we press 0 it should open this new
+> menu
+
+Interpretation: a HIDDEN tuning menu, toggled by pressing "0" (never while typing in an input),
+exposing scale controls to make (a) the card/stamp items and (b) the bubble slightly larger —
+live-adjustable so the right sizes can be found by feel. Built by extending the scene's existing
+tune affordance (reuse-first), not a parallel panel. — CONFIRMED BY QUOTE.
