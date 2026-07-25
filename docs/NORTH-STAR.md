@@ -172,3 +172,24 @@ Interpretation: a HIDDEN tuning menu, toggled by pressing "0" (never while typin
 exposing scale controls to make (a) the card/stamp items and (b) the bubble slightly larger —
 live-adjustable so the right sizes can be found by feel. Built by extending the scene's existing
 tune affordance (reuse-first), not a parallel panel. — CONFIRMED BY QUOTE.
+
+## Addendum 6 (2026-07-25, verbatim)
+
+> for teh connections tab, what it shoudl ship is the not the strongest ties because thats done
+> through teh their treads tab. The connections tab is meant to be for the individual themselves to
+> show their onw stats and how many people are similar to that. Yknow what im saying. like
+> traditional knoweldge graph stats of who they are and what other people share. Imagine being able
+> to visualize how everyone is connected to each other. try to really think what the best one is
+> for this scneario and what is some information worth sharing this is lower prioity so focus on
+> the other one. but for hte bubble it is defining feature is the morphsim. i just want to ensure
+> that ht text behind it is not blurry and readable espcailly at differnet scales
+
+Interpretation: (1) CONNECTIONS BOX RESCOPE (lower priority): on selection it must NOT show
+"strongest ties" — that is the threads widget's job. It becomes the individual's EGO-STATS panel:
+traditional knowledge-graph stats about who they are and how many people share each trait
+(e.g. "1 of 14 from USC · 1 of 9 building-in-public · shares 3 conviction tags with 41 people"),
+chosen to make "how everyone is connected" legible; leads think hard about the best stat set.
+(2) BUBBLE GLASS RULING (priority): the morphism IS the bubble's identity — it stays (resolves the
+open glass question: do NOT neutralize the shader). The requirement is that text seen THROUGH the
+glass is not blurry and stays readable, especially across different scales (magnification + the
+Addendum-5 scale controls) — refraction may bend, it must not smear. — CONFIRMED BY QUOTE.
