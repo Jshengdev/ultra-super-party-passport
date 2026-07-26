@@ -54,6 +54,31 @@ const OUT_PAD = 6; // the breathing room the old circle carried
 const OUT_ANG = Array.from({ length: OUT_BINS }, (_, k) => -Math.PI + ((k + 0.5) / OUT_BINS) * TAU);
 const OUT_COS = OUT_ANG.map(Math.cos);
 const OUT_SIN = OUT_ANG.map(Math.sin);
+const OUT_DASH = [7, 6];
+const NO_DASH: number[] = []; // hoisted — setLineDash([…]) per cluster would allocate
+
+/* ---- the guideline's rainbow edge ----------------------------------------
+   Johnny: *"give it a super subtle rainbow glow edge that fades in and out
+   extremely subtly like at a 5-10% almost."*
+
+   Same path, three concentric solid passes UNDER the dashed ink, painted with
+   a conic gradient of Teri's spectrum baked around the group's own centre —
+   so hue is a function of the outline's ANGLE and walks the ring once per
+   group, and a dragged lobe carries its own slice of the spectrum out with it
+   (the glow strokes the very path the ink strokes; the fit is never computed
+   twice). The three widths are the feather: each pass carries a third of the
+   breath, so the composite peaks at exactly EDGE_HI on the edge itself and
+   steps DOWN outward — never above the band, at the cost of two more strokes
+   and no blur filter.
+
+   The breath is one cosine over EDGE_PERIOD, offset per cluster by the golden
+   angle so the room shimmers out of step instead of pulsing as one animal. */
+const EDGE_LO = 0.05;
+const EDGE_HI = 0.1;
+const EDGE_PERIOD = 9; // s — slower than any gesture, so it reads as ambient
+const EDGE_PHASE = 2.39996; // golden angle: no two neighbours breathe together
+const EDGE_TURN = TAU * 0.381966; // …and no two start the ring on the same hue
+const EDGE_WIDTHS = [7, 4, 2]; // screen px, widest (faintest) first
 
 /** #rgb / #rrggbb / rgb() / rgba() → channels; null when it is not a colour we
     can read, so the caller keeps pure ink instead of guessing one. */
@@ -120,8 +145,12 @@ export class GraphSheet {
   /** The spectrum the name labels are tinted from — set by PeplGraph from the
       live tokens. Empty (or unparseable) → every label stays pure ink. */
   labelSpectrum: string[] = [];
-  /** per-cluster "r,g,b" label ink, baked with the layout — see bakeLabelTints */
+  /** per-cluster "r,g,b" label ink, baked with the layout — see bakePalette */
   private labelTints: string[] = [];
+  /** per-cluster conic spectrum for the guideline's rainbow edge, baked with
+      the layout (world coords — the camera transform carries it). null when
+      the palette is empty or the engine has no conic gradients → no glow. */
+  private outGlow: (CanvasGradient | null)[] = [];
   /* group guidelines: member dot indices per cluster, and the fitted radius
      ring per cluster — `outT` is where the fit wants to be, `outR` is where
      the stroke actually is, eased toward it so the shape flows */
@@ -206,12 +235,14 @@ export class GraphSheet {
       return c;
     });
     this.bakeNames();
-    this.bakeLabelTints();
+    this.bakePalette();
     return true;
   }
 
-  /* Per-CLUSTER label ink, baked once with the layout — the draw loop only
-     indexes a string, so 312 names cost no more than they did.
+  /* Everything the draw loop paints out of Teri's spectrum, baked once with
+     the layout: the per-cluster label ink and the per-cluster conic ring the
+     guideline's rainbow edge is stroked with. The draw loop only indexes them,
+     so 312 names and 11 outlines cost no allocation per frame.
 
      Keyed on the cluster INDEX and never on a data field, so it follows the
      grouping seam (adapter.ts GROUP_BY) wherever that points: regroup the room
@@ -220,7 +251,7 @@ export class GraphSheet {
      stand in, exactly as they take its position. It is an affordance for
      reading the room, not a claim about them; the claim surfaces still read
      `motive` and still find it empty. */
-  bakeLabelTints() {
+  bakePalette() {
     const L = this.layout;
     if (!L) return;
     const pal: [number, number, number][] = [];
@@ -230,12 +261,32 @@ export class GraphSheet {
     }
     if (!pal.length) {
       this.labelTints = [];
+      this.outGlow = [];
       return;
     }
+
+    /* the rainbow edge's ring: the whole palette walked once around the
+       group's own centre, closed back onto hue 0 so the wrap is seamless
+       (token 7 is already the loop-closer). Each group starts the walk a
+       golden turn further on, so no two clouds show the same hue at the same
+       clock position. */
+    this.outGlow = L.clusters.map((cl, ci) => {
+      if (!this.ctx.createConicGradient) return null; // pre-2023 engine — stay dark
+      const g = this.ctx.createConicGradient(ci * EDGE_TURN, cl.cx, cl.cy);
+      for (let k = 0; k <= pal.length; k++) {
+        const h = pal[k % pal.length];
+        g.addColorStop(k / pal.length, `rgb(${h[0]},${h[1]},${h[2]})`);
+      }
+      return g;
+    });
+
     /* Walk the film ring in thirds: clusters sit on a ring in index order, so
        neighbours must not land on neighbouring hues. A palette divisible by 3
        would cycle after two steps — step in TWOS there, never in ones, which
-       is the adjacency this walk exists to avoid. (Dead against the eight real
+       is the adjacency this walk exists to avoid. That stride keeps the gap
+       and spends only part of the palette (at 6 hues it visits 3), which is
+       the right trade: no stride over 6 both covers the ring and clears
+       adjacency, and adjacency is what reads. (Dead against the eight real
        tokens; live the moment a partial resolve leaves 3 or 6 of them.)
 
        The one seam a stride cannot close is the ring's own: the walk returns
@@ -263,8 +314,11 @@ export class GraphSheet {
     const o = ci * OUT_BINS;
     const base = cl.radius + OUT_PAD;
     this.outT.fill(base, o, o + OUT_BINS);
-    for (const i of this.clusterDots[ci]) {
-      const d = L.dots[i];
+    /* index loop, not for…of: this runs every frame of a drag, and the
+       iterator it would allocate per call is the whole cost of a refit */
+    const mem = this.clusterDots[ci];
+    for (let m = 0; m < mem.length; m++) {
+      const d = L.dots[mem[m]];
       const dx = d.x - cl.cx;
       const dy = d.y - cl.cy;
       /* far edge of the person's glyph, at the scale a held dot swells to —
@@ -453,16 +507,17 @@ export class GraphSheet {
     if (live >= 0) this.refitOutline(live);
 
     const outEase = f.reduced ? 1 : 1 - Math.exp(-f.dt * 7);
+    /* the rainbow edge's breath, sampled once — the per-cluster phase is the
+       only thing that differs (reduced motion holds it at mid-band: the
+       iridescence stays, the pulse doesn't) */
+    const breathT = f.t * (TAU / EDGE_PERIOD);
     ctx.save();
-    ctx.setLineDash([7, 6]);
-    ctx.lineWidth = 1 / cs;
     for (let ci = 0; ci < L.clusters.length; ci++) {
       const cl = L.clusters[ci];
       const o = ci * OUT_BINS;
       for (let k = o; k < o + OUT_BINS; k++) {
         this.outR[k] += (this.outT[k] - this.outR[k]) * outEase;
       }
-      ctx.strokeStyle = `rgba(${INK},${(0.16 + 0.1 * f.nameAlpha[ci]).toFixed(3)})`;
       ctx.beginPath();
       /* quadratics through the chord midpoints: one smooth closed curve over
          the ring, no control points to allocate */
@@ -482,6 +537,25 @@ export class GraphSheet {
         y1 = y2;
       }
       ctx.closePath();
+
+      /* the rainbow edge, under the ink and on the same path */
+      const glow = this.outGlow[ci];
+      if (glow) {
+        const breath = f.reduced ? 0.5 : 0.5 + 0.5 * Math.sin(breathT + ci * EDGE_PHASE);
+        const a = EDGE_LO + (EDGE_HI - EDGE_LO) * breath;
+        ctx.setLineDash(NO_DASH);
+        ctx.strokeStyle = glow;
+        ctx.globalAlpha = 1 - Math.cbrt(1 - a); // three passes composite to `a`
+        for (let w = 0; w < EDGE_WIDTHS.length; w++) {
+          ctx.lineWidth = EDGE_WIDTHS[w] / cs;
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.setLineDash(OUT_DASH);
+      ctx.lineWidth = 1 / cs;
+      ctx.strokeStyle = `rgba(${INK},${(0.16 + 0.1 * f.nameAlpha[ci]).toFixed(3)})`;
       ctx.stroke();
     }
     ctx.restore();
