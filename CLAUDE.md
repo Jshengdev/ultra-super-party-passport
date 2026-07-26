@@ -130,7 +130,9 @@ Pipeline/gates (tsx does NOT autoload .env — `set -a; source .env; set +a` fir
 anymore) `CONVICTION_MODEL=anthropic/claude-haiku-4.5`; then `scripts/ingest-guests.ts` →
 `enrich-convictions.ts` → `enrich-matches.ts` → `emit-graph.ts`, gated by
 `check-graph-{ontology,emit,entry,e2e}.ts` + `audit-graph.ts` (receipts audit — can FAIL).
-Aura auto-pauses when idle ("no routing servers" = asleep). Everything else: read the code.
+Aura auto-pauses when idle ("no routing servers" = asleep). Stage caches
+`data/graph-private/{convictions,matches}.json` are gitignored and live ONLY in the main checkout —
+copy them into a worktree before baking there. Everything else: read the code.
 
 **House rules:** TS strict; zod at every boundary; fail loud with named errors; deterministic guard
 around every LLM call. Deps are installed — do NOT touch `package.json`, `.env*`, or `.git`.
