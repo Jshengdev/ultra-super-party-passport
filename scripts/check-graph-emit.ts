@@ -20,6 +20,13 @@
  *     is not byte-verbatim in the answer field the tag is read from, or still carries a
  *     quote behind a tag a human overrode (`_overridden`) — the old quote stopped being
  *     evidence when the tag moved, and a receipt for a claim nobody made is a fabrication
+ *   · a person record's `inferred` block (registers 2+3 — OUR read, OUR labels) whose keys
+ *     are not the pinned set, whose `mission`/`impact` is outside the CLOSED vocabularies,
+ *     whose confidence is outside 0..1, whose `_src`/`_model` provenance is missing, or —
+ *     the one that matters most — whose evidence quotes are not byte-verbatim in THAT
+ *     record's own answers. We are allowed to guess about a guest; we are not allowed to
+ *     invent the words we based the guess on. Absent is always legal (the block is an
+ *     OPTIONAL emit input), so this gate is green on an offline bake that ships none.
  *   · a `direction` outside the contract enum, an edge pointing at nobody, a
  *     zero-count fact rendered as text, or an internal `flags` value leaking into copy
  *   · meta.stages / meta.guestIds missing (the entry drop-zone reads both)
@@ -144,8 +151,18 @@ interface PersonRecord {
       when the extraction had nothing to say (parsed as unknown: this gate types nothing
       it has not checked) */
   conviction?: Record<string, unknown>;
+  /** registers 2+3 — OUR read + OUR labels, a SIBLING of `conviction` (parsed as unknown too) */
+  inferred?: Record<string, unknown>;
   _overridden?: string[];
 }
+
+/**
+ * The pinned key set of the `inferred` block. A key outside it is a register nobody declared —
+ * the whole value of the third register is that a consumer knows exactly what it is looking at.
+ */
+const INFERRED_KEYS = new Set(["summary", "mission", "impact", "_src", "_model"]);
+/** The answer fields an inferred evidence span may cite (the four the summary pass is shown). */
+const INFERRED_EVIDENCE_FIELDS = new Set(["goal", "drew", "seeking", "inspiration"]);
 
 const EXPECTED_PEOPLE = 312;
 const EDGE_TYPES = new Set(["school", "company", "why", "seek"]);
@@ -262,6 +279,11 @@ if (files.length !== EXPECTED_PEOPLE) fail(`people files ${files.length} !== ${E
 const nodeById = new Map(g.nodes.map((n) => [n.id, n] as const));
 let convictionBlocks = 0;
 let convictionReceipts = 0;
+let inferredBlocks = 0;
+let inferredMissions = 0;
+let inferredImpacts = 0;
+let inferredSpans = 0;
+let inferredMinConfidence = Infinity;
 let edgeTotal = 0;
 let highlightTotal = 0;
 let minEdges = Infinity;
@@ -280,7 +302,9 @@ for (const f of files) {
   if (seenIds.has(p.personId)) fail(`duplicate person record ${f}`);
   seenIds.add(p.personId);
 
-  /* PII: contact shapes never, a handle mention only inside an answer */
+  /* PII: contact shapes never, a handle mention only inside an answer. Both scans read the whole
+     file body, so every block a record grows — `conviction`, `inferred`, whatever comes next — is
+     covered the day it is added, with no pattern list to keep in step. */
   for (const [label, re] of CONTACT_PII) if (re.test(body)) fail(`PII tripwire hit in ${f}: ${label}`);
   const answersBlob = Object.values(p.answers ?? {}).join(" ");
   for (const m of body.matchAll(HANDLE)) {
@@ -386,6 +410,89 @@ for (const f of files) {
         convictionReceipts += 1;
       }
     }
+  }
+
+  /* the inferred block — registers 2 and 3, structurally segregated from everything the guest
+   * actually said. (That segregation is already enforced from the other side: the conviction
+   * loop above fails on any key that is not a conviction tag, so an `inferred` smuggled INSIDE
+   * `conviction` cannot ship.) The block is an OPTIONAL emit input, so absent is legal and this
+   * whole section is a no-op on a bake that had no summaries artifact — but everything that IS
+   * present is held to the same bar as a conviction receipt: our guess may be wrong, the words
+   * we base it on may not be. */
+  const inf = p.inferred;
+  if (inf !== undefined) {
+    if (inf === null || typeof inf !== "object" || Array.isArray(inf)) fail(`${f}: inferred is not an object`);
+    const keys = Object.keys(inf);
+    const extra = keys.filter((k) => !INFERRED_KEYS.has(k));
+    if (extra.length > 0) {
+      fail(`${f}: inferred carries [${extra.join(", ")}] — the block's keys are pinned to {${[...INFERRED_KEYS].join(", ")}}`);
+    }
+    for (const k of ["_src", "_model"] as const) {
+      const v = inf[k];
+      if (typeof v !== "string" || v.trim().length === 0) {
+        fail(`${f}: inferred.${k} is missing or empty — an unattributed read is not shippable (law d)`);
+      }
+    }
+    if (!keys.some((k) => k === "summary" || k === "mission" || k === "impact")) {
+      fail(`${f}: inferred carries provenance but no claim — omit the block instead`);
+    }
+    inferredBlocks += 1;
+
+    /** One claim: its value, its confidence, and every span it stands on. */
+    const checkClaim = (where: string, claim: unknown, vocab: readonly string[] | null): void => {
+      if (claim === undefined) return;
+      if (claim === null || typeof claim !== "object" || Array.isArray(claim)) {
+        fail(`${f}: inferred.${where} is not an object`);
+        return;
+      }
+      const c = claim as Record<string, unknown>;
+
+      if (vocab === null) {
+        if (typeof c.text !== "string" || c.text.trim().length === 0) fail(`${f}: inferred.${where}.text is missing or empty`);
+      } else if (typeof c.value !== "string" || !vocab.includes(c.value)) {
+        fail(`${f}: inferred.${where}.value = ${JSON.stringify(c.value)} is outside the closed vocabulary (${vocab.length} allowed values)`);
+      }
+
+      const conf = c.confidence;
+      if (typeof conf !== "number" || !Number.isFinite(conf) || conf < 0 || conf > 1) {
+        fail(`${f}: inferred.${where}.confidence ${JSON.stringify(conf)} is not a number in 0..1`);
+      } else {
+        inferredMinConfidence = Math.min(inferredMinConfidence, conf);
+      }
+
+      // law c: every claim carries a receipt, and every receipt resolves in the guest's OWN words
+      const ev = c.evidence;
+      if (!Array.isArray(ev) || ev.length === 0) {
+        fail(`${f}: inferred.${where} carries no evidence — a read with no receipt is not a read`);
+        return;
+      }
+      for (const [i, item] of ev.entries()) {
+        if (item === null || typeof item !== "object" || Array.isArray(item)) {
+          fail(`${f}: inferred.${where}.evidence[${i}] is not an object`);
+          continue;
+        }
+        const e = item as Record<string, unknown>;
+        if (typeof e.field !== "string" || !INFERRED_EVIDENCE_FIELDS.has(e.field)) {
+          fail(`${f}: inferred.${where}.evidence[${i}] cites "${String(e.field)}" — spans cite {${[...INFERRED_EVIDENCE_FIELDS].join(", ")}}`);
+          continue;
+        }
+        if (typeof e.quote !== "string" || e.quote.length === 0) {
+          fail(`${f}: inferred.${where}.evidence[${i}] has an empty quote`);
+          continue;
+        }
+        // EXACT byte-literal containment against THIS record's own answers, zero normalization
+        if (!(p.answers?.[e.field] ?? "").includes(e.quote)) {
+          fail(`inferred evidence not verbatim in ${f} (${where} ← ${e.field})`);
+        }
+        inferredSpans += 1;
+      }
+    };
+
+    checkClaim("summary", inf.summary, null);
+    checkClaim("mission", inf.mission, TAG_VOCAB.mission);
+    checkClaim("impact", inf.impact, TAG_VOCAB.impact);
+    if (inf.mission !== undefined) inferredMissions += 1;
+    if (inf.impact !== undefined) inferredImpacts += 1;
   }
 }
 
@@ -505,6 +612,17 @@ console.log(
   `conviction OK: ${convictionBlocks} of ${files.length} records carry a block, all tags in the closed ` +
     `vocabularies and equal to their node · ${convictionReceipts} receipts, every one byte-verbatim in the ` +
     `guest's own answer, none behind an overridden tag`,
+);
+/* The render floor itself (INFER_EMIT_FLOOR in scripts/emit-graph.ts) is deliberately NOT
+   re-asserted here: it is emit-time policy read from the environment, and this gate reads only
+   what shipped. What ships is held to the LAW — vocabulary, range, provenance, verbatim spans —
+   and the observed minimum is printed so a floor change is visible in the gate's own output. */
+console.log(
+  inferredBlocks === 0
+    ? "inferred OK: no record carries an inferred block (no summaries artifact at bake time — legal, the input is optional)"
+    : `inferred OK: ${inferredBlocks} of ${files.length} records carry a block [${inferredMissions} mission(s), ` +
+      `${inferredImpacts} impact(s), min confidence ${inferredMinConfidence.toFixed(2)}], every label in the closed ` +
+      `vocabularies, every one of ${inferredSpans} evidence span(s) byte-verbatim in that guest's own answers`,
 );
 console.log(
   `sheet OK: ${SHEET} ${sheet.data.length} rows × ${sheetHeader.length} pinned columns, no contact PII · ` +

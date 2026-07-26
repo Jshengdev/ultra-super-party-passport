@@ -4,7 +4,9 @@
  *   public/graph/graph.json          nodes + edges + per-lens positions + meta
  *   public/graph/people/<id>.json    one record per guest: their own words, their ranked
  *                                    connections with receipts, their conviction (the computed
- *                                    tags + the verbatim quotes behind them), and their highlights
+ *                                    tags + the verbatim quotes behind them), their `inferred`
+ *                                    block (OUR read + OUR labels — the third register, below),
+ *                                    and their highlights
  *   data/graph-enriched.csv          THE ENRICHMENT SHEET (below) — emitted every run
  *
  * Laws honoured here:
@@ -35,6 +37,8 @@
  *   OVERRIDES_PATH  (optional) the enrichment overrides CSV, default `data/graph-overrides.csv`.
  *                   Point it at a temp file to test the override layer without touching the
  *                   committed baseline.
+ *   INFER_EMIT_FLOOR (optional) the confidence floor a LABELLED inference must clear to ship,
+ *                   default 0.75. See THE THIRD REGISTER below.
  */
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -52,6 +56,13 @@ const OUT_DIR = "public/graph";
 const PEOPLE_DIR = join(OUT_DIR, "people");
 const CONVICTIONS = "data/graph-private/convictions.json";
 const MATCHES = "data/graph-private/matches.json";
+/**
+ * OPTIONAL input — see THE THIRD REGISTER. Deliberately NOT in the `InputMissing` list with the
+ * two above: an offline/FIXTURE bake, a fresh clone and a design-only run must all still emit a
+ * complete room. Absent → every record ships exactly as it did before this leg existed, and the
+ * run says so on stdout rather than leaving the difference invisible.
+ */
+const SUMMARIES = "data/graph-private/summaries.json";
 
 /* ═════════════════════════ THE ENRICHMENT SHEET LOOP ═════════════════════════
  *
@@ -192,6 +203,157 @@ const MatchesSchema = z.object({
 });
 type Conviction = z.infer<typeof ConvictionSchema>;
 type SeekRow = z.infer<typeof MatchesSchema>["seeks"][number];
+
+/* ═════════════════════════════ THE THIRD REGISTER ═════════════════════════════
+ *
+ * A person record carries three kinds of claim, and they are SEPARATE KEYS FOREVER:
+ *
+ *   register 1  what the guest STATED      `answers` (verbatim) + `conviction` (tags they
+ *                                          literally named, with their own quotes behind them)
+ *   register 2  what WE READ into it       `inferred.summary` — one distilled line, ours
+ *   register 3  what WE LABELLED them as   `inferred.mission` / `inferred.impact` — our guess
+ *                                          at the same closed vocabularies register 1 uses
+ *
+ * Registers 2 and 3 ride in ONE `inferred` block that is a SIBLING of `conviction`, never a key
+ * inside it. That is the whole point: a card rendering `conviction.mission` is quoting the guest,
+ * a card rendering `inferred.mission` is quoting US, and no consumer can confuse the two by
+ * accident because they never share a container. Nothing here touches `conviction`'s keys, the
+ * graph.json nodes, or the enrichment sheet — the node tags and the sheet's `mission` column stay
+ * register 1, so every count, caucus, why-edge and override in this file keeps meaning exactly
+ * what it meant before. An inference that could re-cut the room would be an inference pretending
+ * to be a fact.
+ *
+ * WHAT SHIPS (law c — no claim without a receipt):
+ *  - every summary and every label carries >=1 evidence span, and every span is re-verified HERE
+ *    against the guest's own CSV answer before it is written. `lib/summarize.ts` already snapped
+ *    them, but the artifact is a separate file that can go stale against the CSV being baked, and
+ *    a receipt that no longer resolves is a fabricated receipt. A span that fails is a NAMED
+ *    error and exit 2, never a silent drop.
+ *  - THE RENDER FLOOR. `lib/summarize.ts` stores a label at confidence >= 0.60 (its own prompt's
+ *    "clearly implied by specific language" band). This leg ships at a STRICTER floor, because
+ *    "worth keeping in a private artifact" and "worth showing a guest as our read of them" are
+ *    different bars. Pinned to 0.75 by reading the labels, not by taste: every one of the 20
+ *    inferred `craft-excellence` missions was inspected, and the defective ones all sit below
+ *    0.75 — careers read as missions ("Being a director for an animated feature"), a medium read
+ *    as a mission ("Computer Graphics"), and the documented over-reach where a guest was labelled
+ *    from an achievement they admired in SOMEONE ELSE (an `inspiration` span about another
+ *    person's show, 0.72). At and above 0.75 the labels stand on the guest's own words about
+ *    their own work. The floor is a policy knob, so it is env-overridable — but it is not a
+ *    substitute for the guards upstream, and lowering it re-admits the over-reach.
+ *  - `_src`/`_model` are ECHOED FROM THE ARTIFACT (law d). The model that produced these records
+ *    is a fact about the extraction run, recorded at extraction time; re-deriving it here from an
+ *    env var that may have changed since would make the provenance a guess. (The conviction
+ *    side's `extraction_model` sheet column does exactly that — a known defect, not a pattern.)
+ * ═════════════════════════════════════════════════════════════════════════════ */
+
+/** The four answer fields shown to the summary pass — therefore the only fields a span may cite. */
+const INFER_EVIDENCE_FIELDS = ["goal", "drew", "seeking", "inspiration"] as const;
+
+/** Default render floor. See THE THIRD REGISTER for why it is 0.75 and not the artifact's 0.60. */
+const INFER_EMIT_FLOOR_DEFAULT = 0.75;
+
+/**
+ * Read at CALL time, not import time. An unparseable or out-of-range override is a NAMED error,
+ * never a silent fall back to the default: a floor nobody can trust is worse than no floor.
+ */
+function inferEmitFloor(): number {
+  const raw = process.env.INFER_EMIT_FLOOR?.trim();
+  if (!raw) return INFER_EMIT_FLOOR_DEFAULT;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 0 || n > 1) {
+    throw new EmitError("InferFloorInvalid", `INFER_EMIT_FLOOR=${JSON.stringify(raw)} is not a number in 0..1`);
+  }
+  return n;
+}
+
+const InferEvidenceSchema = z.object({
+  field: z.enum(INFER_EVIDENCE_FIELDS), // an off-field span is unrepresentable
+  quote: z.string().min(1),
+});
+/** Range-bound HERE so a corrupt artifact fails at the boundary, not in a downstream renderer. */
+const InferConfidence = z.number().min(0).max(1);
+const InferSummarySchema = z.object({
+  text: z.string().min(1),
+  confidence: InferConfidence,
+  evidence: z.array(InferEvidenceSchema),
+});
+const InferClaimSchema = <T extends readonly [string, ...string[]]>(vocab: T) =>
+  z.object({
+    value: z.enum(vocab), // the SAME closed vocabularies register 1 is bounded by
+    confidence: InferConfidence,
+    evidence: z.array(InferEvidenceSchema),
+  });
+const SummaryRecordSchema = z.object({
+  summary: InferSummarySchema.nullable(),
+  inferred: z.object({
+    mission: InferClaimSchema(MISSIONS).nullable(),
+    impact: InferClaimSchema(IMPACTS).nullable(),
+  }),
+  /** present only when the summary post-guard failed twice — such a record has nothing to ship */
+  flags: z.array(z.string()).optional(),
+});
+/**
+ * Records are nested under `records` (never flat at the root), so `Object.entries` can never hand
+ * this leg a provenance string where a record is expected. `_keys` is the pass's own incremental
+ * cache and is deliberately not read here.
+ */
+const SummariesArtifactSchema = z.object({
+  _src: z.string().min(1),
+  _model: z.string().min(1),
+  _ts: z.string().min(1),
+  _actor: z.string().min(1),
+  records: z.record(z.string(), SummaryRecordSchema),
+});
+type SummariesArtifact = z.infer<typeof SummariesArtifactSchema>;
+
+interface InferredEvidenceOut {
+  field: string;
+  quote: string;
+}
+interface InferredClaimOut {
+  value: string;
+  confidence: number;
+  evidence: InferredEvidenceOut[];
+}
+interface InferredSummaryOut {
+  text: string;
+  confidence: number;
+  evidence: InferredEvidenceOut[];
+}
+/** The emitted block. `_src`/`_model` are mandatory: an unattributed read is not shippable. */
+interface InferredOut {
+  summary?: InferredSummaryOut;
+  mission?: InferredClaimOut;
+  impact?: InferredClaimOut;
+  _src: string;
+  _model: string;
+}
+
+/**
+ * Absent → null (the OPTIONAL contract). Present but malformed → a NAMED error, because an
+ * artifact that exists and cannot be trusted is not the same thing as an artifact that is not
+ * there: the first is a broken pipeline stage and must stop the bake, the second is an offline
+ * run. (`lib/summarize.ts` treats a bad file as "no cache" — that is a CACHE reading it; this is
+ * a SHIPPING reading of it, and it fails closed.)
+ */
+function loadSummaries(path: string): SummariesArtifact | null {
+  if (!existsSync(path)) return null;
+  let json: unknown;
+  try {
+    json = JSON.parse(readFileSync(path, "utf8"));
+  } catch (e) {
+    throw new EmitError("SummariesUnreadable", `${path} is not valid JSON: ${(e as Error).message}`);
+  }
+  const parsed = SummariesArtifactSchema.safeParse(json);
+  if (!parsed.success) {
+    const issues = parsed.error.issues
+      .slice(0, 5)
+      .map((is) => `${is.path.join(".") || "<root>"}: ${is.message}`)
+      .join(" | ");
+    throw new EmitError("SummariesUnreadable", `${path} is off-contract — ${issues}`);
+  }
+  return parsed.data;
+}
 
 type EdgeType = "school" | "company" | "why" | "seek";
 type Direction = "mutual" | "inbound" | "outbound";
@@ -703,6 +865,17 @@ async function main(): Promise<number> {
   const matches = MatchesSchema.parse(JSON.parse(readFileSync(MATCHES, "utf8")));
   const convOf = (id: string): Conviction | null => convictions[id] ?? null;
 
+  // the third register — OPTIONAL (see THE THIRD REGISTER). Absent is a supported bake, and the
+  // run says so out loud rather than quietly shipping 312 records with one less register in them.
+  const summaries = loadSummaries(SUMMARIES);
+  const inferFloor = inferEmitFloor();
+  if (!summaries) {
+    console.log(
+      `  inferred: no ${SUMMARIES} — every record ships without the inferred block ` +
+        `(run scripts/enrich-summaries.ts to populate it)`,
+    );
+  }
+
   /* ---- 1c. tag overrides replace the extracted tag, and drop its orphaned receipt ---- */
   const overriddenFields = new Map<string, string[]>(); // personId -> the fields a human changed
   let noopOverrides = 0;
@@ -995,6 +1168,14 @@ async function main(): Promise<number> {
   let records = 0;
   let convictionBlocks = 0;
   let convictionReceipts = 0;
+  // the third register's tally — every one of these is reported, including the drops
+  let inferredBlocks = 0;
+  let inferredMissions = 0;
+  let inferredImpacts = 0;
+  let inferredSpans = 0;
+  let inferredBelowFloor = 0;
+  let inferredNoRecord = 0;
+  let inferredNothingToSay = 0;
   const highlightHist = new Map<string, number>();
   const edgeCounts: number[] = [];
   const pinMisses: string[] = [];
@@ -1189,6 +1370,86 @@ async function main(): Promise<number> {
     if (Object.keys(conviction).length > 0) convictionBlocks += 1;
     convictionReceipts += Object.keys(convQuotes).length;
 
+    /* ---- the inferred block: OUR read and OUR labels, a SIBLING of the conviction above and
+       never a key inside it (THE THIRD REGISTER). Every span is re-verified against this
+       guest's own answers here — the artifact is a separate file and may be stale. ---- */
+    let inferred: InferredOut | undefined;
+    if (summaries) {
+      const sum = summaries.records[me.id];
+      if (!sum) {
+        // the artifact does not cover this guest: an older run, or a filtered one. Not fatal —
+        // they simply ship without the register — but counted and reported, never invisible.
+        inferredNoRecord += 1;
+      } else {
+        const verify = (where: string, evidence: readonly InferredEvidenceOut[]): InferredEvidenceOut[] => {
+          for (const ev of evidence) {
+            const source = g.answers[ev.field as keyof typeof g.answers] ?? "";
+            // EXACT: byte-literal containment, ZERO normalization — the same test the gate and
+            // the receipts audit apply. A span that does not resolve is a fabricated receipt.
+            if (!source.includes(ev.quote)) {
+              throw new EmitError(
+                "InferredSpanUnverifiable",
+                `${me.id} ${where} cites a span that is not in their own "${ev.field}" answer — ` +
+                  `${SUMMARIES} is stale against ${csvPath}; re-run scripts/enrich-summaries.ts`,
+              );
+            }
+          }
+          return evidence.map((ev) => ({ field: ev.field, quote: ev.quote }));
+        };
+
+        const built: Omit<InferredOut, "_src" | "_model"> = {};
+        if (sum.summary) {
+          // law c: a read with no receipt is not shippable, whatever its confidence
+          if (sum.summary.evidence.length === 0) {
+            throw new EmitError("InferredEvidenceMissing", `${me.id} summary carries no evidence span`);
+          }
+          built.summary = {
+            text: sum.summary.text,
+            confidence: sum.summary.confidence,
+            evidence: verify("summary", sum.summary.evidence),
+          };
+        }
+        // THE RENDER FLOOR — a label below it is dropped and COUNTED, never quietly shipped.
+        // `summary` is deliberately not floored: its confidence is informative, not gating.
+        for (const key of ["mission", "impact"] as const) {
+          const claim = sum.inferred[key];
+          if (!claim) continue;
+          if (claim.confidence < inferFloor) {
+            inferredBelowFloor += 1;
+            continue;
+          }
+          if (claim.evidence.length === 0) {
+            throw new EmitError("InferredEvidenceMissing", `${me.id} inferred ${key} "${claim.value}" carries no evidence span`);
+          }
+          built[key] = {
+            value: claim.value,
+            confidence: claim.confidence,
+            evidence: verify(`inferred.${key}`, claim.evidence),
+          };
+        }
+
+        if (Object.keys(built).length === 0) {
+          // a guard-failed or blank-answer guest: nothing to say is a legitimate outcome, and an
+          // empty block would be a claim of its own. Omit it, count it, move on.
+          inferredNothingToSay += 1;
+        } else {
+          inferred = {
+            ...built,
+            // ECHOED from the artifact, never re-derived from the environment (law d)
+            _src: summaries._src,
+            _model: summaries._model,
+          };
+          inferredBlocks += 1;
+          if (built.mission) inferredMissions += 1;
+          if (built.impact) inferredImpacts += 1;
+          inferredSpans +=
+            (built.summary?.evidence.length ?? 0) +
+            (built.mission?.evidence.length ?? 0) +
+            (built.impact?.evidence.length ?? 0);
+        }
+      }
+    }
+
     writeFileSync(
       join(PEOPLE_DIR, `${me.id}.json`),
       `${JSON.stringify({
@@ -1199,6 +1460,8 @@ async function main(): Promise<number> {
         highlights,
         // omitted entirely for anyone the extraction had nothing to say about
         ...(Object.keys(conviction).length > 0 ? { conviction } : {}),
+        // register 2+3, a SIBLING of `conviction` — never nested inside it (THE THIRD REGISTER)
+        ...(inferred ? { inferred } : {}),
         // honest provenance (law d): the artifact itself says which fields a human moved
         ...(stamped.length > 0 ? { _overridden: stamped } : {}),
       })}\n`,
@@ -1319,6 +1582,20 @@ async function main(): Promise<number> {
     `  conviction blocks ${convictionBlocks}/${records} · ${convictionReceipts} verbatim receipt(s) ` +
       `(a tag a human moved ships without one)`,
   );
+  if (summaries) {
+    console.log(
+      `  inferred blocks ${inferredBlocks}/${records} [${summaries._src} · ${summaries._model}] · ` +
+        `${inferredMissions} mission(s) · ${inferredImpacts} impact(s) at the ${inferFloor} floor` +
+        `${process.env.INFER_EMIT_FLOOR?.trim() ? " (INFER_EMIT_FLOOR override)" : ""} · ` +
+        `${inferredSpans} verified span(s)`,
+    );
+    // the drops are part of the report: a floor nobody can see is a floor nobody can argue with
+    if (inferredBelowFloor > 0) console.log(`    ${inferredBelowFloor} label(s) held back below the ${inferFloor} floor`);
+    if (inferredNothingToSay > 0) console.log(`    ${inferredNothingToSay} guest(s) with no read to ship (blank answers or a guard failure)`);
+    if (inferredNoRecord > 0) {
+      console.error(`WARN: ${inferredNoRecord} emitted guest(s) have no record in ${SUMMARIES} — it is stale or was written by a filtered run`);
+    }
+  }
   console.log(`  enrichment sheet → ${ENRICHED_SHEET} (${sheetRows.length} rows × ${SHEET_COLUMNS.length} columns)`);
 
   /* the override summary — an override that nobody can see is an override nobody can undo */

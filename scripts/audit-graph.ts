@@ -5,7 +5,7 @@
  * allowed to lie: the raw CSV (via `loadGuests` — the SAME dedup/canonicalization the
  * pipeline used) and the Neo4j graph itself. Nothing here trusts `public/graph`.
  *
- * Six obligations, all fail-able:
+ * Seven obligations, all fail-able:
  *   1. SPAN INTEGRITY   — every receipt quote is a BYTE-LITERAL substring of the cited
  *                         person's cited field. `answer.includes(quote)`, ZERO normalization:
  *                         the conviction pass snaps stored quotes to exact source spans
@@ -33,6 +33,18 @@
  *                         text is theirs). Hits are reported by offset, NEVER echoed.
  *   6. POPULATION       — node count == the deduped CSV count (derived here, never hardcoded),
  *                         node fields == the canonical guest fields, meta.stages recounted.
+ *   7. INFERRED SPANS   — the third register (`inferred`: OUR distilled read + OUR labelled
+ *                         mission/impact) is the one place the artifacts are allowed to say
+ *                         something the guest never said, so its receipts get the strictest
+ *                         reading in the file: every `inferred.*.evidence[].quote` must be a
+ *                         BYTE-LITERAL substring of that guest's raw CSV answer for the field it
+ *                         names — `answer.includes(quote)`, zero normalization, exactly the rule
+ *                         obligation 1 applies to edge receipts. Plus: labels inside the closed
+ *                         mission/impact vocabularies (re-declared below, never imported),
+ *                         confidence in 0..1, `_src`/`_model` present, and the summary text run
+ *                         through the flag-vocabulary and bare-"@" scans like any other line WE
+ *                         wrote. A guess we cannot trace to the guest's own words is the exact
+ *                         failure this obligation exists to catch.
  *
  * Exit codes:  0 clean (one-line summary) · 1 violations (named, file-scoped list)
  *              2 DEGRADED — `GuestsCsvMissing` / `Neo4jNotConfigured`, named, never faked.
@@ -154,6 +166,28 @@ function phrasesFor(k: TagKey, tag: string): string[] {
   return phrase ? [phrase, pretty, tag] : [pretty, tag];
 }
 
+/**
+ * The two closed vocabularies a LABELLED inference may use, and the four answer fields its spans
+ * may cite. Re-declared here rather than imported from `lib/conviction.ts` — the same deliberate
+ * convention as TAG_PHRASE above: this audit's job is to disagree with the pipeline when the
+ * pipeline is wrong, and a check that imports the subject's own constant can only ever agree with
+ * it. If the vocabulary legitimately grows, this list is part of that change.
+ *
+ * (Mirrors lib/conviction.ts MISSIONS/IMPACTS/QUOTE_FIELDS as of 2026-07-25. Note IMPACTS carries
+ * `comfort-heal`, which has no entry in TAG_PHRASE.impact — it is a valid label that no highlight
+ * template renders, so it must be listed HERE even though it is absent from the phrase table.)
+ */
+const INFERRED_MISSIONS: readonly string[] = [
+  "representation-feel-seen", "joy-positivity", "preserve-stories", "build-community",
+  "elevate-underdogs", "truth-inform", "wonder-escape", "craft-excellence",
+  "prove-its-possible", "inspire-next-gen", "champion-artists",
+];
+const INFERRED_IMPACTS: readonly string[] = [
+  "make-people-feel-seen", "bring-joy", "create-escape-wonder", "connect-people",
+  "provoke-thought", "keep-stories-alive", "inspire-action", "inform-truth", "comfort-heal",
+];
+const INFERRED_EVIDENCE_FIELDS: readonly string[] = ["goal", "drew", "seeking", "inspiration"];
+
 /** Vocabulary that must never reach a guest's eyes. */
 const FLAG_TOKENS = ["missing-school", "missing-answers", GUARD_FAILED_FLAG] as const;
 const FLAG_PATTERNS: Array<[string, RegExp]> = [
@@ -260,11 +294,35 @@ const HighlightSchema = z
   .passthrough();
 type Highlight = z.infer<typeof HighlightSchema>;
 
+/**
+ * The third register, typed LOOSELY on purpose: `value` is a plain string here, not an enum, so a
+ * label outside the closed vocabulary lands as a NAMED violation in obligation 7 instead of a
+ * schema parse failure that would drop the whole file from the audit. Shape problems get named;
+ * they never buy a person's record an exemption from being checked.
+ */
+const InferredEvidenceSchema = z.object({ field: z.string(), quote: z.string() }).passthrough();
+const InferredClaimSchema = z
+  .object({ value: z.string(), confidence: z.number(), evidence: z.array(InferredEvidenceSchema) })
+  .passthrough();
+const InferredSummarySchema = z
+  .object({ text: z.string(), confidence: z.number(), evidence: z.array(InferredEvidenceSchema) })
+  .passthrough();
+const InferredSchema = z
+  .object({
+    summary: InferredSummarySchema.optional(),
+    mission: InferredClaimSchema.optional(),
+    impact: InferredClaimSchema.optional(),
+    _src: z.string().optional(),
+    _model: z.string().optional(),
+  })
+  .passthrough();
+
 const PersonSchema = z
   .object({
     personId: z.string().min(1),
     name: z.string(),
     storyline: z.string().optional(),
+    inferred: InferredSchema.optional(),
     answers: z
       .object({
         goal: z.string(),
@@ -887,6 +945,8 @@ function derive(g: GraphDoc, guests: Guest[]): Derived {
 interface PersonAudit {
   receipts: number;
   counts: number;
+  /** obligation 7 — inferred evidence spans re-resolved against the raw CSV answers */
+  inferredSpans: number;
   seekPairs: Array<{ s: string; t: string; expectMutual: boolean | null; origin: string }>;
 }
 
@@ -901,7 +961,7 @@ function auditPerson(
   doppels: Set<string> | null,
   openSeekers: Set<string> | null,
 ): PersonAudit {
-  const out: PersonAudit = { receipts: 0, counts: 0, seekPairs: [] };
+  const out: PersonAudit = { receipts: 0, counts: 0, inferredSpans: 0, seekPairs: [] };
   const base = path.basename(file, ".json");
   if (base !== rec.personId) add(file, "person-id-mismatch", `filename "${base}" !== personId "${rec.personId}"`);
 
@@ -1023,6 +1083,73 @@ function auditPerson(
 
     checkSide(i, e, "yours", me, "this person");
     checkSide(i, e, "theirs", target, e.targetId);
+  }
+
+  /* --- obligation 7: the third register --- *
+   * `conviction` says what the guest stated; `inferred` says what WE read into it and what WE
+   * labelled them as. Being allowed to guess makes the receipts MORE load-bearing, not less: the
+   * guess is ours, but every word it stands on has to be theirs. Every span is re-resolved here
+   * against the raw CSV answer, byte-literally, with no normalization — the same test checkSide
+   * applies to an edge receipt. Absent block → nothing to check (the emit input is optional). */
+  const inf = rec.inferred;
+  if (inf) {
+    for (const k of ["_src", "_model"] as const) {
+      if (!inf[k] || inf[k].trim() === "") {
+        add(file, "inferred-provenance-missing", `inferred.${k} is absent or empty — an unattributed read cannot be traced to the run that made it`);
+      }
+    }
+    if (!inf.summary && !inf.mission && !inf.impact) {
+      add(file, "inferred-empty", "inferred carries provenance but no claim — the block should have been omitted");
+    }
+
+    const checkInferred = (where: string, claim: { confidence: number; evidence: Array<{ field: string; quote: string }> }): void => {
+      if (!Number.isFinite(claim.confidence) || claim.confidence < 0 || claim.confidence > 1) {
+        add(file, "inferred-confidence-range", `inferred.${where}.confidence ${claim.confidence} is outside 0..1`);
+      }
+      // law c: no claim without a receipt — and this register's claims are the ones nobody said
+      if (claim.evidence.length === 0) {
+        add(file, "inferred-evidence-missing", `inferred.${where} carries no evidence span — an unreceipted read of a person`);
+        return;
+      }
+      for (const [i, ev] of claim.evidence.entries()) {
+        out.inferredSpans++;
+        if (!INFERRED_EVIDENCE_FIELDS.includes(ev.field)) {
+          add(file, "inferred-field-unknown", `inferred.${where}.evidence[${i}] cites "${ev.field}", which is not one of the four answers the summary pass reads`);
+          continue;
+        }
+        if (ev.quote === "") {
+          add(file, "inferred-quote-empty", `inferred.${where}.evidence[${i}] has an empty quote`);
+          continue;
+        }
+        const source = me.answers[ev.field as AnswerField] ?? "";
+        // EXACT: byte-literal containment against the CSV, zero normalization.
+        if (!source.includes(ev.quote)) {
+          add(
+            file,
+            "inferred-quote-not-verbatim",
+            `inferred.${where}.evidence[${i}]: ${q(ev.quote)} is not a literal span of this person's "${ev.field}" (${q(source || "<empty>", 80)})`,
+          );
+        }
+      }
+    };
+
+    if (inf.summary) {
+      checkInferred("summary", inf.summary);
+      // the summary line is OURS, not theirs: it is held to the same copy hygiene as a highlight
+      for (const [code, re] of FLAG_PATTERNS) {
+        const hit = re.exec(inf.summary.text);
+        if (hit) add(file, `inferred-${code}`, `inferred.summary.text shows internal vocabulary: ${q(hit[0], 40)}`);
+      }
+      if (inf.summary.text.trim() === "") add(file, "inferred-empty", "inferred.summary.text is blank");
+    }
+    for (const [key, vocab] of [["mission", INFERRED_MISSIONS], ["impact", INFERRED_IMPACTS]] as const) {
+      const claim = inf[key];
+      if (!claim) continue;
+      checkInferred(key, claim);
+      if (!vocab.includes(claim.value)) {
+        add(file, "inferred-label-off-vocabulary", `inferred.${key} = ${q(claim.value, 40)} is outside the closed ${key} vocabulary (${vocab.length} allowed values)`);
+      }
+    }
   }
 
   /* --- obligation 2: count integrity --- *
@@ -1297,6 +1424,11 @@ function nonAnswerText(rec: PersonRecord): Array<[string, string | undefined]> {
   const out: Array<[string, string | undefined]> = [
     ["name", rec.name],
     ["storyline", rec.storyline],
+    // OUR distilled read — our words about them, so a bare "@" here is a leak with no owner.
+    // The evidence spans below it are NOT listed: they are byte-literal slices of the guest's own
+    // answers (obligation 7 proves exactly that), and a handle a guest typed into their own
+    // answer is theirs, the same exemption checkSide's answer-field receipts get.
+    ["inferred.summary.text", rec.inferred?.summary?.text],
   ];
   for (const [i, e] of rec.edges.entries()) {
     out.push([`edges[${i}].via`, e.via]);
@@ -1521,6 +1653,7 @@ async function main(): Promise<void> {
   auditBareAt(rel(GRAPH_PATH), [["graph.json", art.graphRaw]]); // no answer text lives here
   let receipts = 0;
   let counts = 0;
+  let inferredSpans = 0;
   const seenIds = new Set<string>();
   for (const p of art.people) {
     if (seenIds.has(p.rec.personId)) add(p.file, "duplicate-person-record", `personId "${p.rec.personId}" already emitted`);
@@ -1530,6 +1663,7 @@ async function main(): Promise<void> {
     const res = auditPerson(p.file, p.rec, byId, nodeById, d, art.graph.nodes.length, stages?.raw ?? new Map(), priv.doppels, priv.openSeekers);
     receipts += res.receipts;
     counts += res.counts;
+    inferredSpans += res.inferredSpans;
     for (const sp of res.seekPairs) claim(sp.s, sp.t, sp.expectMutual, sp.origin);
   }
   for (const g of guests) {
@@ -1555,10 +1689,13 @@ async function main(): Promise<void> {
   const scope = SKIP_NEO4J
     ? "NEO4J PHASE SKIPPED (partial audit)"
     : `${live.rels}/${claims.size} seek rels + ${live.nodes} :Person nodes verified live, ${live.live} live rels reconciled both ways`;
+  // the third register is reported separately from `receipts`: they are different KINDS of claim
+  // (their words vs our read of them), and averaging the two would hide a register going quiet.
+  const inferredScope = inferredSpans === 0 ? "no inferred spans" : `${inferredSpans} inferred spans resolved`;
   const summary =
     violations.length === 0
-      ? `audit OK: ${art.graph.nodes.length} nodes · ${art.people.length} records · ${art.graph.edges.length} edges · ${receipts} receipts resolved (100%) · ${counts} counts re-derived · 0 violations · ${scope}`
-      : `audit FAILED: ${violations.length} violation(s) · ${art.people.length} records · ${receipts - violations.filter((v) => v.code === "receipt-quote-not-verbatim").length}/${receipts} receipts verbatim · ${counts} counts re-derived · ${scope}`;
+      ? `audit OK: ${art.graph.nodes.length} nodes · ${art.people.length} records · ${art.graph.edges.length} edges · ${receipts} receipts resolved (100%) · ${inferredScope} · ${counts} counts re-derived · 0 violations · ${scope}`
+      : `audit FAILED: ${violations.length} violation(s) · ${art.people.length} records · ${receipts - violations.filter((v) => v.code === "receipt-quote-not-verbatim").length}/${receipts} receipts verbatim · ${inferredSpans - violations.filter((v) => v.code === "inferred-quote-not-verbatim").length}/${inferredSpans} inferred spans verbatim · ${counts} counts re-derived · ${scope}`;
 
   report(notes, summary);
 }
