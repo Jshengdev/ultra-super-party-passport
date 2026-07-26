@@ -178,6 +178,36 @@ type PersonRecord = {
   highlights?: { kind: string; text: string; targets?: string[] }[];
 };
 
+/** The QUESTION behind a quoted field — ONE voice for the two surfaces that
+    introduce someone's own words: the threads widget's framing line
+    ("Their answer · …") and the receipt dialog's per-side register
+    ("you · …" / "them · …"). Both read this map; neither writes the phrasing
+    itself, so the two can never drift apart again.
+
+    KEYS ARE THE LIVE SET, read off the baked artifacts, not guessed: the five
+    answer-sheet questions (`answers` in public/graph/people/*.json) plus the
+    profile cells a receipt side can actually carry (`edges[].receipt.{yours,
+    theirs}.field` across all 312 records: seeking · title · school · company ·
+    drew · goal). A field with no entry falls back to its RAW NAME — never
+    blank, never invented.
+
+    Lowercase is forced, not a taste call: the shipped framing line reads
+    "Their answer · who they’re looking for" (owner-accepted copy, unchanged
+    here), and the dialog speaks lowercase throughout. The wording mirrors the
+    retired /graph lab's map as a string convention only — that file is deleted
+    and nothing here imports from it. */
+const ANSWER_LABEL: Record<string, string> = {
+  goal: "ultimate goal",
+  drew: "what drew them here",
+  seeking: "who they’re looking for",
+  inspiration: "who inspires them",
+  favorite: "favorite thing",
+  title: "what they do",
+  school: "school",
+  company: "company",
+};
+const answerLabel = (field: string) => ANSWER_LABEL[field] ?? field;
+
 /** widget row sections, in speaking order */
 const REL_SECTIONS: { key: string; title: string; match: (e: NonNullable<PersonRecord["edges"]>[number]) => boolean }[] = [
   { key: "mutual", title: "You are looking for each other", match: (e) => e.direction === "mutual" },
@@ -1932,7 +1962,7 @@ export default function PeplGraph() {
                   color: "rgba(26,25,24,0.36)",
                 }}
               >
-                Their answer · who they’re looking for
+                {`Their answer · ${answerLabel("seeking")}`}
               </div>
               <div
                 style={{
@@ -2071,7 +2101,7 @@ export default function PeplGraph() {
               r ? (
                 <div key={who} style={{ marginTop: 12 }}>
                   <div style={{ ...ui, textTransform: "none", fontSize: 9, color: "rgba(26,25,24,0.35)" }}>
-                    {who} · {r.field}
+                    {who} · {answerLabel(r.field)}
                   </div>
                   <div
                     style={{
