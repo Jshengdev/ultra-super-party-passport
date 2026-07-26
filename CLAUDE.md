@@ -46,7 +46,7 @@ Vision: Johnny. Design: Teri. Distribution + DNA-gradient: Sarah. Built live by 
 | **v1 pipeline** | `lib/ingest.ts`, `scripts/precache.ts`, `scripts/ingest.ts`, `lib/cluster.ts`, `scripts/extract-interests.ts`, `pipeline/*.pipe` | hackathon population (193) → passports |
 | **Passports** | `passport/schema.ts`, `lib/passport.ts`, `lib/traverse.ts`, `scripts/generate-passports.ts`, `scripts/audit-receipts.ts`, `data/passports/` | per-person receipted JSON |
 | **v2 pipeline** | `lib/guests.ts` → `scripts/ingest-guests.ts` → `lib/conviction.ts`/`scripts/enrich-convictions.ts` → `lib/matches.ts`/`scripts/enrich-matches.ts` → `lib/layout.ts`/`scripts/emit-graph.ts` → `public/graph/*` | real guest list (312) → baked graph artifacts |
-| **Surfaces** | `app/page.tsx` (CSV-drop landing), `app/universe/` (the room), `app/graph/` (the room re-fed: drag-in entry via `app/graph/verify.ts`, panel, receipts), `app/passport/[id]/`, `app/deck/`; `passport/tokens.css` = design's handle (canvas reads tokens live, never invents a hex) | what people see |
+| **Surfaces** | `app/page.tsx` (CSV-drop landing), `app/universe/` (the room), `app/graph/` (the room re-fed: the pepl scene, `PartyScene.tsx` → `pepl/`; `verify.ts` = the entry gate's pure CSV verifier), `app/passport/[id]/`, `app/deck/`; `passport/tokens.css` = design's handle (canvas reads tokens live, never invents a hex) | what people see |
 | **Gates** | `scripts/check-conformance.ts` · `check-guests.ts` · `check-graph-{ontology,emit,entry,e2e}.ts` · `audit-graph.ts` (fail-able receipts audit) · `check-universe/checkin/values/ship.ts` · `verify-goal.sh` | what green means |
 
 Pinned shapes: `gx/goals/usp-v1.md` (v1 contract) + the as-built departure report at the end of
