@@ -413,16 +413,17 @@ export default function ConnectionsLegend({
             }}
           >
             <span
-              /* the whole answer on hover, since a long school or company is
-                 clipped rather than reworded */
               title={s.label}
               style={{
                 minWidth: 0,
                 /* no capitalize: a school and a company are THEIR answer,
                    verbatim, and the conviction tags are lowercase by design */
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+                /* WRAPS, never clips. The label IS the claim — a rarity row
+                   reading "representation … · the only one" has lost the thing
+                   it is claiming. Two lines is the worst case: the widest
+                   cohort name in the bake is 25 characters and the rarity
+                   rungs are capped at NAME_MAX. */
+                overflowWrap: "anywhere",
               }}
             >
               {s.label}
