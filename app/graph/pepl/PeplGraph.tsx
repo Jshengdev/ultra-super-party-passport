@@ -71,6 +71,15 @@ export type Params = typeof DEFAULTS & {
 
 const INITIAL: Params = { ...DEFAULTS, field: "weather", exportQuality: false };
 
+/* Every raster in the room — the offscreen sheet, the WebGL backing store and
+   its targets, the grain veil — is sized by this and nothing else.
+   It was 1.75, which on a retina panel is the worst possible number: the
+   browser then resamples every backing store by 8/7 on its way to the glass,
+   and a 8.5px name label cannot spare that (Addendum 3). At 2 the sheet is
+   drawn in the device's own pixels and arrives untouched. 2 is the ceiling —
+   past it the fill rate buys detail no eye collects. */
+const rasterDpr = () => Math.min(window.devicePixelRatio || 1, 2);
+
 const MAX_DEFORM = 0.3;
 /* the scene camera is the zoom; the bubble is a draggable lens toy
    that lives in the middle and never flies to targets */
@@ -151,11 +160,18 @@ const VEIL_DIM = 0.05;
 const VEIL_BLUR_PX = 2.2;
 const VEIL_MS = 480;
 /* how far inside the rim the clarity hole feathers back to veiled. ~the
-   shader's rim band (d 0.84–1.0) at the popped radius on a laptop. */
-const LENS_FEATHER_PX = 18;
+   shader's rim band (d 0.84–1.0) at the popped radius on a laptop.
+   That band is a FRACTION of the radius, so the feather is written as one too
+   (cross-section ruling, Section C consenting): a fixed 18px visibly thins
+   against a bubbleScale=1.6 rim while reading as a hard cut on a phone. 0.15
+   reproduces the old 18px at the popped radius on a laptop; the clamp keeps a
+   tiny bubble from losing the feather and the pre-pop container from wearing a
+   64px one. Still a STATIC string — the proportion is calc over the same
+   --lens-r the frame loop already writes, so nothing is rebuilt per frame. */
 const LENS_MASK =
   `radial-gradient(circle at var(--lens-x) var(--lens-y), transparent 0 ` +
-  `max(0px, calc(var(--lens-r) - ${LENS_FEATHER_PX}px)), #000 var(--lens-r))`;
+  `max(0px, calc(var(--lens-r) - clamp(8px, calc(var(--lens-r) * 0.15), 36px))), ` +
+  `#000 var(--lens-r))`;
 
 /** A baked person record (public/graph/people/<id>.json) — fetched on focus for
     the relationships widget. The stamps do not read it: they are composed from
@@ -287,7 +303,7 @@ function GrainVeil({ paramsRef }: { paramsRef: React.MutableRefObject<Params> })
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const dpr = rasterDpr();
 
     /* a few pre-baked per-channel noise tiles, cycled with a drifting
        anchor — regenerating full-viewport noise per step would be the
@@ -713,7 +729,7 @@ export default function PeplGraph() {
     });
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    const dpr = rasterDpr();
 
     /* ---------- bubble body ---------- */
     const ptr = {

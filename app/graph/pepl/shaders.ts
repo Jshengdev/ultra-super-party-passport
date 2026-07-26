@@ -146,6 +146,42 @@ float hash21(vec2 p){
   return fract(p.x * p.y);
 }
 
+/* ---------- the transmitted tap ----------
+   The lens magnifies (uZoom), so inside the glass the sheet is read BETWEEN
+   its texels — and bilinear reconstruction is exactly a one-texel box blur at
+   that point, which is the whole of "the text behind it is blurry". Catmull-
+   Rom reads the same 4x4 neighbourhood with a cubic that has negative lobes,
+   so a magnified stroke comes back as a stroke instead of a ramp; the
+   sharpness holds as the magnification (or the bubble) is scaled up, because
+   the kernel is defined in SOURCE texels, not screen ones.
+
+   Four fetches via the Sigg/Hadwiger trick (each hardware-bilinear fetch
+   carries two taps), and only inside the silhouette — the room outside the
+   bubble still costs one tap. Nothing here touches the morphism: it changes
+   how the sheet is READ, never how the film is drawn. */
+vec3 sharpTap(vec2 uv){
+  vec2 tc = uv * uRes - 0.5;
+  vec2 base = floor(tc);
+  vec2 f = tc - base;
+  vec2 f2 = f * f;
+  vec2 f3 = f2 * f;
+  vec2 w0 = (-f3 + 2.0 * f2 - f) * 0.5;
+  vec2 w1 = (3.0 * f3 - 5.0 * f2 + 2.0) * 0.5;
+  vec2 w2 = (-3.0 * f3 + 4.0 * f2 + f) * 0.5;
+  vec2 w3 = (f3 - f2) * 0.5;
+  /* s0 vanishes only as f→1 and s1 only as f→0, in both cases together with
+     the numerator above them — the floor keeps 0/0 out of the divide, and
+     where it bites the pair carries no weight anyway */
+  vec2 s0 = max(w0 + w1, 1e-5);
+  vec2 s1 = max(w2 + w3, 1e-5);
+  vec2 t0 = (base + w1 / s0 - 0.5) / uRes;
+  vec2 t1 = (base + w3 / s1 + 1.5) / uRes;
+  return texture2D(uTex, vec2(t0.x, t0.y)).rgb * (s0.x * s0.y)
+       + texture2D(uTex, vec2(t1.x, t0.y)).rgb * (s1.x * s0.y)
+       + texture2D(uTex, vec2(t0.x, t1.y)).rgb * (s0.x * s1.y)
+       + texture2D(uTex, vec2(t1.x, t1.y)).rgb * (s1.x * s1.y);
+}
+
 void main(){
   float mn = min(uRes.x, uRes.y);
   vec2 p = (gl_FragCoord.xy - 0.5 * uRes) / mn;
@@ -241,7 +277,7 @@ void main(){
     vec2 uv = clamp((q * mn + 0.5 * uRes) / uRes, 0.0, 1.0);
 
     float absorb = clamp((gain + gainB * 0.4) * clear, 0.0, 1.0);
-    vec3 trans = texture2D(uTex, uv).rgb * (1.0 - absorb * 0.80);
+    vec3 trans = clamp(sharpTap(uv), 0.0, 1.0) * (1.0 - absorb * 0.80);
 
     vec3 bubble = trans + refl + vec3(s1 + s2 + s3);
     col = mix(col, bubble, mask);

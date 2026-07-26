@@ -228,7 +228,24 @@ void main() {
 
   float d = length(p - uCenter) / max(uRadius, 1e-4);
   float clearMask = mix(0.3, 1.0, smoothstep(0.55, 1.05, d));
-  vec3 col = mix(scene, kuwa, uKuwaAmt * clearMask);
+
+  /* ---- the ink guard ----
+     The abstraction is computed at half res (quarter under the perf gate),
+     so its upscale hands every hard edge back a pixel wider and a shade
+     paler than it was drawn. Paint survives that; 8.5px name labels, the
+     serif inscriptions and the dot glyphs do not — which is the whole of
+     "everything should be crystal clear" zoomed out (Addendum 4) and "text
+     as clear as it can be" (Addendum 3).
+
+     So: where the two signals disagree by more than paint ever does, the
+     sharp one wins. Flats, glows and the film's own gradients sit far below
+     the low threshold and stay fully painterly; a stroke against the cream
+     sits far above it and stays a stroke. This serves the intent the kernel
+     is already kept small for — dots must stay dots — rather than trading
+     any of the Monet look away for it. */
+  vec3 dev = abs(scene - kuwa);
+  float ink = smoothstep(0.05, 0.20, max(max(dev.r, dev.g), dev.b));
+  vec3 col = mix(scene, kuwa, uKuwaAmt * clearMask * (1.0 - ink));
 
   /* grade */
   float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));

@@ -306,7 +306,16 @@ export class GraphSheet {
   bakeNames() {
     const L = this.layout;
     if (!L) return;
-    const SS = 2;
+    /* The inscription is the one piece of type on the sheet that is BAKED
+       rather than drawn live, so its raster — not the font — is the limit on
+       how sharp it can ever be. Two demands stack on it: the sheet's own
+       device pixels, and the lens, which magnifies whatever it parks over by
+       DEFAULTS.zoom (1.35). Supersample for both — capped, because this is
+       per-layout memory — and the glass has real detail to reconstruct
+       instead of a 1:1 raster to stretch. Everything downstream is written in
+       SS, so this is a resolution knob only: the fisheye bulge and the motion
+       blur taps come out exactly as designed. */
+    const SS = Math.min(3, Math.ceil(this.dpr * 1.35));
     this.names = L.clusters.map((cl) => {
       const b = cl.board;
       const w = Math.ceil(b.w + 48);
