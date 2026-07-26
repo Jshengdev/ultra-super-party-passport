@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { defaultAdapter, ROOM_EDGES, type RoomEdgeType } from "./adapter";
 import { GUEST_DETAILS } from "./adapter";
 import StampBurst, { type StampData } from "./Stamps";
@@ -83,6 +83,11 @@ const POPPED_RADIUS = 0.135;
    bubbleScale may only grow the popped toy past it — a pre-pop bubble wider
    than this stops holding the room and starts overflowing its framing. */
 const MAX_LENS_RADIUS = DEFAULTS.radius;
+/* the UNPOPPED lens radius the scene actually renders with — the one place the
+   scaled-and-clamped product is spelled. Both the frame loop's targetR and the
+   camera-home fit read it, because a fit computed off the raw slider would frame
+   the room to a bubble that is not the one on screen. */
+const unpoppedLensR = (p: Params) => Math.min(p.radius * p.bubbleScale, MAX_LENS_RADIUS);
 /* movement (shader units) past which a press is a PAN, not a click/pop */
 const PAN_START = 0.02;
 /* the wobble a press is allowed before it stops being a click. Below it a
@@ -375,7 +380,9 @@ export default function PeplGraph() {
      the one with nothing on screen pointing at it, so pressing 0 has to raise
      BOTH the pill and the panel, and closing has to put both back down. The
      one exception is ?tune=1 — that opt-in owns the pill for the session, so
-     a close leaves the pill where the URL asked for it.
+     a close leaves the pill where the URL asked for it. `togglePanel` IS that
+     rule: the pill's own "hide" is the same close as the 0 key and calls it,
+     so there is no second path that can leave the pill up on its own.
 
      The guards are the whole risk here. This fires on window, and the search
      box is one Tab away: a 0 typed into any field, or committed by an IME, is
@@ -384,6 +391,14 @@ export default function PeplGraph() {
      the one exception to the field rule, and they are exactly the sliders in
      this panel: they take no text, so 0 has to keep closing the menu for
      someone who just finished dragging one. */
+  const togglePanel = useCallback(() => {
+    const opening = !panelOpen;
+    setPanelOpen(opening);
+    /* read live, not at mount: the URL is the session's opt-in */
+    setTuneVisible(
+      opening || new URLSearchParams(window.location.search).get("tune") === "1"
+    );
+  }, [panelOpen]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "0" || e.metaKey || e.ctrlKey || e.altKey) return;
@@ -396,15 +411,11 @@ export default function PeplGraph() {
           (el.tagName === "INPUT" && (el as HTMLInputElement).type !== "range"));
       if (typing) return;
       e.preventDefault();
-      const opening = !panelOpen;
-      setPanelOpen(opening);
-      setTuneVisible(
-        opening || new URLSearchParams(window.location.search).get("tune") === "1"
-      );
+      togglePanel();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [panelOpen]);
+  }, [togglePanel]);
 
   /* the focused person's baked record — their ranked relationships with
      receipts, for the threads widget */
@@ -734,7 +745,7 @@ export default function PeplGraph() {
           ext = Math.max(ext, Math.hypot(cl.cx - w / 2, cl.cy - h / 2) + cl.radius);
         }
         // fit the whole room inside the lens, with a little air
-        const fitR = paramsRef.current.radius * Math.min(w, h) * 0.92;
+        const fitR = unpoppedLensR(paramsRef.current) * Math.min(w, h) * 0.92;
         if (ext > 0) s = Math.max(0.12, Math.min(1, fitR / ext));
       }
       cam.ts = s;
@@ -1225,7 +1236,7 @@ export default function PeplGraph() {
          lensR, so this one multiply carries the whole bubble. */
       const targetR = poppedRef.current
         ? POPPED_RADIUS * P.bubbleScale
-        : Math.min(P.radius * P.bubbleScale, MAX_LENS_RADIUS);
+        : unpoppedLensR(P);
       if (reduced) {
         popAt = -1;
         radiusCur = targetR;
@@ -1654,7 +1665,13 @@ export default function PeplGraph() {
      rides its height + 28 of clearance when it is up and drops to the 20px
      margin when it is not; the legend clears the pill row below it */
   const floor = widgets.ticker ? TICKER_HEIGHT + 28 : 20;
-  const legendBottom = floor + 44;
+  /* what "clears the pill row" costs, spelled out: a `pill()` button is 8px of
+     padding above and below the ~15.5px line box of its 10px type — ~31.5px
+     measured — and that row's `gap: 8` runs horizontally BETWEEN pills, so it
+     adds nothing to this stack. 44 = the row plus ~12px of air; re-derive it if
+     the pill's padding or font size moves. */
+  const PILL_ROW_CLEARANCE = 44;
+  const legendBottom = floor + PILL_ROW_CLEARANCE;
   /* slider readouts update live — format to the step's precision and
      keep the digits tabular so nothing jitters */
   const fmt = (v: number, step: number) =>
@@ -2319,7 +2336,7 @@ export default function PeplGraph() {
       )}
 
       {tuneVisible && (
-        <button className="pepl-pill" onClick={() => setPanelOpen((v) => !v)} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
+        <button className="pepl-pill" onClick={togglePanel} style={{ ...pill(panelOpen), position: "absolute", top: 20, right: 20 }}>
           {panelOpen ? "hide" : "tune"}
         </button>
       )}

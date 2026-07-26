@@ -1,4 +1,4 @@
-/* Step-0 CSV verification — pure, Node-importable (no DOM), shared by GraphLab and the entry gate. */
+/* Step-0 CSV verification — pure, Node-importable (no DOM); the entry gate is its caller. */
 
 export type CsvVerdict =
   | { ok: true; rows: number; ids: number; matched: number; ratio: number }

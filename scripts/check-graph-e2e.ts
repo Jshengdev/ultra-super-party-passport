@@ -12,7 +12,7 @@
  * c); this gate re-loads the raw CSV through `lib/guests` and re-reads the quotes out
  * of the source fields, so "RECEIPT RESOLVED" in the UI is an assertion, not a claim.
  *
- * On the drop-zone assertion: `app/graph/page.tsx` mounts GraphLab with `ssr:false`
+ * On the drop-zone assertion: `app/graph/page.tsx` mounts PartyScene with `ssr:false`
  * (it touches window/document from first paint), so the Step-0 markup is NOT in
  * graph.html — the HTML ships the boot shell and the entry lives in a lazily-loaded
  * chunk. Asserting only on the HTML would therefore be a lie by omission. Instead we
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
 
   const map = [...runtime.body.matchAll(/(\d+):"([0-9a-f]{8,32})"/g)];
   const lazy = map.filter(([, id]) => new RegExp(`\\b${id}\\b`).test(pageChunk.body));
-  need("entry", lazy.length > 0, "the graph page chunk requires no lazy chunk — GraphLab is not being loaded");
+  need("entry", lazy.length > 0, "the graph page chunk requires no lazy chunk — PartyScene is not being loaded");
 
   let entryFoundIn = "";
   for (const [, id, hash] of lazy) {

@@ -8,9 +8,6 @@
  * paint, so it is dynamically imported with ssr:false — which also keeps this
  * route trivially static-exportable (no route handlers, no searchParams; deep
  * links live in location.hash).
- *
- * The previous force-graph room is still in ./GraphLab — kept, not deleted, so
- * the receipts UI it owns can be lifted across rather than rewritten.
  */
 
 import dynamic from "next/dynamic";
