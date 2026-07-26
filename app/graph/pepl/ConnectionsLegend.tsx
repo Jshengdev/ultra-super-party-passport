@@ -47,8 +47,12 @@
         Mission/impact are deliberately conservative — a null there means the
         enricher declined, not that the trait is rare — so a "the only one"
         cut through them would be falsifiable. The ladder then falls to a
-        single-trait cohort of one, then to the craft rung. Hometown is
-        excluded entirely until metros are normalized.
+        single-trait cohort of one, then to a craft held by no more than
+        RARE_SOLO_MAX. Above that ceiling THE ROW IS SILENT: this is the one
+        row that speaks in the rarity register, so it may never carry a common
+        fact — "1 of 48 aiming to direct" is a membership fact, and membership
+        is row 1's job, not this one's. Hometown is excluded entirely until
+        metros are normalized.
 
    NOTHING RENDERS AS A ZERO, a "1 of 1", or a placeholder. A row whose fact
    is missing is simply not there — absence reads as absence (laws c/d). One
@@ -82,6 +86,17 @@ for (const e of ROOM_EDGES) COUNT[e.type] = (COUNT[e.type] ?? 0) + 1;
 /** a pair cohort this size or smaller is worth calling rare; above it the line
     would be dressing a common fact up as an uncommon one */
 const RARE_MAX = 3;
+
+/** The ceiling on the ladder's LAST rung, a lone craft. A pair is two traits at
+    once, so RARE_MAX can be tighter there; one trait has to be small on its own
+    account. Unbounded, this rung shipped "direct · 1 of 48" — the venue's
+    LARGEST craft cohort — in the row whose entire law is that it only speaks
+    when the fact is rare (87 of 312 guests got one). On the current bake
+    nothing reaches it at all: every guest whose craft is this uncommon is
+    already caught by the pair or single-trait rungs above, so row 4 now falls
+    silent for those 87 rather than padding. The rung survives for a population
+    where a rare craft is somebody's ONLY rare trait. */
+const RARE_SOLO_MAX = 5;
 
 /** A cohort of one has no corroboration that the string even NAMES a shared
     place — two people writing "USC" prove USC is a room, one person writing
@@ -238,7 +253,11 @@ function egoRows(id: string, answered: boolean): EgoRow[] {
   else if (schoolN === 1 && namelike(school)) rows.push({ k: "rare", label: school, value: "the only one" });
   else if (companyN === 1 && d.free !== true && namelike(company))
     rows.push({ k: "rare", label: company, value: "the only one" });
-  else if (!craftRung && craftN > 1) rows.push({ k: "rare", label: craft, value: `1 of ${craftN}` });
+  /* the last rung, and the only one that can reach a big cohort — so it is the
+     only one that needs a ceiling. `!craftRung` keeps it from repeating the
+     craft line row 1 already spent on this person. */
+  else if (!craftRung && craftN > 1 && craftN <= RARE_SOLO_MAX)
+    rows.push({ k: "rare", label: craft, value: `1 of ${craftN}` });
 
   return rows;
 }
