@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { defaultAdapter, ROOM_EDGES, type RoomEdgeType } from "./adapter";
 import { GUEST_DETAILS } from "./adapter";
-import StampBurst, { type StampData } from "./Stamps";
+import StampBurst, { type StampData, type StampRecord } from "./Stamps";
 import HometownMap from "./HometownMap";
 import TagTicker, { TICKER_HEIGHT } from "./TagTicker";
 import ConnectionsLegend from "./ConnectionsLegend";
@@ -173,13 +173,18 @@ const LENS_MASK =
   `max(0px, calc(var(--lens-r) - clamp(8px, calc(var(--lens-r) * 0.15), 36px))), ` +
   `#000 var(--lens-r))`;
 
-/** A baked person record (public/graph/people/<id>.json) — fetched on focus for
-    the relationships widget. The stamps do not read it: they are composed from
-    graph.json at pop time so nothing on a stamp arrives late or changes. */
-type PersonRecord = {
-  personId: string;
+/** A baked person record (public/graph/people/<id>.json) — ONE fetch on focus,
+    read by TWO surfaces: the threads widget takes `edges`, and the identity
+    cards take `StampRecord` (the conviction receipts and the guest's own
+    answers, which exist ONLY here — the baked graph.json the burst pops from
+    carries the tags but no verbatim). The card's slice of the shape is declared
+    once, in Stamps.tsx, and widened here rather than restated: one shape, one
+    fetch, and a field the cards read can never drift from a field this fetches.
+
+    What the cards CLAIM still lands at pop time from graph.json; only their
+    quote lines wait on this. */
+type PersonRecord = StampRecord & {
   name: string;
-  answers?: Record<string, string>;
   edges?: {
     targetId: string;
     type: string;
@@ -395,9 +400,16 @@ export default function PeplGraph() {
   const [stamps, setStamps] = useState<(StampData & { on: boolean }) | null>(null);
   const stampsRef = useRef<HTMLDivElement>(null);
   const stampsLiveRef = useRef<(StampData & { on: boolean }) | null>(null);
-  /* a second, frozen-in-place burst that peels while the next pops */
+  /* a second, frozen-in-place burst that peels while the next pops. It carries
+     the record it was drawn with, frozen at peel time: the live one is already
+     being replaced by the incoming person's, and a card must not lose the words
+     it is peeling with — or, worse, peel away wearing someone else's. */
   const [peeling, setPeeling] = useState<
-    (StampData & { at: { x: number; y: number; k: number } }) | null
+    | (StampData & {
+        at: { x: number; y: number; k: number };
+        record: StampRecord | null;
+      })
+    | null
   >(null);
   const peelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
@@ -468,6 +480,12 @@ export default function PeplGraph() {
   const [profile, setProfile] = useState<PersonRecord | null>(null);
   const [receiptOpen, setReceiptOpen] = useState<number | null>(null);
   const profileCache = useRef(new Map<string, PersonRecord>());
+  /* the same record, reachable from the frame loop — which runs outside React
+     and is where a peel is captured (the loop reads refs, never state) */
+  const profileLiveRef = useRef<PersonRecord | null>(null);
+  useEffect(() => {
+    profileLiveRef.current = profile;
+  }, [profile]);
   const focusKey = stamps?.on ? stamps.personKey : null;
   /* the focus veil's only input, and its mount life (constraint note at
      VEIL_DIM): on the instant a person is focused, off only once the fade-out
@@ -515,13 +533,15 @@ export default function PeplGraph() {
     };
   }, [focusKey]);
 
-  /* The stamps used to be patched from this record once it landed — hometown out
-     of the kind-keyed highlight, plus the favourite film. Both are gone: the
-     hometown is a baked node field now (it reads at pop time, for all 311 who
-     answered, instead of the 195 whose record kept the highlight after the
-     6-highlight cap), and a stamp that pops before its own text arrives is a
-     stamp that visibly changes its mind. The burst is composed from graph.json
-     only; this record is the threads widget's. */
+  /* THE TWO ARRIVALS. What the cards CLAIM is composed at pop time from
+     graph.json (`GUEST_DETAILS`) — instant, and never revised, which is the
+     rule the old hometown/film patch broke: a stamp that pops before its own
+     text arrives is a stamp that visibly changes its mind. What the guest SAID
+     lives only in this record, so their quote lines can only arrive with it —
+     and they arrive into slots that were EMPTY, never over a placeholder, so
+     nothing on screen is ever rewritten. The record is handed straight down to
+     the burst (below); it is not copied into stamp state, because a second copy
+     is a second thing that can disagree with the fetch. */
   const [params, setParams] = useState<Params>(INITIAL);
   const [query, setQuery] = useState("");
   const [searchIdx, setSearchIdx] = useState(0);
@@ -1514,6 +1534,9 @@ export default function PeplGraph() {
               at: m
                 ? { x: parseFloat(m[1]), y: parseFloat(m[2]), k: m[3] ? parseFloat(m[3]) : 1 }
                 : { x: 0, y: 0, k: 1 },
+              /* still the OUTGOING person's — the focus change queued below is
+                 what re-keys the fetch, and that happens after this frame */
+              record: profileLiveRef.current,
             });
             if (peelTimerRef.current) clearTimeout(peelTimerRef.current);
             peelTimerRef.current = setTimeout(() => setPeeling(null), 700);
@@ -1855,7 +1878,9 @@ export default function PeplGraph() {
             transformOrigin: "0 0",
           }}
         >
-          {stamps && <StampBurst data={stamps} on={stamps.on} />}
+          {/* the record is the quotes' ONLY source, and the burst checks that it
+              is this person's before printing a word of it */}
+          {stamps && <StampBurst data={stamps} on={stamps.on} record={profile} />}
         </div>
         {peeling && (
           <div
@@ -1868,7 +1893,7 @@ export default function PeplGraph() {
               transformOrigin: "0 0",
             }}
           >
-            <StampBurst data={peeling} on={false} />
+            <StampBurst data={peeling} on={false} record={peeling.record} />
           </div>
         )}
       </div>
