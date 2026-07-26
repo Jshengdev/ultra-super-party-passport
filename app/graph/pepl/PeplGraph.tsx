@@ -1748,6 +1748,18 @@ export default function PeplGraph() {
 
   /* ---- relationships widget: rows from the fetched person record ---- */
   const relEdges = profile?.edges ?? [];
+  /* The connections panel's seek-row gate — the one ego stat it cannot derive
+     from the seeded room. True only once THIS person's record has landed and
+     it carries words of their own; the id check keeps a cached record for the
+     previous selection from answering for the new one. */
+  const focusAnswered =
+    !!focusKey &&
+    profile?.personId === focusKey &&
+    Boolean(
+      profile.answers?.goal?.trim() ||
+        profile.answers?.drew?.trim() ||
+        profile.answers?.seeking?.trim(),
+    );
   /* their own answer to "who are you looking for?" — the response the seek
      matching ran against. Verbatim or nothing: a blank answer means the
      framing line is simply absent, never a placeholder. */
@@ -1908,10 +1920,10 @@ export default function PeplGraph() {
           bottom={legendBottom}
           ui={ui}
           /* selection speaks through the same signal the rest of the scene
-             reads; the legend never fetches — it is handed what is already
-             here, and an empty list means "the record has not landed" */
+             reads; the legend never fetches — its stats come off the seeded
+             room, and this one flag off the record the scene already holds */
           focusKey={focusKey}
-          focusEdges={relEdges}
+          focusAnswered={focusAnswered}
           nameOf={personName}
         />
       )}
