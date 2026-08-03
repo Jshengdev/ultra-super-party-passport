@@ -1,12 +1,13 @@
 /**
  * scripts/emit-graph.ts — bake the party into the two artifacts the /graph room serves:
  *
- *   public/graph/graph.json          nodes + edges + per-lens positions + meta
+ *   public/graph/graph.json          nodes + edges + per-lens positions + `places` + meta
  *   public/graph/people/<id>.json    one record per guest: their own words, their ranked
  *                                    connections with receipts, their conviction (the computed
  *                                    tags + the verbatim quotes behind them), their `inferred`
  *                                    block (OUR read + OUR labels — the third register, below),
- *                                    and their highlights
+ *                                    their `taste` twins (THE FOURTH BLOCK, below), and their
+ *                                    highlights
  *   data/graph-enriched.csv          THE ENRICHMENT SHEET (below) — emitted every run
  *
  * Laws honoured here:
@@ -49,6 +50,8 @@ import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4
 import { webLayout, ringLayout, type Vec2 } from "../lib/layout";
 import { VECTOR_PROVIDERS } from "../lib/matches";
 import { MOTIVES, MISSIONS, IMPACTS, ASPIRATIONS, MODEL_UNRECORDED } from "../lib/conviction";
+import { metroOf, coordOf, PLACE_COORDS_SRC } from "../lib/places";
+import { tasteMatches, TASTE_FIELDS, type TasteMatch } from "../lib/taste";
 
 /* ────────────────────────────── inputs + shapes ────────────────────────────── */
 
@@ -139,7 +142,7 @@ const OVERRIDES_PATH = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrid
  */
 const SHEET_COLUMNS = [
   "person_id", "guest_id", "name", "title", "company", "is_freelance", "school", "class_year",
-  "hometown", "instagram",
+  "hometown", "metro", "instagram",
   "motive", "mission", "impact", "aspiration", "open_seeker",
   "motive_quote", "mission_quote", "impact_quote",
   "school_node", "company_node", "craft_node",
@@ -433,6 +436,36 @@ function loadSummaries(path: string): SummariesArtifact | null {
   return parsed.data;
 }
 
+/* ═══════════════════ THE FOURTH BLOCK: taste, and the places array ═══════════════════
+ *
+ * Two additions that add no register and no edge type — they are DERIVED FACTS about what the
+ * guests already said, and they live where nobody can mistake them for something else.
+ *
+ * `taste` — a SIBLING of `conviction` and `inferred` on the person record, one key per matched
+ * field (`favorite` / `inspiration`; see lib/taste.ts for the exact-match law and the
+ * placeholder exclusion). It is deliberately NOT a fifth edge type: the route's badge maps key
+ * on {school, company, why, seek} and render `MATCH · undefined` for anything else, and a badge
+ * that cannot name its own kind is a provenance lie. It is also deliberately NOT a highlight:
+ * `highlights` is capped at 6 and already evicts hometown for 117 people, so a taste line would
+ * ship by pushing a truer line off the end. A block of its own costs nobody anything.
+ * Both sides carry the OTHER person's cell byte-for-byte, so the claim "you both wrote this"
+ * is provable from the two records alone (law c).
+ *
+ * `places` — a TOP-LEVEL array in graph.json, `{name, lat?, lng?, n, personIds}`, derived EVERY
+ * BAKE from the surviving population's metros (lib/places.ts). Counts are consistent by
+ * construction: `n === personIds.length`, every id is an emitted node, and `hide` flows through
+ * for free because this is built from `nodes`, not from the CSV. It replaces the only geocoded
+ * hometown table the room has ever had — a 50-pin array vendored into app/graph/pepl/adapter.ts
+ * whose counts and people arrays date from a different guest list.
+ *
+ * A METRO WITH NO COORDINATE STILL SHIPS. 171 metros, 89 of them in the vendored coordinate
+ * table; the other 82 appear in `places` with their real `n` and `personIds` and NO `lat`/`lng`
+ * keys at all. Dropping them would make `places` disagree with the population it was derived
+ * from — a map that cannot draw a place is a limit of the map, not a reason to un-count eight
+ * people from Sherman Oaks. A renderer draws what has coordinates; every consumer can still
+ * count what does not.
+ * ═════════════════════════════════════════════════════════════════════════════════════ */
+
 type EdgeType = "school" | "company" | "why" | "seek";
 type Direction = "mutual" | "inbound" | "outbound";
 
@@ -490,6 +523,12 @@ interface GraphNodeOut {
       byte-for-byte against the CSV like every other node field, and check-graph-emit
       asserts its shape and coverage offline. */
   hometown: string | null;
+  /** the normalized metro `hometown` resolves to (lib/places.ts) — the key `places` groups on,
+      and the reason "Los Angeles" is one cohort of 57 instead of ten spellings. DERIVED, and it
+      ships next to the cell it was derived from: `hometown` is this field's receipt, so a
+      surface that renders the metro can always show the guest's own words for it. null exactly
+      when `hometown` is null. */
+  metro: string | null;
   motive: string | null;
   mission: string | null;
   impact: string | null;
@@ -497,6 +536,18 @@ interface GraphNodeOut {
   deg: number;
   pos: { web: Vec2; why: Vec2; seek: Vec2 };
   _overridden?: string[];
+}
+/**
+ * One metro in graph.json's top-level `places`. `lat`/`lng` are OMITTED — not null, not 0/0 —
+ * when the vendored table has no coordinate for the name: an absent key is an absence a
+ * renderer cannot accidentally plot, where `0,0` is the Gulf of Guinea.
+ */
+interface PlaceOut {
+  name: string;
+  lat?: number;
+  lng?: number;
+  n: number;
+  personIds: string[];
 }
 /** a person as the SOURCE says they are (the graph in the default path, the CSV in FIXTURE) */
 interface SourcePerson {
@@ -1166,6 +1217,9 @@ async function main(): Promise<number> {
       company: p.company,
       free: Boolean(g?.isFreelance), // a CSV-side fact: the ontology has no "freelance" node
       hometown: g?.hometown ?? null, // CSV-side too — the graph has no Place node
+      // EMIT-SIDE normalization only. scripts/ingest-guests.ts's place() still names the Neo4j
+      // :Place nodes by leading locality and is NOT touched: changing it would force a re-ingest.
+      metro: metroOf(g?.hometown)?.name ?? null,
       motive: c?.motive ?? null,
       mission: c?.mission ?? null,
       impact: c?.impact ?? null,
@@ -1186,6 +1240,31 @@ async function main(): Promise<number> {
       seek: round(seek.get(n.id) ?? [0, 0]),
     };
   }
+
+  /* ---- 7b. places: the surviving population grouped by metro, coordinates where we have them ----
+   * Derived from `nodes`, so a hidden guest is absent from every count for free, and
+   * `n === personIds.length` is true by construction rather than by assertion. */
+  const placeMembers = new Map<string, string[]>();
+  for (const n of nodes) {
+    if (!n.metro) continue;
+    const arr = placeMembers.get(n.metro);
+    if (arr) arr.push(n.id);
+    else placeMembers.set(n.metro, [n.id]);
+  }
+  const places: PlaceOut[] = [...placeMembers.entries()]
+    .map(([name, members]) => {
+      const c = coordOf(name);
+      const personIds = [...members].sort();
+      // spread the coordinate only when the vendored table HAS one — see PlaceOut
+      return { name, ...(c ? { lat: c.lat, lng: c.lng } : {}), n: personIds.length, personIds };
+    })
+    .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name));
+  const placesCoordinated = places.filter((p) => p.lat !== undefined).length;
+  const placeablePeople = places.reduce((acc, p) => acc + (p.lat !== undefined ? p.n : 0), 0);
+
+  /* ---- 7c. taste twins: exact-match on two answers nothing has ever read ----
+   * Computed over the SURVIVING guests, so a hidden guest is nobody's twin. */
+  const taste = tasteMatches(guests.map((g) => ({ personId: g.personId, answers: g.answers })));
 
   /* ---- 8. person records: ranked connections with receipts, then highlights ---- */
   const nodeById = new Map(nodes.map((n) => [n.id, n] as const));
@@ -1269,6 +1348,10 @@ async function main(): Promise<number> {
   let inferredBelowFloor = 0;
   let inferredNoRecord = 0;
   let inferredNothingToSay = 0;
+  // the fourth block's tally
+  let tasteBlocks = 0;
+  let tasteTwinQuotes = 0;
+  const tasteFieldCounts: Record<string, number> = { favorite: 0, inspiration: 0 };
   const highlightHist = new Map<string, number>();
   const edgeCounts: number[] = [];
   const pinMisses: string[] = [];
@@ -1541,6 +1624,34 @@ async function main(): Promise<number> {
       }
     }
 
+    /* ---- the taste block: THE FOURTH BLOCK. Every quote on both sides is re-verified against
+       the cited person's own answer before it is written — the same rule the inferred spans
+       get, for the same reason: a receipt that does not resolve is a fabricated receipt. ---- */
+    const mineTaste = taste.matches.get(me.id);
+    let tasteOut: Partial<Record<string, TasteMatch>> | undefined;
+    if (mineTaste) {
+      for (const field of TASTE_FIELDS) {
+        const hit = mineTaste[field];
+        if (!hit) continue;
+        if (!g.answers[field].includes(hit.verbatim)) {
+          throw new EmitError("TasteQuoteUnverifiable", `${me.id} taste.${field} is not their own "${field}" answer`);
+        }
+        for (const w of hit.with) {
+          const theirs = byGuestId.get(w.personId)?.answers[field] ?? "";
+          if (!theirs.includes(w.quote)) {
+            throw new EmitError(
+              "TasteQuoteUnverifiable",
+              `${me.id} taste.${field} cites ${w.personId}, whose own "${field}" answer does not contain the quoted cell`,
+            );
+          }
+          tasteTwinQuotes += 1;
+        }
+        tasteFieldCounts[field] += 1;
+      }
+      tasteOut = mineTaste;
+      tasteBlocks += 1;
+    }
+
     writeFileSync(
       join(PEOPLE_DIR, `${me.id}.json`),
       `${JSON.stringify({
@@ -1553,6 +1664,8 @@ async function main(): Promise<number> {
         ...(Object.keys(conviction).length > 0 ? { conviction } : {}),
         // register 2+3, a SIBLING of `conviction` — never nested inside it (THE THIRD REGISTER)
         ...(inferred ? { inferred } : {}),
+        // a sibling again, never an edge and never a highlight (THE FOURTH BLOCK)
+        ...(tasteOut ? { taste: tasteOut } : {}),
         // honest provenance (law d): the artifact itself says which fields a human moved
         ...(stamped.length > 0 ? { _overridden: stamped } : {}),
       })}\n`,
@@ -1582,6 +1695,9 @@ async function main(): Promise<number> {
       school: rawCell(g, "school"),
       class_year: classYearOf(rawCell(g, "school")),
       hometown: g.hometown ?? "",
+      // the derived metro beside the cell it came from, so a host can SEE a bad merge on the
+      // same line as the words that caused it (the sheet's job — the enrichment loop above)
+      metro: me.metro ?? "",
       instagram: g.instagram ?? "",
       motive: c?.motive ?? "",
       mission: c?.mission ?? "",
@@ -1628,6 +1744,9 @@ async function main(): Promise<number> {
   const graph = {
     nodes,
     edges,
+    // top-level, beside nodes and edges: `places` is a grouping OF the nodes, not metadata
+    // about the bake (THE FOURTH BLOCK). Every personIds member is an emitted node.
+    places,
     meta: {
       people: nodes.length,
       built: new Date().toISOString(),
@@ -1637,6 +1756,19 @@ async function main(): Promise<number> {
       // without a DB round trip. ECHOED from matches.json's own `_provider`, which the matching
       // run stamped on itself; this leg never asks EMBED_PROVIDER what it would do today.
       matchProvider,
+      /**
+       * Where the coordinates in `places` came from (law d). They are WORLD KNOWLEDGE — a city
+       * is at the same latitude whoever came to the party — so they are the one thing in this
+       * artifact that is not derived from a guest, and the artifact says so out loud. `metros`
+       * counts every place we can name, `coordinated` only the ones we can draw; the gap IS
+       * the honest absence, and it is a number rather than a silence.
+       */
+      placeCoords: {
+        _src: PLACE_COORDS_SRC,
+        metros: places.length,
+        coordinated: placesCoordinated,
+        placeable: placeablePeople,
+      },
       counts,
       stages: {
         rows: rowCount,
@@ -1685,6 +1817,31 @@ async function main(): Promise<number> {
     if (inferredNothingToSay > 0) console.log(`    ${inferredNothingToSay} guest(s) with no read to ship (blank answers or a guard failure)`);
     if (inferredNoRecord > 0) {
       console.error(`WARN: ${inferredNoRecord} emitted guest(s) have no record in ${SUMMARIES} — it is stale or was written by a filtered run`);
+    }
+  }
+  // the places report names BOTH halves: what we can draw, and what we can only count
+  const rawHometowns = new Set(guests.map((g) => g.hometown ?? "").filter((h) => h !== "")).size;
+  console.log(
+    `  places ${places.length} metro(s) from ${rawHometowns} distinct hometown cell(s) [${PLACE_COORDS_SRC}] · ` +
+      `${placesCoordinated} with coordinates (${placeablePeople} people placeable) · ` +
+      `${places.length - placesCoordinated} counted but not drawable`,
+  );
+  console.log(
+    `    largest: ${places.slice(0, 5).map((p) => `${p.name} ${p.n}`).join(" · ")}`,
+  );
+  // the fourth block, including what it REFUSED to match — see lib/taste.ts PLACEHOLDER
+  console.log(
+    `  taste ${tasteBlocks}/${records} record(s) carry a twin [` +
+      `${TASTE_FIELDS.map((f) => `${f} ${tasteFieldCounts[f]} in ${taste.stats[f].clusters} cluster(s), biggest ${taste.stats[f].biggest}`).join(" · ")}] · ` +
+      `${tasteTwinQuotes} twin-side quote(s), every one byte-verbatim in that twin's own answer`,
+  );
+  for (const f of TASTE_FIELDS) {
+    const s = taste.stats[f];
+    if (s.placeheld > 0) {
+      console.log(
+        `    ${s.placeheld} ${f} answer(s) held back as placeholders — "my mom" is seven different women, ` +
+          `and an equal string there is not a shared anything (lib/taste.ts PLACEHOLDER)`,
+      );
     }
   }
   console.log(`  enrichment sheet → ${ENRICHED_SHEET} (${sheetRows.length} rows × ${SHEET_COLUMNS.length} columns)`);
