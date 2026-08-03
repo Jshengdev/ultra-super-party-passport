@@ -5,7 +5,7 @@
  * allowed to lie: the raw CSV (via `loadGuests` — the SAME dedup/canonicalization the
  * pipeline used) and the Neo4j graph itself. Nothing here trusts `public/graph`.
  *
- * Seven obligations, all fail-able:
+ * Nine obligations, all fail-able:
  *   1. SPAN INTEGRITY   — every receipt quote is a BYTE-LITERAL substring of the cited
  *                         person's cited field. `answer.includes(quote)`, ZERO normalization:
  *                         the conviction pass snaps stored quotes to exact source spans
@@ -50,6 +50,21 @@
  *                         through the flag-vocabulary and bare-"@" scans like any other line WE
  *                         wrote. A guess we cannot trace to the guest's own words is the exact
  *                         failure this obligation exists to catch.
+ *   8. PLACES           — graph.json's top-level `places` re-derived from the CSV hometown
+ *                         cells through this file's OWN copy of the metro table (below): every
+ *                         member, every count, every node's `metro`. A cohort size is the most
+ *                         quotable number the room produces — "one of 57 from Los Angeles" —
+ *                         and it is exactly the number a normalization table can inflate by
+ *                         folding two places into one. Coordinates are NOT re-derived: they are
+ *                         vendored world knowledge, not a claim about a guest, and the CSV
+ *                         cannot corroborate them. What IS checked is that they are shaped like
+ *                         coordinates and that the artifact attributes them (meta.placeCoords).
+ *   9. TASTE            — every `taste` twin re-derived from the RAW CSV answers, byte-literally
+ *                         and in both directions: the artifact may not omit a match the CSV
+ *                         supports, may not assert one it does not, and every quote on either
+ *                         side must be that person's own cell. The claim is "you two wrote the
+ *                         same thing", so a wrong one is a stranger introduced under a false
+ *                         pretext.
  *
  * Exit codes:  0 clean (one-line summary) · 1 violations (named, file-scoped list)
  *              2 DEGRADED — `GuestsCsvMissing` / `Neo4jNotConfigured`, named, never faked.
@@ -228,6 +243,8 @@ const NodeSchema = z
     company: z.string().nullable(),
     free: z.boolean(),
     hometown: z.string().nullable(),
+    /** optional so a pre-D3 artifact still parses; re-derived in {@link auditPlaces} */
+    metro: z.string().nullable().optional(),
     motive: z.string().nullable(),
     mission: z.string().nullable(),
     impact: z.string().nullable(),
@@ -249,10 +266,28 @@ const EdgeSchema = z
   })
   .passthrough();
 
+/**
+ * One metro in the top-level `places`. Every field OPTIONAL on purpose, the same reason the
+ * inferred schemas are loose: a missing `n` must land as a NAMED violation in obligation 8, not
+ * as a parse failure that drops the entire graph — and with it every other obligation — from
+ * the audit.
+ */
+const PlaceSchema = z
+  .object({
+    name: z.string().optional(),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
+    n: z.number().optional(),
+    personIds: z.array(z.string()).optional(),
+  })
+  .passthrough();
+
 const GraphSchema = z
   .object({
     nodes: z.array(NodeSchema),
     edges: z.array(EdgeSchema),
+    /** optional: a pre-D3 artifact ships none, and obligation 8 says so in a note */
+    places: z.array(PlaceSchema).optional(),
     meta: z
       .object({
         people: z.number(),
@@ -274,6 +309,8 @@ const GraphSchema = z
         guestIds: z.array(z.string()),
         /** Optional here so a legacy artifact still parses; corroborated in {@link auditMeta}. */
         matchProvider: z.string().optional(),
+        /** the vendored coordinate table's provenance — checked in {@link auditPlaces} */
+        placeCoords: z.record(z.unknown()).optional(),
       })
       .passthrough(),
   })
@@ -324,12 +361,24 @@ const InferredSchema = z
   })
   .passthrough();
 
+/** The fourth block — loose for the same reason as the third; obligation 9 names its faults. */
+const TasteMatchSchema = z
+  .object({
+    verbatim: z.string().optional(),
+    with: z.array(z.object({ personId: z.string(), quote: z.string() }).passthrough()).optional(),
+  })
+  .passthrough();
+const TasteSchema = z
+  .object({ favorite: TasteMatchSchema.optional(), inspiration: TasteMatchSchema.optional() })
+  .passthrough();
+
 const PersonSchema = z
   .object({
     personId: z.string().min(1),
     name: z.string(),
     storyline: z.string().optional(),
     inferred: InferredSchema.optional(),
+    taste: TasteSchema.optional(),
     answers: z
       .object({
         goal: z.string(),
@@ -846,6 +895,303 @@ function auditMeta(g: GraphDoc, guests: Guest[], stages: CsvStage | null): strin
     notes.push("convictions.json absent — convictions stage uncorroborated");
   }
   return notes;
+}
+
+/* ───────────────── obligation 8: places (the metro table, re-declared) ───────────────── */
+
+/**
+ * A SECOND, INDEPENDENT COPY of lib/places.ts's normalization — the same standing convention as
+ * TAG_PHRASE and the inferred vocabularies above, and the reason this obligation is worth
+ * having. A metro table's whole power is to merge two strings into one cohort, so an audit that
+ * imported the table could only ever confirm that the merge it was handed is the merge it was
+ * handed. With its own copy, a table that grows on one side and not the other makes the counts
+ * disagree, and the audit says so — loudly, in the safe direction (a claim stops binding; it
+ * never gets silently ratified). Keeping the two in step is part of changing either.
+ *
+ * Mirrors lib/places.ts as of 2026-08-03. The coordinate table is deliberately NOT mirrored:
+ * coordinates are vendored world knowledge, the CSV cannot corroborate them, and an audit that
+ * "checked" them would just be two copies of the same lookup agreeing with each other.
+ */
+const METRO_REGION_SUFFIX = new Set(
+  (
+    "alabama alaska arizona arkansas california colorado connecticut delaware florida georgia hawaii " +
+    "idaho illinois indiana iowa kansas kentucky louisiana maine maryland massachusetts michigan " +
+    "minnesota mississippi missouri montana nebraska nevada ohio oklahoma oregon pennsylvania " +
+    "tennessee texas utah vermont virginia washington wisconsin wyoming " +
+    "al ak az ar ca co ct de fl ga hi id il ia ks ky me md ma mi mn ms mo mt ne nv oh ok pa tn tx " +
+    "ut vt va wa wi wy nj ny nc nd nh nm ri sc sd wv dc india"
+  ).split(" "),
+);
+const METRO_REGION_SUFFIX_2 = ["new jersey", "new york", "north carolina", "north dakota", "new hampshire", "new mexico", "rhode island", "south carolina", "south dakota", "west virginia"];
+const METRO_CELL_ALIAS: Record<string, string> = {
+  "eagle rock/nela/ los angeles": "Los Angeles",
+  "atm los angeles, for at least a year more. grew up in sweden": "Los Angeles",
+  "lincoln ca": "Lincoln, CA",
+  "lincoln, nebraska": "Lincoln, NE",
+  "south florida": "South Florida",
+};
+const METRO_LOCALITY_ALIAS: Record<string, string> = {
+  la: "Los Angeles",
+  "los angeles": "Los Angeles",
+  nyc: "New York",
+  "new york city": "New York",
+  sf: "San Francisco",
+  slo: "San Luis Obispo",
+};
+
+function normPlace(s: string): string {
+  return s.normalize("NFKD").replace(/\p{M}+/gu, "").toLowerCase().replace(/\s+/g, " ").trim().replace(/[^\p{L}\p{N})]+$/gu, "");
+}
+
+function localityOf(raw: string): string {
+  let head = raw.split(/[/,(&]| and /i)[0].replace(/\s+/g, " ").trim().replace(/[^\p{L}\p{N})]+$/gu, "");
+  const low = normPlace(head);
+  for (const r of METRO_REGION_SUFFIX_2) {
+    if (low.endsWith(` ${r}`) && low.length > r.length + 1) return head.slice(0, head.length - r.length).replace(/[\s,]+$/, "");
+  }
+  const toks = head.split(" ");
+  if (toks.length > 1 && METRO_REGION_SUFFIX.has(normPlace(toks[toks.length - 1]))) {
+    head = toks.slice(0, -1).join(" ").replace(/[\s,]+$/, "");
+  }
+  return head;
+}
+
+function metroOfCell(hometown: string | null): string | null {
+  const raw = (hometown ?? "").trim();
+  if (raw === "") return null;
+  const cell = METRO_CELL_ALIAS[normPlace(raw)];
+  if (cell) return cell;
+  const head = localityOf(raw);
+  if (head.trim() === "") return null;
+  const alias = METRO_LOCALITY_ALIAS[normPlace(head)];
+  if (alias) return alias;
+  const upper = head === head.toUpperCase();
+  const lower = head === head.toLowerCase();
+  if (!upper && !lower) return head;
+  if (upper && head.replace(/[^\p{L}]/gu, "").length <= 4) return head;
+  return head.split(" ").map((t) => (t.length === 0 ? t : t[0].toUpperCase() + t.slice(1).toLowerCase())).join(" ");
+}
+
+/**
+ * Re-derive `places` and every node's `metro` from the CSV hometown cells.
+ *
+ * SCOPED TO THE EMITTED POPULATION on purpose. Whether the right PEOPLE shipped is obligation
+ * 6's question and it answers it once; repeating it here would print the same fact N more times
+ * for one hidden guest. What this obligation owns is whether the metros and the counts are right
+ * FOR THE PEOPLE WHO SHIPPED — a wrong merge, a member in the wrong cohort, a count that is not
+ * its own membership, a person with a hometown who fell out of every place.
+ */
+function auditPlaces(g: GraphDoc, byId: Map<string, Guest>): string[] {
+  const F = rel(GRAPH_PATH);
+  const notes: string[] = [];
+  const emitted = g.nodes.filter((n) => byId.has(n.id));
+
+  /* the node's own metro first — `places` is a grouping of it, so a wrong node is a wrong group */
+  let nodeMetros = 0;
+  for (const n of emitted) {
+    if (n.metro === undefined) continue; // pre-D3 node: absence is legal, and noted below
+    const want = metroOfCell(byId.get(n.id)!.hometown);
+    const got = n.metro ?? null;
+    if (got === null && want === null) continue;
+    nodeMetros += 1;
+    if (got !== want) {
+      add(F, "metro-not-derivable", `${n.id}.metro is ${JSON.stringify(got)}; the CSV hometown ${JSON.stringify(byId.get(n.id)!.hometown)} normalizes to ${JSON.stringify(want)}`);
+    }
+  }
+
+  if (g.places === undefined) {
+    notes.push("graph.json ships no places array — obligation 8 has nothing to re-derive");
+    if (nodeMetros > 0) add(F, "places-missing", `${nodeMetros} node(s) carry a metro but graph.json has no places array to count them in`);
+    return notes;
+  }
+
+  /* the independent recount */
+  const want = new Map<string, Set<string>>();
+  for (const n of emitted) {
+    const m = metroOfCell(byId.get(n.id)!.hometown);
+    if (m === null) continue;
+    const set = want.get(m) ?? new Set<string>();
+    set.add(n.id);
+    want.set(m, set);
+  }
+
+  const seen = new Set<string>();
+  for (const [i, p] of g.places.entries()) {
+    const where = `places[${i}]`;
+    if (typeof p.name !== "string" || p.name === "") {
+      add(F, "place-shape", `${where} has no name`);
+      continue;
+    }
+    if (seen.has(p.name)) add(F, "place-duplicate", `${where}: "${p.name}" appears more than once`);
+    seen.add(p.name);
+    const members = p.personIds;
+    if (!Array.isArray(members) || members.length === 0) {
+      add(F, "place-shape", `${where} ("${p.name}") lists no personIds`);
+      continue;
+    }
+    if (p.n !== members.length) {
+      add(F, "place-count-not-grounded", `${where} ("${p.name}") claims n=${String(p.n)} for ${members.length} member(s)`);
+    }
+    const expect = want.get(p.name);
+    if (!expect) {
+      add(F, "place-not-derivable", `${where} ("${p.name}") is a metro no CSV hometown normalizes to`);
+      continue;
+    }
+    const extra = members.filter((m) => !expect.has(m));
+    const missing = [...expect].filter((m) => !members.includes(m));
+    if (extra.length) {
+      add(F, "place-member-not-grounded", `${where} ("${p.name}") claims ${extra.length} person(s) whose CSV hometown says otherwise: ${extra.slice(0, 4).join(", ")}`);
+    }
+    if (missing.length) {
+      add(F, "place-member-missing", `${where} ("${p.name}") omits ${missing.length} person(s) the CSV puts there: ${missing.slice(0, 4).join(", ")}`);
+    }
+    // shape only — a coordinate is world knowledge and the CSV cannot corroborate it
+    const hasLat = p.lat !== undefined;
+    if (hasLat !== (p.lng !== undefined)) add(F, "place-shape", `${where} ("${p.name}") carries half a coordinate`);
+    if (hasLat && p.lat === 0 && p.lng === 0) add(F, "place-shape", `${where} ("${p.name}") sits at 0,0 — omit the coordinate instead`);
+  }
+  for (const [name, ids] of want) {
+    if (!seen.has(name)) add(F, "place-missing", `the CSV puts ${ids.size} person(s) in "${name}", which graph.json does not list`);
+  }
+
+  const pc = g.meta.placeCoords;
+  if (pc === undefined) {
+    notes.push("graph.json ships places but no meta.placeCoords — vendored coordinates unattributed");
+  } else if (typeof pc._src !== "string" || pc._src.trim() === "") {
+    add(F, "provenance-missing", "meta.placeCoords._src is absent — the coordinates are the one thing here that is not guest data, and they must say so (law d)");
+  } else if (pc.metros !== g.places.length) {
+    add(F, "meta-count-mismatch", `meta.placeCoords.metros ${String(pc.metros)} !== ${g.places.length} places`);
+  }
+  return notes;
+}
+
+/* ─────────────── obligation 9: taste (the match rules, re-declared) ─────────────── */
+
+/**
+ * lib/taste.ts's canonicalization and its placeholder set, re-declared for the same reason as
+ * the metro table: the emitter DECIDES who is a twin, and a check that borrows the deciding
+ * function is not a check. Both drift directions fail loudly — a rule the emitter has and this
+ * file does not shows up as "the artifact omits a match the CSV supports", the reverse as "the
+ * artifact asserts one it does not". Mirrors lib/taste.ts as of 2026-08-03.
+ */
+const TASTE_FIELDS = ["favorite", "inspiration"] as const;
+type TasteField = (typeof TASTE_FIELDS)[number];
+
+function canonTasteCell(s: string): string {
+  return s
+    .normalize("NFKD")
+    .replace(/\p{M}+/gu, "")
+    .replace(/[‘’ʼ]/g, "'")
+    .replace(/[“”]/g, '"')
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/^["'([\s]+/, "")
+    .replace(/["'.,!?:;)\]\s]+$/, "")
+    .trim();
+}
+
+/** Canonical cells that name a different referent for every writer, plus the declined answers. */
+const TASTE_PLACEHOLDER = new Set([
+  "my mom", "my mother", "my mum", "my mama", "my momma", "mom", "mother",
+  "my dad", "my father", "my papa", "dad", "father",
+  "my parents", "my parent", "both my parents", "my mom and dad", "my mom & dad", "parents",
+  "my family", "family", "my grandparents",
+  "my grandma", "my grandmother", "my grandpa", "my grandfather", "grandma", "grandpa",
+  "my sister", "my brother", "my aunt", "my uncle", "my cousin", "my siblings",
+  "my wife", "my husband", "my partner", "my son", "my daughter", "my kids",
+  "my mentor", "my manager", "my boss", "my professor", "my teacher", "my coach",
+  "my friends", "my friend", "my best friend", "my peers", "my colleagues", "my co-workers",
+  "myself", "me", "my self", "i am", "my past self", "my younger self",
+  "n/a", "na", "none", "no one", "nobody", "x", "xx", "-", "--", "?", "??", "idk",
+  "i don't know", "i dont know", "not sure", "too many", "too many to name", "tbd", ".",
+]);
+
+/**
+ * Re-derive every taste twin from the raw CSV answers and hold the artifact to it in BOTH
+ * directions. Scoped to the emitted population for the same reason as obligation 8.
+ */
+function auditTaste(
+  people: Array<{ file: string; rec: PersonRecord }>,
+  byId: Map<string, Guest>,
+  nodeIds: Set<string>,
+): { checked: number; notes: string[] } {
+  const notes: string[] = [];
+  const shipped = people.filter((p) => nodeIds.has(p.rec.personId) && byId.has(p.rec.personId));
+  if (!shipped.some((p) => p.rec.taste !== undefined)) {
+    // A pre-D3 artifact ships none, and that is legal — the emit input is optional. Only an
+    // artifact that ships SOME taste is held to all of it.
+    notes.push("no person record ships a taste block — obligation 9 has nothing to re-derive");
+    return { checked: 0, notes };
+  }
+
+  /* the independent grouping, from the raw CSV cells */
+  const expect = new Map<string, Map<TasteField, Set<string>>>();
+  for (const field of TASTE_FIELDS) {
+    const groups = new Map<string, string[]>();
+    for (const p of shipped) {
+      const raw = ((byId.get(p.rec.personId)!.answers as Record<string, string>)[field] ?? "").trim();
+      if (raw === "") continue;
+      const key = canonTasteCell(raw);
+      if (key === "" || TASTE_PLACEHOLDER.has(key)) continue;
+      const arr = groups.get(key);
+      if (arr) arr.push(p.rec.personId);
+      else groups.set(key, [p.rec.personId]);
+    }
+    for (const members of groups.values()) {
+      if (members.length < 2) continue;
+      for (const me of members) {
+        const mine = expect.get(me) ?? new Map<TasteField, Set<string>>();
+        mine.set(field, new Set(members.filter((o) => o !== me)));
+        expect.set(me, mine);
+      }
+    }
+  }
+
+  let checked = 0;
+  for (const p of shipped) {
+    const id = p.rec.personId;
+    const mineRaw = byId.get(id)!.answers as Record<string, string>;
+    for (const field of TASTE_FIELDS) {
+      const claim = p.rec.taste?.[field];
+      const wantTwins = expect.get(id)?.get(field);
+
+      if (!claim) {
+        if (wantTwins && wantTwins.size > 0) {
+          add(p.file, "taste-match-missing", `the CSV gives ${id} ${wantTwins.size} ${field} twin(s) the record does not name: ${[...wantTwins].slice(0, 4).join(", ")}`);
+        }
+        continue;
+      }
+      if (!wantTwins || wantTwins.size === 0) {
+        add(p.file, "taste-match-not-grounded", `taste.${field} claims a twin, but the CSV gives ${id} none on that answer`);
+        continue;
+      }
+      // my own half of the receipt, byte-literal against the RAW CSV cell
+      if (typeof claim.verbatim !== "string" || !(mineRaw[field] ?? "").includes(claim.verbatim)) {
+        add(p.file, "taste-quote-not-verbatim", `taste.${field}.verbatim ${q(String(claim.verbatim), 48)} is not in this guest's own CSV ${field} answer`);
+      }
+      const got = new Set((claim.with ?? []).map((w) => w.personId));
+      for (const t of got) {
+        if (!wantTwins.has(t)) add(p.file, "taste-match-not-grounded", `taste.${field} names ${t}, whose CSV ${field} answer is not the same as ${id}'s`);
+      }
+      for (const t of wantTwins) {
+        if (!got.has(t)) add(p.file, "taste-match-missing", `taste.${field} omits ${t}, whose CSV ${field} answer is the same as ${id}'s`);
+      }
+      // the other half: a quote attributed to someone else, checked against THEIR CSV cell
+      for (const w of claim.with ?? []) {
+        const theirs = byId.get(w.personId);
+        if (!theirs) {
+          add(p.file, "taste-match-not-grounded", `taste.${field} names ${w.personId}, who is not in the CSV population`);
+          continue;
+        }
+        if (!((theirs.answers as Record<string, string>)[field] ?? "").includes(w.quote)) {
+          add(p.file, "taste-quote-not-verbatim", `taste.${field} attributes ${q(w.quote, 48)} to ${w.personId}, whose own CSV ${field} answer does not contain it`);
+        }
+        checked += 1;
+      }
+    }
+  }
+  return { checked, notes };
 }
 
 /**
@@ -1652,6 +1998,8 @@ async function main(): Promise<void> {
 
   auditPopulation(art.graph, guests, byId, art.people.map((p) => p.file));
   const notes = [...priv.notes, ...auditMeta(art.graph, guests, stages)];
+  /* obligation 8 — the metros and their counts, re-derived through this file's own table */
+  notes.push(...auditPlaces(art.graph, byId));
   if (art.badFiles > 0) notes.push(`${art.badFiles} person file(s) failed to parse and were not audited further`);
 
   const d = derive(art.graph, guests);
@@ -1704,6 +2052,10 @@ async function main(): Promise<void> {
     if (!seenIds.has(g.personId)) add(rel(PEOPLE_DIR), "person-record-missing", `no record for ${g.personId}`);
   }
 
+  /* obligation 9 — every taste twin re-derived from the raw CSV, both directions */
+  const taste = auditTaste(art.people, byId, new Set(art.graph.nodes.map((n) => n.id)));
+  notes.push(...taste.notes);
+
   /* obligation 4 */
   let live = { nodes: 0, rels: 0, live: 0 };
   if (!SKIP_NEO4J) {
@@ -1726,10 +2078,14 @@ async function main(): Promise<void> {
   // the third register is reported separately from `receipts`: they are different KINDS of claim
   // (their words vs our read of them), and averaging the two would hide a register going quiet.
   const inferredScope = inferredSpans === 0 ? "no inferred spans" : `${inferredSpans} inferred spans resolved`;
+  // places and taste report their own scope: a derived fact that goes quiet must be visible as
+  // a zero in the summary line, not as one fewer clause nobody notices.
+  const placeScope = art.graph.places === undefined ? "no places" : `${art.graph.places.length} places re-derived`;
+  const tasteScope = taste.checked === 0 ? "no taste twins" : `${taste.checked} taste twin quote(s) re-resolved`;
   const summary =
     violations.length === 0
-      ? `audit OK: ${art.graph.nodes.length} nodes · ${art.people.length} records · ${art.graph.edges.length} edges · ${receipts} receipts resolved (100%) · ${inferredScope} · ${counts} counts re-derived · 0 violations · ${scope}`
-      : `audit FAILED: ${violations.length} violation(s) · ${art.people.length} records · ${receipts - violations.filter((v) => v.code === "receipt-quote-not-verbatim").length}/${receipts} receipts verbatim · ${inferredSpans - violations.filter((v) => v.code === "inferred-quote-not-verbatim").length}/${inferredSpans} inferred spans verbatim · ${counts} counts re-derived · ${scope}`;
+      ? `audit OK: ${art.graph.nodes.length} nodes · ${art.people.length} records · ${art.graph.edges.length} edges · ${receipts} receipts resolved (100%) · ${inferredScope} · ${placeScope} · ${tasteScope} · ${counts} counts re-derived · 0 violations · ${scope}`
+      : `audit FAILED: ${violations.length} violation(s) · ${art.people.length} records · ${receipts - violations.filter((v) => v.code === "receipt-quote-not-verbatim").length}/${receipts} receipts verbatim · ${inferredSpans - violations.filter((v) => v.code === "inferred-quote-not-verbatim").length}/${inferredSpans} inferred spans verbatim · ${placeScope} · ${tasteScope} · ${counts} counts re-derived · ${scope}`;
 
   report(notes, summary);
 }
