@@ -199,6 +199,12 @@ export interface Coord {
  * cities themselves (see the header for why the pins' own numbers were not reused). Two decimal
  * places is ~1km, which is all a room-scale map can use.
  *
+ * TWO RULES DECIDE WHETHER A NAME GETS AN ENTRY. It must be a place a reader would recognize,
+ * and the room's own cells must settle WHICH one it is: "Rocky Mount" is here because the guest
+ * wrote "Rocky Mount, Virginia", and "Richmond" is deliberately absent because the guest wrote
+ * only "Richmond" and Richmond VA is 4,000km from Richmond CA. An unplaceable metro is a metro
+ * with a count and no dot; a wrongly-placed one is a lie with a dot.
+ *
  * A country or a US state is a legitimate answer to "Hometown?" and 14 guests gave one. Those
  * entries sit in their own block below and carry the region's centroid — a coarse pin, honestly
  * coarse, and never upgraded into a city the guest did not name.
@@ -256,7 +262,8 @@ export const METRO_COORDS: Record<string, Coord> = {
   Phoenix: { lat: 33.45, lng: -112.07 },
   Portland: { lat: 45.52, lng: -122.68 },
   Raleigh: { lat: 35.78, lng: -78.64 },
-  Richmond: { lat: 37.54, lng: -77.44 },
+  // NOT "Richmond": the one guest who wrote it named no state, and Richmond VA and Richmond CA
+  // are 4,000km apart. An ambiguous name with nothing to disambiguate it gets no coordinate.
   "Rocky Mount": { lat: 37.0, lng: -79.89 },
   "Salt Lake City": { lat: 40.76, lng: -111.89 },
   "San Antonio": { lat: 29.42, lng: -98.49 },
