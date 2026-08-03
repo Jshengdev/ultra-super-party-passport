@@ -21,12 +21,19 @@
  *       all-null conviction carrying the `conviction-guard-failed` flag — visible on the
  *       Guest AND in the written artifact. Never a silent fallback.
  *   (c) claims carry receipts — `quotes` is the receipt for every non-null tag.
+ *   (d) provenance is written INSIDE the artifact, at extraction time: the pass resolves its
+ *       model ONCE ({@link extractConvictions}) and the caller stamps that same string as
+ *       `_model` on the {@link ConvictionsArtifact}. It is never re-derived downstream from
+ *       `CONVICTION_MODEL`, which is a knob that can be different by the time anyone reads the
+ *       file — a run that happened on Haiku does not stop having happened on Haiku because the
+ *       env changed. Same pattern as `lib/summarize.ts`.
  *
  * DEGRADED: `GatewayNotConfigured` propagates untouched (it is not a guard failure —
  * it means "no creds", and the caller must exit 2, not write 312 empty records).
  *
  * Shared surface for downstream tasks: `Conviction`, `extractConvictions`, `verifyQuotes`,
- * `openSeekerBackstop`, `CONVICTIONS_PATH`, `GUARD_FAILED_FLAG`.
+ * `openSeekerBackstop`, `CONVICTIONS_PATH`, `GUARD_FAILED_FLAG`, and the artifact shape +
+ * its two tolerant readers (`ConvictionsArtifact`, `convictionsOf`, `recordedConvictionModel`).
  */
 
 import { z } from "zod";
@@ -75,12 +82,71 @@ export const GUARD_FAILED_FLAG = "conviction-guard-failed";
 /** Where the script caches the pass so downstream tasks don't re-spend gateway calls. */
 export const CONVICTIONS_PATH = "data/graph-private/convictions.json";
 
+/** `_src` provenance for the whole artifact (law d). Version it if the prompt materially changes. */
+export const CONVICTION_SRC = "extraction:conviction-v1";
+
+/**
+ * What a reader reports for a conviction artifact written BEFORE the pass recorded its model —
+ * i.e. the flat `Record<personId, Conviction>` shape this file used to write.
+ *
+ * It is a sentinel, not a guess, and that is the whole point. The pass that produced the standing
+ * cache genuinely wrote down nothing about which model ran; the as-built departure report
+ * (`docs/superpowers/specs/2026-07-25-party-graph-design.md`) says it was Haiku 4.5, but a report
+ * is a human's note, not the computation's own record, and law (d) is about what the write itself
+ * can answer for. Stamping the report's answer into the artifact downstream would be the exact
+ * move this whole change exists to delete: provenance derived from somewhere other than the run.
+ * So an unrecorded model reads as unrecorded, out loud, until a pass records its own.
+ */
+export const MODEL_UNRECORDED = "unrecorded";
+
+/**
+ * The conviction artifact: provenance at the top (law d), records nested under `convictions`.
+ *
+ * NESTED, not flat-at-root, for the reason `lib/summarize.ts` nests under `records`:
+ * `Object.entries()` over the root of a flat file would hand a consumer a `_model` STRING where a
+ * Conviction is expected. Readers must go through {@link convictionsOf}, which accepts both this
+ * shape and the legacy flat one.
+ */
+export interface ConvictionsArtifact {
+  _src: string;
+  /** The model that ACTUALLY produced these records, captured at extraction time. */
+  _model: string;
+  _ts: string;
+  _actor: "agent";
+  convictions: Record<string, Conviction>;
+}
+
+/**
+ * The records, whichever shape is on disk — the envelope above, or the legacy flat
+ * `Record<personId, Conviction>`. One definition, so the five readers of this file
+ * (ingest-guests, enrich-matches, write-conviction-values, emit-graph, and the audit's own
+ * re-declared twin) cannot disagree about what the file means.
+ */
+export function convictionsOf(raw: unknown): Record<string, Conviction> {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const obj = raw as Record<string, unknown>;
+  const nested = obj.convictions;
+  const src = nested && typeof nested === "object" && !Array.isArray(nested) ? nested : obj;
+  return src as Record<string, Conviction>;
+}
+
+/** The model the artifact recorded for itself, or {@link MODEL_UNRECORDED}. Never an env read. */
+export function recordedConvictionModel(raw: unknown): string {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return MODEL_UNRECORDED;
+  const m = (raw as Record<string, unknown>)._model;
+  return typeof m === "string" && m.trim() !== "" ? m.trim() : MODEL_UNRECORDED;
+}
+
 /** Batch size — the house pattern (`scripts/extract-interests.ts`). */
 export const BATCH = 20;
 
 /**
  * The chat model for this pass. `CONVICTION_MODEL` overrides `DEFAULT_CHAT_MODEL` so the model
  * can be bumped from the command line without a code change. Read at CALL time, not import time.
+ *
+ * RESOLVE IT ONCE PER RUN, at the top of {@link extractConvictions} — never per batch, and NEVER
+ * downstream of the pass to attest what the pass did. This function answers "what would run now",
+ * which is a different question from "what did run"; only the artifact's `_model` answers that.
  */
 export function convictionModel(): string {
   return process.env.CONVICTION_MODEL?.trim() || DEFAULT_CHAT_MODEL;
@@ -400,7 +466,7 @@ const SYSTEM = [
   '"impact":null,"aspiration":null,"quotes":{"goal":"..."},"openSeeker":false}]}',
 ].join("\n");
 
-async function askBatch(guests: Guest[], nudge: string | null): Promise<ConvictionItem[]> {
+async function askBatch(guests: Guest[], model: string, nudge: string | null): Promise<ConvictionItem[]> {
   const messages: ChatMessage[] = [
     { role: "system", content: SYSTEM },
     {
@@ -410,7 +476,7 @@ async function askBatch(guests: Guest[], nudge: string | null): Promise<Convicti
         `Guests (${guests.length}):\n\n${guests.map(renderGuest).join("\n\n")}`,
     },
   ];
-  const out = await chat(convictionModel(), messages, BatchSchema);
+  const out = await chat(model, messages, BatchSchema);
   // `.default({})` fills `quotes` at parse time; the `?? {}` is the type-level twin of that
   // (zod's inferred INPUT type still marks a defaulted field optional).
   return out.items.map((it) => ({ ...it, quotes: it.quotes ?? {} }));
@@ -432,9 +498,18 @@ async function askBatch(guests: Guest[], nudge: string | null): Promise<Convicti
  * Guests with all four prompted answers blank never reach the gateway: they get an
  * all-null conviction with NO flag (absence of evidence is not a guard failure).
  *
+ * THE MODEL IS RESOLVED ONCE, HERE (law d). Every batch and every retry of this pass runs on the
+ * same string, and `opts.model` lets the caller hold the exact value it will stamp on the artifact
+ * as `_model` — so the file's attestation and the calls that produced it are the same fact, not
+ * two reads of an env var that a run could change between.
+ *
  * @throws GatewayNotConfigured immediately, untouched — DEGRADED is not a guard failure.
  */
-export async function extractConvictions(guests: Guest[]): Promise<Map<string, Conviction>> {
+export async function extractConvictions(
+  guests: Guest[],
+  opts: { model?: string } = {},
+): Promise<Map<string, Conviction>> {
+  const model = opts.model ?? convictionModel();
   const out = new Map<string, Conviction>();
 
   const askable: Guest[] = [];
@@ -459,6 +534,7 @@ export async function extractConvictions(guests: Guest[]): Promise<Map<string, C
       try {
         items = await askBatch(
           ask,
+          model,
           attempt === 1
             ? null
             : "Your previous answer was REJECTED by a verbatim-quote check for these guests. Redo them. " +

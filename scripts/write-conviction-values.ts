@@ -32,7 +32,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { loadGuests } from "../lib/guests";
-import { CONVICTIONS_PATH, type Conviction } from "../lib/conviction";
+import { CONVICTIONS_PATH, convictionsOf, type Conviction } from "../lib/conviction";
 import { dispatch } from "../lib/ontology-gate";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { WriteValueClusterParams } from "../ontology/manifest";
@@ -142,7 +142,7 @@ async function main(): Promise<number> {
   // stale, and clustering them would mint SHARES_VALUE edges to a Person the graph doesn't hold.
   const guests = loadGuests(csv);
   const approved = new Set(guests.map((g) => g.personId));
-  const raw = JSON.parse(readFileSync(convPath, "utf8")) as Record<string, Conviction>;
+  const raw = convictionsOf(JSON.parse(readFileSync(convPath, "utf8")));
 
   const convByPerson = new Map<string, Conviction>();
   let stale = 0;

@@ -47,8 +47,8 @@ import { z } from "zod";
 import { loadGuests, type Guest } from "../lib/guests";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { webLayout, ringLayout, type Vec2 } from "../lib/layout";
-import { vectorProvider } from "../lib/matches";
-import { MOTIVES, MISSIONS, IMPACTS, ASPIRATIONS, convictionModel } from "../lib/conviction";
+import { VECTOR_PROVIDERS } from "../lib/matches";
+import { MOTIVES, MISSIONS, IMPACTS, ASPIRATIONS, MODEL_UNRECORDED } from "../lib/conviction";
 
 /* ────────────────────────────── inputs + shapes ────────────────────────────── */
 
@@ -129,7 +129,14 @@ const SUMMARIES = "data/graph-private/summaries.json";
 const ENRICHED_SHEET = "data/graph-enriched.csv";
 const OVERRIDES_PATH = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.csv";
 
-/** The pinned column order of data/graph-enriched.csv. check-graph-emit.ts asserts it exactly. */
+/**
+ * The pinned column order of data/graph-enriched.csv. check-graph-emit.ts asserts it exactly.
+ *
+ * The last two are PROVENANCE columns and they are echoes, never derivations: `extraction_model`
+ * is whatever data/graph-private/convictions.json recorded as its `_model` (or "unrecorded" for a
+ * cache written before the stamp existed), and `match_provider` is matches.json's own
+ * `_provider`. Neither is read from the environment at bake time — see readConvictions/readMatches.
+ */
 const SHEET_COLUMNS = [
   "person_id", "guest_id", "name", "title", "company", "is_freelance", "school", "class_year",
   "hometown", "instagram",
@@ -188,8 +195,46 @@ const ConvictionSchema = z.object({
   /** present only when the conviction post-guard failed twice — surfaced in the sheet's `flags` */
   flags: z.array(z.string()).optional(),
 });
-const ConvictionsSchema = z.record(z.string(), ConvictionSchema);
-const MatchesSchema = z.object({
+const ConvictionsFlatSchema = z.record(z.string(), ConvictionSchema);
+/**
+ * The conviction artifact carries its own provenance (law d) and nests the records under
+ * `convictions`. `_model` is the model that ACTUALLY tagged these people, recorded by
+ * scripts/enrich-convictions.ts at extraction time; this leg ECHOES it and never asks the
+ * environment. Extra provenance keys (`_src`, `_ts`, `_actor`) are read past, not required —
+ * `_model` is the one this leg makes a claim out of.
+ */
+const ConvictionsArtifactSchema = z.object({
+  _model: z.string().min(1),
+  convictions: ConvictionsFlatSchema,
+});
+
+/**
+ * The conviction cache, plus what it attests about itself.
+ *
+ * THE LEGACY FLAT SHAPE IS STILL READ, AND IT IS READ HONESTLY. The standing cache predates the
+ * `_model` stamp: it is a bare `Record<personId, Conviction>` that records nothing about which
+ * model produced it. That file is not re-runnable on demand — the tags are calibrated and 51
+ * overrides in data/graph-overrides.csv are pinned to them — so this leg keeps baking from it and
+ * reports {@link MODEL_UNRECORDED} rather than filling the gap.
+ *
+ * Filling it was the alternative, and it is the one to refuse. The as-built departure report says
+ * the pass ran on Haiku 4.5, so stamping that string here would even be CORRECT — but it would be
+ * this leg asserting, from a document, a fact about a run it did not observe, which is precisely
+ * the shape of the bug being deleted (the `extraction_model` column said gpt-4o-mini for 312 rows
+ * because emit re-read `CONVICTION_MODEL` at bake time). An artifact may only attest what it can
+ * support. "unrecorded" is supportable; the report stays where a human can read it.
+ */
+function readConvictions(raw: unknown): { model: string; records: Record<string, Conviction> } {
+  const isEnvelope =
+    Boolean(raw) && typeof raw === "object" && !Array.isArray(raw) && "convictions" in (raw as object);
+  if (isEnvelope) {
+    const a = ConvictionsArtifactSchema.parse(raw);
+    return { model: a._model, records: a.convictions };
+  }
+  return { model: MODEL_UNRECORDED, records: ConvictionsFlatSchema.parse(raw) };
+}
+
+const MatchesBodySchema = z.object({
   seeks: z.array(
     z.object({
       from: z.string(),
@@ -201,8 +246,38 @@ const MatchesSchema = z.object({
   ),
   doppels: z.array(z.object({ a: z.string(), b: z.string(), score: z.number() })),
 });
+
+/**
+ * The seek matrix, plus the vector space it was computed in — echoed from `_provider`, which
+ * scripts/enrich-matches.ts stamps at computation time.
+ *
+ * AN UNRECORDED PROVIDER IS FATAL HERE, unlike the conviction model above, and the asymmetry is
+ * the point rather than an inconsistency. `meta.matchProvider` is a load-bearing claim that
+ * scripts/check-graph-emit.ts asserts is one of two real values, and it says which vector space
+ * decided who should find whom — a bake that cannot answer that is shipping a room it cannot
+ * account for. And the remedy is free: re-running scripts/enrich-matches.ts under
+ * `EMBED_PROVIDER=tfidf` is offline, deterministic, and costs nothing, where re-running the
+ * conviction pass would burn the calibrated tags the overrides are pinned to. Fail loud where the
+ * fix is a re-run; label honestly where it is not.
+ */
+function readMatches(raw: unknown): { provider: string; seeks: SeekRow[]; doppels: DoppelRow[] } {
+  const body = MatchesBodySchema.parse(raw);
+  const p = raw && typeof raw === "object" ? (raw as Record<string, unknown>)._provider : undefined;
+  if (typeof p !== "string" || !(VECTOR_PROVIDERS as readonly string[]).includes(p)) {
+    throw new EmitError(
+      "MatchProviderUnrecorded",
+      `${MATCHES} does not record which vector space produced it (_provider is ${JSON.stringify(p)}, ` +
+        `expected one of ${VECTOR_PROVIDERS.join(" | ")}). This leg echoes the matrix's own ` +
+        `provenance and will not attest a provider it cannot read — re-run scripts/enrich-matches.ts ` +
+        `(EMBED_PROVIDER=tfidf needs no gateway and is deterministic) to stamp it.`,
+    );
+  }
+  return { provider: p, seeks: body.seeks, doppels: body.doppels };
+}
+
 type Conviction = z.infer<typeof ConvictionSchema>;
-type SeekRow = z.infer<typeof MatchesSchema>["seeks"][number];
+type SeekRow = z.infer<typeof MatchesBodySchema>["seeks"][number];
+type DoppelRow = z.infer<typeof MatchesBodySchema>["doppels"][number];
 
 /* ═════════════════════════════ THE THIRD REGISTER ═════════════════════════════
  *
@@ -242,8 +317,11 @@ type SeekRow = z.infer<typeof MatchesSchema>["seeks"][number];
  *    substitute for the guards upstream, and lowering it re-admits the over-reach.
  *  - `_src`/`_model` are ECHOED FROM THE ARTIFACT (law d). The model that produced these records
  *    is a fact about the extraction run, recorded at extraction time; re-deriving it here from an
- *    env var that may have changed since would make the provenance a guess. (The conviction
- *    side's `extraction_model` sheet column does exactly that — a known defect, not a pattern.)
+ *    env var that may have changed since would make the provenance a guess. This is now the
+ *    pattern, not the exception: the sheet's `extraction_model` and `match_provider` columns and
+ *    `meta.matchProvider` are all echoes of what their own artifacts recorded (see
+ *    `readConvictions` / `readMatches`). Nothing in this file asks the environment who did the
+ *    work — it used to, and it spent an entire bake attesting a model that never ran.
  * ═════════════════════════════════════════════════════════════════════════════ */
 
 /** The four answer fields shown to the summary pass — therefore the only fields a span may cite. */
@@ -859,10 +937,25 @@ async function main(): Promise<number> {
     );
   }
 
-  const convictions: Record<string, Conviction> = ConvictionsSchema.parse(
-    JSON.parse(readFileSync(CONVICTIONS, "utf8")),
+  // Both artifacts are read for their PROVENANCE as well as their contents: `extraction_model`
+  // and `match_provider` are echoes of what these files recorded about themselves, never an env
+  // read at bake time (law d — see readConvictions/readMatches).
+  const convictionsFile = readConvictions(JSON.parse(readFileSync(CONVICTIONS, "utf8")));
+  const convictions: Record<string, Conviction> = convictionsFile.records;
+  const extractionModel = convictionsFile.model;
+  const matches = readMatches(JSON.parse(readFileSync(MATCHES, "utf8")));
+  const matchProvider = matches.provider;
+  console.log(
+    `  provenance: extraction_model ${extractionModel} (from ${CONVICTIONS}) · ` +
+      `match_provider ${matchProvider} (from ${MATCHES})`,
   );
-  const matches = MatchesSchema.parse(JSON.parse(readFileSync(MATCHES, "utf8")));
+  if (extractionModel === MODEL_UNRECORDED) {
+    console.log(
+      `  NOTE: ${CONVICTIONS} predates the _model stamp, so the sheet's extraction_model column ` +
+        `reads "${MODEL_UNRECORDED}" for every row. That is the artifact's own answer, not a ` +
+        `guess — the next conviction pass records the model it runs on.`,
+    );
+  }
   const convOf = (id: string): Conviction | null => convictions[id] ?? null;
 
   // the third register — OPTIONAL (see THE THIRD REGISTER). Absent is a supported bake, and the
@@ -1180,8 +1273,6 @@ async function main(): Promise<number> {
   const edgeCounts: number[] = [];
   const pinMisses: string[] = [];
   const sheetRows: Record<string, string>[] = [];
-  const extractionModel = convictionModel();
-  const matchProvider = vectorProvider();
 
   if (existsSync(PEOPLE_DIR)) rmSync(PEOPLE_DIR, { recursive: true });
   mkdirSync(PEOPLE_DIR, { recursive: true });
@@ -1543,9 +1634,9 @@ async function main(): Promise<number> {
       source: src.label,
       // which vector provider produced the SEEKS matches this bake reads — mirrors the
       // SEEKS rels' `_src="match:<provider>-v1"` (law d) so the artifact is self-describing
-      // without a DB round trip. Same resolution lib/matches.ts uses for the actual matching
-      // run: EMBED_PROVIDER at call time, default "gateway".
-      matchProvider: vectorProvider(),
+      // without a DB round trip. ECHOED from matches.json's own `_provider`, which the matching
+      // run stamped on itself; this leg never asks EMBED_PROVIDER what it would do today.
+      matchProvider,
       counts,
       stages: {
         rows: rowCount,

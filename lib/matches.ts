@@ -40,7 +40,8 @@
  * (reciprocal pairs stored once), saved to matches.json only — doppels are NOT written to Neo4j
  * (there is no manifest action for them, and law (a) means no action ⇒ unrepresentable).
  *
- * TWO VECTOR PROVIDERS (`EMBED_PROVIDER`, default `gateway`).
+ * TWO VECTOR PROVIDERS (`EMBED_PROVIDER` — REQUIRED, there is no default: see
+ * {@link vectorProvider}).
  *   `gateway` — Butterbase embeddings, cached at `data/graph-private/embeddings.json` keyed by
  *     sha256(personId + text), so a re-run re-spends nothing. The cache records the embedding
  *     model; a model change invalidates the whole file rather than mixing two vector spaces.
@@ -147,10 +148,43 @@ export class UnknownVectorProvider extends Error {
   }
 }
 
-/** Read the provider at CALL time (never import time), so a run can switch without a code change. */
+/**
+ * `EMBED_PROVIDER` is not set at all — the same refusal as {@link UnknownVectorProvider}, for the
+ * same reason (law b: loud over convenient).
+ *
+ * WHY UNSET IS AN ERROR AND NOT A DEFAULT. This used to fall back to `gateway`, which was the
+ * worst available answer twice over. It was BROKEN — the gateway serves no embedding model any
+ * more (see the header note: 397 model ids, zero embedders, every /embeddings probe answers
+ * MODEL_NOT_FOUND), so the convenient default was the one path that cannot produce a matrix. And
+ * it was DISHONEST — everything downstream that names the provider (`match_provider` in the sheet,
+ * `meta.matchProvider` in graph.json, `_src` on every SEEKS rel) would have said "gateway" about
+ * whatever actually ran. A silent default that labels the run is not a convenience; it is a
+ * fabricated attestation waiting to happen, which is the exact defect this file's callers were
+ * fixed for. `EMBED_PROVIDER=tfidf` is the standing config (CLAUDE.md) — one word on the command
+ * line, and then the label is the operator's own statement.
+ */
+export class VectorProviderUnset extends Error {
+  constructor() {
+    super(
+      `VectorProviderUnset: EMBED_PROVIDER is not set, and there is no default. Name the vector ` +
+        `space this room is built out of: EMBED_PROVIDER=tfidf (the standing config — the gateway ` +
+        `serves no embedding model) or EMBED_PROVIDER=gateway. Every artifact downstream attests ` +
+        `this choice, so it is yours to make, not ours to assume.`,
+    );
+    this.name = "VectorProviderUnset";
+  }
+}
+
+/**
+ * Read the provider at CALL time (never import time), so a run can switch without a code change.
+ *
+ * Call it where the vectors are actually BUILT, never where they are described: a consumer that
+ * asks this function which provider produced an artifact is asking the environment, not the run.
+ * Artifacts record their own provider (`_provider` in matches.json) and readers echo that.
+ */
 export function vectorProvider(raw: string | undefined = process.env.EMBED_PROVIDER): VectorProvider {
   const v = (raw ?? "").trim().toLowerCase();
-  if (v === "") return "gateway";
+  if (v === "") throw new VectorProviderUnset();
   if ((VECTOR_PROVIDERS as readonly string[]).includes(v)) return v as VectorProvider;
   throw new UnknownVectorProvider(raw ?? "");
 }
@@ -178,6 +212,26 @@ export interface Matches {
   doppels: Doppel[];
 }
 
+/**
+ * What gets written to {@link MATCHES_PATH}: the matrix, plus the provenance of the run that
+ * produced it (law d). `_provider` is the answer to "which vector space decided these people
+ * should find each other", recorded AT COMPUTATION TIME by the leg that did the computing.
+ *
+ * `seeks`/`doppels` stay at the ROOT rather than nesting under a `records` key: they are named
+ * arrays, so there is no `Object.entries()` hazard to protect against (the reason the conviction
+ * and summary artifacts nest their per-person maps), and every existing reader — including
+ * scripts/audit-graph.ts's independently re-declared one — keeps working unchanged.
+ *
+ * `_src` is the SAME string the SEEKS relationships carry in Neo4j, so the file and the graph
+ * cannot disagree about where these edges came from.
+ */
+export interface MatchesArtifact extends Matches {
+  _src: string;
+  _provider: VectorProvider;
+  _ts: string;
+  _actor: "agent";
+}
+
 /** School/company for the doppelgänger eligibility test — the only guest fields it reads. */
 export interface DoppelMeta {
   school: string | null;
@@ -185,7 +239,7 @@ export interface DoppelMeta {
 }
 
 export interface MatchOptions {
-  /** Vector source. Default: {@link vectorProvider} (the `EMBED_PROVIDER` env, else `gateway`). */
+  /** Vector source. Omitted → {@link vectorProvider}, which THROWS when `EMBED_PROVIDER` is unset. */
   provider?: VectorProvider;
   /** Per-row percentile floor. Default {@link SEEK_PERCENTILE}. */
   percentile?: number;

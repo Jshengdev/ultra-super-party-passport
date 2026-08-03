@@ -16,13 +16,21 @@
  *   GUESTS_CSV=… GUESTS_FILTER=gst-a,gst-b node --env-file=.env --import tsx scripts/enrich-matches.ts
  *   DRY_RUN=1 GUESTS_CSV=… npx tsx scripts/enrich-matches.ts     # cache-only, no driver, no gateway
  *
- * PROVIDER. `EMBED_PROVIDER=gateway` (default) uses Butterbase embeddings. `EMBED_PROVIDER=tfidf`
- * uses the named local TF-IDF fallback — no gateway creds needed, no cache read or written — and
- * every edge it produces is stamped `_src = "match:tfidf-v1"` instead of `"gateway:seek-match"`,
- * so the graph itself records which vector space matched these people. The banner says it out loud.
+ * PROVIDER. `EMBED_PROVIDER` is REQUIRED — unset is a named `VectorProviderUnset` and exit 2, never
+ * a default (see lib/matches.ts for why the old `gateway` default was both broken and dishonest).
+ * `EMBED_PROVIDER=gateway` uses Butterbase embeddings. `EMBED_PROVIDER=tfidf` uses the named local
+ * TF-IDF fallback — no gateway creds needed, no cache read or written — and every edge it produces
+ * is stamped `_src = "match:tfidf-v1"` instead of `"gateway:seek-match"`, so the graph itself
+ * records which vector space matched these people. The banner says it out loud.
+ *
+ * THE ARTIFACT ATTESTS ITS OWN PROVIDER (law d). matches.json carries `{_src, _provider, _ts,
+ * _actor}` alongside the matrix, recorded HERE at computation time from the provider this run
+ * actually used. scripts/emit-graph.ts ECHOES `_provider` into the sheet's `match_provider` column
+ * and `meta.matchProvider`; it does not call `vectorProvider()`, because an env read at emit time
+ * answers "what would run now", not "what ran".
  *
  * Env:
- *   EMBED_PROVIDER          (optional) gateway (default) | tfidf
+ *   EMBED_PROVIDER          (REQUIRED) gateway | tfidf — no default, unset fails loud
  *   GUESTS_CSV              (required) path to the Luma guest export
  *   GUESTS_FILTER           (optional) comma-separated guest_ids — the golden-sample run
  *   CONVICTIONS_JSON        (optional) override data/graph-private/convictions.json
@@ -38,28 +46,32 @@
  *                           manifest's WriteSeekEdgeParams, touch neither driver nor gateway, and
  *                           write NOTHING to disk. A cold cache is a named note + exit 0.
  *
- * Exit codes: 2 = DEGRADED (no gateway creds / no Neo4j creds / no GUESTS_CSV / no convictions)
+ * Exit codes: 2 = DEGRADED (no EMBED_PROVIDER / no gateway creds / no Neo4j creds / no GUESTS_CSV /
+ *                 no convictions)
  *             1 = the pass failed loud (a write failed, an edge targeted a Person not in the graph)
  *             0 = matrix written + every edge through the gate.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { loadGuests, GOLDEN_NAMES, type Guest } from "../lib/guests";
-import { CONVICTIONS_PATH, openSeekerBackstop, type Conviction } from "../lib/conviction";
+import { CONVICTIONS_PATH, convictionsOf, openSeekerBackstop, type Conviction } from "../lib/conviction";
 import { isGatewayConfigured, GatewayNotConfigured } from "../lib/gateway";
 import { isConfigured as isNeo4jConfigured, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { dispatch } from "../lib/ontology-gate";
 import { WriteSeekEdgeParams } from "../ontology/manifest";
 import {
   computeMatches, cosine, adaptiveThreshold, isOutboundSeeker, isSeekTarget, seekDoc, vectorProvider,
-  EmbeddingsCacheMiss, UnknownVectorProvider, MATCHES_PATH, SEEK_PERCENTILE, SEEK_TOP_K,
-  type Matches, type SeekEdge, type VectorProvider,
+  EmbeddingsCacheMiss, UnknownVectorProvider, VectorProviderUnset, MATCHES_PATH, SEEK_PERCENTILE,
+  SEEK_TOP_K, type Matches, type MatchesArtifact, type SeekEdge, type VectorProvider,
 } from "../lib/matches";
 
 /**
  * Provenance is per-provider (law d): the graph must record WHICH vector space decided that these
  * two people should find each other. `gateway:seek-match` = Butterbase embeddings;
  * `match:tfidf-v1` = the named local fallback. Never one label pretending to be the other.
+ *
+ * ONE definition, used twice: the gate dispatches carry `_src` onto every SEEKS rel, and the SAME
+ * string is stamped on matches.json. The file and the graph cannot drift into two answers.
  */
 const PROV: Record<VectorProvider, { src: string; actor: "agent" }> = {
   gateway: { src: "gateway:seek-match", actor: "agent" },
@@ -151,13 +163,14 @@ async function main(): Promise<number> {
   const percentile = Number(process.env.SEEK_PERCENTILE) || SEEK_PERCENTILE;
   const topK = num(process.env.SEEK_TOP_K, SEEK_TOP_K);
 
-  // The provider decides whether the gateway is needed at all. An unparseable EMBED_PROVIDER
-  // throws UnknownVectorProvider here rather than silently defaulting to a different vector space.
+  // The provider decides whether the gateway is needed at all. An unset or unparseable
+  // EMBED_PROVIDER is a named error and exit 2 here, never a silent default into a vector space
+  // the operator did not choose — every artifact downstream attests this value.
   let provider: VectorProvider;
   try {
     provider = vectorProvider();
   } catch (e) {
-    if (e instanceof UnknownVectorProvider) {
+    if (e instanceof UnknownVectorProvider || e instanceof VectorProviderUnset) {
       console.error(e.message);
       return 2;
     }
@@ -215,7 +228,7 @@ async function main(): Promise<number> {
     return 1;
   }
 
-  const raw = JSON.parse(readFileSync(convPath, "utf8")) as Record<string, Conviction>;
+  const raw = convictionsOf(JSON.parse(readFileSync(convPath, "utf8")));
   const conv = new Map<string, Conviction>();
   const missingConv: string[] = [];
   for (const g of guests) {
@@ -332,9 +345,22 @@ async function main(): Promise<number> {
   }
 
   // ---- artifact FIRST: the embedding spend is the expensive part, a driver hiccup must not lose it
+  // Provenance is stamped HERE, from the provider this run computed with (law d) — the emit leg
+  // echoes `_provider` rather than re-reading EMBED_PROVIDER, which could have changed since.
+  const artifact: MatchesArtifact = {
+    _src: PROV[provider].src,
+    _provider: provider,
+    _ts: new Date().toISOString(),
+    _actor: "agent",
+    seeks,
+    doppels,
+  };
   mkdirSync(dirname(MATCHES_PATH), { recursive: true });
-  writeFileSync(MATCHES_PATH, `${JSON.stringify({ seeks, doppels }, null, 2)}\n`, "utf8");
-  console.log(`\nwrote ${MATCHES_PATH} — ${seeks.length} seek edge(s), ${doppels.length} doppelgänger(s)`);
+  writeFileSync(MATCHES_PATH, `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
+  console.log(
+    `\nwrote ${MATCHES_PATH} — ${seeks.length} seek edge(s), ${doppels.length} doppelgänger(s) ` +
+      `· _provider ${provider} · _src ${PROV[provider].src}`,
+  );
 
   // ---- retract the STANDING matrix before writing the new one.
   // write_seek_edge MERGEs, so without this an edge can only ever be added, and the first run

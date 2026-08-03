@@ -126,10 +126,12 @@ npx tsc --noEmit     # TypeScript strict — fix YOUR files' errors before finis
 **Graph v2 (/graph, real guest list)** — the surface reads committed `public/graph/*`, so
 `npm run dev` + design work need NO creds; `passport/tokens.css` hot-recolors both rooms.
 Pipeline/gates (tsx does NOT autoload .env — `set -a; source .env; set +a` first):
-`GUESTS_CSV=<luma export path>` `EMBED_PROVIDER=tfidf` (gateway has no embedding models
-anymore) `CONVICTION_MODEL=anthropic/claude-haiku-4.5`; then `scripts/ingest-guests.ts` →
-`enrich-convictions.ts` → `enrich-matches.ts` → `emit-graph.ts`, gated by
-`check-graph-{ontology,emit,entry,e2e}.ts` + `audit-graph.ts` (receipts audit — can FAIL).
+`GUESTS_CSV=<luma export path>` `EMBED_PROVIDER=tfidf` (REQUIRED, no default — unset fails loud;
+gateway has no embedding models anymore) `CONVICTION_MODEL=anthropic/claude-haiku-4.5`; then
+`scripts/ingest-guests.ts` → `enrich-convictions.ts` → `enrich-matches.ts` → `emit-graph.ts`, gated
+by `check-graph-{ontology,emit,entry,e2e}.ts` + `audit-graph.ts` (receipts audit — can FAIL).
+The stage caches attest their own provenance (`_model` / `_provider`) and emit ECHOES it — the
+sheet's `extraction_model`/`match_provider` are never re-read from env at bake time.
 Aura auto-pauses when idle ("no routing servers" = asleep). Stage caches
 `data/graph-private/{convictions,matches}.json` are gitignored and live ONLY in the main checkout —
 copy them into a worktree before baking there. Everything else: read the code.
