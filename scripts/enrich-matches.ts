@@ -2,10 +2,15 @@
  * scripts/enrich-matches.ts — the match leg: guests + convictions → the seek matrix → the gate.
  *
  * CSV → Guest[] + data/graph-private/convictions.json → embeddings (cached) → seek edges +
- * doppelgängers → `dispatch("write_seek_edge", …)` for EVERY edge (law a: the gate is the only
- * write path; there is no raw Cypher in this file) → data/graph-private/matches.json for the
- * emit leg. Doppelgängers are artifact-only: no manifest action declares them, so under law (a)
- * they are unrepresentable in the graph and stay in the JSON.
+ * doppelgängers → `dispatch("clear_seek_edges", …)` then `dispatch("write_seek_edge", …)` for
+ * EVERY edge (law a: the gate is the only write path; there is no raw Cypher in this file) →
+ * data/graph-private/matches.json for the emit leg. Doppelgängers are artifact-only: no manifest
+ * action declares them, so under law (a) they are unrepresentable in the graph and stay in the JSON.
+ *
+ * THE MATRIX REPLACES, IT DOES NOT ACCUMULATE. `write_seek_edge` MERGEs, so the standing matrix
+ * is retracted (scoped to the population this run rewrites) before the new one is written —
+ * otherwise a pair this run no longer produces would stand in Neo4j forever, and emit-graph reads
+ * SEEKS from Neo4j, not from matches.json. See `clear_seek_edges` in ontology/manifest.ts.
  *
  *   node --env-file=.env --import tsx scripts/enrich-matches.ts
  *   GUESTS_CSV=… GUESTS_FILTER=gst-a,gst-b node --env-file=.env --import tsx scripts/enrich-matches.ts
@@ -330,6 +335,16 @@ async function main(): Promise<number> {
   mkdirSync(dirname(MATCHES_PATH), { recursive: true });
   writeFileSync(MATCHES_PATH, `${JSON.stringify({ seeks, doppels }, null, 2)}\n`, "utf8");
   console.log(`\nwrote ${MATCHES_PATH} — ${seeks.length} seek edge(s), ${doppels.length} doppelgänger(s)`);
+
+  // ---- retract the STANDING matrix before writing the new one.
+  // write_seek_edge MERGEs, so without this an edge can only ever be added, and the first run
+  // that stops producing a pair would leave that pair standing in Neo4j — which is what
+  // scripts/emit-graph.ts reads. The matrix is recomputed whole every run; the graph has to be
+  // THIS run's matrix, not the union of every run's. Scoped to the population being rewritten.
+  // Ordered after the matches.json write on purpose: the artifact is already safe on disk, so a
+  // driver failure between the clear and the re-write costs a re-run, never the computation.
+  const cleared = await dispatch("clear_seek_edges", { ids: guests.map((g) => g.personId) }, PROV[provider]);
+  console.log(`cleared ${cleared[0] ?? "0"} standing SEEKS edge(s) among the ${guests.length} guest(s) being rewritten`);
 
   // ---- the ONLY write path (law a) + provenance (law d)
   const failures: string[] = [];

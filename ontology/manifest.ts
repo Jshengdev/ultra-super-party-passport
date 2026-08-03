@@ -317,6 +317,36 @@ SET s.score = $score, s.mutual = $mutual, s.via = $via,
 RETURN [$from] AS writtenIds
 `.trim();
 
+/* ---- clear_seek_edges: retract the standing seek matrix before a new one is written ----
+ *
+ * THE MATRIX IS RECOMPUTED WHOLE ON EVERY RUN, so the graph must hold the CURRENT matrix and
+ * not the union of every matrix ever computed. `write_seek_edge` MERGEs, which means an edge
+ * could until now only ever be ADDED: the first run that stopped claiming "A seeks B" would
+ * leave that claim standing in Neo4j, and scripts/emit-graph.ts reads SEEKS from Neo4j (never
+ * from matches.json), so the retired claim would keep shipping — with a receipt from a
+ * computation that no longer produces it. That is a law (c) violation no amount of care in the
+ * matcher can reach, and it is exactly what surfaced the first time a change SHRANK the matrix.
+ *
+ * SCOPED, never global. Both endpoints are pinned to `$ids`, the population this run is about to
+ * rewrite: the database also holds the legacy v1 population, and a golden `GUESTS_FILTER` run
+ * touches only the people it recomputes. An edge with one endpoint outside the set is left alone
+ * — it belongs to a matrix this run is not entitled to speak for.
+ *
+ * Destructive, so it is declared destructive: `ids` is non-empty by zod, and an empty/defaulted
+ * call is rejected at the gate before any Cypher runs.
+ */
+export const ClearSeekEdgesParams = z.object({
+  ids: z.array(z.string().min(1)).min(1),
+});
+export type ClearSeekEdgesParams = z.infer<typeof ClearSeekEdgesParams>;
+
+const CLEAR_SEEK_EDGES_CYPHER = `
+MATCH (a:Person)-[s:SEEKS]->(b:Person)
+WHERE a.id IN $ids AND b.id IN $ids
+DELETE s
+RETURN [toString(count(*))] AS writtenIds
+`.trim();
+
 /* ---- reset_graph: the DESTRUCTIVE dev action — wipes every node and relationship ----
  *
  * Deliberately hard to fire: the only param is the literal string "RESET-EVERYTHING", so an
@@ -432,6 +462,15 @@ export const ACTIONS = {
     writesPatterns: [["Person", "SEEKS", "Person"]],
     cypher: WRITE_SEEK_EDGE_CYPHER,
     defaultSrc: "action:write_seek_edge",
+    defaultActor: "pipeline",
+  },
+  clear_seek_edges: {
+    name: "clear_seek_edges",
+    params: ClearSeekEdgesParams,
+    writesLabels: ["Person"],
+    writesPatterns: [["Person", "SEEKS", "Person"]],
+    cypher: CLEAR_SEEK_EDGES_CYPHER,
+    defaultSrc: "action:clear_seek_edges",
     defaultActor: "pipeline",
   },
 } as const satisfies Record<string, ActionDef>;
