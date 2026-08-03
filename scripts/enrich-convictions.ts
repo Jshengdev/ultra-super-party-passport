@@ -4,6 +4,13 @@
 // keyed by personId. The file is gitignored and exists so downstream tasks (matches,
 // passports) read the pass instead of re-spending gateway calls.
 //
+// PROVENANCE IS WRITTEN HERE, NOT INFERRED LATER (law d). The model is resolved ONCE, handed to
+// the pass, and stamped on the artifact as `_model`, so the file itself answers "which model
+// tagged these people". Downstream (scripts/emit-graph.ts's `extraction_model` sheet column)
+// ECHOES that string and never re-reads `CONVICTION_MODEL` — an env var read at emit time
+// attests the model that would run NOW, which is a different claim, and was wrong for the whole
+// standing bake. Same pattern as lib/summarize.ts.
+//
 //   node --env-file=.env --import tsx scripts/enrich-convictions.ts
 //   GUESTS_CSV=… GUESTS_FILTER=gst-a,gst-b  node --env-file=.env --import tsx scripts/enrich-convictions.ts
 //   CONVICTION_MODEL=anthropic/claude-haiku-4.5  node --env-file=.env --import tsx scripts/…
@@ -16,8 +23,8 @@ import { dirname } from "node:path";
 import { loadGuests } from "../lib/guests";
 import { isGatewayConfigured, GatewayNotConfigured } from "../lib/gateway";
 import {
-  extractConvictions, convictionModel, CONVICTIONS_PATH, GUARD_FAILED_FLAG, MAX_QUOTE_WORDS,
-  type Conviction,
+  extractConvictions, convictionModel, CONVICTIONS_PATH, CONVICTION_SRC, GUARD_FAILED_FLAG,
+  MAX_QUOTE_WORDS, type Conviction, type ConvictionsArtifact,
 } from "../lib/conviction";
 
 function pct(n: number, total: number): string {
@@ -55,13 +62,15 @@ async function main(): Promise<void> {
     console.error("NoGuestsSelected: the CSV (after GUESTS_FILTER) yielded 0 guests");
     process.exit(1);
   }
+  // Resolved ONCE: this exact string runs every batch AND is what the artifact attests below.
+  const model = convictionModel();
   console.log(
-    `conviction pass: ${guests.length} guest(s) · model ${convictionModel()}` +
+    `conviction pass: ${guests.length} guest(s) · model ${model}` +
       `${process.env.CONVICTION_MODEL?.trim() ? " (CONVICTION_MODEL override)" : ""}` +
       ` · quote cap ${MAX_QUOTE_WORDS}w`,
   );
 
-  const conv = await extractConvictions(guests);
+  const conv = await extractConvictions(guests, { model });
 
   // ---- tally BEFORE anything touches disk ----
   const record: Record<string, Conviction> = {};
@@ -99,12 +108,22 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // ---- write the artifact (flat: { [personId]: Conviction }) ----
+  // ---- write the artifact: provenance at the top, records nested under `convictions` ----
+  // Nested rather than flat-at-root so `Object.entries()` over the file can never hand a reader
+  // the `_model` string where a Conviction is expected (the reason lib/summarize.ts nests too).
+  // Readers go through `convictionsOf`, which still accepts the legacy flat file.
+  const artifact: ConvictionsArtifact = {
+    _src: CONVICTION_SRC,
+    _model: model,
+    _ts: new Date().toISOString(),
+    _actor: "agent",
+    convictions: record,
+  };
   mkdirSync(dirname(CONVICTIONS_PATH), { recursive: true });
-  writeFileSync(CONVICTIONS_PATH, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  writeFileSync(CONVICTIONS_PATH, `${JSON.stringify(artifact, null, 2)}\n`, "utf8");
 
   // ---- coverage table ----
-  console.log(`\nwrote ${CONVICTIONS_PATH} — ${total} record(s)\ncoverage:`);
+  console.log(`\nwrote ${CONVICTIONS_PATH} — ${total} record(s) · _model ${model}\ncoverage:`);
   for (const k of ["motive", "mission", "impact", "aspiration"] as const) {
     console.log(`  ${k.padEnd(11)} ${String(nn(k)).padStart(4)}/${total}  ${pct(nn(k), total)}`);
   }

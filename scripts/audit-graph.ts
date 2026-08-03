@@ -32,7 +32,12 @@
  *                         text (a few guests name an Instagram handle in an answer, and that
  *                         text is theirs). Hits are reported by offset, NEVER echoed.
  *   6. POPULATION       — node count == the deduped CSV count (derived here, never hardcoded),
- *                         node fields == the canonical guest fields, meta.stages recounted.
+ *                         node fields == the canonical guest fields, meta.stages recounted. Also
+ *                         meta.matchProvider: it must EQUAL matches.json's own `_provider`, the
+ *                         provenance the matching run stamped on itself. The emitter echoes that
+ *                         field; if the two disagree, the shipped artifact was baked from a
+ *                         different matrix than the one on disk. (No `_provider` on the file at
+ *                         all — the legacy shape — is a note, not a violation: nothing to check.)
  *   7. INFERRED SPANS   — the third register (`inferred`: OUR distilled read + OUR labelled
  *                         mission/impact) is the one place the artifacts are allowed to say
  *                         something the guest never said, so its receipts get the strictest
@@ -267,6 +272,8 @@ const GraphSchema = z
           })
           .passthrough(),
         guestIds: z.array(z.string()),
+        /** Optional here so a legacy artifact still parses; corroborated in {@link auditMeta}. */
+        matchProvider: z.string().optional(),
       })
       .passthrough(),
   })
@@ -609,9 +616,17 @@ async function csvStages(csvPath: string): Promise<CsvStage | null> {
 
 /**
  * The two private artifacts, read ONLY to corroborate claims the CSV and the graph cannot
- * settle on their own (the recorded doppelganger pairing, the openSeeker flag, meta.stages).
+ * settle on their own (the recorded doppelganger pairing, the openSeeker flag, meta.stages,
+ * and — since both artifacts now stamp their own provenance — meta.matchProvider).
  * Absent (they are gitignored) → null, and the dependent checks say so in a note rather than
  * pretending. No span/count/graph obligation depends on them.
+ *
+ * TWO SHAPES ARE ACCEPTED for convictions.json, deliberately: the current artifact nests its
+ * records under `convictions` beside `{_src, _model, _ts, _actor}`, and the legacy file is a bare
+ * `Record<personId, Conviction>` at the root. Every reading below unwraps with
+ * `raw.convictions ?? raw` — re-declared here rather than imported from lib/conviction, on this
+ * file's standing rule that a gate which imports its subject's own helper proves only that the
+ * subject agrees with itself.
  */
 interface Private {
   doppels: Set<string> | null;
@@ -768,7 +783,10 @@ function auditMeta(g: GraphDoc, guests: Guest[], stages: CsvStage | null): strin
   // Private-artifact corroboration for the stages the CSV can't prove.
   if (existsSync(MATCHES_PATH)) {
     try {
-      const mm = JSON.parse(readFileSync(MATCHES_PATH, "utf8")) as { seeks?: Array<{ mutual?: boolean }> };
+      const mm = JSON.parse(readFileSync(MATCHES_PATH, "utf8")) as {
+        seeks?: Array<{ mutual?: boolean }>;
+        _provider?: unknown;
+      };
       const seeks = mm.seeks ?? [];
       const mutualEdges = seeks.filter((x) => x.mutual === true).length;
       if (s.seekEdges !== seeks.length) {
@@ -776,6 +794,22 @@ function auditMeta(g: GraphDoc, guests: Guest[], stages: CsvStage | null): strin
       }
       if (s.mutuals !== mutualEdges && s.mutuals * 2 !== mutualEdges) {
         add(F, "stage-count-mismatch", `meta.stages.mutuals ${s.mutuals} matches neither mutual-edge count ${mutualEdges} nor pair count ${mutualEdges / 2}`);
+      }
+      // meta.matchProvider must be the ECHO of the matrix's own `_provider`, not a second opinion.
+      // The emitter reads it out of this same file (scripts/emit-graph.ts's readMatches), so a
+      // disagreement means the artifact was baked from a different matrix than the one on disk —
+      // which is exactly the class of defect that let `match_provider` be labelled from an env var.
+      // A legacy matches.json with no `_provider` is a NOTE, not a violation: nothing to compare.
+      if (typeof mm._provider === "string" && mm._provider !== "") {
+        if (m.matchProvider !== mm._provider) {
+          add(
+            F,
+            "provenance-mismatch",
+            `meta.matchProvider ${q(String(m.matchProvider))} !== matches.json _provider ${q(mm._provider)}`,
+          );
+        }
+      } else {
+        notes.push("matches.json records no _provider — meta.matchProvider uncorroborated");
       }
     } catch {
       notes.push("matches.json unreadable — seekEdges/mutuals uncorroborated");

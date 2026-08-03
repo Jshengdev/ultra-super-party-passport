@@ -24,7 +24,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { loadGuests, type Guest } from "../lib/guests";
-import { CONVICTIONS_PATH, type Conviction } from "../lib/conviction";
+import { CONVICTIONS_PATH, convictionsOf, type Conviction } from "../lib/conviction";
 import { dispatch } from "../lib/ontology-gate";
 import { isConfigured, run, toNum, close, Neo4jNotConfigured } from "../lib/neo4j";
 import { DEFAULT_PARTY, IngestGuestV2Params } from "../ontology/manifest";
@@ -90,7 +90,7 @@ function loadCraftTags(): Map<string, string> {
     );
     return new Map();
   }
-  const raw = JSON.parse(readFileSync(path, "utf8")) as Record<string, Conviction>;
+  const raw = convictionsOf(JSON.parse(readFileSync(path, "utf8")));
   const out = new Map<string, string>();
   for (const [personId, c] of Object.entries(raw)) {
     const tag = c?.aspiration?.trim().toLowerCase();
