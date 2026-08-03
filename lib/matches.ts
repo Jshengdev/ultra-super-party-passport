@@ -13,8 +13,13 @@
  * tagged `openSeeker` by the conviction pass. They emit NO outbound edges — an edge built on
  * "anyone" is a lie with a receipt attached — but they stay fully INBOUND-eligible: other people
  * can and should be pointed at them. Same treatment for a blank `seeking` answer (nothing to
- * embed). Self is the only pair exclusion: sharing a school AND a company with someone you
+ * embed). Self is the only PAIR exclusion: sharing a school AND a company with someone you
  * asked for is not a reason to hide them (seeking a colleague is fine).
+ *
+ * THE FALLBACK-OFFER CLASS — the mirror image (see {@link isSeekTarget}). A guest who told us
+ * NOTHING gets the manufactured {@link OFFER_FALLBACK} as their offer doc; that string is our
+ * word, not theirs, so it cannot make them a seek TARGET. Their own outbound seeking, if they
+ * wrote one, is untouched — their words are evidence whatever their profile is missing.
  *
  * THE THRESHOLD IS ADAPTIVE, NOT A MAGIC CONSTANT. Every seeker's row gets its own floor: the
  * {@link SEEK_PERCENTILE}th percentile of THAT seeker's own candidate scores (self excluded,
@@ -64,6 +69,8 @@
  *     "someone at a studio"), and under the gateway provider it is honest extra context.
  *   [neutral] a guest with a BLANK `seeking` answer is treated like an openSeeker (no outbound):
  *     the brief only names openSeeker, but there is no document to embed.
+ *   [good] the brief has no inbound-eligibility rule at all — every guest is a target. That let
+ *     the OFFER_FALLBACK placeholder mint demand nobody expressed; {@link isSeekTarget} closes it.
  *   [neutral] the brief's doppelgänger "different signup-burst" rule is skipped per its own v1 note.
  */
 import { createHash } from "node:crypto";
@@ -195,7 +202,14 @@ export interface MatchOptions {
    * print RAW pair scores for named guests (the acceptance step's "print both directions'
    * scores"). Read-only by contract; it never changes what gets built.
    */
-  onVectors?: (v: { ids: string[]; seekVecs: Array<number[] | null>; offerVecs: number[][] }) => void;
+  onVectors?: (v: {
+    ids: string[];
+    seekVecs: Array<number[] | null>;
+    offerVecs: number[][];
+    /** index-aligned inbound eligibility — a diagnostic that ranked against ineligible targets
+     *  would print a floor and a rank the selection never used. */
+    targetable: boolean[];
+  }) => void;
 }
 
 /** cacheOnly mode hit a doc that was never embedded. Named so the caller can exit cleanly. */
@@ -385,6 +399,32 @@ export function isOutboundSeeker(g: Guest, c?: Conviction | null): boolean {
   return seekDoc(g) !== "";
 }
 
+/**
+ * True when this guest may be an INBOUND (seek) TARGET: their offer document is something they
+ * actually told us, and not the manufactured {@link OFFER_FALLBACK}.
+ *
+ * WHY THIS EXISTS. `offerDoc` never embeds an empty string, so a guest who gave us no title, no
+ * goal, no company, no school and no aspiration tag is described to the matcher by the single
+ * word "creative" — our placeholder, not their word. Under the lexical provider that one common
+ * token appears in a large share of the room's `seeking` answers, so the emptiest profile in the
+ * room scored as the room's most-sought person (48 inbound edges against 26 for the legitimate
+ * runner-up). "48 people are looking for someone like you" for someone who told us nothing is a
+ * demand signal our own fallback manufactured, and law (c) has no receipt to offer for it: the
+ * target side of every one of those edges was already quoteless, because `craftLine` correctly
+ * found nothing of theirs to quote. So the fallback offer is inbound-INELIGIBLE.
+ *
+ * Deliberately NOT symmetric with {@link isOutboundSeeker}: this is about what WE manufactured on
+ * their behalf. Anything they wrote themselves — including their `seeking` answer — still stands.
+ *
+ * Uniform by construction: the test is "is this document the fallback", never a person. On the
+ * 312-guest room it selects exactly one guest, and it selects the same guest as the looser
+ * reading ("no real title and no real goal") — this is the tighter of the two, because a company
+ * or a school IS a fact the guest gave us even when they wrote no prose.
+ */
+export function isSeekTarget(g: Guest, c?: Conviction | null): boolean {
+  return offerDoc(g, c) !== OFFER_FALLBACK;
+}
+
 // ---------------------------------------------------------------------------
 // Math (pure — the whole selection rule is testable without a gateway).
 // ---------------------------------------------------------------------------
@@ -483,17 +523,25 @@ export function markMutual(edges: ReadonlyArray<SeekEdge>): SeekEdge[] {
  * @param seekVecs   seek vector per person, or `null` for "emits no outbound edges"
  *                   (openSeeker / blank seeking answer). Still inbound-eligible via offerVecs.
  * @param offerVecs  offer vector per person — every person has one.
+ * @param targetable per person: may anyone be pointed AT them? `false` for a manufactured offer
+ *                   doc ({@link isSeekTarget}). Omit for "everyone is targetable".
  * @param via        deterministic edge label, given the TARGET's personId.
  *
- * Per seeker: score every other person (self is the only exclusion), keep those at or above the
- * row's adaptive threshold AND above zero (an edge needs some evidence), take the best `topK`
- * (ties broken by personId, so the output is a deterministic function of the inputs), then flag
- * the pairs that survived both ways.
+ * Per seeker: score every ELIGIBLE other person, keep those at or above the row's adaptive
+ * threshold AND above zero (an edge needs some evidence), take the best `topK` (ties broken by
+ * personId, so the output is a deterministic function of the inputs), then flag the pairs that
+ * survived both ways.
+ *
+ * An ineligible target is dropped from the candidate list BEFORE the row's percentile floor is
+ * computed, not filtered off the result afterwards. It is not a candidate that lost; it is not a
+ * candidate. Leaving it in the sample would let a phantom high score raise the floor and suppress
+ * a real edge — the fabricated signal would still be shaping the room after being hidden from it.
  */
 export function buildSeekEdges(
   ids: ReadonlyArray<string>,
   seekVecs: ReadonlyArray<number[] | null>,
   offerVecs: ReadonlyArray<number[]>,
+  targetable: ReadonlyArray<boolean> | null,
   via: (toId: string) => string,
   opts: { percentile?: number; topK?: number } = {},
 ): SeekEdge[] {
@@ -502,6 +550,10 @@ export function buildSeekEdges(
       `buildSeekEdges: length mismatch — ids=${ids.length} seek=${seekVecs.length} offer=${offerVecs.length}`,
     );
   }
+  if (targetable !== null && targetable.length !== ids.length) {
+    throw new Error(`buildSeekEdges: length mismatch — ids=${ids.length} targetable=${targetable.length}`);
+  }
+  const canTarget = (j: number): boolean => targetable === null || targetable[j];
   const p = opts.percentile ?? SEEK_PERCENTILE;
   const topK = opts.topK ?? SEEK_TOP_K;
 
@@ -517,7 +569,8 @@ export function buildSeekEdges(
     const row = matrix[r];
     const cand: Array<{ j: number; score: number }> = [];
     for (let j = 0; j < ids.length; j++) {
-      if (j === i) continue; // self — the ONLY exclusion
+      if (j === i) continue; // self — the only PAIR exclusion
+      if (!canTarget(j)) continue; // nothing of their own to be sought for (isSeekTarget)
       cand.push({ j, score: row[j] });
     }
     if (cand.length === 0) continue;
@@ -728,6 +781,7 @@ export async function computeMatches(
     text: offerDoc(g, conv.get(g.personId)),
   }));
   const outbound = guests.map((g) => isOutboundSeeker(g, conv.get(g.personId)));
+  const targetable = guests.map((g) => isSeekTarget(g, conv.get(g.personId)));
   const seekers: EmbedDoc[] = [];
   for (let i = 0; i < guests.length; i++) {
     if (outbound[i]) seekers.push({ personId: guests[i].personId, text: seekDoc(guests[i]) });
@@ -736,6 +790,15 @@ export async function computeMatches(
     `matches: ${guests.length} guest(s) · ${seekers.length} outbound seeker(s) · ` +
       `${guests.length - seekers.length} inbound-only (openSeeker / blank seeking)`,
   );
+  const untargetable = guests.filter((_, i) => !targetable[i]);
+  if (untargetable.length) {
+    // Named, never silent (law b): removing someone from the room's demand side is a decision.
+    log(
+      `matches: ${untargetable.length} guest(s) outbound-only — their offer doc is the ` +
+        `"${OFFER_FALLBACK}" fallback, which is our word and not theirs, so nobody is pointed at ` +
+        `them: ${untargetable.map((g) => g.personId).join(", ")}`,
+    );
+  }
 
   const provider = opts.provider ?? vectorProvider();
   const docs = [...offers, ...seekers];
@@ -783,9 +846,9 @@ export async function computeMatches(
     log(`matches: ${muted} seeker(s) muted — their seeking answer has no usable tokens (inbound-only)`);
   }
 
-  opts.onVectors?.({ ids, seekVecs, offerVecs });
+  opts.onVectors?.({ ids, seekVecs, offerVecs, targetable });
 
-  const seeks = buildSeekEdges(ids, seekVecs, offerVecs, (to) => viaFor(to, conv), {
+  const seeks = buildSeekEdges(ids, seekVecs, offerVecs, targetable, (to) => viaFor(to, conv), {
     percentile: opts.percentile,
     topK: opts.topK,
   });

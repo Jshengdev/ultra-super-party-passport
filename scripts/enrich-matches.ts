@@ -46,7 +46,7 @@ import { isConfigured as isNeo4jConfigured, close, Neo4jNotConfigured } from "..
 import { dispatch } from "../lib/ontology-gate";
 import { WriteSeekEdgeParams } from "../ontology/manifest";
 import {
-  computeMatches, cosine, adaptiveThreshold, isOutboundSeeker, seekDoc, vectorProvider,
+  computeMatches, cosine, adaptiveThreshold, isOutboundSeeker, isSeekTarget, seekDoc, vectorProvider,
   EmbeddingsCacheMiss, UnknownVectorProvider, MATCHES_PATH, SEEK_PERCENTILE, SEEK_TOP_K,
   type Matches, type SeekEdge, type VectorProvider,
 } from "../lib/matches";
@@ -100,7 +100,7 @@ function fallbackConviction(g: Guest): Conviction {
 function diagnose(
   names: string[],
   guests: Guest[],
-  v: { ids: string[]; seekVecs: Array<number[] | null>; offerVecs: number[][] },
+  v: { ids: string[]; seekVecs: Array<number[] | null>; offerVecs: number[][]; targetable: boolean[] },
   percentile: number,
   say: (m: string) => void,
 ): void {
@@ -115,13 +115,19 @@ function diagnose(
       lines.push(`  ${from.g.name} → (no outbound: openSeeker or blank seeking answer)`);
       continue;
     }
-    const row = v.ids.map((_, j) => (j === from.i ? Number.NaN : cosine(sv, v.offerVecs[j])));
+    // NaN marks a non-candidate — self, or a target nobody may be pointed at (isSeekTarget) — so
+    // the printed rank and floor are over the SAME sample buildSeekEdges selected from.
+    const row = v.ids.map((_, j) => (j === from.i || !v.targetable[j] ? Number.NaN : cosine(sv, v.offerVecs[j])));
     const cand = row.filter((x) => !Number.isNaN(x));
     const thr = adaptiveThreshold(cand, percentile);
     const ranked = [...cand].sort((a, b) => b - a);
     for (const to of picked) {
       if (to.i === from.i) continue;
       const s = row[to.i];
+      if (Number.isNaN(s)) {
+        lines.push(`  ${from.g.name} → ${to.g.name}: not a candidate (offer doc is the fallback — inbound-ineligible)`);
+        continue;
+      }
       const rank = ranked.findIndex((x) => x === s) + 1;
       lines.push(
         `  ${from.g.name} → ${to.g.name}: score ${s.toFixed(4)} · rank ${rank}/${cand.length} · ` +
@@ -278,12 +284,14 @@ async function main(): Promise<number> {
   const hubs = [...inDeg.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
   const noInbound = guests.filter((g) => !inDeg.has(g.personId)).length;
   const outboundEligible = guests.filter((g) => isOutboundSeeker(g, conv.get(g.personId))).length;
+  const inboundIneligible = guests.filter((g) => !isSeekTarget(g, conv.get(g.personId))).length;
 
   say(
     `\nseek matrix: ${seeks.length} edge(s) from ${outDeg.size}/${outboundEligible} seeker(s)\n` +
       `  mutual        ${mutualEdges} edge(s) = ${mutualEdges / 2} pair(s)\n` +
       `  out-degree    max ${Math.max(0, ...outDeg.values())} · min ${Math.min(topK, ...outDeg.values())} (cap ${topK})\n` +
-      `  in-degree     max ${Math.max(0, ...inDeg.values())} · ${noInbound} guest(s) sought by nobody\n` +
+      `  in-degree     max ${Math.max(0, ...inDeg.values())} · ${noInbound} guest(s) sought by nobody ` +
+      `(${inboundIneligible} of them inbound-ineligible: fallback offer doc)\n` +
       `  score         min ${Math.min(...scores).toFixed(4)} · median ${median(scores).toFixed(4)} · max ${Math.max(...scores).toFixed(4)}\n` +
       `  most-sought   ${hubs.map(([id, n]) => `${id}(${n})`).join(", ")}\n` +
       `  doppelgängers ${doppels.length} pair(s)`,
