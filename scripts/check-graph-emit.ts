@@ -27,6 +27,17 @@
  *     record's own answers. We are allowed to guess about a guest; we are not allowed to
  *     invent the words we based the guess on. Absent is always legal (the block is an
  *     OPTIONAL emit input), so this gate is green on an offline bake that ships none.
+ *   · graph.json's top-level `places`: a place whose `n` disagrees with its own `personIds`,
+ *     a member who is not an emitted node, a member whose node names a different metro, a
+ *     duplicated name or member, half a coordinate (lat without lng), a coordinate off the
+ *     globe, or a population that does not add up to the nodes carrying a metro. Counts that
+ *     are consistent by construction are still checked, because "by construction" is a claim
+ *     about code and this gate reads only what shipped.
+ *   · a person record's `taste` block (THE FOURTH BLOCK — two guests who wrote the same
+ *     answer): a key outside {favorite, inspiration}, a `verbatim` that is not byte-literal in
+ *     that record's own answer, a twin who is not in the graph, a twin whose quote is not
+ *     byte-literal in THEIR record's answer, or a claim that is not symmetric — if A is B's
+ *     twin on a field and B is not A's, one of the two records is lying about the other.
  *   · a `direction` outside the contract enum, an edge pointing at nobody, a
  *     zero-count fact rendered as text, or an internal `flags` value leaking into copy
  *   · meta.stages / meta.guestIds missing (the entry drop-zone reads both)
@@ -57,7 +68,7 @@ const OVERRIDES = process.env.OVERRIDES_PATH?.trim() || "data/graph-overrides.cs
  */
 const SHEET_COLUMNS = [
   "person_id", "guest_id", "name", "title", "company", "is_freelance", "school", "class_year",
-  "hometown", "instagram",
+  "hometown", "metro", "instagram",
   "motive", "mission", "impact", "aspiration", "open_seeker",
   "motive_quote", "mission_quote", "impact_quote",
   "school_node", "company_node", "craft_node",
@@ -67,6 +78,14 @@ const SHEET_COLUMNS = [
   "pinned_match", "hide", "host_notes",
   "flags", "extraction_model", "match_provider",
 ];
+/**
+ * The same contract before `metro` joined it. A sheet baked by an earlier emit is a LEGAL
+ * artifact — this gate reads what shipped, and what shipped was correct when it shipped — so
+ * the pre-metro header passes with a NOTE rather than a failure. Anything that is neither list
+ * still fails loudly. (Derived from the list above rather than copied, so the two can never
+ * drift into disagreeing about the other 36 columns.)
+ */
+const SHEET_COLUMNS_PRE_METRO = SHEET_COLUMNS.filter((c) => c !== "metro");
 const OVERRIDE_COLUMNS = [
   "person_id", "motive", "mission", "impact", "aspiration", "pinned_match", "hide", "host_notes",
 ];
@@ -98,6 +117,13 @@ const fail = (m: string) => {
   process.exit(1);
 };
 
+/**
+ * Green-with-a-note. Every block this gate checks is an OPTIONAL emit output, so an artifact
+ * baked before that block existed is legal and must pass — but it must never pass SILENTLY,
+ * or "the check is green" and "the check ran" become the same sentence.
+ */
+const notes: string[] = [];
+
 interface GNode {
   id: string;
   name: string;
@@ -106,6 +132,7 @@ interface GNode {
   company: string | null;
   free: boolean;
   hometown?: string | null;
+  metro?: string | null;
   motive: string | null;
   mission: string | null;
   impact: string | null;
@@ -121,9 +148,11 @@ interface GEdge {
   m?: boolean;
   score?: number;
 }
+/** parsed as `unknown` where it is checked — this gate types nothing it has not verified */
 interface Graph {
   nodes: GNode[];
   edges: GEdge[];
+  places?: unknown;
   meta: {
     people: number;
     built: string;
@@ -131,6 +160,7 @@ interface Graph {
     stages: Record<string, number>;
     guestIds: string[];
     matchProvider?: string;
+    placeCoords?: Record<string, unknown>;
   };
 }
 interface PersonEdge {
@@ -153,6 +183,8 @@ interface PersonRecord {
   conviction?: Record<string, unknown>;
   /** registers 2+3 — OUR read + OUR labels, a SIBLING of `conviction` (parsed as unknown too) */
   inferred?: Record<string, unknown>;
+  /** the fourth block — two guests who wrote the same answer (unknown until checked) */
+  taste?: Record<string, unknown>;
   _overridden?: string[];
 }
 
@@ -163,6 +195,8 @@ interface PersonRecord {
 const INFERRED_KEYS = new Set(["summary", "mission", "impact", "_src", "_model"]);
 /** The answer fields an inferred evidence span may cite (the four the summary pass is shown). */
 const INFERRED_EVIDENCE_FIELDS = new Set(["goal", "drew", "seeking", "inspiration"]);
+/** The two answer fields a taste twin may be drawn from — the keys of the `taste` block. */
+const TASTE_FIELDS = ["favorite", "inspiration"] as const;
 
 const EXPECTED_PEOPLE = 312;
 const EDGE_TYPES = new Set(["school", "company", "why", "seek"]);
@@ -197,6 +231,8 @@ if (raw.length > 900_000) fail(`graph.json too big: ${raw.length}`);
 /* ---- node shape + per-lens positions ---- */
 const ids = new Set<string>();
 let hometowns = 0;
+let metros = 0;
+const metroOfNode = new Map<string, string>();
 for (const n of g.nodes) {
   if (!n.id || ids.has(n.id)) fail(`bad or duplicate node id: ${n.id}`);
   ids.add(n.id);
@@ -213,6 +249,18 @@ for (const n of g.nodes) {
     }
     hometowns += 1;
   }
+  /* the derived metro, and the rule that makes it answerable: it never ships without the cell
+     it was derived from. A metro with no hometown beside it is a place claim with no receipt. */
+  if ("metro" in n && n.metro !== null && n.metro !== undefined) {
+    if (typeof n.metro !== "string" || n.metro.trim().length === 0) {
+      fail(`node ${n.id} has a non-string or empty metro: ${JSON.stringify(n.metro)}`);
+    }
+    if (n.hometown === null || n.hometown === undefined) {
+      fail(`node ${n.id} carries metro "${n.metro}" but no hometown — the cell is the metro's receipt`);
+    }
+    metroOfNode.set(n.id, n.metro);
+    metros += 1;
+  }
   for (const lens of ["web", "why", "seek"] as const) {
     const p = n.pos?.[lens];
     if (!Array.isArray(p) || p.length !== 2 || !Number.isFinite(p[0]) || !Number.isFinite(p[1])) {
@@ -226,6 +274,14 @@ for (const n of g.nodes) {
 const HOMETOWN_MIN = 300;
 if (hometowns < HOMETOWN_MIN) {
   fail(`only ${hometowns} of ${g.nodes.length} nodes carry a hometown — below the ${HOMETOWN_MIN} floor`);
+}
+/* Either the whole bake normalizes hometowns or none of it does. A bake where some nodes
+   carry a metro and others with a real hometown do not is one where the grouping silently
+   under-counts — exactly the defect the metro table exists to remove. */
+if (metros === 0) {
+  notes.push("no node carries a metro — pre-D3 artifact, so the places checks below are inert");
+} else if (metros !== hometowns) {
+  fail(`${metros} of ${hometowns} nodes with a hometown carry a metro — a partly-normalized bake under-counts every cohort`);
 }
 
 /* ---- edges resolve, types are in the contract ---- */
@@ -272,6 +328,79 @@ if (!MATCH_PROVIDERS.has(g.meta?.matchProvider ?? "")) {
   fail(`meta.matchProvider "${g.meta?.matchProvider}" is missing or outside {gateway, tfidf}`);
 }
 
+/* ---- the places array: one entry per metro in the room, counts consistent with the nodes ----
+ * OPTIONAL (a pre-D3 artifact has none), and everything present is held to the rule that makes
+ * a count trustworthy: the number and the membership must be the same fact twice. */
+let placeCount = 0;
+let placeCoordCount = 0;
+let placePeople = 0;
+if (g.places === undefined) {
+  notes.push("graph.json carries no places array — pre-D3 artifact, legal, and the next bake adds it");
+} else {
+  if (!Array.isArray(g.places)) fail("graph.json places is not an array");
+  const seenPlace = new Set<string>();
+  const claimed = new Set<string>();
+  for (const [i, raw] of (g.places as unknown[]).entries()) {
+    if (raw === null || typeof raw !== "object" || Array.isArray(raw)) fail(`places[${i}] is not an object`);
+    const p = raw as Record<string, unknown>;
+    const where = `places[${i}] (${JSON.stringify(p.name)})`;
+    if (typeof p.name !== "string" || p.name.trim().length === 0) fail(`${where} has no name`);
+    if (seenPlace.has(p.name as string)) fail(`${where}: duplicate place name — one entry per metro`);
+    seenPlace.add(p.name as string);
+
+    if (!Array.isArray(p.personIds) || p.personIds.length === 0) fail(`${where} has no personIds`);
+    const members = p.personIds as unknown[];
+    const local = new Set<string>();
+    for (const m of members) {
+      if (typeof m !== "string" || !ids.has(m)) fail(`${where} lists "${String(m)}", who is not a node in graph.json`);
+      if (local.has(m as string)) fail(`${where} lists ${m} twice`);
+      local.add(m as string);
+      if (claimed.has(m as string)) fail(`${where} claims ${m}, who is already in another place — one metro per person`);
+      claimed.add(m as string);
+      // the node and the place must be the same bake's answer, not two opinions
+      const onNode = metroOfNode.get(m as string);
+      if (metros > 0 && onNode !== p.name) {
+        fail(`${where} claims ${m}, whose node says metro ${JSON.stringify(onNode ?? null)}`);
+      }
+    }
+    if (p.n !== members.length) fail(`${where}: n ${String(p.n)} !== its ${members.length} personIds`);
+
+    // half a coordinate is worse than none: it renders as a pin at longitude zero
+    const hasLat = p.lat !== undefined;
+    const hasLng = p.lng !== undefined;
+    if (hasLat !== hasLng) fail(`${where} carries ${hasLat ? "lat without lng" : "lng without lat"}`);
+    if (hasLat) {
+      const { lat, lng } = p as { lat: unknown; lng: unknown };
+      if (typeof lat !== "number" || !Number.isFinite(lat) || lat < -90 || lat > 90) fail(`${where} lat ${String(lat)} is off the globe`);
+      if (typeof lng !== "number" || !Number.isFinite(lng) || lng < -180 || lng > 180) fail(`${where} lng ${String(lng)} is off the globe`);
+      if (lat === 0 && lng === 0) fail(`${where} sits at 0,0 — that is the Gulf of Guinea, not an unknown place; omit the coordinate instead`);
+      placeCoordCount += 1;
+    }
+    placeCount += 1;
+    placePeople += members.length;
+  }
+  // nobody with a metro may be missing from the array, or a cohort is quietly short
+  if (placePeople !== metros) fail(`places account for ${placePeople} people but ${metros} nodes carry a metro`);
+  for (const [id, m] of metroOfNode) {
+    if (!claimed.has(id)) fail(`node ${id} carries metro "${m}" but appears in no place`);
+  }
+
+  // the coordinate provenance: world knowledge, and the artifact says so (law d)
+  const pc = g.meta?.placeCoords;
+  if (pc === undefined) {
+    notes.push("graph.json carries places but no meta.placeCoords — the coordinates ship unattributed");
+  } else {
+    if (typeof pc._src !== "string" || pc._src.trim().length === 0) {
+      fail("meta.placeCoords._src is missing — vendored coordinates are not guest data and must say where they came from");
+    }
+    if (pc.metros !== placeCount) fail(`meta.placeCoords.metros ${String(pc.metros)} !== ${placeCount} places`);
+    if (pc.coordinated !== placeCoordCount) fail(`meta.placeCoords.coordinated ${String(pc.coordinated)} !== ${placeCoordCount} places with a coordinate`);
+    if (typeof pc.placeable !== "number" || pc.placeable > placePeople) {
+      fail(`meta.placeCoords.placeable ${String(pc.placeable)} is not a number of people ≤ ${placePeople}`);
+    }
+  }
+}
+
 /* ---- the person records ---- */
 const files = readdirSync(PEOPLE_DIR).filter((f) => f.endsWith(".json"));
 if (files.length !== EXPECTED_PEOPLE) fail(`people files ${files.length} !== ${EXPECTED_PEOPLE}`);
@@ -292,6 +421,12 @@ let handleMentions = 0;
 let numericClaims = 0;
 const handleSamples: string[] = [];
 const seenIds = new Set<string>();
+/** every record's own answers, so a taste twin's quote can be checked against THEIR record */
+const answersById = new Map<string, Record<string, string>>();
+/** `${personId}|${field}|${twinId}` -> the quote this record attributes to that twin */
+const tasteClaims = new Map<string, string>();
+let tasteBlocks = 0;
+let tasteTwinQuotes = 0;
 
 for (const f of files) {
   const body = readFileSync(`${PEOPLE_DIR}/${f}`, "utf8");
@@ -494,6 +629,67 @@ for (const f of files) {
     if (inf.mission !== undefined) inferredMissions += 1;
     if (inf.impact !== undefined) inferredImpacts += 1;
   }
+
+  /* the taste block — the fourth block, and the only one whose receipt lives in SOMEONE ELSE's
+   * record. This side checks everything a single file can settle; the cross-record half (does
+   * that person's own answer really say that, and do they name us back) runs after the loop,
+   * because it cannot be answered until every record is read. */
+  answersById.set(p.personId, p.answers ?? {});
+  const taste = p.taste;
+  if (taste !== undefined) {
+    if (taste === null || typeof taste !== "object" || Array.isArray(taste)) fail(`${f}: taste is not an object`);
+    const keys = Object.keys(taste);
+    if (keys.length === 0) fail(`${f}: taste is present but empty — omit it instead`);
+    const extra = keys.filter((k) => !(TASTE_FIELDS as readonly string[]).includes(k));
+    if (extra.length > 0) fail(`${f}: taste carries [${extra.join(", ")}] — the block's keys are pinned to {${TASTE_FIELDS.join(", ")}}`);
+    tasteBlocks += 1;
+
+    for (const field of TASTE_FIELDS) {
+      const hit = taste[field];
+      if (hit === undefined) continue;
+      if (hit === null || typeof hit !== "object" || Array.isArray(hit)) fail(`${f}: taste.${field} is not an object`);
+      const h = hit as Record<string, unknown>;
+      if (typeof h.verbatim !== "string" || h.verbatim.length === 0) fail(`${f}: taste.${field}.verbatim is missing or empty`);
+      // MY half of the receipt: byte-literal in my own answer, zero normalization
+      if (!(p.answers?.[field] ?? "").includes(h.verbatim as string)) {
+        fail(`taste quote not verbatim in ${f} (${field})`);
+      }
+      if (!Array.isArray(h.with) || h.with.length === 0) {
+        fail(`${f}: taste.${field} names no twin — a match with nobody on the other side is not a match`);
+      }
+      const seenTwin = new Set<string>();
+      for (const [i, item] of (h.with as unknown[]).entries()) {
+        if (item === null || typeof item !== "object" || Array.isArray(item)) fail(`${f}: taste.${field}.with[${i}] is not an object`);
+        const w = item as Record<string, unknown>;
+        if (typeof w.personId !== "string" || !ids.has(w.personId)) {
+          fail(`${f}: taste.${field}.with[${i}] names "${String(w.personId)}", who is not in the graph`);
+        }
+        if (w.personId === p.personId) fail(`${f}: taste.${field} names the record's own subject as their twin`);
+        if (seenTwin.has(w.personId as string)) fail(`${f}: taste.${field} names ${w.personId} twice`);
+        seenTwin.add(w.personId as string);
+        if (typeof w.quote !== "string" || w.quote.length === 0) fail(`${f}: taste.${field}.with[${i}] has an empty quote`);
+        tasteClaims.set(`${p.personId}|${field}|${w.personId as string}`, w.quote as string);
+        tasteTwinQuotes += 1;
+      }
+    }
+  }
+}
+
+/* the cross-record half of the taste receipt. Two failures live here and nowhere else:
+ *   · a quote attributed to a twin that is not in THEIR own answer — a fabricated receipt
+ *     about a third party, the worst shape this artifact can take;
+ *   · an asymmetric claim. Sharing an answer is symmetric by definition, so if A names B and
+ *     B does not name A, one of the two records is wrong about the room. */
+for (const [key, quote] of tasteClaims) {
+  const [me, field, twin] = key.split("|");
+  const theirAnswers = answersById.get(twin);
+  if (!theirAnswers) fail(`${me}.json: taste.${field} names ${twin}, who has no person record`);
+  if (!(theirAnswers?.[field] ?? "").includes(quote)) {
+    fail(`taste twin quote not verbatim in ${twin}.json (cited by ${me}.json, field ${field})`);
+  }
+  if (!tasteClaims.has(`${twin}|${field}|${me}`)) {
+    fail(`${me}.json: taste.${field} names ${twin} as a twin, but ${twin}.json does not name ${me} back`);
+  }
 }
 
 /* The block is absent for the handful the extraction could say nothing about, and a receipt
@@ -535,7 +731,10 @@ if (sheet.errors.length > 0) {
   fail(`${SHEET} is unparseable: row ${sheet.errors[0].row} — ${sheet.errors[0].message}`);
 }
 const sheetHeader = sheet.meta.fields ?? [];
-if (sheetHeader.join(",") !== SHEET_COLUMNS.join(",")) {
+const sheetPreMetro = sheetHeader.join(",") === SHEET_COLUMNS_PRE_METRO.join(",");
+if (sheetPreMetro) {
+  notes.push(`${SHEET} predates the metro column — pre-D3 bake, legal, and the next bake adds it`);
+} else if (sheetHeader.join(",") !== SHEET_COLUMNS.join(",")) {
   const missing = SHEET_COLUMNS.filter((c) => !sheetHeader.includes(c));
   const extra = sheetHeader.filter((c) => !SHEET_COLUMNS.includes(c));
   fail(
@@ -625,6 +824,19 @@ console.log(
       `vocabularies, every one of ${inferredSpans} evidence span(s) byte-verbatim in that guest's own answers`,
 );
 console.log(
+  placeCount === 0
+    ? "places OK: graph.json ships no places array (pre-D3 artifact — legal, the emit input is optional)"
+    : `places OK: ${placeCount} metro(s) covering ${placePeople} of ${g.nodes.length} people, every count equal to its own ` +
+      `membership and every member a node · ${placeCoordCount} with coordinates, ${placeCount - placeCoordCount} counted ` +
+      `but not drawable (an honest absence, never 0,0)`,
+);
+console.log(
+  tasteBlocks === 0
+    ? "taste OK: no record carries a taste block (pre-D3 artifact — legal)"
+    : `taste OK: ${tasteBlocks} of ${files.length} records carry a block · ${tasteTwinQuotes} twin-side quote(s), every one ` +
+      `byte-verbatim in that twin's OWN record, every claim symmetric`,
+);
+console.log(
   `sheet OK: ${SHEET} ${sheet.data.length} rows × ${sheetHeader.length} pinned columns, no contact PII · ` +
     `${OVERRIDES} ${overrideRows === 0 ? "header-only (no overrides in force)" : `${overrideRows} override row(s), all resolved and in-vocabulary`}`,
 );
@@ -633,3 +845,5 @@ if (handleMentions > 0) {
     `note: ${handleMentions} "@handle" mention(s) allowed — inside the guests' own answers, no contact PII: ${handleSamples.join(", ")}`,
   );
 }
+// green, and green about WHAT — a block that was never there did not pass, it was absent
+for (const n of notes) console.log(`note: ${n}`);
